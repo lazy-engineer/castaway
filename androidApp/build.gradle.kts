@@ -1,27 +1,34 @@
+import dependencies.App
+import dependencies.Library
+
 plugins {
-    id("com.android.application")
-    kotlin("android")
+	id("com.android.application")
+	kotlin("android")
+	id("koin")
 }
 
 dependencies {
-    implementation(project(":shared"))
-    implementation("com.google.android.material:material:1.2.1")
-    implementation("androidx.appcompat:appcompat:1.2.0")
-    implementation("androidx.constraintlayout:constraintlayout:2.0.4")
+	implementation(project(":shared"))
+
+	implementation(Library.material)
+	implementation(Library.appcompat)
+	implementation(Library.constraintlayout)
+	implementation(Library.koin)
+	implementation(Library.koinExt)
 }
 
 android {
-    compileSdkVersion(30)
-    defaultConfig {
-        applicationId = "io.github.lazyengineer.castaway.androidApp"
-        minSdkVersion(24)
-        targetSdkVersion(30)
-        versionCode = 1
-        versionName = "1.0"
-    }
-    buildTypes {
-        getByName("release") {
-            isMinifyEnabled = false
-        }
-    }
+	compileSdkVersion(App.compileSdk)
+	defaultConfig {
+		applicationId = "io.github.lazyengineer.castaway.androidApp"
+		minSdkVersion(App.minSdk)
+		targetSdkVersion(App.targetSdk)
+		versionCode = App.versionCode
+		versionName = App.versionName
+	}
+	buildTypes {
+		getByName("release") {
+			isMinifyEnabled = false
+		}
+	}
 }
