@@ -1,0 +1,69 @@
+package dependencies
+
+import org.gradle.kotlin.dsl.extra
+import org.gradle.kotlin.dsl.invoke
+
+object App {
+  const val compileSdk = 30
+  const val minSdk = 21
+  const val targetSdk = 30
+  const val versionCode = 1
+  const val versionName = "1.0.0"
+
+  const val buildTools = "30.0.2"
+  const val testRunner = "androidx.test.runner.AndroidJUnitRunner"
+}
+
+object Version {
+  const val kotlin = "1.4.21"
+  const val gradle = "4.1.1"
+
+  const val appcompat = "1.0.2"
+  const val constraintlayout = "2.0.4"
+  const val material = "1.2.1"
+
+  const val ktxCore = "1.3.2"
+  const val coroutines = "1.4.1"
+  const val exoplayer = "2.12.0"
+  const val coil = "1.1.0"
+  const val gson = "2.8.6"
+  const val koin = "2.2.2"
+
+  const val junit = "4.13.1"
+  const val androidJunit = "1.1.2"
+}
+
+object Plugin {
+  const val kotlin = "org.jetbrains.kotlin:kotlin-gradle-plugin:${Version.kotlin}"
+  const val gradle = "com.android.tools.build:gradle:${Version.gradle}"
+  const val koin = "org.koin:koin-gradle-plugin:${Version.koin}"
+}
+
+object Library {
+  const val kotlin = "org.jetbrains.kotlin:kotlin-stdlib-jdk7:${Version.kotlin}"
+  const val ktxCore = "androidx.core:core-ktx:${Version.ktxCore}"
+
+  const val appcompat = "androidx.appcompat:appcompat:${Version.appcompat}"
+  const val material = "com.google.android.material:material:${Version.material}"
+  const val constraintlayout = "androidx.constraintlayout:constraintlayout:${Version.constraintlayout}"
+  const val koin = "org.koin:koin-core:${Version.koin}"
+  const val koinExt = "org.koin:koin-core-ext:${Version.koin}"
+
+  const val exoplayer = "com.google.android.exoplayer:exoplayer:${Version.exoplayer}"
+  const val exoplayerMediaSession = "com.google.android.exoplayer:extension-mediasession:${Version.exoplayer}"
+  const val exoplayerCast = "com.google.android.exoplayer:extension-cast:${Version.exoplayer}"
+  const val exoplayerUI = "com.google.android.exoplayer:exoplayer-ui:${Version.exoplayer}"
+  const val coil = "io.coil-kt:coil:${Version.coil}"
+  const val gson = "com.google.code.gson:gson:${Version.gson}"
+
+  const val coroutines = "org.jetbrains.kotlinx:kotlinx-coroutines-core:${Version.coroutines}"
+  const val coroutinesAndroid = "org.jetbrains.kotlinx:kotlinx-coroutines-android:${Version.coroutines}"
+}
+
+object TestLibrary {
+  const val junit = "junit:junit:${Version.junit}"
+}
+
+object AndroidTestLibrary {
+  const val androidJunit = "androidx.test.ext:junit:${Version.androidJunit}"
+}
