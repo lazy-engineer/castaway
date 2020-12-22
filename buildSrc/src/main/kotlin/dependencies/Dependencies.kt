@@ -1,8 +1,5 @@
 package dependencies
 
-import org.gradle.kotlin.dsl.extra
-import org.gradle.kotlin.dsl.invoke
-
 object App {
   const val compileSdk = 30
   const val minSdk = 21
@@ -18,9 +15,14 @@ object Version {
   const val kotlin = "1.4.21"
   const val gradle = "4.1.1"
 
-  const val appcompat = "1.0.2"
+  const val appcompat = "1.1.0"
   const val constraintlayout = "2.0.4"
   const val material = "1.2.1"
+  const val media = "1.2.1"
+
+  const val lifecycleExtensions = "2.2.0"
+  const val ktxActivity = "1.1.0"
+  const val ktxFragment = "1.2.5"
 
   const val ktxCore = "1.3.2"
   const val coroutines = "1.4.1"
@@ -46,9 +48,17 @@ object Library {
   const val appcompat = "androidx.appcompat:appcompat:${Version.appcompat}"
   const val material = "com.google.android.material:material:${Version.material}"
   const val constraintlayout = "androidx.constraintlayout:constraintlayout:${Version.constraintlayout}"
+
   const val koin = "org.koin:koin-core:${Version.koin}"
   const val koinExt = "org.koin:koin-core-ext:${Version.koin}"
+  const val koinAndroid = "org.koin:koin-androidx-scope:${Version.koin}"
+  const val koinViewmodel = "org.koin:koin-androidx-viewmodel:${Version.koin}"
 
+  const val viewmodelKtx = "androidx.lifecycle:lifecycle-viewmodel-ktx:${Version.lifecycleExtensions}"
+  const val activityKtx = "androidx.activity:activity-ktx:${Version.ktxActivity}"
+  const val fragmentKtx = "androidx.fragment:fragment-ktx:${Version.ktxFragment}"
+
+  const val media = "androidx.media:media:${Version.media}"
   const val exoplayer = "com.google.android.exoplayer:exoplayer:${Version.exoplayer}"
   const val exoplayerMediaSession = "com.google.android.exoplayer:extension-mediasession:${Version.exoplayer}"
   const val exoplayerCast = "com.google.android.exoplayer:extension-cast:${Version.exoplayer}"

@@ -45,12 +45,6 @@ dependencies {
 	implementation(Library.kotlin)
 	implementation(Library.ktxCore)
 
-	implementation(Library.material)
-	implementation(Library.appcompat)
-	implementation(Library.constraintlayout)
-	implementation(Library.koin)
-	implementation(Library.koinExt)
-
 	implementation(Library.exoplayer)
 	implementation(Library.exoplayerCast)
 	implementation(Library.exoplayerMediaSession)
