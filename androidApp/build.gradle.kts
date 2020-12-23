@@ -23,6 +23,11 @@ dependencies {
 	implementation(Library.koinExt)
 	implementation(Library.koinAndroid)
 	implementation(Library.koinViewmodel)
+
+	implementation(Library.coil)
+	implementation(Library.gson)
+	implementation(Library.okhttp)
+	implementation(Library.feedparser)
 }
 
 android {

@@ -30,6 +30,8 @@ object Version {
   const val coil = "1.1.0"
   const val gson = "2.8.6"
   const val koin = "2.2.2"
+  const val okhttp = "4.7.2"
+  const val feedparser = "0.1.0"
 
   const val junit = "4.13.1"
   const val androidJunit = "1.1.2"
@@ -65,6 +67,8 @@ object Library {
   const val exoplayerUI = "com.google.android.exoplayer:exoplayer-ui:${Version.exoplayer}"
   const val coil = "io.coil-kt:coil:${Version.coil}"
   const val gson = "com.google.code.gson:gson:${Version.gson}"
+  const val okhttp = "com.squareup.okhttp3:okhttp:${Version.okhttp}"
+  const val feedparser = "io.github.lazy-engineer:feedparser:${Version.feedparser}"
 
   const val coroutines = "org.jetbrains.kotlinx:kotlinx-coroutines-core:${Version.coroutines}"
   const val coroutinesAndroid = "org.jetbrains.kotlinx:kotlinx-coroutines-android:${Version.coroutines}"
