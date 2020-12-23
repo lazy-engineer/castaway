@@ -1,0 +1,9 @@
+<resources>
+    <string name="title_discover">Discover</string>
+
+    <string name="nav_overview">Overview</string>
+    <string name="nav_playlist">Playlist</string>
+    <string name="nav_discover">Discover</string>
+    <string name="nav_user">User</string>
+    <string name="fetch_feed">Fetch Feed</string>
+</resources>
