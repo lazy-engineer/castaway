@@ -1,5 +1,6 @@
-package io.github.lazyengineer.castaway.androidApp
+package io.github.lazyengineer.castaway.androidApp.repository
 
+import io.github.lazyengineer.castaway.androidApp.common.Result
 import io.github.lazyengineer.castaway.androidApp.entity.Episode
 import io.github.lazyengineer.castaway.androidApp.entity.FeedData
 

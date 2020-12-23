@@ -1,4 +1,4 @@
-package io.github.lazyengineer.castaway.androidApp
+package io.github.lazyengineer.castaway.androidApp.viewmodel
 
 import android.support.v4.media.MediaBrowserCompat.MediaItem
 import android.support.v4.media.MediaBrowserCompat.SubscriptionCallback
@@ -7,6 +7,8 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import io.github.lazyengineer.castaway.androidApp.usecase.GetFeedUseCase
+import io.github.lazyengineer.castaway.androidApp.view.MediaPlayerFragment
 import io.github.lazyengineer.castaway.androidApp.entity.Episode
 import io.github.lazyengineer.castaway.androidApp.entity.FeedData
 import io.github.lazyengineer.castaway.androidApp.entity.PlaybackPosition
@@ -185,13 +187,13 @@ class MainViewModel constructor(
 	}
 
 	fun episodeClicked(clickedItem: Episode) {
-//		if (mediaServiceClient.isConnected.value) {
-//			_navigateToFragment.value = MediaPlayerFragment.newInstance(clickedItem)
-//
-//			if (!playingState(clickedItem.id)) {
-//				mediaServiceClient.playMediaId(clickedItem.id)
-//			}
-//		}
+		if (mediaServiceClient.isConnected.value) {
+			_navigateToFragment.value = MediaPlayerFragment.newInstance(clickedItem)
+
+			if (!playingState(clickedItem.id)) {
+				mediaServiceClient.playMediaId(clickedItem.id)
+			}
+		}
 	}
 
 	fun forwardCurrentItem() {
