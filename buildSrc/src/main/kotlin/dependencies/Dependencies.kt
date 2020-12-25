@@ -20,6 +20,8 @@ object Version {
   const val material = "1.2.1"
   const val media = "1.2.1"
 
+  const val compose = "1.0.0-alpha08"
+
   const val lifecycleExtensions = "2.2.0"
   const val ktxActivity = "1.1.0"
   const val ktxFragment = "1.2.5"
@@ -50,6 +52,13 @@ object Library {
   const val appcompat = "androidx.appcompat:appcompat:${Version.appcompat}"
   const val material = "com.google.android.material:material:${Version.material}"
   const val constraintlayout = "androidx.constraintlayout:constraintlayout:${Version.constraintlayout}"
+
+  const val compose = "androidx.compose.ui:ui:${Version.compose}"
+  const val composeTooling = "androidx.compose.ui:ui-tooling:${Version.compose}"
+  const val composeFoundation = "androidx.compose.foundation:foundation:${Version.compose}"
+  const val composeMaterial = "androidx.compose.material:material:${Version.compose}"
+  const val composeIcons = "androidx.compose.material:material-icons-core:${Version.compose}"
+  const val composeIconsExt = "androidx.compose.material:material-icons-extended:${Version.compose}"
 
   const val koin = "org.koin:koin-core:${Version.koin}"
   const val koinExt = "org.koin:koin-core-ext:${Version.koin}"

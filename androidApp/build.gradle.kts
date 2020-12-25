@@ -1,5 +1,6 @@
 import dependencies.App
 import dependencies.Library
+import dependencies.Version
 
 plugins {
 	id("com.android.application")
@@ -18,6 +19,14 @@ dependencies {
 	implementation(Library.material)
 	implementation(Library.appcompat)
 	implementation(Library.constraintlayout)
+
+	implementation(Library.compose)
+	implementation(Library.composeFoundation)
+	implementation(Library.composeMaterial)
+	implementation(Library.composeTooling)
+	implementation(Library.composeIcons)
+	implementation(Library.composeIconsExt)
+
 	implementation(Library.media)
 	implementation(Library.koin)
 	implementation(Library.koinExt)
@@ -57,5 +66,10 @@ android {
 
 	buildFeatures {
 		dataBinding = true
+	}
+
+	composeOptions {
+		kotlinCompilerVersion = Version.kotlin
+		kotlinCompilerExtensionVersion = Version.compose
 	}
 }
