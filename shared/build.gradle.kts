@@ -1,7 +1,8 @@
-import org.jetbrains.kotlin.gradle.plugin.mpp.KotlinNativeTarget
+
 import dependencies.App
 import dependencies.Library
 import dependencies.TestLibrary
+import org.jetbrains.kotlin.gradle.plugin.mpp.KotlinNativeTarget
 
 plugins {
     kotlin("multiplatform")
@@ -18,7 +19,11 @@ kotlin {
         }
     }
     sourceSets {
-        val commonMain by getting
+        val commonMain by getting {
+            dependencies {
+                implementation(Library.ktor)
+            }
+        }
         val commonTest by getting {
             dependencies {
                 implementation(kotlin("test-common"))
@@ -28,6 +33,7 @@ kotlin {
         val androidMain by getting {
             dependencies {
                 implementation(Library.material)
+                implementation(Library.ktorAndroid)
             }
         }
         val androidTest by getting {
@@ -36,7 +42,11 @@ kotlin {
                 implementation(TestLibrary.junit)
             }
         }
-        val iosMain by getting
+        val iosMain by getting {
+            dependencies {
+                implementation(Library.ktorIOS)
+            }
+        }
         val iosTest by getting
     }
 }
