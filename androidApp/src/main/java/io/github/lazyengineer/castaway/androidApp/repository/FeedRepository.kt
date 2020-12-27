@@ -1,17 +1,19 @@
 package io.github.lazyengineer.castaway.androidApp.repository
 
-import io.github.lazyengineer.castaway.shared.Result
-import io.github.lazyengineer.castaway.shared.Result.Error
-import io.github.lazyengineer.castaway.shared.Result.Success
 import io.github.lazyengineer.castaway.androidApp.database.LocalFeedDataSource
 import io.github.lazyengineer.castaway.androidApp.entity.Episode
 import io.github.lazyengineer.castaway.androidApp.entity.FeedData
 import io.github.lazyengineer.castaway.androidApp.entity.PlaybackPosition
-import io.github.lazyengineer.castaway.androidApp.webservice.RemoteFeedDataSource
+import io.github.lazyengineer.castaway.shared.Result
+import io.github.lazyengineer.castaway.shared.Result.Error
+import io.github.lazyengineer.castaway.shared.Result.Success
+import io.github.lazyengineer.castaway.shared.webservice.RemoteFeedDataSource
+import io.github.lazyengineer.feedparser.FeedParser
 import io.github.lazyengineer.feedparser.model.feed.AtomFeed
 import io.github.lazyengineer.feedparser.model.feed.Feed
 import io.github.lazyengineer.feedparser.model.feed.RSSFeed
-import java.util.UUID
+import org.xmlpull.v1.XmlPullParserFactory
+import java.util.*
 
 class FeedRepository constructor(
 	private val remoteDataSource: RemoteFeedDataSource,
@@ -36,7 +38,9 @@ class FeedRepository constructor(
 	private suspend fun loadRemotely(url: String): Result<FeedData> {
 		return when (val fetchedFeed = remoteDataSource.fetchFeed(url)) {
 			is Success -> {
-				val remoteFeed = fetchedFeed.data.toFeedData(url)
+				val factory = XmlPullParserFactory.newInstance()
+				val xmlPullParser = factory.newPullParser()
+				val remoteFeed = FeedParser.parseFeed(fetchedFeed.data, xmlPullParser).toFeedData(url)
 				localDataSource.saveFeedData(remoteFeed)
 				localDataSource.fetchFeed(remoteFeed.title)
 			}

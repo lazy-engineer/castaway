@@ -9,7 +9,7 @@ import io.github.lazyengineer.castaway.androidApp.database.FeedLocalDataSource
 import io.github.lazyengineer.castaway.androidApp.repository.FeedRepository
 import io.github.lazyengineer.castaway.androidApp.usecase.GetFeedUseCase
 import io.github.lazyengineer.castaway.androidApp.viewmodel.MainViewModel
-import io.github.lazyengineer.castaway.androidApp.webservice.FeedRemoteDataSource
+import io.github.lazyengineer.castaway.shared.webservice.FeedRemoteDataSource
 import io.github.lazyengineer.castawayplayer.MediaServiceClient
 import io.github.lazyengineer.castawayplayer.config.MediaServiceConfig
 import io.github.lazyengineer.castawayplayer.service.MediaPlayerService
@@ -38,7 +38,7 @@ val appModule = module {
 
 	single {
 		FeedRepository(
-			remoteDataSource = FeedRemoteDataSource.getInstance(get()),
+			remoteDataSource = FeedRemoteDataSource(),
 			localDataSource = FeedLocalDataSource.getInstance(get(), get())
 		)
 	}
