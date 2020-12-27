@@ -1,6 +1,6 @@
 package io.github.lazyengineer.castaway.androidApp.entity
 
-import io.github.lazyengineer.castaway.androidApp.ArgumentsKt
+import io.github.lazyengineer.castaway.androidApp.common.ArgumentsKt
 import kotlinx.android.parcel.Parcelize
 
 @Parcelize

@@ -1,6 +1,6 @@
 package io.github.lazyengineer.castaway.androidApp.usecase
 
-import io.github.lazyengineer.castaway.androidApp.common.Result
+import io.github.lazyengineer.castaway.shared.Result
 import io.github.lazyengineer.castaway.androidApp.common.UseCase
 import io.github.lazyengineer.castaway.androidApp.entity.Episode
 import io.github.lazyengineer.castaway.androidApp.repository.FeedDataSource

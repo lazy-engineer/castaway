@@ -1,4 +1,4 @@
-package io.github.lazyengineer.castaway.androidApp.common
+package io.github.lazyengineer.castaway.shared
 
 /**
  * A generic class that holds a value with its loading status.

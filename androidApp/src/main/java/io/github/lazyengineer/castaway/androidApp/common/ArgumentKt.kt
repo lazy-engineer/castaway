@@ -1,4 +1,4 @@
-package io.github.lazyengineer.castaway.androidApp
+package io.github.lazyengineer.castaway.androidApp.common
 
 import android.os.Bundle
 import android.os.Parcelable

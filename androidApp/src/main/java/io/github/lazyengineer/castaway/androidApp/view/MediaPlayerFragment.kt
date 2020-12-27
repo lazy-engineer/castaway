@@ -12,7 +12,7 @@ import android.widget.SeekBar.OnSeekBarChangeListener
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import coil.load
-import io.github.lazyengineer.castaway.androidApp.ArgumentsKt
+import io.github.lazyengineer.castaway.androidApp.common.ArgumentsKt
 import io.github.lazyengineer.castaway.androidApp.R.drawable
 import io.github.lazyengineer.castaway.androidApp.databinding.FragmentMediaPlayerBinding
 import io.github.lazyengineer.castaway.androidApp.entity.Episode

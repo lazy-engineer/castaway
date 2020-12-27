@@ -1,5 +1,7 @@
 package io.github.lazyengineer.castaway.androidApp.common
 
+import io.github.lazyengineer.castaway.shared.Result
+
 abstract class UseCase<out Type, in Params> where Type : Any {
 
 	abstract suspend fun run(params: Params): Result<Type>

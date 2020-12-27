@@ -1,8 +1,8 @@
 package io.github.lazyengineer.castaway.androidApp.webservice
 
-import io.github.lazyengineer.castaway.androidApp.common.Result
-import io.github.lazyengineer.castaway.androidApp.common.Result.Error
-import io.github.lazyengineer.castaway.androidApp.common.Result.Success
+import io.github.lazyengineer.castaway.shared.Result
+import io.github.lazyengineer.castaway.shared.Result.Error
+import io.github.lazyengineer.castaway.shared.Result.Success
 import io.github.lazyengineer.feedparser.FeedParser
 import io.github.lazyengineer.feedparser.model.feed.Feed
 import okhttp3.OkHttpClient

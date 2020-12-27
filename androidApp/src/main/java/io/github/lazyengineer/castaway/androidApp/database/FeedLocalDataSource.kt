@@ -2,9 +2,9 @@ package io.github.lazyengineer.castaway.androidApp.database
 
 import android.content.SharedPreferences
 import com.google.gson.Gson
-import io.github.lazyengineer.castaway.androidApp.common.Result
-import io.github.lazyengineer.castaway.androidApp.common.Result.Error
-import io.github.lazyengineer.castaway.androidApp.common.Result.Success
+import io.github.lazyengineer.castaway.shared.Result
+import io.github.lazyengineer.castaway.shared.Result.Error
+import io.github.lazyengineer.castaway.shared.Result.Success
 import io.github.lazyengineer.castaway.androidApp.entity.Episode
 import io.github.lazyengineer.castaway.androidApp.entity.FeedData
 import kotlinx.coroutines.Dispatchers

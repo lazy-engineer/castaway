@@ -1,8 +1,8 @@
 package io.github.lazyengineer.castaway.androidApp.repository
 
-import io.github.lazyengineer.castaway.androidApp.common.Result
-import io.github.lazyengineer.castaway.androidApp.common.Result.Error
-import io.github.lazyengineer.castaway.androidApp.common.Result.Success
+import io.github.lazyengineer.castaway.shared.Result
+import io.github.lazyengineer.castaway.shared.Result.Error
+import io.github.lazyengineer.castaway.shared.Result.Success
 import io.github.lazyengineer.castaway.androidApp.database.LocalFeedDataSource
 import io.github.lazyengineer.castaway.androidApp.entity.Episode
 import io.github.lazyengineer.castaway.androidApp.entity.FeedData
