@@ -7,12 +7,12 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.LinearLayoutManager
+import io.github.lazyengineer.castaway.androidApp.databinding.FragmentFeedEpisodesBinding
 import io.github.lazyengineer.castaway.androidApp.view.ChannelItemAdapter.OnItemClickListener
 import io.github.lazyengineer.castaway.androidApp.view.ChannelItemAdapter.ViewHolder
-import io.github.lazyengineer.castaway.androidApp.databinding.FragmentFeedEpisodesBinding
-import io.github.lazyengineer.castaway.androidApp.entity.Episode
-import io.github.lazyengineer.castaway.androidApp.entity.FeedData
 import io.github.lazyengineer.castaway.androidApp.viewmodel.MainViewModel
+import io.github.lazyengineer.castaway.shared.entity.Episode
+import io.github.lazyengineer.castaway.shared.entity.FeedData
 
 class FeedEpisodesFragment : Fragment(), OnItemClickListener {
 
@@ -86,7 +86,7 @@ class FeedEpisodesFragment : Fragment(), OnItemClickListener {
 	}
 
 	override fun onPlayClick(item: Episode) {
-		viewModel.mediaItemClicked(item)
+		viewModel.mediaItemClicked(item.id)
 	}
 
 	companion object {

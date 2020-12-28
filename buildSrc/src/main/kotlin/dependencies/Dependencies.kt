@@ -29,7 +29,7 @@ object Version {
   const val exoplayer = "2.12.0"
   const val coil = "1.1.0"
   const val gson = "2.8.6"
-  const val koin = "2.2.2"
+  const val koin = "3.0.0-alpha-4"
   const val okhttp = "4.7.2"
   const val ktor = "1.5.0"
   const val feedparser = "0.1.0"
@@ -54,6 +54,8 @@ object Library {
 
   const val koin = "org.koin:koin-core:${Version.koin}"
   const val koinExt = "org.koin:koin-core-ext:${Version.koin}"
+  const val koinTest = "org.koin:koin-test:${Version.koin}"
+
   const val koinAndroid = "org.koin:koin-androidx-scope:${Version.koin}"
   const val koinViewmodel = "org.koin:koin-androidx-viewmodel:${Version.koin}"
 

@@ -22,12 +22,14 @@ kotlin {
         val commonMain by getting {
             dependencies {
                 implementation(Library.ktor)
+                implementation(Library.koin)
             }
         }
         val commonTest by getting {
             dependencies {
                 implementation(kotlin("test-common"))
                 implementation(kotlin("test-annotations-common"))
+                implementation(Library.koinTest)
             }
         }
         val androidMain by getting {

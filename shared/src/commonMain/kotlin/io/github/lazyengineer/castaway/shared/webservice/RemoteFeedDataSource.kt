@@ -1,6 +1,6 @@
 package io.github.lazyengineer.castaway.shared.webservice
 
-import io.github.lazyengineer.castaway.shared.Result
+import io.github.lazyengineer.castaway.shared.common.Result
 
 interface RemoteFeedDataSource {
 

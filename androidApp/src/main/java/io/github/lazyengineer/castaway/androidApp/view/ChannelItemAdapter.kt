@@ -6,7 +6,7 @@ import android.widget.ProgressBar
 import androidx.recyclerview.widget.RecyclerView
 import io.github.lazyengineer.castaway.androidApp.R.drawable
 import io.github.lazyengineer.castaway.androidApp.databinding.FeedItemBinding
-import io.github.lazyengineer.castaway.androidApp.entity.Episode
+import io.github.lazyengineer.castaway.shared.entity.Episode
 import io.github.lazyengineer.castaway.androidApp.view.ChannelItemAdapter.ViewHolder
 
 class ChannelItemAdapter(private val clickListener: OnItemClickListener) :

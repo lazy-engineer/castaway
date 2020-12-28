@@ -5,7 +5,6 @@ plugins {
 	id("com.android.application")
 	kotlin("android")
 	kotlin("android.extensions")
-	id("koin")
 }
 
 dependencies {
@@ -20,7 +19,6 @@ dependencies {
 	implementation(Library.constraintlayout)
 	implementation(Library.media)
 	implementation(Library.koin)
-	implementation(Library.koinExt)
 	implementation(Library.koinAndroid)
 	implementation(Library.koinViewmodel)
 

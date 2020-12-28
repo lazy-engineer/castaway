@@ -7,7 +7,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.commit
 import io.github.lazyengineer.castaway.androidApp.R.id
 import io.github.lazyengineer.castaway.androidApp.databinding.ActivityMainBinding
-import io.github.lazyengineer.castaway.androidApp.entity.FeedData
+import io.github.lazyengineer.castaway.shared.entity.FeedData
 import io.github.lazyengineer.castaway.androidApp.viewmodel.MainViewModel
 import io.github.lazyengineer.castaway.shared.Greeting
 import org.koin.androidx.viewmodel.ext.android.viewModel
