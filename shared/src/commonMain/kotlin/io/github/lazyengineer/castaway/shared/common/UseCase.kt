@@ -1,6 +1,6 @@
-package io.github.lazyengineer.castaway.androidApp.common
+package io.github.lazyengineer.castaway.shared.common
 
-import io.github.lazyengineer.castaway.shared.Result
+import io.github.lazyengineer.castaway.shared.common.Result
 
 abstract class UseCase<out Type, in Params> where Type : Any {
 

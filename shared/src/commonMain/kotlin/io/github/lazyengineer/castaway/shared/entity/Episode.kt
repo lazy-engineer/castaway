@@ -1,9 +1,5 @@
-package io.github.lazyengineer.castaway.androidApp.entity
+package io.github.lazyengineer.castaway.shared.entity
 
-import io.github.lazyengineer.castaway.androidApp.common.ArgumentsKt
-import kotlinx.android.parcel.Parcelize
-
-@Parcelize
 data class Episode(
 	val id: String,
 	val title: String,
@@ -14,4 +10,4 @@ data class Episode(
 	val author: String?,
 	val playbackPosition: PlaybackPosition,
 	val isPlaying: Boolean = false,
-) : ArgumentsKt
+)
