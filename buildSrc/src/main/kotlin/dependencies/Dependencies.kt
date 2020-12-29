@@ -30,8 +30,8 @@ object Version {
   const val coil = "1.1.0"
   const val gson = "2.8.6"
   const val koin = "3.0.0-alpha-4"
-  const val okhttp = "4.7.2"
   const val ktor = "1.5.0"
+  const val sqldelight = "1.4.3"
   const val feedparser = "0.1.0"
 
   const val junit = "4.13.1"
@@ -55,7 +55,6 @@ object Library {
   const val koin = "org.koin:koin-core:${Version.koin}"
   const val koinExt = "org.koin:koin-core-ext:${Version.koin}"
   const val koinTest = "org.koin:koin-test:${Version.koin}"
-
   const val koinAndroid = "org.koin:koin-androidx-scope:${Version.koin}"
   const val koinViewmodel = "org.koin:koin-androidx-viewmodel:${Version.koin}"
 
@@ -71,10 +70,12 @@ object Library {
 
   const val coil = "io.coil-kt:coil:${Version.coil}"
   const val gson = "com.google.code.gson:gson:${Version.gson}"
-  const val okhttp = "com.squareup.okhttp3:okhttp:${Version.okhttp}"
   const val ktor = "io.ktor:ktor-client-core:${Version.ktor}"
   const val ktorAndroid = "io.ktor:ktor-client-android:${Version.ktor}"
   const val ktorIOS = "io.ktor:ktor-client-ios:${Version.ktor}"
+  const val sqldelight = "com.squareup.sqldelight:runtime:${Version.sqldelight}"
+  const val sqldelightAndroid = "com.squareup.sqldelight:android-driver:${Version.sqldelight}"
+  const val sqldelightIOS = "com.squareup.sqldelight:native-driver:${Version.sqldelight}"
   const val feedparser = "io.github.lazy-engineer:feedparser:${Version.feedparser}"
 
   const val coroutines = "org.jetbrains.kotlinx:kotlinx-coroutines-core:${Version.coroutines}"

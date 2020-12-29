@@ -18,13 +18,13 @@ dependencies {
 	implementation(Library.appcompat)
 	implementation(Library.constraintlayout)
 	implementation(Library.media)
+
 	implementation(Library.koin)
 	implementation(Library.koinAndroid)
 	implementation(Library.koinViewmodel)
 
 	implementation(Library.coil)
 	implementation(Library.gson)
-	implementation(Library.okhttp)
 	implementation(Library.feedparser)
 }
 
