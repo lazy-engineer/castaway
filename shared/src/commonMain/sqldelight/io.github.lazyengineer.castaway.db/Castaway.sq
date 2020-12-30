@@ -1,0 +1,13 @@
+CREATE TABLE Podcast(
+name TEXT NOT NULL PRIMARY KEY,
+url TEXT NOT NULL
+);
+
+insertItem:
+INSERT OR REPLACE INTO Podcast(name, url)VALUES(?,?);
+
+selectAll:
+SELECT * FROM Podcast;
+
+deleteAll:
+DELETE FROM Podcast;
