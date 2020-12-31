@@ -1,6 +1,20 @@
+import io.github.lazyengineer.castaway.shared.entity.PlaybackPosition;
+
 CREATE TABLE Podcast(
 name TEXT NOT NULL PRIMARY KEY,
 url TEXT NOT NULL
+);
+
+CREATE TABLE Episode(
+id TEXT NOT NULL PRIMARY KEY,
+title TEXT NOT NULL,
+subtitle TEXT,
+description TEXT,
+audioUrl TEXT NOT NULL,
+imageUrl TEXT,
+author TEXT,
+playbackPosition TEXT AS PlaybackPosition,
+isPlaying INTEGER AS Boolean DEFAULT 0
 );
 
 insertItem:
