@@ -1,0 +1,24 @@
+CREATE TABLE Podcast(
+id TEXT NOT NULL PRIMARY KEY,
+name TEXT NOT NULL,
+url TEXT NOT NULL
+);
+
+insertPodcast:
+INSERT OR REPLACE INTO Podcast(id, name, url) VALUES(?,?,?);
+
+selectById:
+SELECT *
+FROM Podcast
+WHERE id = ?;
+
+selectAll:
+SELECT * FROM Podcast;
+
+deleteById:
+DELETE
+FROM Podcast
+WHERE id = ?;
+
+deleteAll:
+DELETE FROM Podcast;
