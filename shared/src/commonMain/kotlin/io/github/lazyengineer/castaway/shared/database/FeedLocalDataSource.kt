@@ -1,11 +1,12 @@
 package io.github.lazyengineer.castaway.shared.database
 
+import io.github.lazyengineer.castaway.db.CastawayDatabase
 import io.github.lazyengineer.castaway.shared.common.Result
 import io.github.lazyengineer.castaway.shared.common.Result.Error
 import io.github.lazyengineer.castaway.shared.entity.Episode
 import io.github.lazyengineer.castaway.shared.entity.FeedData
 
-class FeedLocalDataSource : LocalFeedDataSource {
+class FeedLocalDataSource constructor(private val database: CastawayDatabase) : LocalFeedDataSource {
 
 	override suspend fun fetchFeed(feedUrl: String): Result<FeedData> {
 		return Error(Exception("Not implemented"))

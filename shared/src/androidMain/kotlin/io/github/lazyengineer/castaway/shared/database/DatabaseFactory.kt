@@ -2,11 +2,17 @@ package io.github.lazyengineer.castaway.shared.database
 
 import android.content.Context
 import com.squareup.sqldelight.android.AndroidSqliteDriver
-import com.squareup.sqldelight.db.SqlDriver
 import io.github.lazyengineer.castaway.db.CastawayDatabase
+import io.github.lazyengineer.castaway.shared.entity.PlaybackPosition.Companion.playbackPositionAdapter
+import iogithublazyengineercastawaydb.Episode
 
-actual class DatabaseFactory(private val context: Context) {
-    actual fun createDb(): SqlDriver {
-        return AndroidSqliteDriver(CastawayDatabase.Schema, context, "castaway.db")
-    }
+lateinit var appContext: Context
+
+actual fun createDb(): CastawayDatabase {
+    val driver = AndroidSqliteDriver(CastawayDatabase.Schema, appContext, "castaway.db")
+    return CastawayDatabase(
+        driver, EpisodeAdapter = Episode.Adapter(
+            playbackPositionAdapter = playbackPositionAdapter
+        )
+    )
 }

@@ -1,7 +1,5 @@
 package io.github.lazyengineer.castaway.shared.database
 
-import com.squareup.sqldelight.db.SqlDriver
+import io.github.lazyengineer.castaway.db.CastawayDatabase
 
-expect class DatabaseFactory {
-    fun createDb(): SqlDriver
-}
+expect fun createDb(): CastawayDatabase

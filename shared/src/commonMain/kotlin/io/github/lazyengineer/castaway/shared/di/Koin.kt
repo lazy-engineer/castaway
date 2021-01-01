@@ -1,6 +1,7 @@
 package io.github.lazyengineer.castaway.shared.di
 
 import io.github.lazyengineer.castaway.shared.database.FeedLocalDataSource
+import io.github.lazyengineer.castaway.shared.database.createDb
 import io.github.lazyengineer.castaway.shared.repository.FeedRepository
 import io.github.lazyengineer.castaway.shared.usecase.GetFeedUseCase
 import io.github.lazyengineer.castaway.shared.webservice.FeedRemoteDataSource
@@ -17,11 +18,12 @@ fun initKoin(appDeclaration: KoinAppDeclaration = {}) =
     }
 
 private val coreModule = module {
+    single { createDb() }
     single { HttpClient() }
     single {
         FeedRepository(
             remoteDataSource = FeedRemoteDataSource(get()),
-            localDataSource = FeedLocalDataSource()
+            localDataSource = FeedLocalDataSource(get())
         )
     }
     single { GetFeedUseCase(get() as FeedRepository) }
