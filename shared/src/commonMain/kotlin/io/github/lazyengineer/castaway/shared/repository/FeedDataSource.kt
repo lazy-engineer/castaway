@@ -9,4 +9,5 @@ interface FeedDataSource {
 	suspend fun saveFeed(feed: FeedData): Result<FeedData>
 	suspend fun saveEpisode(episode: Episode): Result<Episode>
 	suspend fun fetchFeed(url: String): Result<String>
+	suspend fun loadLocally(url: String): Result<FeedData>
 }

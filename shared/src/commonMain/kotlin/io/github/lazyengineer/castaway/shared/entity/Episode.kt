@@ -10,4 +10,5 @@ data class Episode(
 	val author: String?,
 	val playbackPosition: PlaybackPosition,
 	val isPlaying: Boolean = false,
+	val podcastUrl: String,
 )

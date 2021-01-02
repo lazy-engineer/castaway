@@ -7,27 +7,24 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import io.github.lazyengineer.castaway.androidApp.parser.FeedParser.toFeedData
+import io.github.lazyengineer.castaway.androidApp.usecase.StoreAndGetFeedUseCase
 import io.github.lazyengineer.castaway.androidApp.view.MediaPlayerFragment
 import io.github.lazyengineer.castaway.shared.entity.Episode
 import io.github.lazyengineer.castaway.shared.entity.FeedData
 import io.github.lazyengineer.castaway.shared.entity.PlaybackPosition
-import io.github.lazyengineer.castaway.shared.usecase.GetFeedUseCase
 import io.github.lazyengineer.castawayplayer.MediaServiceClient
 import io.github.lazyengineer.castawayplayer.extention.isPlaying
 import io.github.lazyengineer.castawayplayer.service.Constants.MEDIA_DESCRIPTION_EXTRAS_START_PLAYBACK_POSITION_MS
 import io.github.lazyengineer.castawayplayer.service.Constants.MEDIA_ROOT_ID
 import io.github.lazyengineer.castawayplayer.source.MediaData
-import io.github.lazyengineer.feedparser.FeedParser
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import org.xmlpull.v1.XmlPullParserFactory
 
 class MainViewModel constructor(
-	private val mediaServiceClient: MediaServiceClient,
-	private val getFeedUseCase: GetFeedUseCase,
+    private val mediaServiceClient: MediaServiceClient,
+    private val storeAndGetFeedUseCase: StoreAndGetFeedUseCase,
 ) : ViewModel() {
 
     private val subscriptionCallback = object : SubscriptionCallback() {
@@ -51,10 +48,17 @@ class MainViewModel constructor(
                         ) ?: 0
                     ),
                     isPlaying = playingState(it.mediaId!!),
+                    podcastUrl = TEST_URL,
                 )
             }
 
-            _feed.postValue(FeedData(url = TEST_URL, title = "Android Backstage", episodes = items))
+            _feed.postValue(
+                FeedData(
+                    url = TEST_URL,
+                    title = "Android Backstage",
+                    episodes = items
+                )
+            )
         }
     }
 
@@ -146,15 +150,10 @@ class MainViewModel constructor(
 
     private suspend fun fetchFeedFromUrl(url: String) {
         withContext(Dispatchers.IO) {
-            getFeedUseCase(
+            storeAndGetFeedUseCase(
                 url,
                 onSuccess = {
-                    val factory = XmlPullParserFactory.newInstance()
-                    val xmlPullParser = factory.newPullParser()
-                    val feed = FeedParser.parseFeed(it, xmlPullParser)
-                    val feedData = feed.toFeedData(TEST_URL)
-
-                    prepareMediaData(feedData.episodes)
+                    prepareMediaData(it.episodes)
                 },
                 onError = {},
             )
@@ -256,7 +255,6 @@ class MainViewModel constructor(
     }
 
     companion object {
-        private const val TAG = "MainViewModel"
         const val TEST_URL = "https://feeds.feedburner.com/blogspot/androiddevelopersbackstage"
     }
 }
