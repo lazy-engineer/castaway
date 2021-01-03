@@ -15,18 +15,7 @@ class FeedLocalDataSource constructor(private val database: CastawayDatabase) :
             val podcast = database.podcastQueries.selectByUrl(feedUrl).executeAsOne()
 
             val episodes = database.episodeQueries.selectByPodcast(feedUrl).executeAsList().map {
-                Episode(
-                    id = it.id,
-                    title = it.title,
-                    subTitle = it.subTitle,
-                    description = it.description,
-                    audioUrl = it.audioUrl,
-                    imageUrl = it.imageUrl,
-                    author = it.author,
-                    playbackPosition = it.playbackPosition ?: PlaybackPosition(0),
-                    isPlaying = it.isPlaying ?: false,
-                    podcastUrl = it.podcastUrl,
-                )
+                it.toEpisode()
             }
 
             FeedData(url = podcast.url, title = podcast.name, episodes = episodes)
@@ -35,23 +24,22 @@ class FeedLocalDataSource constructor(private val database: CastawayDatabase) :
         return Result.Success(feed)
     }
 
+    override suspend fun loadEpisodes(episodeIds: List<String>): Result<List<Episode>> {
+        val episodes: List<Episode> = database.episodeQueries.transactionWithResult {
+            database.episodeQueries.selectByIds(episodeIds).executeAsList().map {
+                it.toEpisode()
+            }
+        }
+
+        return Result.Success(episodes)
+    }
+
     override suspend fun saveFeedData(feed: FeedData): Result<FeedData> {
         val savedFeed: FeedData = database.episodeQueries.transactionWithResult {
             database.podcastQueries.insertPodcast(feed.url, feed.title)
             feed.episodes.forEach {
                 database.episodeQueries.insertEpisode(
-                    SqlEpisode(
-                        id = it.id,
-                        title = it.title,
-                        subTitle = it.subTitle,
-                        description = it.description,
-                        audioUrl = it.audioUrl,
-                        imageUrl = it.imageUrl,
-                        author = it.author,
-                        playbackPosition = it.playbackPosition,
-                        isPlaying = it.isPlaying,
-                        podcastUrl = feed.url,
-                    )
+                    it.toSqlEpisode()
                 )
             }
 
@@ -64,23 +52,42 @@ class FeedLocalDataSource constructor(private val database: CastawayDatabase) :
     override suspend fun saveEpisode(episode: Episode): Result<Episode> {
         val savedEpisode: Episode = database.episodeQueries.transactionWithResult {
             database.episodeQueries.insertEpisode(
-                SqlEpisode(
-                    id = episode.id,
-                    title = episode.title,
-                    subTitle = episode.subTitle,
-                    description = episode.description,
-                    audioUrl = episode.audioUrl,
-                    imageUrl = episode.imageUrl,
-                    author = episode.author,
-                    playbackPosition = episode.playbackPosition,
-                    isPlaying = episode.isPlaying,
-                    podcastUrl = episode.podcastUrl,
-                )
+                episode.toSqlEpisode()
             )
 
             episode
         }
 
         return Result.Success(savedEpisode)
+    }
+
+    private fun SqlEpisode.toEpisode(): Episode {
+        return Episode(
+            id = this.id,
+            title = this.title,
+            subTitle = this.subTitle,
+            description = this.description,
+            audioUrl = this.audioUrl,
+            imageUrl = this.imageUrl,
+            author = this.author,
+            playbackPosition = this.playbackPosition ?: PlaybackPosition(0),
+            isPlaying = this.isPlaying ?: false,
+            podcastUrl = this.podcastUrl,
+        )
+    }
+
+    private fun Episode.toSqlEpisode(): SqlEpisode {
+        return SqlEpisode(
+            id = this.id,
+            title = this.title,
+            subTitle = this.subTitle,
+            description = this.description,
+            audioUrl = this.audioUrl,
+            imageUrl = this.imageUrl,
+            author = this.author,
+            playbackPosition = this.playbackPosition,
+            isPlaying = this.isPlaying,
+            podcastUrl = this.podcastUrl,
+        )
     }
 }

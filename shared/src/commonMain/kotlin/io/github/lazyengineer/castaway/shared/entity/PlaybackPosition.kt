@@ -19,7 +19,7 @@ data class PlaybackPosition(
             }
 
             override fun encode(value: PlaybackPosition): String {
-                return "${value.position}, ${value.duration}"
+                return "${value.position},${value.duration}"
             }
         }
     }

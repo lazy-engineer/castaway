@@ -11,7 +11,7 @@ lateinit var appContext: Context
 actual fun createDb(): CastawayDatabase {
     val driver = AndroidSqliteDriver(CastawayDatabase.Schema, appContext, "castaway.db")
     return CastawayDatabase(
-        driver, EpisodeAdapter = Episode.Adapter(
+        driver, episodeAdapter = Episode.Adapter(
             playbackPositionAdapter = playbackPositionAdapter
         )
     )

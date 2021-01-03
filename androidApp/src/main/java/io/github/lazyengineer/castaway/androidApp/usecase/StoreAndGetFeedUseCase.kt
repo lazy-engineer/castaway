@@ -20,7 +20,7 @@ class StoreAndGetFeedUseCase constructor(
 ) : UseCase<FeedData, String>() {
 
     override suspend fun run(url: String): Result<FeedData> {
-        return when (val feedXmlResult = feedRepository.fetchFeed(url)) {
+        return when (val feedXmlResult = feedRepository.fetchXml(url)) {
             is Result.Success -> {
                 val factory = XmlPullParserFactory.newInstance()
                 val xmlPullParser = factory.newPullParser()

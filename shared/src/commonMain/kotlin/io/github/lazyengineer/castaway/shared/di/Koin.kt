@@ -4,6 +4,8 @@ import io.github.lazyengineer.castaway.shared.database.FeedLocalDataSource
 import io.github.lazyengineer.castaway.shared.database.createDb
 import io.github.lazyengineer.castaway.shared.repository.FeedRepository
 import io.github.lazyengineer.castaway.shared.usecase.GetFeedUseCase
+import io.github.lazyengineer.castaway.shared.usecase.GetStoredEpisodesUseCase
+import io.github.lazyengineer.castaway.shared.usecase.GetStoredFeedUseCase
 import io.github.lazyengineer.castaway.shared.webservice.FeedRemoteDataSource
 import io.ktor.client.*
 import org.koin.core.context.startKoin
@@ -27,6 +29,8 @@ private val coreModule = module {
         )
     }
     single { GetFeedUseCase(get() as FeedRepository) }
+    single { GetStoredFeedUseCase(get() as FeedRepository) }
+    single { GetStoredEpisodesUseCase(get() as FeedRepository) }
 }
 
 expect val platformModule: Module

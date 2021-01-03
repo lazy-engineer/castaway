@@ -9,6 +9,6 @@ class GetFeedUseCase constructor(
 ) : UseCase<String, String>() {
 
 	override suspend fun run(url: String): Result<String> {
-		return feedRepository.fetchFeed(url)
+		return feedRepository.fetchXml(url)
 	}
 }

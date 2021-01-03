@@ -1,8 +1,6 @@
 package io.github.lazyengineer.castaway.shared.repository
 
 import io.github.lazyengineer.castaway.shared.common.Result
-import io.github.lazyengineer.castaway.shared.common.Result.Error
-import io.github.lazyengineer.castaway.shared.common.Result.Success
 import io.github.lazyengineer.castaway.shared.database.LocalFeedDataSource
 import io.github.lazyengineer.castaway.shared.entity.Episode
 import io.github.lazyengineer.castaway.shared.entity.FeedData
@@ -21,14 +19,15 @@ class FeedRepository constructor(
 		return localDataSource.saveEpisode(episode)
 	}
 
-	override suspend fun fetchFeed(url: String): Result<String> {
+	override suspend fun fetchXml(url: String): Result<String> {
 		return remoteDataSource.fetchFeed(url)
 	}
 
 	override suspend fun loadLocally(url: String): Result<FeedData> {
-		return when (val localFeed = localDataSource.loadFeed(url)) {
-			is Success -> localFeed
-			is Error -> Error(Exception())
-		}
+		return localDataSource.loadFeed(url)
+	}
+
+	override suspend fun loadEpisodes(episodeIds: List<String>): Result<List<Episode>> {
+		return localDataSource.loadEpisodes(episodeIds)
 	}
 }

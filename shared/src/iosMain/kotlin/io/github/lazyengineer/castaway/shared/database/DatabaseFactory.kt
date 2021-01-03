@@ -8,7 +8,7 @@ import iogithublazyengineercastawaydb.Episode
 actual fun createDb(): CastawayDatabase {
     val driver = NativeSqliteDriver(CastawayDatabase.Schema, "castaway.db")
     return CastawayDatabase(
-        driver, EpisodeAdapter = Episode.Adapter(
+        driver, episodeAdapter = Episode.Adapter(
             playbackPositionAdapter = playbackPositionAdapter
         )
     )
