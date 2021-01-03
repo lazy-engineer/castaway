@@ -12,9 +12,9 @@ import io.github.lazyengineer.castaway.androidApp.view.MediaPlayerFragment
 import io.github.lazyengineer.castaway.shared.entity.Episode
 import io.github.lazyengineer.castaway.shared.entity.FeedData
 import io.github.lazyengineer.castaway.shared.entity.PlaybackPosition
+import io.github.lazyengineer.castaway.shared.usecase.GetStoredFeedUseCase
 import io.github.lazyengineer.castawayplayer.MediaServiceClient
 import io.github.lazyengineer.castawayplayer.extention.isPlaying
-import io.github.lazyengineer.castawayplayer.service.Constants.MEDIA_DESCRIPTION_EXTRAS_START_PLAYBACK_POSITION_MS
 import io.github.lazyengineer.castawayplayer.service.Constants.MEDIA_ROOT_ID
 import io.github.lazyengineer.castawayplayer.source.MediaData
 import kotlinx.coroutines.Dispatchers
@@ -24,6 +24,7 @@ import kotlinx.coroutines.withContext
 
 class MainViewModel constructor(
     private val mediaServiceClient: MediaServiceClient,
+    private val getStoredFeedUseCase: GetStoredFeedUseCase,
     private val storeAndGetFeedUseCase: StoreAndGetFeedUseCase,
 ) : ViewModel() {
 
@@ -33,32 +34,17 @@ class MainViewModel constructor(
             children: MutableList<MediaItem>
         ) {
             super.onChildrenLoaded(parentId, children)
-            val items = children.map {
-                Episode(
-                    id = it.mediaId!!,
-                    title = it.description.title.toString(),
-                    subTitle = it.description.subtitle.toString(),
-                    description = it.description.description.toString(),
-                    audioUrl = it.description.mediaUri.toString(),
-                    imageUrl = it.description.iconUri.toString(),
-                    author = "",
-                    playbackPosition = PlaybackPosition(
-                        position = it.description.extras?.getLong(
-                            MEDIA_DESCRIPTION_EXTRAS_START_PLAYBACK_POSITION_MS
-                        ) ?: 0
-                    ),
-                    isPlaying = playingState(it.mediaId!!),
-                    podcastUrl = TEST_URL,
-                )
+            viewModelScope.launch {
+                loadFeed(TEST_URL)
             }
-
-            _feed.postValue(
-                FeedData(
-                    url = TEST_URL,
-                    title = "Android Backstage",
-                    episodes = items
-                )
-            )
+            /**
+             * Usually we would load list of episodes here:
+             *
+             * viewModelScope.launch {
+             *  loadEpisodes(episodeIds)
+             * }
+             *
+             */
         }
     }
 
@@ -145,6 +131,18 @@ class MainViewModel constructor(
     fun fetchFeed() {
         viewModelScope.launch {
             fetchFeedFromUrl(TEST_URL)
+        }
+    }
+
+    private suspend fun loadFeed(url: String) {
+        withContext(Dispatchers.IO) {
+            getStoredFeedUseCase(
+                url,
+                onSuccess = {
+                    _feed.postValue(it)
+                },
+                onError = {},
+            )
         }
     }
 
