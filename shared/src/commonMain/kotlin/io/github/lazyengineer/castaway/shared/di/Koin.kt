@@ -19,6 +19,9 @@ fun initKoin(appDeclaration: KoinAppDeclaration = {}) =
         modules(coreModule, platformModule)
     }
 
+// called by iOS etc
+fun initKoin() = initKoin {}
+
 private val coreModule = module {
     single { createDb() }
     single { HttpClient() }
