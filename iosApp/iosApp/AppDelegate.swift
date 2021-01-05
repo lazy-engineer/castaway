@@ -4,11 +4,14 @@ import shared
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
-
-
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
-        KoinKt.doInitKoin()
+        initKoin()
         return true
+    }
+    
+    private var _koin: Koin_coreKoin? = nil
+    var koin: Koin_coreKoin {
+        return _koin!
     }
 
     // MARK: UISceneSession Lifecycle

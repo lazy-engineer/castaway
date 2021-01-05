@@ -31,7 +31,7 @@ private val coreModule = module {
             localDataSource = FeedLocalDataSource(get())
         )
     }
-    single { GetFeedUseCase(get() as FeedRepository) }
+    single { GetFeedUseCase() }
     single { GetStoredFeedUseCase(get() as FeedRepository) }
     single { GetStoredEpisodesUseCase(get() as FeedRepository) }
 }

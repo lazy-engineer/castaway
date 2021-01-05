@@ -6,8 +6,14 @@ func greet() -> String {
 }
 
 struct ContentView: View {
+    
+    var viewModel = CastawayViewModel(getFeedUseCase: GetFeedUseCase())
+    
     var body: some View {
-        Text(greet())
+        List {
+            Text(greet())
+            Text(viewModel.fetchFeed())
+        }
     }
 }
 
