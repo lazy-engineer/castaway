@@ -33,6 +33,7 @@ object Version {
   const val ktor = "1.5.0"
   const val sqldelight = "1.4.3"
   const val feedparser = "0.1.0"
+  const val stately = "1.1.0"
 
   const val junit = "4.13.1"
   const val androidJunit = "1.1.2"
@@ -77,6 +78,7 @@ object Library {
   const val sqldelightAndroid = "com.squareup.sqldelight:android-driver:${Version.sqldelight}"
   const val sqldelightIOS = "com.squareup.sqldelight:native-driver:${Version.sqldelight}"
   const val feedparser = "io.github.lazy-engineer:feedparser:${Version.feedparser}"
+  const val stately = "co.touchlab:stately-common:${Version.stately}"
 
   const val coroutines = "org.jetbrains.kotlinx:kotlinx-coroutines-core:${Version.coroutines}"
   const val coroutinesAndroid = "org.jetbrains.kotlinx:kotlinx-coroutines-android:${Version.coroutines}"

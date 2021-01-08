@@ -30,6 +30,7 @@ kotlin {
             dependencies {
                 implementation(Library.koin)
                 implementation(Library.ktor)
+                implementation(Library.stately)
                 implementation(Library.sqldelight)
             }
         }
