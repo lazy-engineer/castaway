@@ -2,13 +2,11 @@ package io.github.lazyengineer.castaway.shared.usecase
 
 import io.github.lazyengineer.castaway.shared.common.Result
 import io.github.lazyengineer.castaway.shared.common.UseCase
-import io.github.lazyengineer.castaway.shared.repository.FeedRepository
-import org.koin.core.KoinComponent
-import org.koin.core.inject
+import io.github.lazyengineer.castaway.shared.repository.FeedDataSource
 
-class GetFeedUseCase : UseCase<String, String>(), KoinComponent {
-
-	private val feedRepository: FeedRepository by inject()
+class GetFeedUseCase constructor(
+	private val feedRepository: FeedDataSource
+) : UseCase<String, String>() {
 
 	override suspend fun run(url: String): Result<String> {
 		return feedRepository.fetchXml(url)
