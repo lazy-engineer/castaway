@@ -1,5 +1,6 @@
 package io.github.lazyengineer.castaway.shared.database
 
+import co.touchlab.stately.ensureNeverFrozen
 import io.github.lazyengineer.castaway.db.CastawayDatabase
 import io.github.lazyengineer.castaway.shared.common.Result
 import io.github.lazyengineer.castaway.shared.entity.Episode
@@ -9,6 +10,10 @@ import iogithublazyengineercastawaydb.Episode as SqlEpisode
 
 class FeedLocalDataSource constructor(private val database: CastawayDatabase) :
     LocalFeedDataSource {
+
+    init {
+        ensureNeverFrozen()
+    }
 
     override suspend fun loadFeed(feedUrl: String): Result<FeedData> {
         val feed: FeedData = database.episodeQueries.transactionWithResult {
