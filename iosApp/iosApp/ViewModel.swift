@@ -4,42 +4,24 @@ import FeedKit
 
 class CastawayViewModel: ObservableObject {
     
-    private let getFeedUseCase: GetFeedUseCase
+    private let storeAndGetFeedUseCase: StoreAndGetFeedUseCase
     
-    var rssFeed: RSSFeed?
+    @Published var episodes = [Episode_]()
     
-    
-    init(getFeedUseCase: GetFeedUseCase) {
-        self.getFeedUseCase = getFeedUseCase
+    init() {
+        self.storeAndGetFeedUseCase = StoreAndGetFeedUseCase()
     }
     
-    func fetchFeed() -> String {
-        getFeedUseCase.invoke(params: "https://feeds.feedburner.com/blogspot/androiddevelopersbackstage") { xml in
-            if let data = xml.data(using: String.Encoding(rawValue: String.Encoding.utf8.rawValue).rawValue) {
-                let parser = FeedParser(data: data)
-                parser.parseAsync(queue: DispatchQueue.global(qos: .userInitiated)) { (result) in
-                    switch result {
-                    case .success(let feed):
-                        
-                        print(feed.rssFeed?.title)
-                        print(feed.rssFeed?.link)
-                        print(feed.rssFeed?.items?.count)
-        
-                    case .failure(let error):
-                        print(error)
-                    }
-                    
-                    DispatchQueue.main.async {
-                        // ..and update the UI
-                    }
-                }
+    func fetchFeed() {
+        self.storeAndGetFeedUseCase.run(url: "https://feeds.feedburner.com/blogspot/androiddevelopersbackstage") { result in
+            switch result {
+            case .success(let feed):
+                print(feed)
+                self.episodes = feed.episodes
+                
+            case .failure(let error):
+                print(error)
             }
-        } onError: { _ in
-        } completionHandler: { (unit: KotlinUnit?, _: Error?) in
-            
         }
-        
-        return "fetched"
     }
-
 }

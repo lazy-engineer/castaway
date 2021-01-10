@@ -7,12 +7,13 @@ func greet() -> String {
 
 struct ContentView: View {
     
-    var viewModel = CastawayViewModel(getFeedUseCase: GetFeedUseCase())
+    @ObservedObject var viewModel = CastawayViewModel()
     
     var body: some View {
-        List {
-            Text(greet())
-            Text(viewModel.fetchFeed())
+        List(viewModel.episodes, id: \.id) { episode in
+            Text(episode.title)
+        }.onAppear {
+            self.viewModel.fetchFeed()
         }
     }
 }
