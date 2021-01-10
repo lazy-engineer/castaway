@@ -29,8 +29,9 @@ kotlin {
         val commonMain by getting {
             dependencies {
                 implementation(Library.koin)
-                implementation(Library.ktor)
+                implementation(Library.coroutines)
                 implementation(Library.stately)
+                implementation(Library.ktor)
                 implementation(Library.sqldelight)
             }
         }
