@@ -44,7 +44,7 @@ class FeedLocalDataSource constructor(private val database: CastawayDatabase) :
             database.podcastQueries.insertPodcast(feed.url, feed.title)
             feed.episodes.forEach {
                 database.episodeQueries.insertEpisode(
-                    it.toSqlEpisode()
+                    it.toEpisodeEntity()
                 )
             }
 
@@ -57,7 +57,7 @@ class FeedLocalDataSource constructor(private val database: CastawayDatabase) :
     override suspend fun saveEpisode(episode: Episode): Result<Episode> {
         val savedEpisode: Episode = database.episodeQueries.transactionWithResult {
             database.episodeQueries.insertEpisode(
-                episode.toSqlEpisode()
+                episode.toEpisodeEntity()
             )
 
             episode
@@ -81,7 +81,7 @@ class FeedLocalDataSource constructor(private val database: CastawayDatabase) :
         )
     }
 
-    private fun Episode.toSqlEpisode(): EpisodeEntity {
+    private fun Episode.toEpisodeEntity(): EpisodeEntity {
         return EpisodeEntity(
             id = this.id,
             title = this.title,
