@@ -75,12 +75,25 @@ class StoreAndGetFeedUseCase {
 
 extension RSSFeed {
     func toFeedData(url: String) -> FeedData {
-        return FeedData(url: url, title: self.title!, episodes: self.items!.map({ $0.toEpisode(url: url) }))
+        return FeedData(
+            url: url,
+            title: self.title!,
+            episodes: self.items!.map({ $0.toEpisode(url: url) }))
     }
 }
 
 extension RSSFeedItem {
-    func toEpisode(url: String) -> Episode_ {
-        return Episode_(id: UUID.init().uuidString, title: self.title!, subTitle: self.iTunes?.iTunesSubtitle, description: self.description, audioUrl: (self.media?.mediaContents!.first!.attributes!.url)!, imageUrl: nil, author: self.author, playbackPosition: PlaybackPosition(position: 0, duration: nil, percentage: nil), isPlaying: false, podcastUrl: url)
+    func toEpisode(url: String) -> Episode {
+        return Episode(
+            id: UUID.init().uuidString,
+            title: self.title!,
+            subTitle: self.iTunes?.iTunesSubtitle,
+            description: self.description,
+            audioUrl: (self.media?.mediaContents!.first!.attributes!.url)!,
+            imageUrl: nil,
+            author: self.author,
+            playbackPosition: PlaybackPosition(position: 0, duration: nil, percentage: nil),
+            isPlaying: false,
+            podcastUrl: url)
     }
 }

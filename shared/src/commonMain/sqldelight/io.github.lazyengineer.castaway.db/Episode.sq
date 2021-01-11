@@ -1,6 +1,6 @@
 import io.github.lazyengineer.castaway.shared.entity.PlaybackPosition;
 
-CREATE TABLE episode(
+CREATE TABLE episodeEntity(
 id TEXT NOT NULL PRIMARY KEY,
 title TEXT NOT NULL,
 subTitle TEXT,
@@ -15,35 +15,35 @@ FOREIGN KEY(podcastUrl) REFERENCES podcast(url)
 );
 
 insertEpisode:
-INSERT INTO episode VALUES ?;
+INSERT INTO episodeEntity VALUES ?;
 
 selectById:
 SELECT *
-FROM episode
+FROM episodeEntity
 WHERE id = ?;
 
 selectByPodcast:
 SELECT *
-FROM episode
+FROM episodeEntity
 WHERE podcastUrl = ?;
 
 selectByIds:
 SELECT *
-FROM episode
+FROM episodeEntity
 WHERE id IN ?;
 
 selectAll:
-SELECT * FROM episode;
+SELECT * FROM episodeEntity;
 
 deleteById:
 DELETE
-FROM episode
+FROM episodeEntity
 WHERE id = ?;
 
 deleteByPodcast:
 DELETE
-FROM episode
+FROM episodeEntity
 WHERE podcastUrl = ?;
 
 deleteAll:
-DELETE FROM episode;
+DELETE FROM episodeEntity;

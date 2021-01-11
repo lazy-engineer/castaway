@@ -6,7 +6,7 @@ import io.github.lazyengineer.castaway.shared.common.Result
 import io.github.lazyengineer.castaway.shared.entity.Episode
 import io.github.lazyengineer.castaway.shared.entity.FeedData
 import io.github.lazyengineer.castaway.shared.entity.PlaybackPosition
-import iogithublazyengineercastawaydb.Episode as SqlEpisode
+import iogithublazyengineercastawaydb.EpisodeEntity
 
 class FeedLocalDataSource constructor(private val database: CastawayDatabase) :
     LocalFeedDataSource {
@@ -66,7 +66,7 @@ class FeedLocalDataSource constructor(private val database: CastawayDatabase) :
         return Result.Success(savedEpisode)
     }
 
-    private fun SqlEpisode.toEpisode(): Episode {
+    private fun EpisodeEntity.toEpisode(): Episode {
         return Episode(
             id = this.id,
             title = this.title,
@@ -81,8 +81,8 @@ class FeedLocalDataSource constructor(private val database: CastawayDatabase) :
         )
     }
 
-    private fun Episode.toSqlEpisode(): SqlEpisode {
-        return SqlEpisode(
+    private fun Episode.toSqlEpisode(): EpisodeEntity {
+        return EpisodeEntity(
             id = this.id,
             title = this.title,
             subTitle = this.subTitle,

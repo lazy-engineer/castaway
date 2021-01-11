@@ -6,7 +6,7 @@ class CastawayViewModel: ObservableObject {
     
     private let storeAndGetFeedUseCase: StoreAndGetFeedUseCase
     
-    @Published var episodes = [Episode_]()
+    @Published var episodes = [Episode]()
     
     init() {
         self.storeAndGetFeedUseCase = StoreAndGetFeedUseCase()
