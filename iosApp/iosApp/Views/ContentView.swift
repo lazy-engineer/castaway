@@ -8,10 +8,11 @@ func greet() -> String {
 struct ContentView: View {
     
     @ObservedObject var viewModel = CastawayViewModel()
-    
+  
     var body: some View {
+        
         List(viewModel.episodes, id: \.id) { episode in
-            Text(episode.title)
+            EpisodeRowView(episode: episode)
         }.onAppear {
             self.viewModel.fetchFeed()
         }
