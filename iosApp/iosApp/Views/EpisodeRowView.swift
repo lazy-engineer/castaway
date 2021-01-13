@@ -5,28 +5,26 @@ import shared
 
 struct EpisodeRowView: View {
     
-    private let episode: Episode
-    private let localPlayer = AVQueuePlayer.init()
+    let onPlayPause: (Bool) -> Void
     
-    init(episode: Episode) {
+    private let episode: Episode
+    
+    init(episode: Episode, onPlayPause: @escaping (Bool) -> Void) {
         self.episode = episode
+        self.onPlayPause = onPlayPause
     }
     
-    @State var playerPaused = true
+    @State var isPlaying = false
 
     var body: some View {
         HStack {
             Text(episode.title)
                 .frame(minWidth: 0, maxWidth: .infinity, alignment: .leading)
             Button(action: {
-                self.playerPaused.toggle()
-                playPauseEpisode(
-                    episodeUrl: episode.audioUrl,
-                    player: localPlayer,
-                    playState: playerPaused
-                )
+                self.isPlaying.toggle()
+                self.onPlayPause(isPlaying)
             }) {
-                Image(systemName: playerPaused ? "play" : "pause")
+                Image(systemName: isPlaying ? "pause" : "play")
                     .foregroundColor(.blue)
                     .padding()
             }
@@ -34,29 +32,15 @@ struct EpisodeRowView: View {
     }
 }
 
-fileprivate func playPauseEpisode(episodeUrl: String, player: AVQueuePlayer, playState: Bool) {
-    let url : URL? = URL.init(string: episodeUrl)
-    if url != nil {
-        let playerItem = AVPlayerItem.init(url: url!)
-        player.insert(playerItem, after: nil)
-    }
-    
-    if playState {
-        player.pause()
-    } else {
-        player.play()
-    }
-}
-
 struct EpisodeRowView_Previews: PreviewProvider {
     static var previews: some View {
         Group {
-            EpisodeRowView(episode: dummy_episode_1)
+            EpisodeRowView(episode: dummy_episode_1) {_ in }
                 .previewLayout(.fixed(width: 360.0, height: 60.0))
-            EpisodeRowView(episode: dummy_episode_1)
+            EpisodeRowView(episode: dummy_episode_1) {_ in }
                 .preferredColorScheme(.dark)
                 .previewLayout(.fixed(width: 360.0, height: 60.0))
-            EpisodeRowView(episode: dummy_episode_2)
+            EpisodeRowView(episode: dummy_episode_2) {_ in }
                 .previewLayout(.fixed(width: 360.0, height: 60.0))
         }
     }

@@ -8,11 +8,15 @@ func greet() -> String {
 struct ContentView: View {
     
     @ObservedObject var viewModel = CastawayViewModel()
-  
+    
     var body: some View {
-        
         List(viewModel.episodes, id: \.id) { episode in
-            EpisodeRowView(episode: episode)
+            EpisodeRowView(episode: episode) { playing in
+                self.viewModel.playPauseEpisode(
+                    episodeUrl: episode.audioUrl,
+                    playState: playing
+                )
+            }
         }.onAppear {
             self.viewModel.fetchFeed()
         }
