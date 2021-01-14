@@ -6,11 +6,11 @@ import AVKit
 class CastawayViewModel: ObservableObject {
     
     private let storeAndGetFeedUseCase: StoreAndGetFeedUseCase
-    private let localPlayer = AVPlayer.init()
+    private let player = CastawayPlayer()
     
     @Published var episodes = [Episode]()
     @Published var currentEpisode: Episode?
-   
+    
     init() {
         self.storeAndGetFeedUseCase = StoreAndGetFeedUseCase()
     }
@@ -27,52 +27,39 @@ class CastawayViewModel: ObservableObject {
         }
     }
     
-    func playPauseEpisode(episodeUrl: String, playState: Bool) {
-        let url : URL? = URL.init(string: episodeUrl)
-        if url != nil {
-            let playerItem = AVPlayerItem.init(url: url!)
-            localPlayer.replaceCurrentItem(with: playerItem)
-        }
+    func mediaItemClicked(clickedItemId: String) {
         
-        if playState {
-            localPlayer.play()
-        } else {
-            localPlayer.pause()
-        }
     }
     
-    func mediaItemClicked(clickedItemId: String) {
-       
+    func episodeClicked(episode: Episode, playState: Bool) {        
+        self.currentEpisode = episode
+        self.player.playPause(mediaId: episode.audioUrl, playState: playState)
     }
-
-    func episodeClicked(episode: Episode) {
-       
-    }
-
+    
     func forwardCurrentItem() {
-        
+        self.player.fastForward()
     }
-
+    
     func replayCurrentItem() {
-       
+        self.player.rewind()
     }
-
+    
     func skipToPrevious() {
-       
+        self.player.skipToPrevious()
     }
-
+    
     func skipToNext() {
-
+        self.player.skipToNext()
     }
-
+    
     func seekTo(positionMillis: Int) {
-      
+        self.player.seekTo(position: positionMillis)
     }
-
+    
     func playbackSpeed(speed: Float) {
-       
+        self.player.speed(speed: speed)
     }
-
+    
     private func playingState(mediaId: String) -> Bool {
         return false
     }

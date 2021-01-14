@@ -1,28 +1,25 @@
 import SwiftUI
-import AVKit
 import shared
 
 
 struct EpisodeRowView: View {
     
-    let onPlayPause: (Bool) -> Void
-    
-    private let episode: Episode
-    
-    init(episode: Episode, onPlayPause: @escaping (Bool) -> Void) {
-        self.episode = episode
+    private let onPlayPause: (Bool) -> Void
+    @State var episode: Episode
+    private let isPlaying: Bool
+   
+    init(episode: Episode, playing: Bool, onPlayPause: @escaping (Bool) -> Void) {
         self.onPlayPause = onPlayPause
+        _episode = State(initialValue: episode)
+        self.isPlaying = playing
     }
     
-    @State var isPlaying = false
-
     var body: some View {
         HStack {
             Text(episode.title)
                 .frame(minWidth: 0, maxWidth: .infinity, alignment: .leading)
             Button(action: {
-                self.isPlaying.toggle()
-                self.onPlayPause(isPlaying)
+                self.onPlayPause(!isPlaying)
             }) {
                 Image(systemName: isPlaying ? "pause" : "play")
                     .foregroundColor(.blue)
@@ -32,15 +29,16 @@ struct EpisodeRowView: View {
     }
 }
 
+#if DEBUG
 struct EpisodeRowView_Previews: PreviewProvider {
     static var previews: some View {
         Group {
-            EpisodeRowView(episode: dummy_episode_1) {_ in }
+            EpisodeRowView(episode: dummy_episode_1, playing: false) {_ in }
                 .previewLayout(.fixed(width: 360.0, height: 60.0))
-            EpisodeRowView(episode: dummy_episode_1) {_ in }
+            EpisodeRowView(episode: dummy_episode_1, playing: true) {_ in }
                 .preferredColorScheme(.dark)
                 .previewLayout(.fixed(width: 360.0, height: 60.0))
-            EpisodeRowView(episode: dummy_episode_2) {_ in }
+            EpisodeRowView(episode: dummy_episode_2, playing: false) {_ in }
                 .previewLayout(.fixed(width: 360.0, height: 60.0))
         }
     }
@@ -49,3 +47,4 @@ struct EpisodeRowView_Previews: PreviewProvider {
 let dummy_episode_1 = Episode(id: "String", title: "ADB 148: [Constraint|Motion][Layout|Editor] Tooooooooo Long Title. Wow even longer", subTitle: "String?", description: "String?", audioUrl: "String", imageUrl: "String?", author: "String?", playbackPosition: PlaybackPosition(position: 0, duration: nil, percentage: nil), isPlaying: false, podcastUrl: "String")
 
 let dummy_episode_2 = Episode(id: "String", title: "Episode 154: It's a Wrap!", subTitle: "String?", description: "String?", audioUrl: "String", imageUrl: "String?", author: "String?", playbackPosition: PlaybackPosition(position: 0, duration: nil, percentage: nil), isPlaying: false, podcastUrl: "String")
+#endif
