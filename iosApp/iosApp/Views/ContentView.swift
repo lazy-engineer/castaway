@@ -10,10 +10,10 @@ struct ContentView: View {
     @ObservedObject var viewModel = CastawayViewModel()
     
     var body: some View {
-        List(viewModel.episodes, id: \.id) { episode in
+        List(self.viewModel.episodes, id: \.id) { episode in
             EpisodeRowView(
                 episode: episode,
-                playing: episodePlaying(currentEpisode: self.viewModel.currentEpisode, episode: episode)
+                playing: self.viewModel.currentEpisode?.id == episode.id
             ) { playing in
                 self.viewModel.episodeClicked(episode: episode, playState: playing)
             }
@@ -22,16 +22,6 @@ struct ContentView: View {
         }
     }
 }
-
-private func episodePlaying(currentEpisode: Episode?, episode: Episode) -> Bool {
-    var playing = false
-    if (currentEpisode != nil) {
-        playing = currentEpisode!.id == episode.id
-    }
-    
-    return playing
-}
-
 
 #if DEBUG
 struct ContentView_Previews: PreviewProvider {

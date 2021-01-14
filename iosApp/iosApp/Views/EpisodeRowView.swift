@@ -3,25 +3,19 @@ import shared
 
 
 struct EpisodeRowView: View {
-    
-    private let onPlayPause: (Bool) -> Void
-    @State var episode: Episode
-    private let isPlaying: Bool
    
-    init(episode: Episode, playing: Bool, onPlayPause: @escaping (Bool) -> Void) {
-        self.onPlayPause = onPlayPause
-        _episode = State(initialValue: episode)
-        self.isPlaying = playing
-    }
-    
+    @State var episode: Episode
+    let playing: Bool
+    let onPlayPause: (Bool) -> Void
+   
     var body: some View {
         HStack {
             Text(episode.title)
                 .frame(minWidth: 0, maxWidth: .infinity, alignment: .leading)
             Button(action: {
-                self.onPlayPause(!isPlaying)
+                self.onPlayPause(!playing)
             }) {
-                Image(systemName: isPlaying ? "pause" : "play")
+                Image(systemName: playing ? "pause" : "play")
                     .foregroundColor(.blue)
                     .padding()
             }
@@ -33,9 +27,9 @@ struct EpisodeRowView: View {
 struct EpisodeRowView_Previews: PreviewProvider {
     static var previews: some View {
         Group {
-            EpisodeRowView(episode: dummy_episode_1, playing: false) {_ in }
-                .previewLayout(.fixed(width: 360.0, height: 60.0))
             EpisodeRowView(episode: dummy_episode_1, playing: true) {_ in }
+                .previewLayout(.fixed(width: 360.0, height: 60.0))
+            EpisodeRowView(episode: dummy_episode_1, playing: false) {_ in }
                 .preferredColorScheme(.dark)
                 .previewLayout(.fixed(width: 360.0, height: 60.0))
             EpisodeRowView(episode: dummy_episode_2, playing: false) {_ in }
