@@ -1,12 +1,33 @@
 import Foundation
 import AVKit
+import Combine
 
 class CastawayPlayer {
     
     private let player: AVPlayer
-    
+    private var timeObserverToken: Any?
+    let playbackTimePublisher = PassthroughSubject<TimeInterval, Never>()
+        
     init() {
         self.player = AVPlayer.init()
+        addPeriodicTimeObserver()
+    }
+    
+    func addPeriodicTimeObserver() {
+        let timeScale = CMTimeScale(NSEC_PER_SEC)
+        let time = CMTime(seconds: 0.1, preferredTimescale: timeScale)
+
+        timeObserverToken = player.addPeriodicTimeObserver(forInterval: time, queue: .main) { [weak self] time in
+            guard let self = self else { return }
+            self.playbackTimePublisher.send(time.seconds)
+        }
+    }
+
+    func removePeriodicTimeObserver() {
+        if let timeObserverToken = timeObserverToken {
+            player.removeTimeObserver(timeObserverToken)
+            self.timeObserverToken = nil
+        }
     }
     
     func subscribe() {
