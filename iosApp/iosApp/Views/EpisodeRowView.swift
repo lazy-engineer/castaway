@@ -6,20 +6,31 @@ struct EpisodeRowView: View {
    
     @State var episode: Episode
     let playing: Bool
+    let playbbackTime: TimeInterval
     let onPlayPause: (Bool) -> Void
    
     var body: some View {
-        HStack {
-            Text(episode.title)
-                .frame(minWidth: 0, maxWidth: .infinity, alignment: .leading)
-            Button(action: {
-                self.onPlayPause(!playing)
-            }) {
-                Image(systemName: playing ? "pause" : "play")
-                    .foregroundColor(.blue)
-                    .padding()
+        VStack {
+            HStack {
+                Text(episode.title)
+                    .frame(minWidth: 0, maxWidth: .infinity, alignment: .leading)
+                Button(action: {
+                    self.onPlayPause(!playing)
+                }) {
+                    Image(systemName: playing ? "pause" : "play")
+                        .foregroundColor(.blue)
+                        .padding()
+                }
+            }.frame(height: 60)
+            
+            if #available(iOS 14.0, *) {
+                ProgressView(value: playing ? playbbackTime : 0, total: 1000)
+            } else {
+                // Fallback on earlier versions
             }
-        }.frame(height: 60)
+            
+        }
+       
     }
 }
 
@@ -27,12 +38,12 @@ struct EpisodeRowView: View {
 struct EpisodeRowView_Previews: PreviewProvider {
     static var previews: some View {
         Group {
-            EpisodeRowView(episode: dummy_episode_1, playing: true) {_ in }
+            EpisodeRowView(episode: dummy_episode_1, playing: true, playbbackTime: 0) {_ in }
                 .previewLayout(.fixed(width: 360.0, height: 60.0))
-            EpisodeRowView(episode: dummy_episode_1, playing: false) {_ in }
+            EpisodeRowView(episode: dummy_episode_1, playing: false, playbbackTime: 0) {_ in }
                 .preferredColorScheme(.dark)
                 .previewLayout(.fixed(width: 360.0, height: 60.0))
-            EpisodeRowView(episode: dummy_episode_2, playing: false) {_ in }
+            EpisodeRowView(episode: dummy_episode_2, playing: false, playbbackTime: 0.0) {_ in }
                 .previewLayout(.fixed(width: 360.0, height: 60.0))
         }
     }

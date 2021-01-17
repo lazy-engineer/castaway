@@ -2,6 +2,7 @@ import Foundation
 import shared
 import FeedKit
 import AVKit
+import Combine
 
 class CastawayViewModel: ObservableObject {
     
@@ -10,9 +11,11 @@ class CastawayViewModel: ObservableObject {
     
     @Published var episodes = [Episode]()
     @Published var currentEpisode: Episode?
+    var playbackTimePublisher: PassthroughSubject<TimeInterval, Never>
     
     init() {
         self.storeAndGetFeedUseCase = StoreAndGetFeedUseCase()
+        self.playbackTimePublisher = self.player.playbackTimePublisher
     }
     
     func fetchFeed() {
