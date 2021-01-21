@@ -7,6 +7,7 @@ import Combine
 class CastawayViewModel: ObservableObject {
     
     private let storeAndGetFeedUseCase: StoreAndGetFeedUseCase
+    private let storeEpisodeUseCase: NativeSaveEpisodeUseCase
     private let player = CastawayPlayer()
     
     @Published var episodes = [Episode]()
@@ -15,6 +16,7 @@ class CastawayViewModel: ObservableObject {
     
     init() {
         self.storeAndGetFeedUseCase = StoreAndGetFeedUseCase()
+        self.storeEpisodeUseCase = NativeSaveEpisodeUseCase()
         self.playbackTimePublisher = self.player.playbackTimePublisher
     }
     
@@ -70,5 +72,16 @@ class CastawayViewModel: ObservableObject {
     
     private func playingState(mediaId: String) -> Bool {
         return false
+    }
+    
+    private func storeEpisode(episode: Episode) {
+        self.storeEpisodeUseCase.run(
+            episode: episode,
+            onSuccess: { storedEpisode in
+                
+            },
+            onError: { error in
+                
+            })
     }
 }
