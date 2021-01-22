@@ -27,6 +27,7 @@ class CastawayPlayer {
         if let timeObserverToken = timeObserverToken {
             player.removeTimeObserver(timeObserverToken)
             self.timeObserverToken = nil
+            player.currentItem?.duration
         }
     }
     
@@ -94,5 +95,13 @@ class CastawayPlayer {
     
     func repeatMode(repeat: Int) {
         
+    }
+    
+    func duration(url: String) -> Float64? {
+        guard let url = URL.init(string: url) else { return nil }
+        
+        let asset = AVURLAsset(url: url)
+        let audioDuration = asset.duration
+        return CMTimeGetSeconds(audioDuration)
     }
 }
