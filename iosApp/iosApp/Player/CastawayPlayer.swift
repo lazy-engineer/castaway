@@ -1,13 +1,14 @@
 import Foundation
 import AVKit
 import Combine
+import shared
 
 class CastawayPlayer {
     
     private let player: AVPlayer
     private var timeObserverToken: Any?
     let playbackTimePublisher = PassthroughSubject<TimeInterval, Never>()
-        
+    
     init() {
         self.player = AVPlayer.init()
         addPeriodicTimeObserver()
@@ -16,13 +17,13 @@ class CastawayPlayer {
     func addPeriodicTimeObserver() {
         let timeScale = CMTimeScale(NSEC_PER_SEC)
         let time = CMTime(seconds: 0.1, preferredTimescale: timeScale)
-
+        
         timeObserverToken = player.addPeriodicTimeObserver(forInterval: time, queue: .main) { [weak self] time in
             guard let self = self else { return }
             self.playbackTimePublisher.send(time.seconds)
         }
     }
-
+    
     func removePeriodicTimeObserver() {
         if let timeObserverToken = timeObserverToken {
             player.removeTimeObserver(timeObserverToken)
@@ -97,11 +98,15 @@ class CastawayPlayer {
         
     }
     
-    func duration(url: String) -> Float64? {
+    func duration(url: String) -> KotlinLong? {
         guard let url = URL.init(string: url) else { return nil }
         
         let asset = AVURLAsset(url: url)
-        let audioDuration = asset.duration
-        return CMTimeGetSeconds(audioDuration)
+        let timemillis = CMTimeConvertScale(
+            asset.duration,
+            timescale:1000,
+            method: CMTimeRoundingMethod.roundHalfAwayFromZero)
+        
+        return KotlinLong(value: timemillis.value)
     }
 }
