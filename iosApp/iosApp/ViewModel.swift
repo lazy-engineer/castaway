@@ -17,7 +17,7 @@ class CastawayViewModel: ObservableObject {
     init() {
         self.storeAndGetFeedUseCase = StoreAndGetFeedUseCase()
         self.storeEpisodeUseCase = NativeSaveEpisodeUseCase()
-        self.playbackTimePublisher = self.player.playbackTimePublisher
+        self.playbackTimePublisher = self.player.playbackTime
     }
     
     func fetchFeed() {
@@ -25,7 +25,6 @@ class CastawayViewModel: ObservableObject {
             switch result {
             case .success(let feed):
                 self.episodes = feed.episodes
-                
             case .failure(let error):
                 print(error)
             }
@@ -37,13 +36,13 @@ class CastawayViewModel: ObservableObject {
     }
     
     func episodeClicked(episode: Episode, playState: Bool) {
+        self.player.playPause(mediaId: episode.audioUrl, playState: playState)
+        
         if episode != currentEpisode {
             self.currentEpisode = episode
         } else {
             self.currentEpisode = nil
         }
-       
-        self.player.playPause(mediaId: episode.audioUrl, playState: playState)
     }
     
     func forwardCurrentItem() {

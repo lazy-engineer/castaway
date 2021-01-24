@@ -7,7 +7,7 @@ class CastawayPlayer {
     
     private let player: AVPlayer
     private var timeObserverToken: Any?
-    let playbackTimePublisher = PassthroughSubject<TimeInterval, Never>()
+    let playbackTime = PassthroughSubject<TimeInterval, Never>()
     
     init() {
         self.player = AVPlayer.init()
