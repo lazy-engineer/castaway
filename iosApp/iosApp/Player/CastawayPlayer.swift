@@ -7,7 +7,14 @@ class CastawayPlayer {
     
     private let player: AVPlayer
     private var timeObserverToken: Any?
+    private var rateObserver: Any?
+    private var statusObserver: Any?
+    private var durationObserver: Any?
+    private var likelyToKeepUpObserver: Any?
+    private var bufferEmptyObserver: Any?
+    
     let playbackTime = PassthroughSubject<TimeInterval, Never>()
+    let nowPlaying = PassthroughSubject<AVPlayerItem, Never>()
     
     init() {
         self.player = AVPlayer.init()
@@ -20,7 +27,35 @@ class CastawayPlayer {
         
         timeObserverToken = player.addPeriodicTimeObserver(forInterval: time, queue: .main) { [weak self] time in
             guard let self = self else { return }
-            self.playbackTimePublisher.send(time.seconds)
+            self.playbackTime.send(time.seconds)
+        }
+    }
+    
+    func obeserver() {
+        // track playback rate
+        rateObserver = player.observe(\.rate, options: [.initial, .old, .new]) { [weak self] (item, change) in
+            guard let self = self else { return }
+        }
+        
+        // track status
+        statusObserver = player.currentItem?.observe(\.status, options: [.initial, .old, .new]) { [weak self] (item, change) in
+            guard let self = self else { return }
+        }
+        
+        // track duration
+        durationObserver = player.currentItem?.observe(\.duration, options: [.initial, .old, .new]) { [weak self] (item, change) in
+            guard let self = self else { return }
+        }
+        
+        // track "likely to keep up"
+        likelyToKeepUpObserver = player.currentItem?.observe(\.isPlaybackLikelyToKeepUp, options: [.initial, .old, .new]) { [weak self] (item, change) in
+            guard let self = self else { return }
+            
+        }
+        
+        // track buffer empty
+        bufferEmptyObserver = player.currentItem?.observe(\.isPlaybackBufferEmpty, options: [.initial, .old, .new]) { [weak self] (item, change) in
+            guard let self = self else { return }
         }
     }
     
@@ -28,7 +63,6 @@ class CastawayPlayer {
         if let timeObserverToken = timeObserverToken {
             player.removeTimeObserver(timeObserverToken)
             self.timeObserverToken = nil
-            player.currentItem?.duration
         }
     }
     
