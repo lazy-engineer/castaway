@@ -8,17 +8,20 @@ class CastawayPlayer {
     private let player: AVPlayer
     private var timeObserverToken: Any?
     private var rateObserver: Any?
+    private var currentItemObserver: Any?
     private var statusObserver: Any?
     private var durationObserver: Any?
     private var likelyToKeepUpObserver: Any?
     private var bufferEmptyObserver: Any?
     
     let playbackTime = PassthroughSubject<TimeInterval, Never>()
+    let playbackSpeed = PassthroughSubject<Float, Never>()
     let nowPlaying = PassthroughSubject<AVPlayerItem, Never>()
     
     init() {
         self.player = AVPlayer.init()
         addPeriodicTimeObserver()
+        observePlayer()
     }
     
     func addPeriodicTimeObserver() {
@@ -31,31 +34,53 @@ class CastawayPlayer {
         }
     }
     
-    func obeserver() {
-        // track playback rate
+    func observePlayer() {
         rateObserver = player.observe(\.rate, options: [.initial, .old, .new]) { [weak self] (item, change) in
             guard let self = self else { return }
+            print("rateObserver: \(change)")
+            
+            if let rate = change.newValue {
+                self.playbackSpeed.send(rate)
+            }
         }
         
-        // track status
-        statusObserver = player.currentItem?.observe(\.status, options: [.initial, .old, .new]) { [weak self] (item, change) in
+        currentItemObserver = player.observe(\.currentItem, options: [.initial, .old, .new]) { [weak self] (item, change) in
             guard let self = self else { return }
+            
+            if let currentItem = change.newValue {
+                self.observePlayerItem()
+                
+                if let unwrappedItem = currentItem {
+                    self.nowPlaying.send(unwrappedItem)
+                }
+            }
+        }
+    }
+    
+    func observePlayerItem() {
+        // track status
+        self.statusObserver = self.player.currentItem?.observe(\.status, options: [.initial, .old, .new]) { [weak self] (item, change) in
+            guard let self = self else { return }
+            print("statusObserver: \(change)")
         }
         
         // track duration
-        durationObserver = player.currentItem?.observe(\.duration, options: [.initial, .old, .new]) { [weak self] (item, change) in
+        self.durationObserver = self.player.currentItem?.observe(\.duration, options: [.initial, .old, .new]) { [weak self] (item, change) in
             guard let self = self else { return }
+            print("durationObserver: \(change)")
         }
         
         // track "likely to keep up"
-        likelyToKeepUpObserver = player.currentItem?.observe(\.isPlaybackLikelyToKeepUp, options: [.initial, .old, .new]) { [weak self] (item, change) in
+        self.likelyToKeepUpObserver = self.player.currentItem?.observe(\.isPlaybackLikelyToKeepUp, options: [.initial, .old, .new]) { [weak self] (item, change) in
             guard let self = self else { return }
+            print("likelyToKeepUpObserver: \(change)")
             
         }
         
         // track buffer empty
-        bufferEmptyObserver = player.currentItem?.observe(\.isPlaybackBufferEmpty, options: [.initial, .old, .new]) { [weak self] (item, change) in
+        self.bufferEmptyObserver = self.player.currentItem?.observe(\.isPlaybackBufferEmpty, options: [.initial, .old, .new]) { [weak self] (item, change) in
             guard let self = self else { return }
+            print("bufferEmptyObserver: \(change)")
         }
     }
     
