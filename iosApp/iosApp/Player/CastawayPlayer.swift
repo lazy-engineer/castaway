@@ -101,7 +101,6 @@ class CastawayPlayer {
     
     func prepare(playlist: [AVPlayerItem]) {
         
-        
     }
     
     func prepare(block: () -> [AVPlayerItem]) {
@@ -146,7 +145,7 @@ class CastawayPlayer {
     }
     
     func speed(speed: Float) {
-        
+        self.player.rate = speed
     }
     
     func shuffle(shuffle: Bool) {
