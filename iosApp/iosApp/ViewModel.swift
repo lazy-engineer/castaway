@@ -36,7 +36,7 @@ class CastawayViewModel: ObservableObject {
     }
     
     func episodeClicked(episode: Episode, playState: Bool) {
-        self.player.playPause(mediaId: episode.audioUrl, playState: playState)
+        self.player.playPause(mediaId: episode.id, playState: playState)
         
         if episode != currentEpisode {
             self.currentEpisode = episode

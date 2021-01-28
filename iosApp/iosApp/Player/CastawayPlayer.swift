@@ -6,6 +6,8 @@ import shared
 class CastawayPlayer {
     
     private let player: AVPlayer
+    private var playerItems = [String : AVPlayerItem]()
+    
     private var timeObserverToken: Any?
     private var rateObserver: Any?
     private var currentItemObserver: Any?
@@ -99,21 +101,20 @@ class CastawayPlayer {
         
     }
     
-    func prepare(playlist: [AVPlayerItem]) {
-        
+    func prepare(playlist: [String : AVPlayerItem]) {
+        self.playerItems = playlist
     }
     
-    func prepare(block: () -> [AVPlayerItem]) {
-        
+    func prepare(block: () -> [String :  AVPlayerItem]) {
+        self.playerItems = block()
     }
     
     func playPause(
         mediaId: String,
         playState: Bool
     ) {
-        let url : URL? = URL.init(string: mediaId)
-        if url != nil {
-            let playerItem = AVPlayerItem.init(url: url!)
+        let playerItem: AVPlayerItem? = playerItems[mediaId]
+        if playerItem != nil {
             self.player.replaceCurrentItem(with: playerItem)
         }
         
