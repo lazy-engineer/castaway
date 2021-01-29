@@ -1,6 +1,7 @@
 import Foundation
 import shared
 import FeedKit
+import AVFoundation
 
 extension Episode {
     func copy(playbackPosition: Int64) -> Episode {
@@ -39,6 +40,12 @@ extension Episode {
             ),
             isPlaying: self.isPlaying,
             podcastUrl: self.podcastUrl)
+    }
+}
+
+extension Episode {
+    func toAVPlayerItem() -> AVPlayerItem {
+        return AVPlayerItem.init(url: URL.init(string: self.audioUrl)!)
     }
 }
 

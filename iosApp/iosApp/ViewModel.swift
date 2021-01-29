@@ -25,8 +25,17 @@ class CastawayViewModel: ObservableObject {
             switch result {
             case .success(let feed):
                 self.episodes = feed.episodes
+                self.preparePlayer(feed.episodes)
             case .failure(let error):
                 print(error)
+            }
+        }
+    }
+    
+    fileprivate func preparePlayer(_ episodes: [Episode]) {
+        self.player.prepare {
+            Dictionary(grouping: episodes, by: { episode in episode.id }).mapValues { episodes in
+                episodes.first!.toAVPlayerItem()
             }
         }
     }
