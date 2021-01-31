@@ -7,6 +7,7 @@ class CastawayPlayer {
     
     private let player: AVPlayer
     private var playerItems = [String : AVPlayerItem]()
+    private var playlist = [String]()
     
     private var timeObserverToken: Any?
     private var rateObserver: Any?
@@ -18,7 +19,8 @@ class CastawayPlayer {
     
     let playbackTime = PassthroughSubject<TimeInterval, Never>()
     let playbackSpeed = PassthroughSubject<Float, Never>()
-    let nowPlaying = PassthroughSubject<AVPlayerItem, Never>()
+    let playbackDuration = PassthroughSubject<KotlinLong, Never>()
+    let nowPlaying = PassthroughSubject<String, Never>()
     
     init() {
         self.player = AVPlayer.init()
@@ -26,17 +28,17 @@ class CastawayPlayer {
         observePlayer()
     }
     
-    func addPeriodicTimeObserver() {
+    fileprivate func addPeriodicTimeObserver() {
         let timeScale = CMTimeScale(NSEC_PER_SEC)
         let time = CMTime(seconds: 0.5, preferredTimescale: timeScale)
         
         timeObserverToken = player.addPeriodicTimeObserver(forInterval: time, queue: .main) { [weak self] time in
             guard let self = self else { return }
-            self.playbackTime.send(time.seconds)
+            self.playbackTime.send(time.seconds * 1000)
         }
     }
     
-    func observePlayer() {
+    fileprivate func observePlayer() {
         rateObserver = player.observe(\.rate, options: [.initial, .old, .new]) { [weak self] (item, change) in
             guard let self = self else { return }
             print("rateObserver: \(change)")
@@ -51,25 +53,32 @@ class CastawayPlayer {
             
             if let currentItem = change.newValue {
                 self.observePlayerItem()
-                
-                if let unwrappedItem = currentItem {
-                    self.nowPlaying.send(unwrappedItem)
-                }
+                self.sendNowPlayingItemKey(currentItem)
             }
         }
     }
     
-    func observePlayerItem() {
+    fileprivate func sendNowPlayingItemKey(_ currentItem: AVPlayerItem?) {
+        if let unwrappedItem = currentItem {
+            if let playerItemKey = self.playerItems.allKeys(forValue: unwrappedItem).first {
+                self.nowPlaying.send(playerItemKey)
+            }
+        }
+    }
+    
+    fileprivate func observePlayerItem() {
         // track status
         self.statusObserver = self.player.currentItem?.observe(\.status, options: [.initial, .old, .new]) { [weak self] (item, change) in
             guard let self = self else { return }
             print("statusObserver: \(change)")
         }
         
-        // track duration
         self.durationObserver = self.player.currentItem?.observe(\.duration, options: [.initial, .old, .new]) { [weak self] (item, change) in
             guard let self = self else { return }
-            print("durationObserver: \(change)")
+            
+            if let newDuration = change.newValue {
+                self.sendDurationMillis(newDuration)
+            }
         }
         
         // track "likely to keep up"
@@ -86,7 +95,14 @@ class CastawayPlayer {
         }
     }
     
-    func removePeriodicTimeObserver() {
+    fileprivate func sendDurationMillis(_ newDuration: CMTime) {
+        let durationMillies = self.duration(time: newDuration)
+        if durationMillies.intValue > 0 {
+            self.playbackDuration.send(durationMillies)
+        }
+    }
+    
+    fileprivate func removePeriodicTimeObserver() {
         if let timeObserverToken = timeObserverToken {
             player.removeTimeObserver(timeObserverToken)
             self.timeObserverToken = nil
@@ -101,11 +117,16 @@ class CastawayPlayer {
         
     }
     
-    func prepare(playlist: [String : AVPlayerItem]) {
-        self.playerItems = playlist
+    func prepare(episodes: [Episode]) {
+        self.playlist = episodes.map { episode in
+            episode.id
+        }
+        self.playerItems = Dictionary(grouping: episodes, by: { episode in episode.id }).mapValues { episodes in
+            episodes.first!.toAVPlayerItem()
+        }
     }
     
-    func prepare(block: () -> [String :  AVPlayerItem]) {
+    func prepare(block: () -> [String : AVPlayerItem]) {
         self.playerItems = block()
     }
     
@@ -157,15 +178,18 @@ class CastawayPlayer {
         
     }
     
-    func duration(url: String) -> KotlinLong? {
-        guard let url = URL.init(string: url) else { return nil }
-        
-        let asset = AVURLAsset(url: url)
+    func duration(time: CMTime) -> KotlinLong {
         let timemillis = CMTimeConvertScale(
-            asset.duration,
+            time,
             timescale:1000,
             method: CMTimeRoundingMethod.roundHalfAwayFromZero)
         
         return KotlinLong(value: timemillis.value)
+    }
+    
+    func durationFromUrl(url: String) -> KotlinLong? {
+        guard let url = URL.init(string: url) else { return nil }
+        let asset = AVURLAsset(url: url)
+        return self.duration(time: asset.duration)
     }
 }

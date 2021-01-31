@@ -13,11 +13,13 @@ class CastawayViewModel: ObservableObject {
     @Published var episodes = [Episode]()
     @Published var currentEpisode: Episode?
     var playbackTimePublisher: PassthroughSubject<TimeInterval, Never>
+    var playbackDurationPublisher: PassthroughSubject<KotlinLong, Never>
     
     init() {
         self.storeAndGetFeedUseCase = StoreAndGetFeedUseCase()
         self.storeEpisodeUseCase = NativeSaveEpisodeUseCase()
         self.playbackTimePublisher = self.player.playbackTime
+        self.playbackDurationPublisher = self.player.playbackDuration
     }
     
     func fetchFeed() {
@@ -25,17 +27,9 @@ class CastawayViewModel: ObservableObject {
             switch result {
             case .success(let feed):
                 self.episodes = feed.episodes
-                self.preparePlayer(feed.episodes)
+                self.player.prepare(episodes: feed.episodes)
             case .failure(let error):
                 print(error)
-            }
-        }
-    }
-    
-    fileprivate func preparePlayer(_ episodes: [Episode]) {
-        self.player.prepare {
-            Dictionary(grouping: episodes, by: { episode in episode.id }).mapValues { episodes in
-                episodes.first!.toAVPlayerItem()
             }
         }
     }
