@@ -27,7 +27,7 @@ class CastawayViewModel: ObservableObject {
             switch result {
             case .success(let feed):
                 self.episodes = feed.episodes
-                self.player.prepare(episodes: feed.episodes)
+                self.player.prepare(media: feed.episodes.map{ episode in episode.toMediaData() })
             case .failure(let error):
                 print(error)
             }

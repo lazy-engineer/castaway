@@ -6,7 +6,7 @@ import shared
 class CastawayPlayer {
     
     private let player: AVPlayer
-    private var playerItems = [String : AVPlayerItem]()
+    private var playerItems = [String : (MediaData, AVPlayerItem)]()
     private var playlist = [String]()
     
     private var timeObserverToken: Any?
@@ -20,7 +20,7 @@ class CastawayPlayer {
     let playbackTime = PassthroughSubject<TimeInterval, Never>()
     let playbackSpeed = PassthroughSubject<Float, Never>()
     let playbackDuration = PassthroughSubject<KotlinLong, Never>()
-    let nowPlaying = PassthroughSubject<String, Never>()
+    let nowPlaying = CurrentValueSubject<String?, Never>(nil)
     
     init() {
         self.player = AVPlayer.init()
@@ -41,7 +41,6 @@ class CastawayPlayer {
     fileprivate func observePlayer() {
         rateObserver = player.observe(\.rate, options: [.initial, .old, .new]) { [weak self] (item, change) in
             guard let self = self else { return }
-            print("rateObserver: \(change)")
             
             if let rate = change.newValue {
                 self.playbackSpeed.send(rate)
@@ -60,9 +59,15 @@ class CastawayPlayer {
     
     fileprivate func sendNowPlayingItemKey(_ currentItem: AVPlayerItem?) {
         if let unwrappedItem = currentItem {
-            if let playerItemKey = self.playerItems.allKeys(forValue: unwrappedItem).first {
-                self.nowPlaying.send(playerItemKey)
+            self.playerItems.forEach { key, itemTuple in
+                sendKeyIfPlayerItemFound(itemToFound: unwrappedItem, itemTuple: itemTuple)
             }
+        }
+    }
+    
+    fileprivate func sendKeyIfPlayerItemFound(itemToFound: AVPlayerItem, itemTuple: (MediaData, AVPlayerItem)) {
+        if itemToFound == itemTuple.1 {
+            self.nowPlaying.send(itemTuple.0.mediaId)
         }
     }
     
@@ -117,24 +122,27 @@ class CastawayPlayer {
         
     }
     
-    func prepare(episodes: [Episode]) {
-        self.playlist = episodes.map { episode in
-            episode.id
-        }
-        self.playerItems = Dictionary(grouping: episodes, by: { episode in episode.id }).mapValues { episodes in
-            episodes.first!.toAVPlayerItem()
-        }
+    func prepare(media: [MediaData]) {
+        prepareMediaData(media)
     }
     
-    func prepare(block: () -> [String : AVPlayerItem]) {
-        self.playerItems = block()
+    func prepare(block: () -> [MediaData]) {
+        prepareMediaData(block())
+    }
+    
+    fileprivate func prepareMediaData(_ media: [MediaData]) {
+        self.playlist = media.map { mediaData in
+            mediaData.mediaId
+        }
+        self.playerItems = Dictionary(grouping: media, by: { mediaData in mediaData.mediaId })
+            .mapValues { media in (media.first!, media.first!.toAVPlayerItem()) }
     }
     
     func playPause(
         mediaId: String,
         playState: Bool
     ) {
-        let playerItem: AVPlayerItem? = playerItems[mediaId]
+        let playerItem: AVPlayerItem? = playerItems[mediaId]?.1
         if playerItem != nil {
             self.player.replaceCurrentItem(with: playerItem)
         }

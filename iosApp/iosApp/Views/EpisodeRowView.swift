@@ -6,7 +6,8 @@ struct EpisodeRowView: View {
    
     @State var episode: Episode
     let playing: Bool
-    let playbbackTime: TimeInterval
+    let playbackTime: TimeInterval
+    let playbackDuration: TimeInterval
     let onPlayPause: (Bool) -> Void
    
     var body: some View {
@@ -24,13 +25,11 @@ struct EpisodeRowView: View {
             }.frame(height: 60)
             
             if #available(iOS 14.0, *) {
-                ProgressView(value: playing ? playbbackTime : 0, total: 1000)
+                ProgressView(value: playing ? playbackTime : 0, total: playbackDuration)
             } else {
                 // Fallback on earlier versions
             }
-            
         }
-       
     }
 }
 
@@ -38,12 +37,12 @@ struct EpisodeRowView: View {
 struct EpisodeRowView_Previews: PreviewProvider {
     static var previews: some View {
         Group {
-            EpisodeRowView(episode: dummy_episode_1, playing: true, playbbackTime: 0) {_ in }
+            EpisodeRowView(episode: dummy_episode_1, playing: true, playbackTime: 0, playbackDuration: 1) {_ in }
                 .previewLayout(.fixed(width: 360.0, height: 60.0))
-            EpisodeRowView(episode: dummy_episode_1, playing: false, playbbackTime: 0) {_ in }
+            EpisodeRowView(episode: dummy_episode_1, playing: false, playbackTime: 0, playbackDuration: 1) {_ in }
                 .preferredColorScheme(.dark)
                 .previewLayout(.fixed(width: 360.0, height: 60.0))
-            EpisodeRowView(episode: dummy_episode_2, playing: false, playbbackTime: 0.0) {_ in }
+            EpisodeRowView(episode: dummy_episode_2, playing: false, playbackTime: 0.0, playbackDuration: 1) {_ in }
                 .previewLayout(.fixed(width: 360.0, height: 60.0))
         }
     }

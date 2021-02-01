@@ -44,8 +44,19 @@ extension Episode {
 }
 
 extension Episode {
+    func toMediaData() -> MediaData {
+        return MediaData.init(
+            mediaId: self.id,
+            mediaUri: self.audioUrl,
+            playbackPosition: self.playbackPosition.position,
+            duration: playbackPosition.duration ?? 1
+        )
+    }
+}
+
+extension MediaData {
     func toAVPlayerItem() -> AVPlayerItem {
-        return AVPlayerItem.init(url: URL.init(string: self.audioUrl)!)
+        return AVPlayerItem.init(url: URL.init(string: self.mediaUri)!)
     }
 }
 
