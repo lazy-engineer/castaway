@@ -83,6 +83,10 @@ class CastawayPlayer {
             
             if let newDuration = change.newValue {
                 self.sendDurationMillis(newDuration)
+                
+                if let nowPlayingKey = self.nowPlaying.value {
+                    self.updateMediaItemDuration(nowPlayingKey, newDuration)
+                }
             }
         }
         
@@ -104,6 +108,14 @@ class CastawayPlayer {
         let durationMillies = self.duration(time: newDuration)
         if durationMillies.intValue > 0 {
             self.playbackDuration.send(durationMillies)
+        }
+    }
+    
+    fileprivate func updateMediaItemDuration(_ itemKey: String, _ newDuration: CMTime) {
+        if let item = self.playerItems[itemKey] {
+            var updatedItem = item
+            updatedItem.0.duration = self.duration(time: newDuration)
+            self.playerItems.updateValue((updatedItem.0, updatedItem.1), forKey: itemKey)
         }
     }
     
