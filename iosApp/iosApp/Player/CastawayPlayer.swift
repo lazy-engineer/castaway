@@ -20,6 +20,7 @@ class CastawayPlayer {
     let playbackTime = PassthroughSubject<TimeInterval, Never>()
     let playbackSpeed = PassthroughSubject<Float, Never>()
     let playbackDuration = PassthroughSubject<KotlinLong, Never>()
+    let playbackState = CurrentValueSubject<PlaybackState, Never>(PlaybackState.unknown)
     let nowPlaying = CurrentValueSubject<String?, Never>(nil)
     
     init() {
@@ -90,11 +91,14 @@ class CastawayPlayer {
             }
         }
         
-        // track "likely to keep up"
         self.likelyToKeepUpObserver = self.player.currentItem?.observe(\.isPlaybackLikelyToKeepUp, options: [.initial, .old, .new]) { [weak self] (item, change) in
             guard let self = self else { return }
-            print("likelyToKeepUpObserver: \(change)")
             
+            if let readyToPlay = change.newValue {
+                if readyToPlay == true {
+                    self.playbackState.send(PlaybackState.readyToPlay)
+                }
+            }
         }
         
         // track buffer empty
@@ -161,8 +165,10 @@ class CastawayPlayer {
         
         if playState {
             self.player.play()
+            self.playbackState.send(PlaybackState.playing)
         } else {
             self.player.pause()
+            self.playbackState.send(PlaybackState.paused)
         }
     }
     
