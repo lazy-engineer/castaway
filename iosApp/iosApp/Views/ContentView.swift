@@ -8,7 +8,7 @@ func greet() -> String {
 
 struct ContentView: View {
     
-    @ObservedObject var viewModel = CastawayViewModel()
+    @EnvironmentObject var viewModel: CastawayViewModel
     @State private var currentTime: TimeInterval = 0
     @State private var duration: TimeInterval = 1
     
