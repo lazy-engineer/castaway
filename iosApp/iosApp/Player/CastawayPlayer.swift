@@ -19,7 +19,7 @@ class CastawayPlayer {
     
     let playbackTime = PassthroughSubject<TimeInterval, Never>()
     let playbackSpeed = PassthroughSubject<Float, Never>()
-    let playbackDuration = PassthroughSubject<KotlinLong, Never>()
+    let playbackDuration = CurrentValueSubject<KotlinLong, Never>(1)
     let playbackState = CurrentValueSubject<PlaybackState, Never>(PlaybackState.unknown)
     let nowPlaying = CurrentValueSubject<String?, Never>(nil)
     

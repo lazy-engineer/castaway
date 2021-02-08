@@ -10,16 +10,35 @@ class CastawayViewModel: ObservableObject {
     private let storeEpisodeUseCase: NativeSaveEpisodeUseCase
     private let player = CastawayPlayer()
     
+    private var disposables = Set<AnyCancellable>()
+    
     @Published var episodes = [Episode]()
     @Published var currentEpisode: Episode?
     var playbackTimePublisher: PassthroughSubject<TimeInterval, Never>
-    var playbackDurationPublisher: PassthroughSubject<KotlinLong, Never>
+    var playbackDurationPublisher: CurrentValueSubject<KotlinLong, Never>
     
     init() {
         self.storeAndGetFeedUseCase = StoreAndGetFeedUseCase()
         self.storeEpisodeUseCase = NativeSaveEpisodeUseCase()
         self.playbackTimePublisher = self.player.playbackTime
         self.playbackDurationPublisher = self.player.playbackDuration
+        
+        observePlaybackState()
+    }
+    
+    fileprivate func observePlaybackState() {
+        self.player.playbackState
+            .sink(receiveValue: { state in
+                self.storeEpisodeOnPausedOrStopped(state)
+            })
+            .store(in: &disposables)
+    }
+    
+    fileprivate func storeEpisodeOnPausedOrStopped(_ state: PlaybackState) {
+        if state == PlaybackState.paused || state == PlaybackState.stopped {
+            guard let episode = self.currentEpisode?.copy(duration: self.playbackDurationPublisher.value) else { return }
+            self.storeEpisode(episode: episode)
+        }
     }
     
     func fetchFeed() {
@@ -34,9 +53,7 @@ class CastawayViewModel: ObservableObject {
         }
     }
     
-    func mediaItemClicked(clickedItemId: String) {
-        
-    }
+    func mediaItemClicked(_ clickedItemId: String) {}
     
     func episodeClicked(episode: Episode, playState: Bool) {
         self.player.playPause(mediaId: episode.id, playState: playState)
@@ -80,10 +97,10 @@ class CastawayViewModel: ObservableObject {
         self.storeEpisodeUseCase.run(
             episode: episode,
             onSuccess: { storedEpisode in
-                
+                print("Stored: \(storedEpisode.title)")
             },
             onError: { error in
-                
+                print("Error storing: \(error)")
             })
     }
 }
