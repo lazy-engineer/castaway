@@ -14,24 +14,24 @@ import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
 
 val appModule = module {
-    single {
-        ImageLoader.Builder(androidApplication())
-            .availableMemoryPercentage(0.25)
-            .crossfade(true)
-            .build()
-    }
+  single {
+	ImageLoader.Builder(androidApplication())
+	  .availableMemoryPercentage(0.25)
+	  .crossfade(true)
+	  .build()
+  }
 
-    single {
-        MediaServiceClient.getInstance(
-            androidContext(),
-            ComponentName(androidContext(), MediaPlayerService::class.java),
-            MediaServiceConfig(fastForwardInterval = 10_000)
-        )
-    }
+  single {
+	MediaServiceClient.getInstance(
+		androidContext(),
+		ComponentName(androidContext(), MediaPlayerService::class.java),
+		MediaServiceConfig(fastForwardInterval = 10_000)
+	)
+  }
 
-    single {
-        StoreAndGetFeedUseCase(get() as FeedRepository)
-    }
+  single {
+	StoreAndGetFeedUseCase(get() as FeedRepository)
+  }
 
-    viewModel { MainViewModel(get(), get(), get()) }
+  viewModel { MainViewModel(get(), get(), get()) }
 }

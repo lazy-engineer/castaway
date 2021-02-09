@@ -9,10 +9,10 @@ import iogithublazyengineercastawaydb.EpisodeEntity
 lateinit var appContext: Context
 
 actual fun createDb(): CastawayDatabase {
-    val driver = AndroidSqliteDriver(CastawayDatabase.Schema, appContext, "castaway.db")
-    return CastawayDatabase(
-        driver, episodeEntityAdapter = EpisodeEntity.Adapter(
-            playbackPositionAdapter = playbackPositionAdapter
-        )
-    )
+  val driver = AndroidSqliteDriver(CastawayDatabase.Schema, appContext, "castaway.db")
+  return CastawayDatabase(
+	  driver, episodeEntityAdapter = EpisodeEntity.Adapter(
+		  playbackPositionAdapter = playbackPositionAdapter
+	  )
+  )
 }

@@ -8,7 +8,7 @@ class GetFeedUseCase constructor(
 	private val feedRepository: FeedDataSource
 ) : UseCase<String, String>() {
 
-	override suspend fun run(url: String): Result<String> {
-		return feedRepository.fetchXml(url)
-	}
+  override suspend fun run(url: String): Result<String> {
+	return feedRepository.fetchXml(url)
+  }
 }

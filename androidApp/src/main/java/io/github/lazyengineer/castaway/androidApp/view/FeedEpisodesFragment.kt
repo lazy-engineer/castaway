@@ -16,82 +16,82 @@ import io.github.lazyengineer.castaway.shared.entity.FeedData
 
 class FeedEpisodesFragment : Fragment(), OnItemClickListener {
 
-	private val viewModel: MainViewModel by activityViewModels()
-	private val binding: FragmentFeedEpisodesBinding by lazy { FragmentFeedEpisodesBinding.inflate(layoutInflater) }
+  private val viewModel: MainViewModel by activityViewModels()
+  private val binding: FragmentFeedEpisodesBinding by lazy { FragmentFeedEpisodesBinding.inflate(layoutInflater) }
 
-	private lateinit var episodesAdapter: ChannelItemAdapter
+  private lateinit var episodesAdapter: ChannelItemAdapter
 
-	override fun onCreate(savedInstanceState: Bundle?) {
-		super.onCreate(savedInstanceState)
+  override fun onCreate(savedInstanceState: Bundle?) {
+	super.onCreate(savedInstanceState)
+  }
+
+  override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
+	initAdapter()
+
+	binding.fetchFeedBtn.setOnClickListener {
+	  viewModel.fetchFeed()
 	}
 
-	override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
-		initAdapter()
+	viewModel.feed.observe(viewLifecycleOwner, { feed ->
+	  hideButton()
+	  showFeed(feed)
+	})
 
-		binding.fetchFeedBtn.setOnClickListener {
-			viewModel.fetchFeed()
-		}
+	viewModel.updatedEpisodes.observe(viewLifecycleOwner, { episodes ->
+	  episodes.forEach { episode ->
+		updateProgressBar(episode)
+	  }
+	})
 
-		viewModel.feed.observe(viewLifecycleOwner, { feed ->
-			hideButton()
-			showFeed(feed)
-		})
+	return binding.root
+  }
 
-		viewModel.updatedEpisodes.observe(viewLifecycleOwner, { episodes ->
-			episodes.forEach { episode ->
-				updateProgressBar(episode)
-			}
-		})
+  private fun initAdapter() {
+	binding.feedList.layoutManager = LinearLayoutManager(activity)
+	episodesAdapter = ChannelItemAdapter(this)
+	binding.feedList.adapter = episodesAdapter
+  }
 
-		return binding.root
+  private fun hideButton() {
+	binding.fetchFeedBtn.visibility = View.GONE
+  }
+
+  private fun showFeed(feed: FeedData) {
+	binding.feedList.visibility = View.VISIBLE
+	showList(feed.episodes)
+  }
+
+  private fun showList(episodes: List<Episode>) {
+	episodesAdapter.setData(episodes)
+  }
+
+  private fun updateProgressBar(episode: Episode) {
+	episode.playbackPosition.percentage?.let { percentage ->
+	  val index = episode.index()
+	  if (index != -1) {
+		val viewHolder = binding.feedList.findViewHolderForAdapterPosition(index)
+		viewHolder?.let { (it as ViewHolder).progressBar.progress = percentage.toInt() }
+	  }
 	}
+  }
 
-	private fun initAdapter() {
-		binding.feedList.layoutManager = LinearLayoutManager(activity)
-		episodesAdapter = ChannelItemAdapter(this)
-		binding.feedList.adapter = episodesAdapter
+  private fun Episode.index(): Int {
+	return episodesAdapter.items.indexOfFirst {
+	  this.id == it.id
 	}
+  }
 
-	private fun hideButton() {
-		binding.fetchFeedBtn.visibility = View.GONE
-	}
+  override fun onItemClick(item: Episode) {
+	viewModel.episodeClicked(item)
+  }
 
-	private fun showFeed(feed: FeedData) {
-		binding.feedList.visibility = View.VISIBLE
-		showList(feed.episodes)
-	}
+  override fun onPlayClick(item: Episode) {
+	viewModel.mediaItemClicked(item.id)
+  }
 
-	private fun showList(episodes: List<Episode>) {
-		episodesAdapter.setData(episodes)
-	}
+  companion object {
 
-	private fun updateProgressBar(episode: Episode) {
-		episode.playbackPosition.percentage?.let { percentage ->
-			val index = episode.index()
-			if (index != -1) {
-				val viewHolder = binding.feedList.findViewHolderForAdapterPosition(index)
-				viewHolder?.let { (it as ViewHolder).progressBar.progress = percentage.toInt() }
-			}
-		}
-	}
-
-	private fun Episode.index(): Int {
-		return episodesAdapter.items.indexOfFirst {
-			this.id == it.id
-		}
-	}
-
-	override fun onItemClick(item: Episode) {
-		viewModel.episodeClicked(item)
-	}
-
-	override fun onPlayClick(item: Episode) {
-		viewModel.mediaItemClicked(item.id)
-	}
-
-	companion object {
-
-		@JvmStatic
-		fun newInstance() = FeedEpisodesFragment()
-	}
+	@JvmStatic
+	fun newInstance() = FeedEpisodesFragment()
+  }
 }

@@ -12,38 +12,38 @@ class LocalDataSource private constructor(
 	private val gson: Gson,
 ) {
 
-	suspend fun saveRecentPlaylist(mediaDataList: List<MediaData>) {
-		withContext(Dispatchers.IO) {
-			val mediaDataJson = gson.toJson(mediaDataList)
+  suspend fun saveRecentPlaylist(mediaDataList: List<MediaData>) {
+	withContext(Dispatchers.IO) {
+	  val mediaDataJson = gson.toJson(mediaDataList)
 
-			preferences.edit()
-				.putString(RECENT_MEDIA_PLAYLIST, mediaDataJson)
-				.apply()
-		}
+	  preferences.edit()
+		.putString(RECENT_MEDIA_PLAYLIST, mediaDataJson)
+		.apply()
 	}
+  }
 
-	fun loadRecentPlaylist(): List<MediaData> {
-		val mediaDataJson = preferences.getString(RECENT_MEDIA_PLAYLIST, null)
+  fun loadRecentPlaylist(): List<MediaData> {
+	val mediaDataJson = preferences.getString(RECENT_MEDIA_PLAYLIST, null)
 
-		val type: Type = object : TypeToken<List<MediaData>>() {}.type
-		return gson.fromJson(mediaDataJson, type) ?: emptyList()
+	val type: Type = object : TypeToken<List<MediaData>>() {}.type
+	return gson.fromJson(mediaDataJson, type) ?: emptyList()
+  }
+
+  companion object {
+
+	@Volatile
+	private var INSTANCE: LocalDataSource? = null
+
+	fun getInstance(
+		preferences: SharedPreferences,
+		gson: Gson
+	): LocalDataSource {
+	  return INSTANCE ?: synchronized(this) {
+		INSTANCE ?: LocalDataSource(preferences, gson)
+		  .also { INSTANCE = it }
+	  }
 	}
-
-	companion object {
-
-		@Volatile
-		private var INSTANCE: LocalDataSource? = null
-
-		fun getInstance(
-			preferences: SharedPreferences,
-			gson: Gson
-		): LocalDataSource {
-			return INSTANCE ?: synchronized(this) {
-				INSTANCE ?: LocalDataSource(preferences, gson)
-					.also { INSTANCE = it }
-			}
-		}
-	}
+  }
 }
 
 const val PREFERENCES_NAME = "castaway_player_prefs"

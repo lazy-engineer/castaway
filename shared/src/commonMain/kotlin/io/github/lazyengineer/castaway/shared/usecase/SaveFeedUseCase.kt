@@ -9,7 +9,7 @@ class SaveFeedUseCase constructor(
 	private val feedRepository: FeedDataSource
 ) : UseCase<FeedData, FeedData>() {
 
-    override suspend fun run(feed: FeedData): Result<FeedData> {
-        return feedRepository.saveFeed(feed)
-    }
+  override suspend fun run(feed: FeedData): Result<FeedData> {
+	return feedRepository.saveFeed(feed)
+  }
 }

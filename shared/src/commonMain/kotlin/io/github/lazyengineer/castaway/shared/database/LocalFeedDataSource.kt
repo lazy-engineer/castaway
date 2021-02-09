@@ -6,8 +6,8 @@ import io.github.lazyengineer.castaway.shared.entity.FeedData
 
 interface LocalFeedDataSource {
 
-    suspend fun loadFeed(feedUrl: String): Result<FeedData>
-    suspend fun loadEpisodes(episodeIds: List<String>): Result<List<Episode>>
-    suspend fun saveFeedData(feed: FeedData): Result<FeedData>
-    suspend fun saveEpisode(episode: Episode): Result<Episode>
+  suspend fun loadFeed(feedUrl: String): Result<FeedData>
+  suspend fun loadEpisodes(episodeIds: List<String>): Result<List<Episode>>
+  suspend fun saveFeedData(feed: FeedData): Result<FeedData>
+  suspend fun saveEpisode(episode: Episode): Result<Episode>
 }

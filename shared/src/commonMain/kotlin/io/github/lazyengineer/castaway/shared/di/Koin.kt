@@ -16,29 +16,29 @@ import org.koin.dsl.KoinAppDeclaration
 import org.koin.dsl.module
 
 fun initKoin(appDeclaration: KoinAppDeclaration = {}) =
-    startKoin {
-        appDeclaration()
-        modules(coreModule, platformModule)
-    }
+  startKoin {
+	appDeclaration()
+	modules(coreModule, platformModule)
+  }
 
 // called by iOS etc
 fun initKoin() = initKoin {}
 
 private val coreModule = module {
-    single { createDb() }
-    single { HttpClient() }
-    single {
-        FeedRepository(
-            remoteDataSource = FeedRemoteDataSource(get()),
-            localDataSource = FeedLocalDataSource(get())
-        )
-    }
+  single { createDb() }
+  single { HttpClient() }
+  single {
+	FeedRepository(
+		remoteDataSource = FeedRemoteDataSource(get()),
+		localDataSource = FeedLocalDataSource(get())
+	)
+  }
 
-    single { GetFeedUseCase(get() as FeedRepository) }
-    single { GetStoredFeedUseCase(get() as FeedRepository) }
-    single { GetStoredEpisodesUseCase(get() as FeedRepository) }
-    single { SaveEpisodeUseCase(get() as FeedRepository) }
-    single { SaveFeedUseCase(get() as FeedRepository) }
+  single { GetFeedUseCase(get() as FeedRepository) }
+  single { GetStoredFeedUseCase(get() as FeedRepository) }
+  single { GetStoredEpisodesUseCase(get() as FeedRepository) }
+  single { SaveEpisodeUseCase(get() as FeedRepository) }
+  single { SaveFeedUseCase(get() as FeedRepository) }
 }
 
 expect val platformModule: Module

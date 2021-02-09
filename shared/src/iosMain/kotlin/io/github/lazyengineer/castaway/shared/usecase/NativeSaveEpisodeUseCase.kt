@@ -9,27 +9,28 @@ import org.koin.core.KoinComponent
 import org.koin.core.inject
 
 class NativeSaveEpisodeUseCase : KoinComponent {
-	private val saveEpisodeUseCase: SaveEpisodeUseCase by inject()
-	private val coroutineScope = MainScope(Dispatchers.Main)
 
-	init {
-		ensureNeverFrozen()
-	}
+  private val saveEpisodeUseCase: SaveEpisodeUseCase by inject()
+  private val coroutineScope = MainScope(Dispatchers.Main)
 
-	fun run(
-		episode: Episode,
-		onSuccess: (Episode) -> Unit,
-		onError: (String) -> Unit,
-	) {
-		coroutineScope.launch {
-			saveEpisodeUseCase(
-				episode,
-				onSuccess = { onSuccess(it) },
-				onError = { onError(it.message ?: "Error save") })
-		}
-	}
+  init {
+	ensureNeverFrozen()
+  }
 
-	fun onDestroy() {
-		coroutineScope.onDestroy()
+  fun run(
+	episode: Episode,
+	onSuccess: (Episode) -> Unit,
+	onError: (String) -> Unit,
+  ) {
+	coroutineScope.launch {
+	  saveEpisodeUseCase(
+		episode,
+		onSuccess = { onSuccess(it) },
+		onError = { onError(it.message ?: "Error save") })
 	}
+  }
+
+  fun onDestroy() {
+	coroutineScope.onDestroy()
+  }
 }

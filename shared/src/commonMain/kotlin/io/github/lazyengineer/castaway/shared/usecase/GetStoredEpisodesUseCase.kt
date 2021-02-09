@@ -6,10 +6,10 @@ import io.github.lazyengineer.castaway.shared.entity.Episode
 import io.github.lazyengineer.castaway.shared.repository.FeedDataSource
 
 class GetStoredEpisodesUseCase constructor(
-    private val feedRepository: FeedDataSource
+	private val feedRepository: FeedDataSource
 ) : UseCase<List<Episode>, List<String>>() {
 
-    override suspend fun run(episodeIds: List<String>): Result<List<Episode>> {
-        return feedRepository.loadEpisodes(episodeIds)
-    }
+  override suspend fun run(episodeIds: List<String>): Result<List<Episode>> {
+	return feedRepository.loadEpisodes(episodeIds)
+  }
 }

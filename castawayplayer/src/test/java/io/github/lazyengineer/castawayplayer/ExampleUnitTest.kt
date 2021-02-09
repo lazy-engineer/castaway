@@ -1,7 +1,6 @@
 package io.github.lazyengineer.castawayplayer
 
-import org.junit.Test
-
+import org.junit.*
 import org.junit.Assert.*
 
 /**
@@ -10,8 +9,9 @@ import org.junit.Assert.*
  * See [testing documentation](http://d.android.com/tools/testing).
  */
 class ExampleUnitTest {
-	@Test
-	fun addition_isCorrect() {
-		assertEquals(4, 2 + 2)
-	}
+
+  @Test
+  fun addition_isCorrect() {
+	assertEquals(4, 2 + 2)
+  }
 }

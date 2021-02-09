@@ -88,11 +88,11 @@
             android:id="@+id/episode_playback_speed"
             android:layout_width="48dp"
             android:layout_height="wrap_content"
-            android:gravity="center"
             android:layout_marginBottom="8dp"
             android:layout_marginStart="8dp"
             android:clickable="true"
             android:focusable="true"
+            android:gravity="center"
             app:layout_constraintBottom_toTopOf="@id/episode_seekbar"
             app:layout_constraintStart_toStartOf="parent"
             tools:text="1x" />

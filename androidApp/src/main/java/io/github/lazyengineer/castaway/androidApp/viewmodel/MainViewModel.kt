@@ -23,236 +23,237 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 class MainViewModel constructor(
-    private val mediaServiceClient: MediaServiceClient,
-    private val getStoredFeedUseCase: GetStoredFeedUseCase,
-    private val storeAndGetFeedUseCase: StoreAndGetFeedUseCase,
+	private val mediaServiceClient: MediaServiceClient,
+	private val getStoredFeedUseCase: GetStoredFeedUseCase,
+	private val storeAndGetFeedUseCase: StoreAndGetFeedUseCase,
 ) : ViewModel() {
 
-    private val subscriptionCallback = object : SubscriptionCallback() {
-        override fun onChildrenLoaded(
-            parentId: String,
-            children: MutableList<MediaItem>
-        ) {
-            super.onChildrenLoaded(parentId, children)
-            viewModelScope.launch {
-                loadFeed(TEST_URL)
-            }
-            /**
-             * Usually we would load list of episodes here:
-             *
-             * viewModelScope.launch {
-             *  loadEpisodes(episodeIds)
-             * }
-             *
-             */
-        }
-    }
+  private val subscriptionCallback = object : SubscriptionCallback() {
+	override fun onChildrenLoaded(
+		parentId: String,
+		children: MutableList<MediaItem>
+	) {
+	  super.onChildrenLoaded(parentId, children)
+	  viewModelScope.launch {
+		loadFeed(TEST_URL)
+	  }
+	  /**
+	   * Usually we would load list of episodes here:
+	   *
+	   * viewModelScope.launch {
+	   *  loadEpisodes(episodeIds)
+	   * }
+	   *
+	   */
+	}
+  }
 
-    private val _feed = MutableLiveData<FeedData>()
-    val feed: LiveData<FeedData>
-        get() = _feed
+  private val _feed = MutableLiveData<FeedData>()
+  val feed: LiveData<FeedData>
+	get() = _feed
 
-    private val _updatedEpisodes = MutableLiveData<List<Episode>>()
-    val updatedEpisodes: LiveData<List<Episode>>
-        get() = _updatedEpisodes
+  private val _updatedEpisodes = MutableLiveData<List<Episode>>()
+  val updatedEpisodes: LiveData<List<Episode>>
+	get() = _updatedEpisodes
 
-    private val _currentEpisode = MutableLiveData<Episode>()
-    val currentEpisode: LiveData<Episode>
-        get() = _currentEpisode
+  private val _currentEpisode = MutableLiveData<Episode>()
+  val currentEpisode: LiveData<Episode>
+	get() = _currentEpisode
 
-    private val _navigateToFragment = MutableLiveData<Fragment>()
-    val navigateToFragment: LiveData<Fragment>
-        get() = _navigateToFragment
+  private val _navigateToFragment = MutableLiveData<Fragment>()
+  val navigateToFragment: LiveData<Fragment>
+	get() = _navigateToFragment
 
-    init {
-        subscribeToMediaService()
-        collectPlaybackState()
-        collectPlaybackPositions()
-        collectNowPlaying()
-    }
+  init {
+	subscribeToMediaService()
+	collectPlaybackState()
+	collectPlaybackPositions()
+	collectNowPlaying()
+  }
 
-    private fun collectPlaybackState() {
-        viewModelScope.launch {
-            mediaServiceClient.playbackState.collect {
-                feed.value?.let { feedData ->
-                    _feed.postValue(feed.value?.copy(episodes = feedData.episodes.map { episode ->
-                        episode.copy(isPlaying = playingState(episode.id))
-                    }))
-                }
-            }
-        }
-    }
+  private fun collectPlaybackState() {
+	viewModelScope.launch {
+	  mediaServiceClient.playbackState.collect {
+		feed.value?.let { feedData ->
+		  _feed.postValue(feed.value?.copy(episodes = feedData.episodes.map { episode ->
+			  episode.copy(isPlaying = playingState(episode.id))
+		  }))
+		}
+	  }
+	}
+  }
 
-    private fun collectPlaybackPositions() {
-        viewModelScope.launch {
-            mediaServiceClient.playbackPosition.collect { position ->
-                feed.value?.postCurrentWithUpdatedPosition(position)
-            }
-        }
-    }
+  private fun collectPlaybackPositions() {
+	viewModelScope.launch {
+	  mediaServiceClient.playbackPosition.collect { position ->
+		feed.value?.postCurrentWithUpdatedPosition(position)
+	  }
+	}
+  }
 
-    private fun collectNowPlaying() {
-        viewModelScope.launch {
-            mediaServiceClient.nowPlaying.collect { mediaData ->
-                val feedEpisode = feed.value?.episodes?.firstOrNull { episode ->
-                    mediaData.mediaId == episode.id
-                }
+  private fun collectNowPlaying() {
+	viewModelScope.launch {
+	  mediaServiceClient.nowPlaying.collect { mediaData ->
+		val feedEpisode = feed.value?.episodes?.firstOrNull { episode ->
+		  mediaData.mediaId == episode.id
+		}
 
-                feedEpisode?.let { _currentEpisode.postValue(it) }
-            }
-        }
-    }
+		feedEpisode?.let { _currentEpisode.postValue(it) }
+	  }
+	}
+  }
 
-    private fun FeedData.postCurrentWithUpdatedPosition(position: Long) {
-        val episode = this.nowPlayingEpisode()
+  private fun FeedData.postCurrentWithUpdatedPosition(position: Long) {
+	val episode = this.nowPlayingEpisode()
 
-        episode?.let {
-            _updatedEpisodes.postValue(
-                listOf(it.withUpdatedPosition(position))
-            )
-        }
-    }
+	episode?.let {
+	  _updatedEpisodes.postValue(
+		  listOf(it.withUpdatedPosition(position))
+	  )
+	}
+  }
 
-    private fun FeedData.nowPlayingEpisode(): Episode? {
-        return this.episodes.find { episode ->
-            episode.id == mediaServiceClient.nowPlaying.value.mediaId
-        }
-    }
+  private fun FeedData.nowPlayingEpisode(): Episode? {
+	return this.episodes.find { episode ->
+	  episode.id == mediaServiceClient.nowPlaying.value.mediaId
+	}
+  }
 
-    private fun Episode.withUpdatedPosition(position: Long): Episode {
-        return this.copy(
-            playbackPosition = PlaybackPosition(
-                position = position,
-                duration = mediaServiceClient.nowPlaying.value.duration
-            )
-        )
-    }
+  private fun Episode.withUpdatedPosition(position: Long): Episode {
+	return this.copy(
+		playbackPosition = PlaybackPosition(
+			position = position,
+			duration = mediaServiceClient.nowPlaying.value.duration
+		)
+	)
+  }
 
-    fun fetchFeed() {
-        viewModelScope.launch {
-            fetchFeedFromUrl(TEST_URL)
-        }
-    }
+  fun fetchFeed() {
+	viewModelScope.launch {
+	  fetchFeedFromUrl(TEST_URL)
+	}
+  }
 
-    private suspend fun loadFeed(url: String) {
-        withContext(Dispatchers.IO) {
-            getStoredFeedUseCase(
-                url,
-                onSuccess = {
-                    _feed.postValue(it)
-                },
-                onError = {},
-            )
-        }
-    }
+  private suspend fun loadFeed(url: String) {
+	withContext(Dispatchers.IO) {
+	  getStoredFeedUseCase(
+		  url,
+		  onSuccess = {
+			  _feed.postValue(it)
+		  },
+		  onError = {},
+	  )
+	}
+  }
 
-    private suspend fun fetchFeedFromUrl(url: String) {
-        withContext(Dispatchers.IO) {
-            storeAndGetFeedUseCase(
-                url,
-                onSuccess = {
-                    prepareMediaData(it.episodes)
-                },
-                onError = {},
-            )
-        }
-    }
+  private suspend fun fetchFeedFromUrl(url: String) {
+	withContext(Dispatchers.IO) {
+	  storeAndGetFeedUseCase(
+		  url,
+		  onSuccess = {
+			  prepareMediaData(it.episodes)
+		  },
+		  onError = {},
+	  )
+	}
+  }
 
-    private fun prepareMediaData(episodes: List<Episode>) {
-        if (mediaServiceClient.isConnected.value) {
-            mediaServiceClient.prepare {
-                episodes.mapToMediaData()
-            }
-        }
-    }
+  private fun prepareMediaData(episodes: List<Episode>) {
+	if (mediaServiceClient.isConnected.value) {
+	  mediaServiceClient.prepare {
+		episodes.mapToMediaData()
+	  }
+	}
+  }
 
-    private fun List<Episode>.mapToMediaData() = this.map {
-        MediaData(
-            mediaId = it.id,
-            mediaUri = it.audioUrl,
-            displayTitle = it.title,
-            displayIconUri = it.imageUrl,
-            displayDescription = it.description,
-            displaySubtitle = it.subTitle ?: "",
-            playbackPosition = it.playbackPosition.position,
-            duration = it.playbackPosition.duration,
-        )
-    }
+  private fun List<Episode>.mapToMediaData() = this.map {
+	MediaData(
+		mediaId = it.id,
+		mediaUri = it.audioUrl,
+		displayTitle = it.title,
+		displayIconUri = it.imageUrl,
+		displayDescription = it.description,
+		displaySubtitle = it.subTitle ?: "",
+		playbackPosition = it.playbackPosition.position,
+		duration = it.playbackPosition.duration,
+	)
+  }
 
-    private fun subscribeToMediaService() {
-        viewModelScope.launch {
-            mediaServiceClient.subscribe(MEDIA_ROOT_ID, subscriptionCallback)
-        }
-    }
+  private fun subscribeToMediaService() {
+	viewModelScope.launch {
+	  mediaServiceClient.subscribe(MEDIA_ROOT_ID, subscriptionCallback)
+	}
+  }
 
-    fun mediaItemClicked(clickedItemId: String) {
-        if (mediaServiceClient.isConnected.value) {
-            mediaServiceClient.playMediaId(clickedItemId)
-        }
-    }
+  fun mediaItemClicked(clickedItemId: String) {
+	if (mediaServiceClient.isConnected.value) {
+	  mediaServiceClient.playMediaId(clickedItemId)
+	}
+  }
 
-    fun episodeClicked(clickedItem: Episode) {
-        if (mediaServiceClient.isConnected.value) {
-            _navigateToFragment.value = MediaPlayerFragment.newInstance(clickedItem)
+  fun episodeClicked(clickedItem: Episode) {
+	if (mediaServiceClient.isConnected.value) {
+	  _navigateToFragment.value = MediaPlayerFragment.newInstance(clickedItem)
 
-            if (!playingState(clickedItem.id)) {
-                mediaServiceClient.playMediaId(clickedItem.id)
-            }
-        }
-    }
+	  if (!playingState(clickedItem.id)) {
+		mediaServiceClient.playMediaId(clickedItem.id)
+	  }
+	}
+  }
 
-    fun forwardCurrentItem() {
-        if (mediaServiceClient.isConnected.value) {
-            mediaServiceClient.fastForward()
-        }
-    }
+  fun forwardCurrentItem() {
+	if (mediaServiceClient.isConnected.value) {
+	  mediaServiceClient.fastForward()
+	}
+  }
 
-    fun replayCurrentItem() {
-        if (mediaServiceClient.isConnected.value) {
-            mediaServiceClient.rewind()
-        }
-    }
+  fun replayCurrentItem() {
+	if (mediaServiceClient.isConnected.value) {
+	  mediaServiceClient.rewind()
+	}
+  }
 
-    fun skipToPrevious() {
-        if (mediaServiceClient.isConnected.value) {
-            mediaServiceClient.skipToPrevious()
-        }
-    }
+  fun skipToPrevious() {
+	if (mediaServiceClient.isConnected.value) {
+	  mediaServiceClient.skipToPrevious()
+	}
+  }
 
-    fun skipToNext() {
-        if (mediaServiceClient.isConnected.value) {
-            mediaServiceClient.skipToNext()
-        }
-    }
+  fun skipToNext() {
+	if (mediaServiceClient.isConnected.value) {
+	  mediaServiceClient.skipToNext()
+	}
+  }
 
-    fun seekTo(positionMillis: Long) {
-        if (mediaServiceClient.isConnected.value) {
-            mediaServiceClient.seekTo(positionMillis)
-        }
-    }
+  fun seekTo(positionMillis: Long) {
+	if (mediaServiceClient.isConnected.value) {
+	  mediaServiceClient.seekTo(positionMillis)
+	}
+  }
 
-    fun playbackSpeed(speed: Float) {
-        if (mediaServiceClient.isConnected.value) {
-            mediaServiceClient.speed(speed)
-        }
-    }
+  fun playbackSpeed(speed: Float) {
+	if (mediaServiceClient.isConnected.value) {
+	  mediaServiceClient.speed(speed)
+	}
+  }
 
-    private fun playingState(mediaId: String): Boolean {
-        val isActive = mediaId == mediaServiceClient.nowPlaying.value.mediaId
-        val isPlaying = mediaServiceClient.playbackState.value.isPlaying
-        return when {
-            !isActive -> false
-            isPlaying -> true
-            else -> false
-        }
-    }
+  private fun playingState(mediaId: String): Boolean {
+	val isActive = mediaId == mediaServiceClient.nowPlaying.value.mediaId
+	val isPlaying = mediaServiceClient.playbackState.value.isPlaying
+	return when {
+	  !isActive -> false
+	  isPlaying -> true
+	  else -> false
+	}
+  }
 
-    override fun onCleared() {
-        super.onCleared()
-        mediaServiceClient.unsubscribe(MEDIA_ROOT_ID, subscriptionCallback)
-    }
+  override fun onCleared() {
+	super.onCleared()
+	mediaServiceClient.unsubscribe(MEDIA_ROOT_ID, subscriptionCallback)
+  }
 
-    companion object {
-        const val TEST_URL = "https://feeds.feedburner.com/blogspot/androiddevelopersbackstage"
-    }
+  companion object {
+
+	const val TEST_URL = "https://feeds.feedburner.com/blogspot/androiddevelopersbackstage"
+  }
 }

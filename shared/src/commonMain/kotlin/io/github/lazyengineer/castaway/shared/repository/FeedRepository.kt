@@ -12,27 +12,27 @@ class FeedRepository constructor(
 	private val localDataSource: LocalFeedDataSource
 ) : FeedDataSource {
 
-	init {
-		ensureNeverFrozen()
-	}
+  init {
+	ensureNeverFrozen()
+  }
 
-	override suspend fun saveFeed(feed: FeedData): Result<FeedData> {
-		return localDataSource.saveFeedData(feed)
-	}
+  override suspend fun saveFeed(feed: FeedData): Result<FeedData> {
+	return localDataSource.saveFeedData(feed)
+  }
 
-	override suspend fun saveEpisode(episode: Episode): Result<Episode> {
-		return localDataSource.saveEpisode(episode)
-	}
+  override suspend fun saveEpisode(episode: Episode): Result<Episode> {
+	return localDataSource.saveEpisode(episode)
+  }
 
-	override suspend fun fetchXml(url: String): Result<String> {
-		return remoteDataSource.fetchFeed(url)
-	}
+  override suspend fun fetchXml(url: String): Result<String> {
+	return remoteDataSource.fetchFeed(url)
+  }
 
-	override suspend fun loadLocally(url: String): Result<FeedData> {
-		return localDataSource.loadFeed(url)
-	}
+  override suspend fun loadLocally(url: String): Result<FeedData> {
+	return localDataSource.loadFeed(url)
+  }
 
-	override suspend fun loadEpisodes(episodeIds: List<String>): Result<List<Episode>> {
-		return localDataSource.loadEpisodes(episodeIds)
-	}
+  override suspend fun loadEpisodes(episodeIds: List<String>): Result<List<Episode>> {
+	return localDataSource.loadEpisodes(episodeIds)
+  }
 }

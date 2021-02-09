@@ -1,11 +1,10 @@
 pluginManagement {
-    repositories {
-        google()
-        jcenter()
-        gradlePluginPortal()
-        mavenCentral()
-    }
-
+  repositories {
+	google()
+	jcenter()
+	gradlePluginPortal()
+	mavenCentral()
+  }
 }
 rootProject.name = "castaway"
 

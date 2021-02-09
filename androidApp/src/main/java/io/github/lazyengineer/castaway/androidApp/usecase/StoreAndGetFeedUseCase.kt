@@ -8,7 +8,6 @@ import io.github.lazyengineer.castaway.shared.repository.FeedDataSource
 import io.github.lazyengineer.feedparser.FeedParser
 import org.xmlpull.v1.XmlPullParserFactory
 
-
 /**
  * At the moment kotlinx.serialization doesn't support xml parsing
  * (https://github.com/Kotlin/kotlinx.serialization/issues/188), that's why
@@ -16,22 +15,22 @@ import org.xmlpull.v1.XmlPullParserFactory
  * store the feed object locally and return it from there as a single source of truth
  */
 class StoreAndGetFeedUseCase constructor(
-    private val feedRepository: FeedDataSource
+	private val feedRepository: FeedDataSource
 ) : UseCase<FeedData, String>() {
 
-    override suspend fun run(url: String): Result<FeedData> {
-        return when (val feedXmlResult = feedRepository.fetchXml(url)) {
-            is Result.Success -> {
-                val factory = XmlPullParserFactory.newInstance()
-                val xmlPullParser = factory.newPullParser()
-                val feed = FeedParser.parseFeed(feedXmlResult.data, xmlPullParser)
-                val feedData = feed.toFeedData(url)
+  override suspend fun run(url: String): Result<FeedData> {
+	return when (val feedXmlResult = feedRepository.fetchXml(url)) {
+		is Result.Success -> {
+			val factory = XmlPullParserFactory.newInstance()
+			val xmlPullParser = factory.newPullParser()
+			val feed = FeedParser.parseFeed(feedXmlResult.data, xmlPullParser)
+			val feedData = feed.toFeedData(url)
 
-                feedRepository.saveFeed(feedData)
-            }
-            is Result.Error -> {
-                feedXmlResult
-            }
-        }
-    }
+			feedRepository.saveFeed(feedData)
+		}
+		is Result.Error -> {
+			feedXmlResult
+		}
+	}
+  }
 }

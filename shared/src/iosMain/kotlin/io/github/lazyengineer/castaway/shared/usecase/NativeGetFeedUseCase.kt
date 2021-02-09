@@ -8,27 +8,28 @@ import org.koin.core.KoinComponent
 import org.koin.core.inject
 
 class NativeGetFeedUseCase : KoinComponent {
-    private val getFeedUseCase: GetFeedUseCase by inject()
-    private val coroutineScope = MainScope(Dispatchers.Main)
 
-    init {
-        ensureNeverFrozen()
-    }
+  private val getFeedUseCase: GetFeedUseCase by inject()
+  private val coroutineScope = MainScope(Dispatchers.Main)
 
-    fun run(
-        url: String,
-        onSuccess: (String) -> Unit,
-        onError: (String) -> Unit,
-    ) {
-        coroutineScope.launch {
-            getFeedUseCase(
-                url,
-                onSuccess = { onSuccess(it) },
-                onError = { onError(it.message ?: "Error fetch") })
-        }
-    }
+  init {
+	ensureNeverFrozen()
+  }
 
-    fun onDestroy() {
-        coroutineScope.onDestroy()
-    }
+  fun run(
+	  url: String,
+	  onSuccess: (String) -> Unit,
+	  onError: (String) -> Unit,
+  ) {
+	coroutineScope.launch {
+	  getFeedUseCase(
+		  url,
+		  onSuccess = { onSuccess(it) },
+		  onError = { onError(it.message ?: "Error fetch") })
+	}
+  }
+
+  fun onDestroy() {
+	coroutineScope.onDestroy()
+  }
 }

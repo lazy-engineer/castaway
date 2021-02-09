@@ -9,15 +9,15 @@ import org.koin.android.ext.koin.androidLogger
 
 class App : Application() {
 
-    override fun onCreate() {
-        super.onCreate()
+  override fun onCreate() {
+	super.onCreate()
 
-        appContext = this
+	appContext = this
 
-        initKoin {
-            androidLogger()
-            androidContext(this@App)
-            modules(appModule)
-        }
-    }
+	initKoin {
+	  androidLogger()
+	  androidContext(this@App)
+	  modules(appModule)
+	}
+  }
 }

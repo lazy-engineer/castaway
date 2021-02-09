@@ -6,10 +6,10 @@ import io.github.lazyengineer.castaway.shared.entity.FeedData
 import io.github.lazyengineer.castaway.shared.repository.FeedDataSource
 
 class GetStoredFeedUseCase constructor(
-    private val feedRepository: FeedDataSource
+	private val feedRepository: FeedDataSource
 ) : UseCase<FeedData, String>() {
 
-    override suspend fun run(feedUrl: String): Result<FeedData> {
-        return feedRepository.loadLocally(feedUrl)
-    }
+  override suspend fun run(feedUrl: String): Result<FeedData> {
+	return feedRepository.loadLocally(feedUrl)
+  }
 }

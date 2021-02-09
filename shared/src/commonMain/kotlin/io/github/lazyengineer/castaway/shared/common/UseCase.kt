@@ -8,52 +8,52 @@ import kotlinx.coroutines.flow.onEach
 
 abstract class UseCase<out Type, in Params> where Type : Any {
 
-	init {
-		ensureNeverFrozen()
+  init {
+	ensureNeverFrozen()
+  }
+
+  abstract suspend fun run(params: Params): Result<Type>
+
+  suspend operator fun invoke(
+	  params: Params,
+	  onSuccess: (Type) -> Unit,
+	  onError: (Exception) -> Unit
+  ) {
+	when (val result = run(params)) {
+		is Result.Success -> {
+			onSuccess(result.data)
+		}
+		is Result.Error -> {
+			onError(result.exception)
+		}
 	}
-
-    abstract suspend fun run(params: Params): Result<Type>
-
-    suspend operator fun invoke(
-		params: Params,
-		onSuccess: (Type) -> Unit,
-		onError: (Exception) -> Unit
-	) {
-        when (val result = run(params)) {
-			is Result.Success -> {
-				onSuccess(result.data)
-			}
-			is Result.Error -> {
-				onError(result.exception)
-			}
-        }
-    }
+  }
 }
 
 abstract class FlowableUseCase<out Type, in Params> where Type : Any {
 
-	init {
-		ensureNeverFrozen()
+  init {
+	ensureNeverFrozen()
+  }
+
+  abstract fun run(params: Params): Flow<Result<Type>>
+
+  operator fun invoke(
+	  params: Params,
+	  onEach: (Type) -> Unit,
+	  onError: (Throwable) -> Unit,
+	  onComplete: () -> Unit
+  ) = run(params)
+	.onEach {
+	  when (val result = it) {
+		  is Result.Success -> {
+			  onEach(result.data)
+		  }
+		  is Result.Error -> {
+			  onError(result.exception)
+		  }
+	  }
 	}
-
-    abstract fun run(params: Params): Flow<Result<Type>>
-
-    operator fun invoke(
-		params: Params,
-		onEach: (Type) -> Unit,
-		onError: (Throwable) -> Unit,
-		onComplete: () -> Unit
-	) = run(params)
-        .onEach {
-            when (val result = it) {
-				is Result.Success -> {
-					onEach(result.data)
-				}
-				is Result.Error -> {
-					onError(result.exception)
-				}
-            }
-        }
-        .catch { onError(it) }
-        .onCompletion { onComplete() }
+	.catch { onError(it) }
+	.onCompletion { onComplete() }
 }

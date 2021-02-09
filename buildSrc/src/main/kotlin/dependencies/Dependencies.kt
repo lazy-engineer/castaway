@@ -1,6 +1,7 @@
 package dependencies
 
 object App {
+
   const val compileSdk = 30
   const val minSdk = 21
   const val targetSdk = 30
@@ -12,6 +13,7 @@ object App {
 }
 
 object Version {
+
   const val kotlin = "1.4.21"
   const val gradle = "4.1.1"
 
@@ -40,12 +42,14 @@ object Version {
 }
 
 object Plugin {
+
   const val kotlin = "org.jetbrains.kotlin:kotlin-gradle-plugin:${Version.kotlin}"
   const val gradle = "com.android.tools.build:gradle:${Version.gradle}"
   const val koin = "org.koin:koin-gradle-plugin:${Version.koin}"
 }
 
 object Library {
+
   const val kotlin = "org.jetbrains.kotlin:kotlin-stdlib-jdk7:${Version.kotlin}"
   const val ktxCore = "androidx.core:core-ktx:${Version.ktxCore}"
 
@@ -85,9 +89,11 @@ object Library {
 }
 
 object TestLibrary {
+
   const val junit = "junit:junit:${Version.junit}"
 }
 
 object AndroidTestLibrary {
+
   const val androidJunit = "androidx.test.ext:junit:${Version.androidJunit}"
 }

@@ -6,15 +6,16 @@ import kotlinx.coroutines.SupervisorJob
 import kotlin.coroutines.CoroutineContext
 
 class MainScope(private val mainContext: CoroutineContext) : CoroutineScope {
-    override val coroutineContext: CoroutineContext
-        get() = mainContext + job + exceptionHandler
 
-    private val job = SupervisorJob()
-    private val exceptionHandler = CoroutineExceptionHandler { _, throwable ->
-        // TODO: pass throwable to platform
-    }
+  override val coroutineContext: CoroutineContext
+	get() = mainContext + job + exceptionHandler
 
-    fun onDestroy() {
-        job.cancel()
-    }
+  private val job = SupervisorJob()
+  private val exceptionHandler = CoroutineExceptionHandler { _, throwable ->
+	// TODO: pass throwable to platform
+  }
+
+  fun onDestroy() {
+	job.cancel()
+  }
 }
