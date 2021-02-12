@@ -15,9 +15,6 @@ FOREIGN KEY(podcastUrl) REFERENCES podcast(url)
 );
 
 insertEpisode:
-INSERT INTO episodeEntity VALUES ?;
-
-replaceEpisode:
 INSERT OR REPLACE INTO episodeEntity VALUES ?;
 
 selectById:
