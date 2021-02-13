@@ -12,6 +12,7 @@ class CastawayViewModel: ObservableObject {
     
     private var disposables = Set<AnyCancellable>()
     
+    @Published var feedTitle = ""
     @Published var episodes = [Episode]()
     @Published var currentEpisode: Episode?
     var playbackTimePublisher: PassthroughSubject<TimeInterval, Never>
@@ -45,6 +46,7 @@ class CastawayViewModel: ObservableObject {
         self.storeAndGetFeedUseCase.run(url: "https://feeds.feedburner.com/blogspot/androiddevelopersbackstage") { result in
             switch result {
             case .success(let feed):
+                self.feedTitle = feed.title
                 self.episodes = feed.episodes
                 self.player.prepare(media: feed.episodes.map{ episode in episode.toMediaData() })
             case .failure(let error):
