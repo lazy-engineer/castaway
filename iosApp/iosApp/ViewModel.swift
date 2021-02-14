@@ -67,6 +67,11 @@ class CastawayViewModel: ObservableObject {
         }
     }
     
+    func playPause(playState: Bool) {
+        guard let episodeId = self.currentEpisode?.id else { return }
+        self.player.playPause(mediaId: episodeId, playState: playState)
+    }
+    
     func forwardCurrentItem() {
         self.player.fastForward()
     }
