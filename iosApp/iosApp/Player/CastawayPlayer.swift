@@ -29,7 +29,7 @@ class CastawayPlayer {
         observePlayer()
     }
     
-    fileprivate func addPeriodicTimeObserver() {
+    private func addPeriodicTimeObserver() {
         let timeScale = CMTimeScale(NSEC_PER_SEC)
         let time = CMTime(seconds: 0.5, preferredTimescale: timeScale)
         
@@ -39,7 +39,7 @@ class CastawayPlayer {
         }
     }
     
-    fileprivate func observePlayer() {
+    private func observePlayer() {
         rateObserver = player.observe(\.rate, options: [.initial, .old, .new]) { [weak self] (item, change) in
             guard let self = self else { return }
             
@@ -58,7 +58,7 @@ class CastawayPlayer {
         }
     }
     
-    fileprivate func sendNowPlayingItemKey(_ currentItem: AVPlayerItem?) {
+    private func sendNowPlayingItemKey(_ currentItem: AVPlayerItem?) {
         if let unwrappedItem = currentItem {
             self.playerItems.forEach { key, itemTuple in
                 sendKeyIfPlayerItemFound(itemToFound: unwrappedItem, itemTuple: itemTuple)
@@ -66,13 +66,13 @@ class CastawayPlayer {
         }
     }
     
-    fileprivate func sendKeyIfPlayerItemFound(itemToFound: AVPlayerItem, itemTuple: (MediaData, AVPlayerItem)) {
+    private func sendKeyIfPlayerItemFound(itemToFound: AVPlayerItem, itemTuple: (MediaData, AVPlayerItem)) {
         if itemToFound == itemTuple.1 {
             self.nowPlaying.send(itemTuple.0.mediaId)
         }
     }
     
-    fileprivate func observePlayerItem() {
+    private func observePlayerItem() {
         // track status
         self.statusObserver = self.player.currentItem?.observe(\.status, options: [.initial, .old, .new]) { [weak self] (item, change) in
             guard let self = self else { return }
@@ -108,14 +108,14 @@ class CastawayPlayer {
         }
     }
     
-    fileprivate func sendDurationMillis(_ newDuration: CMTime) {
+    private func sendDurationMillis(_ newDuration: CMTime) {
         let durationMillies = self.duration(time: newDuration)
         if durationMillies.intValue > 0 {
             self.playbackDuration.send(durationMillies)
         }
     }
     
-    fileprivate func updateMediaItemDuration(_ itemKey: String, _ newDuration: CMTime) {
+    private func updateMediaItemDuration(_ itemKey: String, _ newDuration: CMTime) {
         if let item = self.playerItems[itemKey] {
             var updatedItem = item
             updatedItem.0.duration = self.duration(time: newDuration)
@@ -123,7 +123,7 @@ class CastawayPlayer {
         }
     }
     
-    fileprivate func removePeriodicTimeObserver() {
+    private func removePeriodicTimeObserver() {
         if let timeObserverToken = timeObserverToken {
             player.removeTimeObserver(timeObserverToken)
             self.timeObserverToken = nil
@@ -146,7 +146,7 @@ class CastawayPlayer {
         prepareMediaData(block())
     }
     
-    fileprivate func prepareMediaData(_ media: [MediaData]) {
+    private func prepareMediaData(_ media: [MediaData]) {
         self.playlist = media.map { mediaData in
             mediaData.mediaId
         }

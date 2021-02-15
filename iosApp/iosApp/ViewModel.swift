@@ -27,7 +27,7 @@ class CastawayViewModel: ObservableObject {
         observePlaybackState()
     }
     
-    fileprivate func observePlaybackState() {
+    private func observePlaybackState() {
         self.player.playbackState
             .sink(receiveValue: { state in
                 self.storeEpisodeOnPausedOrStopped(state)
@@ -35,7 +35,7 @@ class CastawayViewModel: ObservableObject {
             .store(in: &disposables)
     }
     
-    fileprivate func storeEpisodeOnPausedOrStopped(_ state: PlaybackState) {
+    private func storeEpisodeOnPausedOrStopped(_ state: PlaybackState) {
         if state == PlaybackState.paused || state == PlaybackState.stopped {
             guard let episode = self.currentEpisode?.copy(duration: self.playbackDurationPublisher.value) else { return }
             self.storeEpisode(episode: episode)

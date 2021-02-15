@@ -46,7 +46,7 @@ class StoreAndGetFeedUseCase {
             })
     }
     
-    fileprivate func parseXml(_ xml: String, completion: @escaping (Swift.Result<RSSFeed, Error>) -> Void) {
+    private func parseXml(_ xml: String, completion: @escaping (Swift.Result<RSSFeed, Error>) -> Void) {
         if let data = xml.data(using: String.Encoding(rawValue: String.Encoding.utf8.rawValue)) {
             let parser = FeedParser(data: data)
             parser.parseAsync(queue: DispatchQueue.global(qos: .userInitiated)) { (result) in
