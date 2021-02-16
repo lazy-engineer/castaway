@@ -63,14 +63,14 @@ struct NowPlayingView: View {
                     .padding(.trailing, 8)
             }.padding(.top, 48)
             
-            Slider(value: $playbackPosition, in: 0...self.duration, step: 0.1)
+            Slider(value: $playbackPosition, in: 0...self.duration, step: 1)
                 .padding(.leading, 8)
                 .padding(.trailing, 8)
                 .padding(.bottom, 48)
-                .onReceive(self.viewModel.playbackTimePublisher) { time in
-                    self.playbackPosition = time
+                .onReceive(self.viewModel.playbackPositionPublisher) { time in
+                    self.playbackPosition = TimeInterval(time)
                 }.onReceive(self.viewModel.playbackDurationPublisher) { duration in
-                    self.duration = duration.doubleValue
+                    self.duration = TimeInterval(duration)
                 }
         }
     }

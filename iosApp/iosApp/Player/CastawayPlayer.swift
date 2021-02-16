@@ -17,9 +17,9 @@ class CastawayPlayer {
     private var likelyToKeepUpObserver: Any?
     private var bufferEmptyObserver: Any?
     
-    let playbackTime = PassthroughSubject<TimeInterval, Never>()
+    let playbackTime = CurrentValueSubject<Int64, Never>(0)
+    let playbackDuration = CurrentValueSubject<Int64, Never>(1)
     let playbackSpeed = PassthroughSubject<Float, Never>()
-    let playbackDuration = CurrentValueSubject<KotlinLong, Never>(1)
     let playbackState = CurrentValueSubject<PlaybackState, Never>(PlaybackState.unknown)
     let nowPlaying = CurrentValueSubject<String?, Never>(nil)
     
@@ -35,7 +35,7 @@ class CastawayPlayer {
         
         timeObserverToken = player.addPeriodicTimeObserver(forInterval: time, queue: .main) { [weak self] time in
             guard let self = self else { return }
-            self.playbackTime.send(time.seconds * 1000)
+            self.playbackTime.send(Int64(time.seconds * 1000))
         }
     }
     
@@ -110,7 +110,7 @@ class CastawayPlayer {
     
     private func sendDurationMillis(_ newDuration: CMTime) {
         let durationMillies = self.duration(time: newDuration)
-        if durationMillies.intValue > 0 {
+        if durationMillies > 0 {
             self.playbackDuration.send(durationMillies)
         }
     }
@@ -204,16 +204,16 @@ class CastawayPlayer {
         
     }
     
-    func duration(time: CMTime) -> KotlinLong {
+    func duration(time: CMTime) -> Int64 {
         let timemillis = CMTimeConvertScale(
             time,
             timescale:1000,
             method: CMTimeRoundingMethod.roundHalfAwayFromZero)
         
-        return KotlinLong(value: timemillis.value)
+        return timemillis.value
     }
     
-    func durationFromUrl(url: String) -> KotlinLong? {
+    func durationFromUrl(url: String) -> Int64? {
         guard let url = URL.init(string: url) else { return nil }
         let asset = AVURLAsset(url: url)
         return self.duration(time: asset.duration)

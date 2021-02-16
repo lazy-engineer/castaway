@@ -3,9 +3,8 @@ package io.github.lazyengineer.castaway.shared.entity
 import com.squareup.sqldelight.ColumnAdapter
 
 data class PlaybackPosition(
-	val position: Long,
-	val duration: Long? = null,
-	val percentage: Double? = duration?.let { (position.toDouble() / duration) * 100 },
+	val position: Long = 0,
+	val duration: Long = 1,
 ) {
 
   companion object {

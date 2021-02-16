@@ -62,7 +62,8 @@ class ChannelItemAdapter(private val clickListener: OnItemClickListener) :
 	fun bind(item: Episode) {
 	  binding.itemTitle.text = item.title
 	  binding.playItem.setImageResource(playbackResourceId(item.isPlaying))
-	  item.playbackPosition.percentage?.let { progressBar.progress = it.toInt() }
+
+	  progressBar.progress = ((item.playbackPosition.position / item.playbackPosition.duration) * 100).toInt()
 
 	  binding.playItem.setOnClickListener {
 		clickListener.onPlayClick(item)

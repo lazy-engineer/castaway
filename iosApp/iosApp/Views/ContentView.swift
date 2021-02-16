@@ -22,10 +22,10 @@ struct ContentView: View {
                     playbackDuration: duration
                 ) { playing in
                     self.viewModel.episodeClicked(episode: episode, playState: playing)
-                }.onReceive(self.viewModel.playbackTimePublisher) { time in
-                    self.currentTime = time
+                }.onReceive(self.viewModel.playbackPositionPublisher) { time in
+                    self.currentTime = TimeInterval(time)
                 }.onReceive(self.viewModel.playbackDurationPublisher) { duration in
-                    self.duration = duration.doubleValue
+                    self.duration = TimeInterval(duration)
                 }
                 NavigationLink (destination: NowPlayingView()) {
                     EmptyView()

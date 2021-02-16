@@ -111,7 +111,7 @@ class MediaPlayerFragment : Fragment() {
 	  playbackPosition: PlaybackPosition,
   ) {
 	seekBarHandler.post {
-	  binding.episodeSeekbar.max = playbackPosition.duration!!.toInt()
+	  binding.episodeSeekbar.max = playbackPosition.duration.toInt()
 	  binding.episodeSeekbar.progress = playbackPosition.position.toInt()
 	}
   }

@@ -15,13 +15,13 @@ class CastawayViewModel: ObservableObject {
     @Published var feedTitle = ""
     @Published var episodes = [Episode]()
     @Published var currentEpisode: Episode?
-    var playbackTimePublisher: PassthroughSubject<TimeInterval, Never>
-    var playbackDurationPublisher: CurrentValueSubject<KotlinLong, Never>
+    var playbackPositionPublisher: CurrentValueSubject<Int64, Never>
+    var playbackDurationPublisher: CurrentValueSubject<Int64, Never>
     
     init() {
         self.storeAndGetFeedUseCase = StoreAndGetFeedUseCase()
         self.storeEpisodeUseCase = NativeSaveEpisodeUseCase()
-        self.playbackTimePublisher = self.player.playbackTime
+        self.playbackPositionPublisher = self.player.playbackTime
         self.playbackDurationPublisher = self.player.playbackDuration
         
         observePlaybackState()
@@ -37,7 +37,11 @@ class CastawayViewModel: ObservableObject {
     
     private func storeEpisodeOnPausedOrStopped(_ state: PlaybackState) {
         if state == PlaybackState.paused || state == PlaybackState.stopped {
-            guard let episode = self.currentEpisode?.copy(duration: self.playbackDurationPublisher.value) else { return }
+            guard let episode = self.currentEpisode?
+                    .copy(playbackPosition: PlaybackPosition(
+                        position: self.playbackPositionPublisher.value,
+                        duration: self.playbackDurationPublisher.value
+                    )) else { return }
             self.storeEpisode(episode: episode)
         }
     }

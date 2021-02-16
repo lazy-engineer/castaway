@@ -4,7 +4,7 @@ import FeedKit
 import AVFoundation
 
 extension Episode {
-    func copy(playbackPosition: Int64) -> Episode {
+    func copy(position: Int64) -> Episode {
         return self.doCopy(
             id: self.id,
             title: self.title,
@@ -14,9 +14,8 @@ extension Episode {
             imageUrl: self.imageUrl,
             author: self.author,
             playbackPosition: PlaybackPosition(
-                position: playbackPosition,
-                duration: self.playbackPosition.duration,
-                percentage: self.playbackPosition.percentage
+                position: position,
+                duration: self.playbackPosition.duration
             ),
             isPlaying: self.isPlaying,
             podcastUrl: self.podcastUrl)
@@ -24,7 +23,7 @@ extension Episode {
 }
 
 extension Episode {
-    func copy(duration: KotlinLong) -> Episode {
+    func copy(duration: Int64) -> Episode {
         return self.doCopy(
             id: self.id,
             title: self.title,
@@ -35,9 +34,24 @@ extension Episode {
             author: self.author,
             playbackPosition: PlaybackPosition(
                 position: self.playbackPosition.position,
-                duration: duration,
-                percentage: self.playbackPosition.percentage
+                duration: duration
             ),
+            isPlaying: self.isPlaying,
+            podcastUrl: self.podcastUrl)
+    }
+}
+
+extension Episode {
+    func copy(playbackPosition: PlaybackPosition) -> Episode {
+        return self.doCopy(
+            id: self.id,
+            title: self.title,
+            subTitle: self.subTitle,
+            description: self.description_,
+            audioUrl: self.audioUrl,
+            imageUrl: self.imageUrl,
+            author: self.author,
+            playbackPosition: playbackPosition,
             isPlaying: self.isPlaying,
             podcastUrl: self.podcastUrl)
     }
@@ -49,7 +63,7 @@ extension Episode {
             mediaId: self.id,
             mediaUri: self.audioUrl,
             playbackPosition: self.playbackPosition.position,
-            duration: playbackPosition.duration ?? 1
+            duration: playbackPosition.duration
         )
     }
 }
@@ -79,7 +93,7 @@ extension RSSFeedItem {
             audioUrl: (self.media?.mediaContents!.first!.attributes!.url)!,
             imageUrl: nil,
             author: self.author,
-            playbackPosition: PlaybackPosition(position: 0, duration: nil, percentage: nil),
+            playbackPosition: PlaybackPosition(position: 0, duration: 1),
             isPlaying: false,
             podcastUrl: url)
     }

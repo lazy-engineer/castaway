@@ -66,13 +66,12 @@ class FeedEpisodesFragment : Fragment(), OnItemClickListener {
   }
 
   private fun updateProgressBar(episode: Episode) {
-	episode.playbackPosition.percentage?.let { percentage ->
+	  val percentage = ((episode.playbackPosition.position / episode.playbackPosition.duration) * 100).toInt()
 	  val index = episode.index()
 	  if (index != -1) {
 		val viewHolder = binding.feedList.findViewHolderForAdapterPosition(index)
-		viewHolder?.let { (it as ViewHolder).progressBar.progress = percentage.toInt() }
+		viewHolder?.let { (it as ViewHolder).progressBar.progress = percentage }
 	  }
-	}
   }
 
   private fun Episode.index(): Int {

@@ -123,7 +123,7 @@ class MainViewModel constructor(
 	return this.copy(
 		playbackPosition = PlaybackPosition(
 			position = position,
-			duration = mediaServiceClient.nowPlaying.value.duration
+			duration = mediaServiceClient.nowPlaying.value.duration ?: 1
 		)
 	)
   }
