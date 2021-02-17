@@ -18,15 +18,15 @@ class NativeSaveFeedUseCase : KoinComponent {
   }
 
   fun run(
-	  feedData: FeedData,
-	  onSuccess: (FeedData) -> Unit,
-	  onError: (String) -> Unit,
+	feedData: FeedData,
+	onSuccess: (FeedData) -> Unit,
+	onError: (String) -> Unit,
   ) {
 	coroutineScope.launch {
 	  saveFeedUseCase(
-		  feedData,
-		  onSuccess = { onSuccess(it) },
-		  onError = { onError(it.message ?: "Error save") })
+		feedData,
+		onSuccess = { onSuccess(it) },
+		onError = { onError(it.message ?: "Error save") })
 	}
   }
 

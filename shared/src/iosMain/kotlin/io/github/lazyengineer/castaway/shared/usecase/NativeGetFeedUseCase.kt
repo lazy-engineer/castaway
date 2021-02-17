@@ -17,15 +17,15 @@ class NativeGetFeedUseCase : KoinComponent {
   }
 
   fun run(
-	  url: String,
-	  onSuccess: (String) -> Unit,
-	  onError: (String) -> Unit,
+	url: String,
+	onSuccess: (String) -> Unit,
+	onError: (String) -> Unit,
   ) {
 	coroutineScope.launch {
 	  getFeedUseCase(
-		  url,
-		  onSuccess = { onSuccess(it) },
-		  onError = { onError(it.message ?: "Error fetch") })
+		url,
+		onSuccess = { onSuccess(it) },
+		onError = { onError(it.message ?: "Error fetch") })
 	}
   }
 
