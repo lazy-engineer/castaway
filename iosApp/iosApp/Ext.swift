@@ -79,23 +79,37 @@ extension RSSFeed {
         return FeedData(
             url: url,
             title: self.title!,
-            episodes: self.items!.map({ $0.toEpisode(url: url) }))
+            episodes: self.items!.compactMap({ $0.toEpisode(url: url) }))
     }
 }
 
 extension RSSFeedItem {
-    func toEpisode(url: String) -> Episode {
+    func toEpisode(url: String) -> Episode? {
+        guard let audioUrl = audioUrl() else { return nil }
+        
         return Episode(
             id: UUID.init().uuidString,
             title: self.title!,
             subTitle: self.iTunes?.iTunesSubtitle,
             description: self.description,
-            audioUrl: (self.media?.mediaContents!.first!.attributes!.url)!,
-            imageUrl: nil,
+            audioUrl: audioUrl,
+            imageUrl: self.iTunes?.iTunesImage?.attributes?.href,
             author: self.author,
             playbackPosition: PlaybackPosition(position: 0, duration: 1),
             isPlaying: false,
             podcastUrl: url)
+    }
+    
+    private func audioUrl() -> String? {
+        var audioUrl: String? = nil
+        
+        if let enclosureUrl = self.enclosure?.attributes?.url {
+            audioUrl = enclosureUrl
+        } else if let mediaUrl = self.media?.mediaContents?.first?.attributes?.url {
+            audioUrl = mediaUrl
+        }
+
+        return audioUrl
     }
 }
 
