@@ -47,7 +47,7 @@ class CastawayViewModel: ObservableObject {
     }
     
     func fetchFeed() {
-        self.storeAndGetFeedUseCase.run(url: "https://feeds.feedburner.com/blogspot/androiddevelopersbackstage") { result in
+        self.storeAndGetFeedUseCase.run(url: "https://atp.fm/rss") { result in
             switch result {
             case .success(let feed):
                 self.feedTitle = feed.title
