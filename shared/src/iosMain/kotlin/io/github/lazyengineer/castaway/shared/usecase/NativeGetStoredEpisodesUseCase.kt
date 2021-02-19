@@ -26,7 +26,7 @@ class NativeGetStoredEpisodesUseCase : KoinComponent {
 	  getStoredEpisodesUseCase(
 		episodeIds,
 		onSuccess = { onSuccess(it) },
-		onError = { onError(it.message ?: "Error fetch") })
+		onError = { onError(it.message ?: "Failed to get stored Episodes") })
 	}
   }
 
