@@ -6,6 +6,7 @@ import Combine
 
 class CastawayViewModel: ObservableObject {
     
+    private let getStoredFeedUseCase: NativeGetStoredFeedUseCase
     private let storeAndGetFeedUseCase: StoreAndGetFeedUseCase
     private let storeEpisodeUseCase: NativeSaveEpisodeUseCase
     private let player = CastawayPlayer()
@@ -21,6 +22,7 @@ class CastawayViewModel: ObservableObject {
     init() {
         self.storeAndGetFeedUseCase = StoreAndGetFeedUseCase()
         self.storeEpisodeUseCase = NativeSaveEpisodeUseCase()
+        self.getStoredFeedUseCase = NativeGetStoredFeedUseCase()
         self.playbackPositionPublisher = self.player.playbackTime
         self.playbackDurationPublisher = self.player.playbackDuration
         
@@ -46,17 +48,35 @@ class CastawayViewModel: ObservableObject {
         }
     }
     
-    func fetchFeed() {
-        self.storeAndGetFeedUseCase.run(url: "https://atp.fm/rss") { result in
+    func loadFeed(_ url: String) {
+        self.getStoredFeedUseCase.run(
+            url: url,
+            onSuccess: { feed in
+                print("Local ✅")
+                self.publishAndPrepareFeed(feed)
+            },
+            onError: { error in
+                print("There is no stored Feed: \(url) ❌ \(error) 👉 Download...")
+                self.fetchFeed(url)
+            })
+    }
+    
+    private func fetchFeed(_ url: String) {
+        self.storeAndGetFeedUseCase.run(url: url) { result in
             switch result {
             case .success(let feed):
-                self.feedTitle = feed.title
-                self.episodes = feed.episodes
-                self.player.prepare(media: feed.episodes.map{ episode in episode.toMediaData() })
+                print("Fetched 💯")
+                self.publishAndPrepareFeed(feed)
             case .failure(let error):
                 print(error)
             }
         }
+    }
+    
+    private func publishAndPrepareFeed(_ feed: FeedData) {
+        self.feedTitle = feed.title
+        self.episodes = feed.episodes
+        self.player.prepare(media: feed.episodes.map{ episode in episode.toMediaData() })
     }
     
     func mediaItemClicked(_ clickedItemId: String) {}
