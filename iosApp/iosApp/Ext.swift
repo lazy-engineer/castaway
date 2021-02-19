@@ -129,12 +129,10 @@ extension RSSFeedItem {
     }
     
     private func episodeImage(feedImage: String?) -> String? {
-        var episodeImage: String? = nil
+        var episodeImage: String? = feedImage
         
         if let iTunesImage = self.iTunes?.iTunesImage?.attributes?.href {
             episodeImage = iTunesImage
-        } else {
-            episodeImage = feedImage
         }
 
         return episodeImage
