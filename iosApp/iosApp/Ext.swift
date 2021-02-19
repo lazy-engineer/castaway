@@ -76,17 +76,32 @@ extension MediaData {
 
 extension RSSFeed {
     func toFeedData(url: String) -> FeedData {
+        let feedImage = self.feedImage()
+        
         return FeedData(
             url: url,
             title: self.title!,
-            image: self.iTunes?.iTunesImage?.attributes?.href,
-            episodes: self.items!.compactMap({ $0.toEpisode(url: url, image: self.iTunes?.iTunesImage?.attributes?.href) }))
+            image: feedImage,
+            episodes: self.items!.compactMap({ $0.toEpisode(url: url, image: feedImage) }))
+    }
+    
+    private func feedImage() -> String? {
+        var feedImage: String? = nil
+        
+        if let image = self.image?.url {
+            feedImage = image
+        } else if let iTunesFeedImage = self.iTunes?.iTunesImage?.attributes?.href {
+            feedImage = iTunesFeedImage
+        }
+
+        return feedImage
     }
 }
 
 extension RSSFeedItem {
     func toEpisode(url: String, image: String?) -> Episode? {
         guard let audioUrl = audioUrl() else { return nil }
+        let episodeImage = self.episodeImage(feedImage: image)
         
         return Episode(
             id: UUID.init().uuidString,
@@ -94,7 +109,7 @@ extension RSSFeedItem {
             subTitle: self.iTunes?.iTunesSubtitle,
             description: self.description,
             audioUrl: audioUrl,
-            imageUrl: image,
+            imageUrl: episodeImage,
             author: self.author,
             playbackPosition: PlaybackPosition(position: 0, duration: 1),
             isPlaying: false,
@@ -111,6 +126,18 @@ extension RSSFeedItem {
         }
 
         return audioUrl
+    }
+    
+    private func episodeImage(feedImage: String?) -> String? {
+        var episodeImage: String? = nil
+        
+        if let iTunesImage = self.iTunes?.iTunesImage?.attributes?.href {
+            episodeImage = iTunesImage
+        } else {
+            episodeImage = feedImage
+        }
+
+        return episodeImage
     }
 }
 
