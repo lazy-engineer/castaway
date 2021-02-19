@@ -16,27 +16,33 @@ class FeedLocalDataSource constructor(private val database: CastawayDatabase) :
   }
 
   override suspend fun loadFeed(feedUrl: String): Result<FeedData> {
-	val feed: FeedData = database.episodeQueries.transactionWithResult {
-	  val podcast = database.podcastQueries.selectByUrl(feedUrl).executeAsOne()
+	return database.episodeQueries.transactionWithResult {
+	  try {
+		val podcast = database.podcastQueries.selectByUrl(feedUrl).executeAsOne()
 
-	  val episodes = database.episodeQueries.selectByPodcast(feedUrl).executeAsList().map {
-		it.toEpisode()
+		val episodes = database.episodeQueries.selectByPodcast(feedUrl).executeAsList().map {
+		  it.toEpisode()
+		}
+
+		Result.Success(FeedData(url = podcast.url, title = podcast.name, episodes = episodes))
+	  } catch (e: NullPointerException) {
+		Result.Error(e)
 	  }
-
-	  FeedData(url = podcast.url, title = podcast.name, episodes = episodes)
 	}
-
-	return Result.Success(feed)
   }
 
   override suspend fun loadEpisodes(episodeIds: List<String>): Result<List<Episode>> {
-	val episodes: List<Episode> = database.episodeQueries.transactionWithResult {
-	  database.episodeQueries.selectByIds(episodeIds).executeAsList().map {
-		it.toEpisode()
+	return database.episodeQueries.transactionWithResult {
+	  try {
+		val episodes = database.episodeQueries.selectByIds(episodeIds).executeAsList().map {
+		  it.toEpisode()
+		}
+
+		Result.Success(episodes)
+	  } catch (e: NullPointerException) {
+		Result.Error(e)
 	  }
 	}
-
-	return Result.Success(episodes)
   }
 
   override suspend fun saveFeedData(feed: FeedData): Result<FeedData> {
@@ -44,7 +50,7 @@ class FeedLocalDataSource constructor(private val database: CastawayDatabase) :
 	  database.podcastQueries.insertPodcast(feed.url, feed.title)
 	  feed.episodes.forEach {
 		database.episodeQueries.insertEpisode(
-			it.toEpisodeEntity()
+		  it.toEpisodeEntity()
 		)
 	  }
 
@@ -57,7 +63,7 @@ class FeedLocalDataSource constructor(private val database: CastawayDatabase) :
   override suspend fun saveEpisode(episode: Episode): Result<Episode> {
 	val savedEpisode: Episode = database.episodeQueries.transactionWithResult {
 	  database.episodeQueries.insertEpisode(
-		  episode.toEpisodeEntity()
+		episode.toEpisodeEntity()
 	  )
 
 	  episode
@@ -68,31 +74,31 @@ class FeedLocalDataSource constructor(private val database: CastawayDatabase) :
 
   private fun EpisodeEntity.toEpisode(): Episode {
 	return Episode(
-		id = this.id,
-		title = this.title,
-		subTitle = this.subTitle,
-		description = this.description,
-		audioUrl = this.audioUrl,
-		imageUrl = this.imageUrl,
-		author = this.author,
-		playbackPosition = this.playbackPosition ?: PlaybackPosition(0),
-		isPlaying = this.isPlaying ?: false,
-		podcastUrl = this.podcastUrl,
+	  id = this.id,
+	  title = this.title,
+	  subTitle = this.subTitle,
+	  description = this.description,
+	  audioUrl = this.audioUrl,
+	  imageUrl = this.imageUrl,
+	  author = this.author,
+	  playbackPosition = this.playbackPosition ?: PlaybackPosition(0),
+	  isPlaying = this.isPlaying ?: false,
+	  podcastUrl = this.podcastUrl,
 	)
   }
 
   private fun Episode.toEpisodeEntity(): EpisodeEntity {
 	return EpisodeEntity(
-		id = this.id,
-		title = this.title,
-		subTitle = this.subTitle,
-		description = this.description,
-		audioUrl = this.audioUrl,
-		imageUrl = this.imageUrl,
-		author = this.author,
-		playbackPosition = this.playbackPosition,
-		isPlaying = this.isPlaying,
-		podcastUrl = this.podcastUrl,
+	  id = this.id,
+	  title = this.title,
+	  subTitle = this.subTitle,
+	  description = this.description,
+	  audioUrl = this.audioUrl,
+	  imageUrl = this.imageUrl,
+	  author = this.author,
+	  playbackPosition = this.playbackPosition,
+	  isPlaying = this.isPlaying,
+	  podcastUrl = this.podcastUrl,
 	)
   }
 }
