@@ -9,12 +9,24 @@ struct NowPlayingScreen: View {
     
     var body: some View {
         VStack {
-            Image(systemName: "mic")
-                .resizable()
-                .scaledToFill()
-                .frame(width: 200, height: 300)
-                .foregroundColor(.gray)
-                .padding(86)
+            if let imageUrl = self.viewModel.feedImage {
+                Image(uiImage: imageUrl)
+                    .resizable()
+                    .scaledToFill()
+                    .frame(width: 200, height: 300)
+                        .padding(86)
+            } else {
+                Image(systemName: "mic")
+                    .resizable()
+                    .scaledToFill()
+                    .frame(width: 200, height: 300)
+                    .padding(86)
+                    .foregroundColor(.gray)
+                    .onAppear {
+                        guard let imageUrl = self.viewModel.currentEpisode?.imageUrl else { return }
+                        self.viewModel.loadImage(imageUrl)
+                    }
+            }
             
             HStack(spacing: 30) {
                 Spacer()

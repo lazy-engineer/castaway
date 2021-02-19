@@ -9,11 +9,13 @@ class CastawayViewModel: ObservableObject {
     private let getStoredFeedUseCase: NativeGetStoredFeedUseCase
     private let storeAndGetFeedUseCase: StoreAndGetFeedUseCase
     private let storeEpisodeUseCase: NativeSaveEpisodeUseCase
+    private let loadImageUseCase: NativeLoadImageUseCase
     private let player = CastawayPlayer()
     
     private var disposables = Set<AnyCancellable>()
     
     @Published var feedTitle = ""
+    @Published var feedImage: UIImage?
     @Published var episodes = [Episode]()
     @Published var currentEpisode: Episode?
     var playbackPositionPublisher: CurrentValueSubject<Int64, Never>
@@ -23,6 +25,7 @@ class CastawayViewModel: ObservableObject {
         self.storeAndGetFeedUseCase = StoreAndGetFeedUseCase()
         self.storeEpisodeUseCase = NativeSaveEpisodeUseCase()
         self.getStoredFeedUseCase = NativeGetStoredFeedUseCase()
+        self.loadImageUseCase = NativeLoadImageUseCase()
         self.playbackPositionPublisher = self.player.playbackTime
         self.playbackDurationPublisher = self.player.playbackDuration
         
@@ -56,7 +59,7 @@ class CastawayViewModel: ObservableObject {
                 self.publishAndPrepareFeed(feed)
             },
             onError: { error in
-                print("There is no stored Feed: \(url) ❌ \(error) 👉 Download...")
+                print("There is no stored Feed: \(url) ❌ \(error) 👉 💾 Download...")
                 self.fetchFeed(url)
             })
     }
@@ -71,6 +74,18 @@ class CastawayViewModel: ObservableObject {
                 print(error)
             }
         }
+    }
+    
+    func loadImage(_ url: String) {
+        self.loadImageUseCase.run(
+            url: url,
+            onSuccess: { image in
+                print("🖼 \(image)")
+                self.feedImage = image
+            },
+            onError: { error in
+                print("Fail to load Image: \(url) ❌ \(error)")
+            })
     }
     
     private func publishAndPrepareFeed(_ feed: FeedData) {
