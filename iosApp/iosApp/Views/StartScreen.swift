@@ -6,7 +6,7 @@ func greet() -> String {
     return Greeting().greeting()
 }
 
-struct ContentView: View {
+struct StartScreen: View {
     
     @EnvironmentObject var viewModel: CastawayViewModel
     @State private var currentTime: TimeInterval = 0
@@ -27,7 +27,7 @@ struct ContentView: View {
                 }.onReceive(self.viewModel.playbackDurationPublisher) { duration in
                     self.duration = TimeInterval(duration)
                 }
-                NavigationLink (destination: NowPlayingView()) {
+                NavigationLink (destination: NowPlayingScreen()) {
                     EmptyView()
                 }.frame(width: 0, height: 0).hidden()
             }.onAppear {
@@ -39,9 +39,9 @@ struct ContentView: View {
 }
 
 #if DEBUG
-struct ContentView_Previews: PreviewProvider {
+struct StartScreen_Previews: PreviewProvider {
     static var previews: some View {
-        ContentView()
+        StartScreen()
     }
 }
 #endif

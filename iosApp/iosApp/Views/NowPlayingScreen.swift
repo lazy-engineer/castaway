@@ -1,6 +1,6 @@
 import SwiftUI
 
-struct NowPlayingView: View {
+struct NowPlayingScreen: View {
     
     @EnvironmentObject var viewModel: CastawayViewModel
     @State private var playbackPosition: TimeInterval = 0
@@ -77,9 +77,9 @@ struct NowPlayingView: View {
 }
 
 #if DEBUG
-struct NowPlayingView_Previews: PreviewProvider {
+struct NowPlayingScreen_Previews: PreviewProvider {
     static var previews: some View {
-        NowPlayingView()
+        NowPlayingScreen()
     }
 }
 #endif
