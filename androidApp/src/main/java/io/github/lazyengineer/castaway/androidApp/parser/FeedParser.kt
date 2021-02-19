@@ -16,6 +16,7 @@ object FeedParser {
 			FeedData(
 				url = url,
 				title = this.title,
+			  	image = this.iTunes?.image?.attributes?.href,
 				episodes = this.items.map {
 					Episode(
 						id = UUID.randomUUID().toString(),
@@ -35,6 +36,7 @@ object FeedParser {
 			FeedData(
 				url = url,
 				title = this.title?.value ?: "",
+			  	image = this.icon,
 				episodes = this.entries.map {
 					Episode(
 						id = UUID.randomUUID().toString(),

@@ -79,12 +79,13 @@ extension RSSFeed {
         return FeedData(
             url: url,
             title: self.title!,
-            episodes: self.items!.compactMap({ $0.toEpisode(url: url) }))
+            image: self.iTunes?.iTunesImage?.attributes?.href,
+            episodes: self.items!.compactMap({ $0.toEpisode(url: url, image: self.iTunes?.iTunesImage?.attributes?.href) }))
     }
 }
 
 extension RSSFeedItem {
-    func toEpisode(url: String) -> Episode? {
+    func toEpisode(url: String, image: String?) -> Episode? {
         guard let audioUrl = audioUrl() else { return nil }
         
         return Episode(
@@ -93,7 +94,7 @@ extension RSSFeedItem {
             subTitle: self.iTunes?.iTunesSubtitle,
             description: self.description,
             audioUrl: audioUrl,
-            imageUrl: self.iTunes?.iTunesImage?.attributes?.href,
+            imageUrl: image,
             author: self.author,
             playbackPosition: PlaybackPosition(position: 0, duration: 1),
             isPlaying: false,
