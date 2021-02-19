@@ -31,7 +31,7 @@ struct ContentView: View {
                     EmptyView()
                 }.frame(width: 0, height: 0).hidden()
             }.onAppear {
-                self.viewModel.fetchFeed()
+                self.viewModel.loadFeed("https://atp.fm/rss")
             }
             .navigationBarTitle(self.viewModel.feedTitle)
         }
