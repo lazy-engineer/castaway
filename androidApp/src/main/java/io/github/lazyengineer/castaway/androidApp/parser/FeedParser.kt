@@ -12,47 +12,49 @@ object FeedParser {
 
   fun Feed.toFeedData(url: String): FeedData {
 	return when (this) {
-		is RSSFeed -> {
-			FeedData(
-				url = url,
-				title = this.title,
-			  	image = this.iTunes?.image?.attributes?.href,
-				episodes = this.items.map {
-					Episode(
-						id = UUID.randomUUID().toString(),
-						title = it.title,
-						subTitle = it.iTunes?.subtitle ?: "",
-						description = it.description,
-						audioUrl = it.media?.url ?: "",
-						imageUrl = it.mediaNamespace?.thumbnails?.firstOrNull()?.attributes?.url
-							?: "",
-						author = it.author ?: "",
-						playbackPosition = PlaybackPosition(0, Long.MAX_VALUE),
-						podcastUrl = url,
-					)
-				})
-		}
-		is AtomFeed -> {
-			FeedData(
-				url = url,
-				title = this.title?.value ?: "",
-			  	image = this.icon,
-				episodes = this.entries.map {
-					Episode(
-						id = UUID.randomUUID().toString(),
-						title = it.title?.value ?: "",
-						subTitle = "",
-						description = it.summary?.value ?: "",
-						audioUrl = it.mediaNamespace?.contents?.firstOrNull()?.attributes?.url
-							?: "",
-						imageUrl = it.mediaNamespace?.thumbnails?.firstOrNull()?.attributes?.url
-							?: "",
-						author = it.authors.firstOrNull()?.uri ?: "",
-						playbackPosition = PlaybackPosition(0, Long.MAX_VALUE),
-						podcastUrl = url,
-					)
-				})
-		}
+	  is RSSFeed -> {
+		FeedData(
+		  url = url,
+		  title = this.title,
+		  image = this.iTunes?.image?.attributes?.href,
+		  episodes = this.items.mapIndexed { index, episode ->
+			Episode(
+			  id = UUID.randomUUID().toString(),
+			  title = episode.title,
+			  subTitle = episode.iTunes?.subtitle ?: "",
+			  description = episode.description,
+			  audioUrl = episode.media?.url ?: "",
+			  imageUrl = episode.mediaNamespace?.thumbnails?.firstOrNull()?.attributes?.url
+				?: "",
+			  author = episode.author ?: "",
+			  playbackPosition = PlaybackPosition(0, Long.MAX_VALUE),
+			  episode = index,
+			  podcastUrl = url,
+			)
+		  })
+	  }
+	  is AtomFeed -> {
+		FeedData(
+		  url = url,
+		  title = this.title?.value ?: "",
+		  image = this.icon,
+		  episodes = this.entries.mapIndexed { index, episode ->
+			Episode(
+			  id = UUID.randomUUID().toString(),
+			  title = episode.title?.value ?: "",
+			  subTitle = "",
+			  description = episode.summary?.value ?: "",
+			  audioUrl = episode.mediaNamespace?.contents?.firstOrNull()?.attributes?.url
+				?: "",
+			  imageUrl = episode.mediaNamespace?.thumbnails?.firstOrNull()?.attributes?.url
+				?: "",
+			  author = episode.authors.firstOrNull()?.uri ?: "",
+			  playbackPosition = PlaybackPosition(0, Long.MAX_VALUE),
+			  episode = index,
+			  podcastUrl = url,
+			)
+		  })
+	  }
 	}
   }
 }

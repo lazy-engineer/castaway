@@ -18,6 +18,7 @@ extension Episode {
                 duration: self.playbackPosition.duration
             ),
             isPlaying: self.isPlaying,
+            episode: self.episode,
             podcastUrl: self.podcastUrl)
     }
 }
@@ -37,6 +38,7 @@ extension Episode {
                 duration: duration
             ),
             isPlaying: self.isPlaying,
+            episode: self.episode,
             podcastUrl: self.podcastUrl)
     }
 }
@@ -53,6 +55,7 @@ extension Episode {
             author: self.author,
             playbackPosition: playbackPosition,
             isPlaying: self.isPlaying,
+            episode: self.episode,
             podcastUrl: self.podcastUrl)
     }
 }
@@ -82,7 +85,7 @@ extension RSSFeed {
             url: url,
             title: self.title!,
             image: feedImage,
-            episodes: self.items!.compactMap({ $0.toEpisode(url: url, image: feedImage) }))
+            episodes: self.items!.enumerated().compactMap({ $0.element.toEpisode(url: url, image: feedImage, index: Int32($0.offset)) }))
     }
     
     private func feedImage() -> String? {
@@ -99,7 +102,7 @@ extension RSSFeed {
 }
 
 extension RSSFeedItem {
-    func toEpisode(url: String, image: String?) -> Episode? {
+    func toEpisode(url: String, image: String?, index: Int32) -> Episode? {
         guard let audioUrl = audioUrl() else { return nil }
         let episodeImage = self.episodeImage(feedImage: image)
         
@@ -113,6 +116,7 @@ extension RSSFeedItem {
             author: self.author,
             playbackPosition: PlaybackPosition(position: 0, duration: 1),
             isPlaying: false,
+            episode: index,
             podcastUrl: url)
     }
     

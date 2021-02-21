@@ -83,6 +83,7 @@ class FeedLocalDataSource constructor(private val database: CastawayDatabase) :
 	  author = this.author,
 	  playbackPosition = this.playbackPosition ?: PlaybackPosition(0),
 	  isPlaying = this.isPlaying ?: false,
+	  episode = this.episode.toInt(),
 	  podcastUrl = this.podcastUrl,
 	)
   }
@@ -98,6 +99,7 @@ class FeedLocalDataSource constructor(private val database: CastawayDatabase) :
 	  author = this.author,
 	  playbackPosition = this.playbackPosition,
 	  isPlaying = this.isPlaying,
+	  episode = this.episode.toLong(),
 	  podcastUrl = this.podcastUrl,
 	)
   }

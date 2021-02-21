@@ -10,6 +10,7 @@ imageUrl TEXT,
 author TEXT,
 playbackPosition TEXT AS PlaybackPosition,
 isPlaying INTEGER AS Boolean DEFAULT 0,
+episode INTEGER NOT NULL,
 podcastUrl TEXT NOT NULL,
 FOREIGN KEY(podcastUrl) REFERENCES podcast(url)
 );
@@ -25,7 +26,8 @@ WHERE id = ?;
 selectByPodcast:
 SELECT *
 FROM episodeEntity
-WHERE podcastUrl = ?;
+WHERE podcastUrl = ?
+ORDER BY episode ASC;
 
 selectByIds:
 SELECT *
