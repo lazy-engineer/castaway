@@ -18,6 +18,7 @@ class CastawayViewModel: ObservableObject {
     @Published var feedImage: UIImage?
     @Published var episodes = [Episode]()
     @Published var currentEpisode: Episode?
+    @Published var playing: Bool = false
     var playbackPositionPublisher: CurrentValueSubject<Int64, Never>
     var playbackDurationPublisher: CurrentValueSubject<Int64, Never>
     
@@ -93,21 +94,19 @@ class CastawayViewModel: ObservableObject {
         self.episodes = feed.episodes
         self.player.prepare(media: feed.episodes.map{ episode in episode.toMediaData() })
     }
-    
-    func mediaItemClicked(_ clickedItemId: String) {}
-    
+
     func episodeClicked(episode: Episode, playState: Bool) {
-        self.player.playPause(mediaId: episode.id, playState: playState)
-        
-        if episode != currentEpisode {
-            self.currentEpisode = episode
-        } else {
-            self.currentEpisode = nil
-        }
+        self.playPause(episode.id, playState)
+        self.currentEpisode = episode
     }
     
-    func playPause(playState: Bool) {
+    func playPauseCurrent(playState: Bool) {
         guard let episodeId = self.currentEpisode?.id else { return }
+        playPause(episodeId, playState)
+    }
+    
+    private func playPause(_ episodeId: String, _ playState: Bool) {
+        self.playing = playState
         self.player.playPause(mediaId: episodeId, playState: playState)
     }
     
@@ -143,10 +142,14 @@ class CastawayViewModel: ObservableObject {
         self.storeEpisodeUseCase.run(
             episode: episode,
             onSuccess: { storedEpisode in
-                print("Stored: \(storedEpisode.title)")
+                print("Stored: 💾 \(storedEpisode.title)")
+                self.currentEpisode = storedEpisode
+                if let index = self.episodes.firstIndex(where: {$0.id == storedEpisode.id}) {
+                    self.episodes[index] = storedEpisode
+                }
             },
             onError: { error in
-                print("Error storing: \(error)")
+                print("Error storing: ❌ \(error)")
             })
     }
 }

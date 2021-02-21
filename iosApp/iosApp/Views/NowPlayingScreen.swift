@@ -1,20 +1,32 @@
 import SwiftUI
 
 struct NowPlayingScreen: View {
+ 
+    @Environment(\.presentationMode) var presentationMode
     
     @EnvironmentObject var viewModel: CastawayViewModel
     @State private var playbackPosition: TimeInterval = 0
     @State private var duration: TimeInterval = 1
-    @State private var playing: Bool = true
     
     var body: some View {
         VStack {
+            HStack {
+                Spacer()
+                Button(action: {
+                    presentationMode.wrappedValue.dismiss()
+                }) {
+                    Image(systemName: "chevron.down")
+                        .foregroundColor(.blue)
+                        .padding()
+                }
+            }
+            
             if let imageUrl = self.viewModel.feedImage {
                 Image(uiImage: imageUrl)
                     .resizable()
                     .scaledToFill()
                     .frame(width: 200, height: 300)
-                        .padding(86)
+                    .padding(86)
             } else {
                 Image(systemName: "mic")
                     .resizable()
@@ -43,10 +55,9 @@ struct NowPlayingScreen: View {
                     .foregroundColor(.blue)
                 
                 Button(action: {
-                    self.viewModel.playPause(playState: !playing)
-                    self.playing = !playing
+                    self.viewModel.playPauseCurrent(playState: !self.viewModel.playing)
                 }) {
-                    Image(systemName: playing ? "pause.circle.fill" : "play.circle.fill")
+                    Image(systemName: self.viewModel.playing ? "pause.circle.fill" : "play.circle.fill")
                         .resizable()
                         .scaledToFill()
                         .frame(width:52, height: 52)
