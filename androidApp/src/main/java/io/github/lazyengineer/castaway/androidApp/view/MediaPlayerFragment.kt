@@ -27,7 +27,7 @@ class MediaPlayerFragment : Fragment() {
 
   private val binding: FragmentMediaPlayerBinding by lazy {
 	FragmentMediaPlayerBinding.inflate(
-		layoutInflater
+	  layoutInflater
 	)
   }
   private val initialEpisodeId: String? by lazy { arguments?.getString("id") }
@@ -41,28 +41,28 @@ class MediaPlayerFragment : Fragment() {
   }
 
   override fun onCreateView(
-	  inflater: LayoutInflater,
-	  container: ViewGroup?,
-	  savedInstanceState: Bundle?
+	inflater: LayoutInflater,
+	container: ViewGroup?,
+	savedInstanceState: Bundle?
   ): View {
 	val seekBarHandler = Handler(Looper.getMainLooper())
 	observeEpisodeUpdates(seekBarHandler)
 
 	binding.episodeSeekbar.setOnSeekBarChangeListener(object : OnSeekBarChangeListener {
-		override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
-			playbackPositionTxt(progress.toLong())
-		}
+	  override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
+		playbackPositionTxt(progress.toLong())
+	  }
 
-		override fun onStartTrackingTouch(seekBar: SeekBar?) {
-			seekBarUpdateEnabled = false
-		}
+	  override fun onStartTrackingTouch(seekBar: SeekBar?) {
+		seekBarUpdateEnabled = false
+	  }
 
-		override fun onStopTrackingTouch(seekBar: SeekBar?) {
-			seekBarUpdateEnabled = true
-			seekBar?.progress?.let {
-				viewModel.seekTo(it.toLong())
-			}
+	  override fun onStopTrackingTouch(seekBar: SeekBar?) {
+		seekBarUpdateEnabled = true
+		seekBar?.progress?.let {
+		  viewModel.seekTo(it.toLong())
 		}
+	  }
 	})
 
 	observeCurrentEpisode()
@@ -76,39 +76,39 @@ class MediaPlayerFragment : Fragment() {
 
   private fun observeFeed() {
 	viewModel.feed.observe(viewLifecycleOwner, { feed ->
-		val nowPlayingEpisode = viewModel.currentEpisode.value
-		if (nowPlayingEpisode != null) {
-			val feedEpisode = feed.episodes.first {
-				nowPlayingEpisode.id == it.id
-			}
-
-			binding.playButton.setImageResource(playbackResourceId(feedEpisode.isPlaying))
-		} else {
-			binding.playButton.setImageResource(playbackResourceId(initialPlayingState))
+	  val nowPlayingEpisode = viewModel.currentEpisode.value
+	  if (nowPlayingEpisode != null) {
+		val feedEpisode = feed.episodes.first {
+		  nowPlayingEpisode.id == it.id
 		}
+
+		binding.playButton.setImageResource(playbackResourceId(feedEpisode.isPlaying))
+	  } else {
+		binding.playButton.setImageResource(playbackResourceId(initialPlayingState))
+	  }
 	})
   }
 
   private fun observeCurrentEpisode() {
 	viewModel.currentEpisode.observe(viewLifecycleOwner, { episode ->
-		binding.playButton.setImageResource(playbackResourceId(episode.isPlaying))
-		loadEpisodeImage(episode.imageUrl)
+	  binding.playButton.setImageResource(playbackResourceId(episode.isPlaying))
+	  loadEpisodeImage(episode.imageUrl)
 	})
   }
 
   private fun observeEpisodeUpdates(seekBarHandler: Handler) {
 	viewModel.updatedEpisodes.observe(viewLifecycleOwner, { episodes ->
-		if (seekBarUpdateEnabled) {
-			val currentEpisode = episodes.first()
-			playbackPositionTxt(currentEpisode.playbackPosition.position)
-			seekBarPlaybackPosition(seekBarHandler, currentEpisode.playbackPosition)
-		}
+	  if (seekBarUpdateEnabled) {
+		val currentEpisode = episodes.first()
+		playbackPositionTxt(currentEpisode.playbackPosition.position)
+		seekBarPlaybackPosition(seekBarHandler, currentEpisode.playbackPosition)
+	  }
 	})
   }
 
   private fun seekBarPlaybackPosition(
-	  seekBarHandler: Handler,
-	  playbackPosition: PlaybackPosition,
+	seekBarHandler: Handler,
+	playbackPosition: PlaybackPosition,
   ) {
 	seekBarHandler.post {
 	  binding.episodeSeekbar.max = playbackPosition.duration.toInt()
@@ -118,10 +118,10 @@ class MediaPlayerFragment : Fragment() {
 
   private fun playbackPositionTxt(positionMilliSeconds: Long) {
 	binding.episodePositionTxt.text = String.format(
-		"%02d:%02d",
-		MILLISECONDS.toMinutes(positionMilliSeconds),
-		MILLISECONDS.toSeconds(positionMilliSeconds) -
-				MINUTES.toSeconds(MILLISECONDS.toMinutes(positionMilliSeconds))
+	  "%02d:%02d",
+	  MILLISECONDS.toMinutes(positionMilliSeconds),
+	  MILLISECONDS.toSeconds(positionMilliSeconds) -
+			  MINUTES.toSeconds(MILLISECONDS.toMinutes(positionMilliSeconds))
 	)
   }
 
@@ -148,18 +148,18 @@ class MediaPlayerFragment : Fragment() {
 
 	binding.episodePlaybackSpeed.setOnClickListener {
 	  when (binding.episodePlaybackSpeed.text) {
-		  playbackSpeed1 -> {
-			  binding.episodePlaybackSpeed.text = playbackSpeed2
-			  viewModel.playbackSpeed(1.5f)
-		  }
-		  playbackSpeed2 -> {
-			  binding.episodePlaybackSpeed.text = playbackSpeed3
-			  viewModel.playbackSpeed(2f)
-		  }
-		  playbackSpeed3 -> {
-			  binding.episodePlaybackSpeed.text = playbackSpeed1
-			  viewModel.playbackSpeed(1f)
-		  }
+		playbackSpeed1 -> {
+		  binding.episodePlaybackSpeed.text = playbackSpeed2
+		  viewModel.playbackSpeed(1.5f)
+		}
+		playbackSpeed2 -> {
+		  binding.episodePlaybackSpeed.text = playbackSpeed3
+		  viewModel.playbackSpeed(2f)
+		}
+		playbackSpeed3 -> {
+		  binding.episodePlaybackSpeed.text = playbackSpeed1
+		  viewModel.playbackSpeed(1f)
+		}
 	  }
 	}
   }
@@ -204,9 +204,9 @@ class MediaPlayerFragment : Fragment() {
 	fun newInstance(episode: Episode) =
 	  MediaPlayerFragment().apply {
 		val mediaPlayerArgsBundle = bundleOf(
-			"id" to episode.id,
-			"imageUrl" to episode.imageUrl,
-			"isPlaying" to episode.isPlaying,
+		  "id" to episode.id,
+		  "imageUrl" to episode.imageUrl,
+		  "isPlaying" to episode.isPlaying,
 		)
 
 		arguments = mediaPlayerArgsBundle

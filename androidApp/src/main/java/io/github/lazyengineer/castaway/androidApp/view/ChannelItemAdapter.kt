@@ -42,13 +42,13 @@ class ChannelItemAdapter(private val clickListener: OnItemClickListener) :
   override fun getItemCount(): Int = itemList.size
 
   override fun onBindViewHolder(
-	  holder: ViewHolder,
-	  position: Int
+	holder: ViewHolder,
+	position: Int
   ) = holder.bind(itemList[position])
 
   override fun onCreateViewHolder(
-	  parent: ViewGroup,
-	  viewType: Int
+	parent: ViewGroup,
+	viewType: Int
   ): ViewHolder {
 	val inflater = LayoutInflater.from(parent.context)
 	val binding = FeedItemBinding.inflate(inflater, parent, false)
