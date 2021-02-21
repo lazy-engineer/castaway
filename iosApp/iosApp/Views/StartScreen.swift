@@ -1,44 +1,42 @@
 import SwiftUI
-import shared
-import AVFoundation
 
-func greet() -> String {
-    return Greeting().greeting()
-}
-
-struct StartScreen: View {
+struct StartScreen : View {
     
     @EnvironmentObject var viewModel: CastawayViewModel
-    @State private var currentTime: TimeInterval = 0
-    @State private var duration: TimeInterval = 1
-    @State private var presentNowPlaying = false
     
     var body: some View {
-        NavigationView {
-            List(self.viewModel.episodes, id: \.id) { episode in
-                EpisodeRowView(
-                    episode: episode,
-                    playing: (self.viewModel.playing) ? self.viewModel.currentEpisode?.id == episode.id : false,
-                    playbackTime: (self.viewModel.currentEpisode?.id == episode.id) ? currentTime : TimeInterval(episode.playbackPosition.position),
-                    playbackDuration: (self.viewModel.currentEpisode?.id == episode.id) ? duration : TimeInterval(episode.playbackPosition.duration),
-                    onEpisodeClicked: {
-                        self.viewModel.episodeClicked(episode: episode, playState: true)
-                        presentNowPlaying.toggle()
-                    }
-                ) { playing in
-                    self.viewModel.episodeClicked(episode: episode, playState: playing)
-                }.onReceive(self.viewModel.playbackPositionPublisher) { time in
-                    self.currentTime = TimeInterval(time)
-                }.onReceive(self.viewModel.playbackDurationPublisher) { duration in
-                    self.duration = TimeInterval(duration)
+        VStack {
+            HStack {
+                if let imageUrl = viewModel.feedImage {
+                    Image(uiImage: imageUrl)
+                        .resizable()
+                        .scaledToFill()
+                        .frame(width: 48, height: 48)
+                        .cornerRadius(10)
+                        .padding(8)
+                } else {
+                    Image(systemName: "mic")
+                        .frame(width: 48, height: 48)
+                        .background(Rectangle()
+                                        .fill(Color.black)
+                                        .cornerRadius(10))
+                        .foregroundColor(.white)
+                        .padding(8)
+                        .onAppear {
+                            guard let imageUrl = viewModel.currentEpisode?.imageUrl else { return }
+                            viewModel.loadImage(imageUrl)
+                        }
                 }
-            }.onAppear {
-                self.viewModel.loadFeed("https://atp.fm/rss")
+                
+                Text(viewModel.feedTitle)
+                    .font(.title)
+                    .minimumScaleFactor(0.7)
+                    .lineLimit(1)
+                    .padding(.trailing, 8)
+                Spacer()
             }
-            .navigationBarTitle(self.viewModel.feedTitle)
-        }
-        .fullScreenCover(isPresented: $presentNowPlaying,  onDismiss: {}) {
-            NowPlayingScreen().environmentObject(viewModel)
+            
+            EpisodeListView().environmentObject(viewModel)
         }
     }
 }

@@ -21,12 +21,12 @@ struct EpisodeRowView: View {
                         .foregroundColor(.blue)
                         .padding()
                         .onTapGesture(perform: {
-                            self.onPlayPause(!playing)
+                            onPlayPause(!playing)
                         })
                 }
             }.frame(height: 60)
             .onTapGesture(perform: {
-                self.onEpisodeClicked()
+                onEpisodeClicked()
             })
             
             ProgressView(value: playing ? playbackTime : 0, total: playbackDuration)

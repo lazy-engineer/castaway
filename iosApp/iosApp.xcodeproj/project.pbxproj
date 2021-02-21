@@ -30,6 +30,7 @@
 		A2BB7BEA25A4C4EE007E7F6B /* ViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2BB7BE925A4C4EE007E7F6B /* ViewModel.swift */; };
 		A2BB7BF925A4D548007E7F6B /* Koin.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2BB7BF825A4D548007E7F6B /* Koin.swift */; };
 		A2BB7C1125A6520F007E7F6B /* FeedKit in Frameworks */ = {isa = PBXBuildFile; productRef = A2BB7C1025A6520F007E7F6B /* FeedKit */; };
+		A2EC0CC525E2865F0050E0B5 /* EpisodeListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2EC0CC425E2865F0050E0B5 /* EpisodeListView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -91,6 +92,7 @@
 		A2B6ACBF25B5F2A50052C128 /* Ext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Ext.swift; sourceTree = "<group>"; };
 		A2BB7BE925A4C4EE007E7F6B /* ViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewModel.swift; sourceTree = "<group>"; };
 		A2BB7BF825A4D548007E7F6B /* Koin.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Koin.swift; sourceTree = "<group>"; };
+		A2EC0CC425E2865F0050E0B5 /* EpisodeListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EpisodeListView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -227,6 +229,7 @@
 			isa = PBXGroup;
 			children = (
 				7555FF82242A565900829871 /* StartScreen.swift */,
+				A2EC0CC425E2865F0050E0B5 /* EpisodeListView.swift */,
 				A216F9CC25AD993900A52C6D /* EpisodeRowView.swift */,
 				A27E339825D84E4A0028343E /* NowPlayingScreen.swift */,
 			);
@@ -412,6 +415,7 @@
 				A245927825CCA34900916A2C /* PlaybackState.swift in Sources */,
 				7555FF81242A565900829871 /* SceneDelegate.swift in Sources */,
 				A2BB7BEA25A4C4EE007E7F6B /* ViewModel.swift in Sources */,
+				A2EC0CC525E2865F0050E0B5 /* EpisodeListView.swift in Sources */,
 				7555FF83242A565900829871 /* StartScreen.swift in Sources */,
 				A2B6ACC025B5F2A50052C128 /* Ext.swift in Sources */,
 				A205065F25C732A600D90A98 /* MediaData.swift in Sources */,

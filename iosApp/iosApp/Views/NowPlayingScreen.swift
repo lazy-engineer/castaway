@@ -21,7 +21,7 @@ struct NowPlayingScreen: View {
                 }
             }
             
-            if let imageUrl = self.viewModel.feedImage {
+            if let imageUrl = viewModel.feedImage {
                 Image(uiImage: imageUrl)
                     .resizable()
                     .scaledToFill()
@@ -35,8 +35,8 @@ struct NowPlayingScreen: View {
                     .padding(86)
                     .foregroundColor(.gray)
                     .onAppear {
-                        guard let imageUrl = self.viewModel.currentEpisode?.imageUrl else { return }
-                        self.viewModel.loadImage(imageUrl)
+                        guard let imageUrl = viewModel.currentEpisode?.imageUrl else { return }
+                        viewModel.loadImage(imageUrl)
                     }
             }
             
@@ -55,9 +55,9 @@ struct NowPlayingScreen: View {
                     .foregroundColor(.blue)
                 
                 Button(action: {
-                    self.viewModel.playPauseCurrent(playState: !self.viewModel.playing)
+                    viewModel.playPauseCurrent(playState: !viewModel.playing)
                 }) {
-                    Image(systemName: self.viewModel.playing ? "pause.circle.fill" : "play.circle.fill")
+                    Image(systemName: viewModel.playing ? "pause.circle.fill" : "play.circle.fill")
                         .resizable()
                         .scaledToFill()
                         .frame(width:52, height: 52)
@@ -86,14 +86,14 @@ struct NowPlayingScreen: View {
                     .padding(.trailing, 8)
             }.padding(.top, 48)
             
-            Slider(value: $playbackPosition, in: 0...self.duration, step: 1)
+            Slider(value: $playbackPosition, in: 0...duration, step: 1)
                 .padding(.leading, 8)
                 .padding(.trailing, 8)
                 .padding(.bottom, 48)
-                .onReceive(self.viewModel.playbackPositionPublisher) { time in
-                    self.playbackPosition = TimeInterval(time)
-                }.onReceive(self.viewModel.playbackDurationPublisher) { duration in
-                    self.duration = TimeInterval(duration)
+                .onReceive(viewModel.playbackPositionPublisher) { time in
+                    playbackPosition = TimeInterval(time)
+                }.onReceive(viewModel.playbackDurationPublisher) { playbackDuration in
+                    duration = TimeInterval(playbackDuration)
                 }
         }
     }
