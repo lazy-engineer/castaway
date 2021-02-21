@@ -1,71 +1,70 @@
-import Foundation
 import shared
 import FeedKit
 import AVFoundation
 
 extension Episode {
     func copy(position: Int64) -> Episode {
-        return self.doCopy(
-            id: self.id,
-            title: self.title,
-            subTitle: self.subTitle,
-            description: self.description_,
-            audioUrl: self.audioUrl,
-            imageUrl: self.imageUrl,
-            author: self.author,
+        return doCopy(
+            id: id,
+            title: title,
+            subTitle: subTitle,
+            description: description_,
+            audioUrl: audioUrl,
+            imageUrl: imageUrl,
+            author: author,
             playbackPosition: PlaybackPosition(
                 position: position,
-                duration: self.playbackPosition.duration
+                duration: playbackPosition.duration
             ),
-            isPlaying: self.isPlaying,
-            episode: self.episode,
-            podcastUrl: self.podcastUrl)
+            isPlaying: isPlaying,
+            episode: episode,
+            podcastUrl: podcastUrl)
     }
 }
 
 extension Episode {
     func copy(duration: Int64) -> Episode {
-        return self.doCopy(
-            id: self.id,
-            title: self.title,
-            subTitle: self.subTitle,
-            description: self.description_,
-            audioUrl: self.audioUrl,
-            imageUrl: self.imageUrl,
-            author: self.author,
+        return doCopy(
+            id: id,
+            title: title,
+            subTitle: subTitle,
+            description: description_,
+            audioUrl: audioUrl,
+            imageUrl: imageUrl,
+            author: author,
             playbackPosition: PlaybackPosition(
-                position: self.playbackPosition.position,
+                position: playbackPosition.position,
                 duration: duration
             ),
-            isPlaying: self.isPlaying,
-            episode: self.episode,
-            podcastUrl: self.podcastUrl)
+            isPlaying: isPlaying,
+            episode: episode,
+            podcastUrl: podcastUrl)
     }
 }
 
 extension Episode {
     func copy(playbackPosition: PlaybackPosition) -> Episode {
-        return self.doCopy(
-            id: self.id,
-            title: self.title,
-            subTitle: self.subTitle,
-            description: self.description_,
-            audioUrl: self.audioUrl,
-            imageUrl: self.imageUrl,
-            author: self.author,
+        return doCopy(
+            id: id,
+            title: title,
+            subTitle: subTitle,
+            description: description_,
+            audioUrl: audioUrl,
+            imageUrl: imageUrl,
+            author: author,
             playbackPosition: playbackPosition,
-            isPlaying: self.isPlaying,
-            episode: self.episode,
-            podcastUrl: self.podcastUrl)
+            isPlaying: isPlaying,
+            episode: episode,
+            podcastUrl: podcastUrl)
     }
 }
 
 extension Episode {
     func toMediaData() -> MediaData {
         return MediaData.init(
-            mediaId: self.id,
-            mediaUri: self.audioUrl,
-            playbackPosition: self.playbackPosition.position,
+            mediaId: id,
+            mediaUri: audioUrl,
+            playbackPosition: playbackPosition.position,
             duration: playbackPosition.duration
         )
     }
@@ -73,7 +72,7 @@ extension Episode {
 
 extension MediaData {
     func toAVPlayerItem() -> AVPlayerItem {
-        return AVPlayerItem.init(url: URL.init(string: self.mediaUri)!)
+        return AVPlayerItem.init(url: URL.init(string: mediaUri)!)
     }
 }
 
@@ -83,17 +82,17 @@ extension RSSFeed {
         
         return FeedData(
             url: url,
-            title: self.title!,
+            title: title!,
             image: feedImage,
-            episodes: self.items!.enumerated().compactMap({ $0.element.toEpisode(url: url, image: feedImage, index: Int32($0.offset)) }))
+            episodes: items!.enumerated().compactMap({ $0.element.toEpisode(url: url, image: feedImage, index: Int32($0.offset)) }))
     }
     
     private func feedImage() -> String? {
         var feedImage: String? = nil
         
-        if let image = self.image?.url {
+        if let image = image?.url {
             feedImage = image
-        } else if let iTunesFeedImage = self.iTunes?.iTunesImage?.attributes?.href {
+        } else if let iTunesFeedImage = iTunes?.iTunesImage?.attributes?.href {
             feedImage = iTunesFeedImage
         }
 
@@ -108,12 +107,12 @@ extension RSSFeedItem {
         
         return Episode(
             id: UUID.init().uuidString,
-            title: self.title!,
-            subTitle: self.iTunes?.iTunesSubtitle,
-            description: self.description,
+            title: title!,
+            subTitle: iTunes?.iTunesSubtitle,
+            description: description,
             audioUrl: audioUrl,
             imageUrl: episodeImage,
-            author: self.author,
+            author: author,
             playbackPosition: PlaybackPosition(position: 0, duration: 1),
             isPlaying: false,
             episode: index,
@@ -123,9 +122,9 @@ extension RSSFeedItem {
     private func audioUrl() -> String? {
         var audioUrl: String? = nil
         
-        if let enclosureUrl = self.enclosure?.attributes?.url {
+        if let enclosureUrl = enclosure?.attributes?.url {
             audioUrl = enclosureUrl
-        } else if let mediaUrl = self.media?.mediaContents?.first?.attributes?.url {
+        } else if let mediaUrl = media?.mediaContents?.first?.attributes?.url {
             audioUrl = mediaUrl
         }
 
@@ -135,7 +134,7 @@ extension RSSFeedItem {
     private func episodeImage(feedImage: String?) -> String? {
         var episodeImage: String? = feedImage
         
-        if let iTunesImage = self.iTunes?.iTunesImage?.attributes?.href {
+        if let iTunesImage = iTunes?.iTunesImage?.attributes?.href {
             episodeImage = iTunesImage
         }
 

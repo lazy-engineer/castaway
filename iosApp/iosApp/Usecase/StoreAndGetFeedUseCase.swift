@@ -13,12 +13,12 @@ class StoreAndGetFeedUseCase {
     private let saveFeedUseCase: NativeSaveFeedUseCase
     
     init() {
-        self.getFeedUseCase = NativeGetFeedUseCase()
-        self.saveFeedUseCase = NativeSaveFeedUseCase()
+        getFeedUseCase = NativeGetFeedUseCase()
+        saveFeedUseCase = NativeSaveFeedUseCase()
     }
     
     func run(url: String, completion: @escaping (Swift.Result<FeedData, Error>) -> Void) {
-        self.getFeedUseCase.run(
+        getFeedUseCase.run(
             url: url,
             onSuccess: { xml in
                 self.parseXml(xml, completion: { rssFeed in

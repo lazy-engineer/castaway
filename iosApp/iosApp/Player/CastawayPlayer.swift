@@ -24,7 +24,7 @@ class CastawayPlayer {
     let nowPlaying = CurrentValueSubject<String?, Never>(nil)
     
     init() {
-        self.player = AVPlayer.init()
+        player = AVPlayer.init()
         addPeriodicTimeObserver()
         observePlayer()
     }
@@ -60,7 +60,7 @@ class CastawayPlayer {
     
     private func sendNowPlayingItemKey(_ currentItem: AVPlayerItem?) {
         if let unwrappedItem = currentItem {
-            self.playerItems.forEach { key, itemTuple in
+            playerItems.forEach { key, itemTuple in
                 sendKeyIfPlayerItemFound(itemToFound: unwrappedItem, itemTuple: itemTuple)
             }
         }
@@ -68,18 +68,18 @@ class CastawayPlayer {
     
     private func sendKeyIfPlayerItemFound(itemToFound: AVPlayerItem, itemTuple: (MediaData, AVPlayerItem)) {
         if itemToFound == itemTuple.1 {
-            self.nowPlaying.send(itemTuple.0.mediaId)
+            nowPlaying.send(itemTuple.0.mediaId)
         }
     }
     
     private func observePlayerItem() {
         // track status
-        self.statusObserver = self.player.currentItem?.observe(\.status, options: [.initial, .old, .new]) { [weak self] (item, change) in
+        statusObserver = player.currentItem?.observe(\.status, options: [.initial, .old, .new]) { [weak self] (item, change) in
             guard let self = self else { return }
             print("statusObserver: \(change)")
         }
         
-        self.durationObserver = self.player.currentItem?.observe(\.duration, options: [.initial, .old, .new]) { [weak self] (item, change) in
+        durationObserver = player.currentItem?.observe(\.duration, options: [.initial, .old, .new]) { [weak self] (item, change) in
             guard let self = self else { return }
             
             if let newDuration = change.newValue {
@@ -91,7 +91,7 @@ class CastawayPlayer {
             }
         }
         
-        self.likelyToKeepUpObserver = self.player.currentItem?.observe(\.isPlaybackLikelyToKeepUp, options: [.initial, .old, .new]) { [weak self] (item, change) in
+        likelyToKeepUpObserver = player.currentItem?.observe(\.isPlaybackLikelyToKeepUp, options: [.initial, .old, .new]) { [weak self] (item, change) in
             guard let self = self else { return }
             
             if let readyToPlay = change.newValue {
@@ -102,31 +102,31 @@ class CastawayPlayer {
         }
         
         // track buffer empty
-        self.bufferEmptyObserver = self.player.currentItem?.observe(\.isPlaybackBufferEmpty, options: [.initial, .old, .new]) { [weak self] (item, change) in
+        bufferEmptyObserver = player.currentItem?.observe(\.isPlaybackBufferEmpty, options: [.initial, .old, .new]) { [weak self] (item, change) in
             guard let self = self else { return }
             print("bufferEmptyObserver: \(change)")
         }
     }
     
     private func sendDurationMillis(_ newDuration: CMTime) {
-        let durationMillies = self.duration(time: newDuration)
+        let durationMillies = duration(time: newDuration)
         if durationMillies > 0 {
-            self.playbackDuration.send(durationMillies)
+            playbackDuration.send(durationMillies)
         }
     }
     
     private func updateMediaItemDuration(_ itemKey: String, _ newDuration: CMTime) {
-        if let item = self.playerItems[itemKey] {
+        if let item = playerItems[itemKey] {
             var updatedItem = item
-            updatedItem.0.duration = self.duration(time: newDuration)
-            self.playerItems.updateValue((updatedItem.0, updatedItem.1), forKey: itemKey)
+            updatedItem.0.duration = duration(time: newDuration)
+            playerItems.updateValue((updatedItem.0, updatedItem.1), forKey: itemKey)
         }
     }
     
     private func removePeriodicTimeObserver() {
-        if let timeObserverToken = timeObserverToken {
-            player.removeTimeObserver(timeObserverToken)
-            self.timeObserverToken = nil
+        if let token = timeObserverToken {
+            player.removeTimeObserver(token)
+            timeObserverToken = nil
         }
     }
     
@@ -147,10 +147,10 @@ class CastawayPlayer {
     }
     
     private func prepareMediaData(_ media: [MediaData]) {
-        self.playlist = media.map { mediaData in
+        playlist = media.map { mediaData in
             mediaData.mediaId
         }
-        self.playerItems = Dictionary(grouping: media, by: { mediaData in mediaData.mediaId })
+        playerItems = Dictionary(grouping: media, by: { mediaData in mediaData.mediaId })
             .mapValues { media in (media.first!, media.first!.toAVPlayerItem()) }
     }
     
@@ -160,15 +160,15 @@ class CastawayPlayer {
     ) {
         let playerItem: AVPlayerItem? = playerItems[mediaId]?.1
         if playerItem != nil {
-            self.player.replaceCurrentItem(with: playerItem)
+            player.replaceCurrentItem(with: playerItem)
         }
         
         if playState {
-            self.player.play()
-            self.playbackState.send(PlaybackState.playing)
+            player.play()
+            playbackState.send(PlaybackState.playing)
         } else {
-            self.player.pause()
-            self.playbackState.send(PlaybackState.paused)
+            player.pause()
+            playbackState.send(PlaybackState.paused)
         }
     }
     
@@ -193,7 +193,7 @@ class CastawayPlayer {
     }
     
     func speed(speed: Float) {
-        self.player.rate = speed
+        player.rate = speed
     }
     
     func shuffle(shuffle: Bool) {
@@ -216,6 +216,6 @@ class CastawayPlayer {
     func durationFromUrl(url: String) -> Int64? {
         guard let url = URL.init(string: url) else { return nil }
         let asset = AVURLAsset(url: url)
-        return self.duration(time: asset.duration)
+        return duration(time: asset.duration)
     }
 }
