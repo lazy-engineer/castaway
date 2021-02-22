@@ -29,7 +29,8 @@ struct EpisodeRowView: View {
                 onEpisodeClicked()
             })
             
-            ProgressView(value: playing ? playbackTime : 0, total: playbackDuration)
+            ProgressView(value: playbackTime, total: playbackDuration)
+                .padding(0)
         }
     }
 }

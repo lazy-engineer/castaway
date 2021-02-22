@@ -1,7 +1,7 @@
 import SwiftUI
 
 struct NowPlayingScreen: View {
- 
+    
     @Environment(\.presentationMode) var presentationMode
     
     @EnvironmentObject var viewModel: CastawayViewModel
@@ -86,15 +86,18 @@ struct NowPlayingScreen: View {
                     .padding(.trailing, 8)
             }.padding(.top, 48)
             
-            Slider(value: $playbackPosition, in: 0...duration, step: 1)
-                .padding(.leading, 8)
-                .padding(.trailing, 8)
-                .padding(.bottom, 48)
-                .onReceive(viewModel.playbackPositionPublisher) { time in
-                    playbackPosition = TimeInterval(time)
-                }.onReceive(viewModel.playbackDurationPublisher) { playbackDuration in
-                    duration = TimeInterval(playbackDuration)
-                }
+            Slider(value: $playbackPosition, in: 0...duration, step: 1, onEditingChanged: { value in
+                viewModel.seekTo(positionMillis: Int64(playbackPosition))
+            })
+            .padding(.leading, 8)
+            .padding(.trailing, 8)
+            .padding(.bottom, 48)
+            .onReceive(viewModel.playbackPositionPublisher) { time in
+                guard duration > 1 else { return }
+                playbackPosition = TimeInterval(time)
+            }.onReceive(viewModel.playbackDurationPublisher) { playbackDuration in
+                duration = TimeInterval(playbackDuration)
+            }
         }
     }
 }

@@ -154,26 +154,37 @@ class CastawayPlayer {
             .mapValues { media in (media.first!, media.first!.toAVPlayerItem()) }
     }
     
-    func playPause(
+    func play(
         mediaId: String,
-        playState: Bool
+        startAt: Int64
     ) {
-        let playerItem: AVPlayerItem? = playerItems[mediaId]?.1
-        if playerItem != nil {
-            player.replaceCurrentItem(with: playerItem)
-        }
+        preparePlayer(mediaId, startAt)
         
-        if playState {
-            player.play()
-            playbackState.send(PlaybackState.playing)
-        } else {
-            player.pause()
-            playbackState.send(PlaybackState.paused)
+        player.play()
+        playbackState.send(PlaybackState.playing)
+    }
+    
+    func resume() {
+        player.play()
+        playbackState.send(PlaybackState.playing)
+    }
+    
+    func pause() {
+        player.pause()
+        playbackState.send(PlaybackState.paused)
+    }
+    
+    private func preparePlayer(_ mediaId: String, _ startAt: Int64) {
+        guard let playerItem = playerItems[mediaId]?.1 else { return }
+        if player.currentItem != playerItem {
+            playbackState.send(PlaybackState.stopped)
+            player.replaceCurrentItem(with: playerItem)
+            seekTo(position: startAt)
         }
     }
     
-    func seekTo(position: Int) {
-        
+    func seekTo(position: Int64) {
+        player.seek(to: CMTimeMake(value:position, timescale: 1000))
     }
     
     func fastForward() {

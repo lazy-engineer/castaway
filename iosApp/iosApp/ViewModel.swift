@@ -99,18 +99,33 @@ class CastawayViewModel: ObservableObject {
     }
     
     func episodeClicked(episode: Episode, playState: Bool) {
-        playPause(episode.id, playState)
-        currentEpisode = episode
+        playPause(episode, playState, episode.playbackPosition.position)
+    }
+    
+    private func playPause(_ episode: Episode, _ playState: Bool, _ startAt: Int64) {
+        if currentEpisode?.id == episode.id {
+            playPauseCurrent(playState: playState)
+        } else {
+            playPauseNew(playState, episode, startAt)
+        }
     }
     
     func playPauseCurrent(playState: Bool) {
-        guard let episodeId = currentEpisode?.id else { return }
-        playPause(episodeId, playState)
+        guard currentEpisode != nil else { return }
+        playing = playState
+        if playing {
+            player.resume()
+        } else {
+            player.pause()
+        }
     }
     
-    private func playPause(_ episodeId: String, _ playState: Bool) {
+    private func playPauseNew(_ playState: Bool, _ episode: Episode, _ startAt: Int64) {
         playing = playState
-        player.playPause(mediaId: episodeId, playState: playState)
+        if playing {
+            player.play(mediaId: episode.id, startAt: startAt)
+        }
+        currentEpisode = episode
     }
     
     func forwardCurrentItem() {
@@ -129,7 +144,7 @@ class CastawayViewModel: ObservableObject {
         player.skipToNext()
     }
     
-    func seekTo(positionMillis: Int) {
+    func seekTo(positionMillis: Int64) {
         player.seekTo(position: positionMillis)
     }
     
@@ -146,7 +161,6 @@ class CastawayViewModel: ObservableObject {
             episode: episode,
             onSuccess: { storedEpisode in
                 print("Stored: 💾 \(storedEpisode.title)")
-                self.currentEpisode = storedEpisode
                 if let index = self.episodes.firstIndex(where: {$0.id == storedEpisode.id}) {
                     self.episodes[index] = storedEpisode
                 }

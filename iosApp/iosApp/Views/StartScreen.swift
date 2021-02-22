@@ -17,10 +17,10 @@ struct StartScreen : View {
                 } else {
                     Image(systemName: "mic")
                         .frame(width: 48, height: 48)
-                        .background(Rectangle()
-                                        .fill(Color.black)
-                                        .cornerRadius(10))
-                        .foregroundColor(.white)
+                        .foregroundColor(Color.white)
+                        .background(Color.black)
+                        .clipShape(Rectangle())
+                        .cornerRadius(10)
                         .padding(8)
                         .onAppear {
                             guard let imageUrl = viewModel.currentEpisode?.imageUrl else { return }
