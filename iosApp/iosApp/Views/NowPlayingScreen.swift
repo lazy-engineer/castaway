@@ -86,18 +86,30 @@ struct NowPlayingScreen: View {
                     .padding(.trailing, 8)
             }.padding(.top, 48)
             
-            Slider(value: $playbackPosition, in: 0...duration, step: 1, onEditingChanged: { value in
-                viewModel.seekTo(positionMillis: Int64(playbackPosition))
-            })
-            .padding(.leading, 8)
-            .padding(.trailing, 8)
-            .padding(.bottom, 48)
-            .onReceive(viewModel.playbackPositionPublisher) { time in
-                guard duration > 1 else { return }
-                playbackPosition = TimeInterval(time)
-            }.onReceive(viewModel.playbackDurationPublisher) { playbackDuration in
-                duration = TimeInterval(playbackDuration)
-            }
+            Slider(value: $playbackPosition, in: 0...duration, step: 1, onEditingChanged: sliderEditingChanged)
+                .padding(.leading, 8)
+                .padding(.trailing, 8)
+                .padding(.bottom, 48)
+                .onReceive(viewModel.playbackDurationPublisher) { playbackDuration in
+                    duration = TimeInterval(playbackDuration)
+                }
+                .onReceive(viewModel.playbackPositionPublisher) { time in
+                    guard duration > 1 else { return }
+                    
+                    if (playbackPosition != 0.0) {
+                        guard (-1...1).contains((TimeInterval(time/1000) - playbackPosition/1000)) else { return }
+                    }
+                    
+                    playbackPosition = TimeInterval(time)
+                }
+        }
+    }
+    
+    private func sliderEditingChanged(editingStarted: Bool) {
+        if editingStarted {
+            print("✍️ editing started")
+        } else {
+            viewModel.seekTo(positionMillis: Int64(playbackPosition))
         }
     }
 }
