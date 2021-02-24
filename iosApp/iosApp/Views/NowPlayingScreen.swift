@@ -93,13 +93,12 @@ struct NowPlayingScreen: View {
                 .onReceive(viewModel.playbackDurationPublisher) { playbackDuration in
                     duration = TimeInterval(playbackDuration)
                 }
-                .onReceive(viewModel.playbackPositionPublisher) { time in
+                .onReceive(viewModel.playbackStatePublisher) { state in
+                    guard state == PlaybackState.playing else { return }
+                    viewModel.playbackPosition.pause(false)
+                }
+                .onReceive(viewModel.playbackPosition.publisher) { time in
                     guard duration > 1 else { return }
-                    
-                    if (playbackPosition != 0.0) {
-                        guard (-1...1).contains((TimeInterval(time/1000) - playbackPosition/1000)) else { return }
-                    }
-                    
                     playbackPosition = TimeInterval(time)
                 }
         }
@@ -107,7 +106,7 @@ struct NowPlayingScreen: View {
     
     private func sliderEditingChanged(editingStarted: Bool) {
         if editingStarted {
-            print("✍️ editing started")
+            viewModel.playbackPosition.pause(true)
         } else {
             viewModel.seekTo(positionMillis: Int64(playbackPosition))
         }

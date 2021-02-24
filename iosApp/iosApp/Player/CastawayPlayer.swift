@@ -9,7 +9,6 @@ class CastawayPlayer {
     private var playerItems = [String : (MediaData, AVPlayerItem)]()
     private var playlist = [String]()
     
-    private var timeObserverToken: Any?
     private var rateObserver: Any?
     private var currentItemObserver: Any?
     private var statusObserver: Any?
@@ -17,7 +16,7 @@ class CastawayPlayer {
     private var likelyToKeepUpObserver: Any?
     private var bufferEmptyObserver: Any?
     
-    let playbackTime = CurrentValueSubject<Int64, Never>(0)
+    let playbackTimeObserver: PlayerTimeObserver
     let playbackDuration = CurrentValueSubject<Int64, Never>(1)
     let playbackSpeed = PassthroughSubject<Float, Never>()
     let playbackState = CurrentValueSubject<PlaybackState, Never>(PlaybackState.unknown)
@@ -25,19 +24,10 @@ class CastawayPlayer {
     
     init() {
         player = AVPlayer.init()
-        addPeriodicTimeObserver()
+        playbackTimeObserver = PlayerTimeObserver(player: player)
         observePlayer()
     }
     
-    private func addPeriodicTimeObserver() {
-        let timeScale = CMTimeScale(NSEC_PER_SEC)
-        let time = CMTime(seconds: 0.5, preferredTimescale: timeScale)
-        
-        timeObserverToken = player.addPeriodicTimeObserver(forInterval: time, queue: .main) { [weak self] time in
-            guard let self = self else { return }
-            self.playbackTime.send(Int64(time.seconds * 1000))
-        }
-    }
     
     private func observePlayer() {
         rateObserver = player.observe(\.rate, options: [.initial, .old, .new]) { [weak self] (item, change) in
@@ -123,13 +113,6 @@ class CastawayPlayer {
         }
     }
     
-    private func removePeriodicTimeObserver() {
-        if let token = timeObserverToken {
-            player.removeTimeObserver(token)
-            timeObserverToken = nil
-        }
-    }
-    
     func subscribe() {
         
     }
@@ -184,7 +167,10 @@ class CastawayPlayer {
     }
     
     func seekTo(position: Int64) {
-        player.seek(to: CMTimeMake(value:position, timescale: 1000))
+        playbackState.send(PlaybackState.buffering)
+        player.seek(to: CMTimeMake(value:position, timescale: 1000)) { _ in
+            self.playbackState.send(PlaybackState.playing)
+        }
     }
     
     func fastForward() {

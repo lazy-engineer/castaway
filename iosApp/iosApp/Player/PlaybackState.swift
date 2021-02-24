@@ -3,14 +3,16 @@ import Foundation
 public enum PlaybackState : Int {
 
     case unknown = 0
-
-    case readyToPlay = 1
-
-    case playing = 2
     
-    case paused = 3
-    
-    case stopped = 4
+    case buffering = 1
 
-    case failed = 5
+    case readyToPlay = 2
+
+    case playing = 3
+    
+    case paused = 4
+    
+    case stopped = 5
+
+    case failed = 6
 }

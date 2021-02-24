@@ -29,7 +29,7 @@ struct EpisodeListView : View {
             ) { playing in
                 viewModel.episodeClicked(episode: episode, playState: playing)
             }
-            .onReceive(viewModel.playbackPositionPublisher) { time in
+            .onReceive(viewModel.playbackPosition.publisher) { time in
                 guard duration > 1 else { return }
                 currentTime = TimeInterval(time)
             }
