@@ -30,6 +30,7 @@
 		A2BB7BEA25A4C4EE007E7F6B /* ViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2BB7BE925A4C4EE007E7F6B /* ViewModel.swift */; };
 		A2BB7BF925A4D548007E7F6B /* Koin.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2BB7BF825A4D548007E7F6B /* Koin.swift */; };
 		A2BB7C1125A6520F007E7F6B /* FeedKit in Frameworks */ = {isa = PBXBuildFile; productRef = A2BB7C1025A6520F007E7F6B /* FeedKit */; };
+		A2D4B2A725E6EECA006714E6 /* PlayerDurationObserver.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2D4B2A625E6EECA006714E6 /* PlayerDurationObserver.swift */; };
 		A2D8CC9C25E6E8EF0018C342 /* PlayerTimeObserver.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2D8CC9B25E6E8EF0018C342 /* PlayerTimeObserver.swift */; };
 		A2EC0CC525E2865F0050E0B5 /* EpisodeListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2EC0CC425E2865F0050E0B5 /* EpisodeListView.swift */; };
 /* End PBXBuildFile section */
@@ -93,6 +94,7 @@
 		A2B6ACBF25B5F2A50052C128 /* Ext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Ext.swift; sourceTree = "<group>"; };
 		A2BB7BE925A4C4EE007E7F6B /* ViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewModel.swift; sourceTree = "<group>"; };
 		A2BB7BF825A4D548007E7F6B /* Koin.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Koin.swift; sourceTree = "<group>"; };
+		A2D4B2A625E6EECA006714E6 /* PlayerDurationObserver.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerDurationObserver.swift; sourceTree = "<group>"; };
 		A2D8CC9B25E6E8EF0018C342 /* PlayerTimeObserver.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerTimeObserver.swift; sourceTree = "<group>"; };
 		A2EC0CC425E2865F0050E0B5 /* EpisodeListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EpisodeListView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -213,6 +215,7 @@
 			children = (
 				A2ACEE3525B05BC600F4BD52 /* CastawayPlayer.swift */,
 				A2D8CC9B25E6E8EF0018C342 /* PlayerTimeObserver.swift */,
+				A2D4B2A625E6EECA006714E6 /* PlayerDurationObserver.swift */,
 				A205065E25C732A600D90A98 /* MediaData.swift */,
 				A245927725CCA34900916A2C /* PlaybackState.swift */,
 			);
@@ -410,6 +413,7 @@
 			files = (
 				A27E339925D84E4A0028343E /* NowPlayingScreen.swift in Sources */,
 				7555FF7F242A565900829871 /* AppDelegate.swift in Sources */,
+				A2D4B2A725E6EECA006714E6 /* PlayerDurationObserver.swift in Sources */,
 				A2ACEE3625B05BC600F4BD52 /* CastawayPlayer.swift in Sources */,
 				A2D8CC9C25E6E8EF0018C342 /* PlayerTimeObserver.swift in Sources */,
 				A2ACEE3C25B3A49B00F4BD52 /* Utility.swift in Sources */,

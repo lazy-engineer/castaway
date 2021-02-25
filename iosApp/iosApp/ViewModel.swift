@@ -19,7 +19,7 @@ class CastawayViewModel: ObservableObject {
     @Published var currentEpisode: Episode?
     @Published var playing: Bool = false
     var playbackPosition: PlayerTimeObserver
-    var playbackDurationPublisher: CurrentValueSubject<Int64, Never>
+    var playbackDuration: PlayerDurationObserver
     var playbackStatePublisher: CurrentValueSubject<PlaybackState, Never>
     
     init() {
@@ -28,7 +28,7 @@ class CastawayViewModel: ObservableObject {
         getStoredFeedUseCase = NativeGetStoredFeedUseCase()
         loadImageUseCase = NativeLoadImageUseCase()
         playbackPosition = player.playbackTimeObserver
-        playbackDurationPublisher = player.playbackDuration
+        playbackDuration = player.playbackDurationObserver
         playbackStatePublisher = player.playbackState
         
         observePlaybackState()
@@ -47,7 +47,7 @@ class CastawayViewModel: ObservableObject {
             guard let episode = currentEpisode?
                     .copy(playbackPosition: PlaybackPosition(
                         position: playbackPosition.publisher.value,
-                        duration: playbackDurationPublisher.value
+                        duration: playbackDuration.publisher.value
                     )) else { return }
             storeEpisode(episode: episode)
         }

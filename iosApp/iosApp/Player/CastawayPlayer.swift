@@ -9,27 +9,36 @@ class CastawayPlayer {
     private var playerItems = [String : (MediaData, AVPlayerItem)]()
     private var playlist = [String]()
     
+    private var disposables = Set<AnyCancellable>()
+    
     private var rateObserver: Any?
     private var currentItemObserver: Any?
     private var statusObserver: Any?
-    private var durationObserver: Any?
     private var likelyToKeepUpObserver: Any?
     private var bufferEmptyObserver: Any?
     
     let playbackTimeObserver: PlayerTimeObserver
-    let playbackDuration = CurrentValueSubject<Int64, Never>(1)
-    let playbackSpeed = PassthroughSubject<Float, Never>()
+    let playbackDurationObserver: PlayerDurationObserver
     let playbackState = CurrentValueSubject<PlaybackState, Never>(PlaybackState.unknown)
+    let playbackSpeed = PassthroughSubject<Float, Never>()
     let nowPlaying = CurrentValueSubject<String?, Never>(nil)
     
     init() {
         player = AVPlayer.init()
         playbackTimeObserver = PlayerTimeObserver(player: player)
+        playbackDurationObserver = PlayerDurationObserver(player: player)
         observePlayer()
     }
     
     
     private func observePlayer() {
+        playbackDurationObserver.publisher
+            .sink(receiveValue: { duration in
+                if let nowPlayingKey = self.nowPlaying.value {
+                    self.updateMediaItemDuration(nowPlayingKey, duration)
+                }
+            }).store(in: &disposables)
+        
         rateObserver = player.observe(\.rate, options: [.initial, .old, .new]) { [weak self] (item, change) in
             guard let self = self else { return }
             
@@ -69,18 +78,6 @@ class CastawayPlayer {
             print("statusObserver: \(change)")
         }
         
-        durationObserver = player.currentItem?.observe(\.duration, options: [.initial, .old, .new]) { [weak self] (item, change) in
-            guard let self = self else { return }
-            
-            if let newDuration = change.newValue {
-                self.sendDurationMillis(newDuration)
-                
-                if let nowPlayingKey = self.nowPlaying.value {
-                    self.updateMediaItemDuration(nowPlayingKey, newDuration)
-                }
-            }
-        }
-        
         likelyToKeepUpObserver = player.currentItem?.observe(\.isPlaybackLikelyToKeepUp, options: [.initial, .old, .new]) { [weak self] (item, change) in
             guard let self = self else { return }
             
@@ -98,17 +95,10 @@ class CastawayPlayer {
         }
     }
     
-    private func sendDurationMillis(_ newDuration: CMTime) {
-        let durationMillies = duration(time: newDuration)
-        if durationMillies > 0 {
-            playbackDuration.send(durationMillies)
-        }
-    }
-    
-    private func updateMediaItemDuration(_ itemKey: String, _ newDuration: CMTime) {
+    private func updateMediaItemDuration(_ itemKey: String, _ newDuration: Int64) {
         if let item = playerItems[itemKey] {
             var updatedItem = item
-            updatedItem.0.duration = duration(time: newDuration)
+            updatedItem.0.duration = newDuration
             playerItems.updateValue((updatedItem.0, updatedItem.1), forKey: itemKey)
         }
     }
@@ -199,20 +189,5 @@ class CastawayPlayer {
     
     func repeatMode(repeat: Int) {
         
-    }
-    
-    func duration(time: CMTime) -> Int64 {
-        let timemillis = CMTimeConvertScale(
-            time,
-            timescale:1000,
-            method: CMTimeRoundingMethod.roundHalfAwayFromZero)
-        
-        return timemillis.value
-    }
-    
-    func durationFromUrl(url: String) -> Int64? {
-        guard let url = URL.init(string: url) else { return nil }
-        let asset = AVURLAsset(url: url)
-        return duration(time: asset.duration)
     }
 }

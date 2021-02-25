@@ -33,7 +33,7 @@ struct EpisodeListView : View {
                 guard duration > 1 else { return }
                 currentTime = TimeInterval(time)
             }
-            .onReceive(viewModel.playbackDurationPublisher) { playbackDuration in
+            .onReceive(viewModel.playbackDuration.publisher) { playbackDuration in
                 duration = TimeInterval(playbackDuration)
             }
         }

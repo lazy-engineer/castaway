@@ -90,7 +90,7 @@ struct NowPlayingScreen: View {
                 .padding(.leading, 8)
                 .padding(.trailing, 8)
                 .padding(.bottom, 48)
-                .onReceive(viewModel.playbackDurationPublisher) { playbackDuration in
+                .onReceive(viewModel.playbackDuration.publisher) { playbackDuration in
                     duration = TimeInterval(playbackDuration)
                 }
                 .onReceive(viewModel.playbackStatePublisher) { state in
