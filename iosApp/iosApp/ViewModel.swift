@@ -39,6 +39,7 @@ class CastawayViewModel: ObservableObject {
     private func observePlaybackState() {
         playbackStatePublisher
             .sink(receiveValue: { state in
+                self.playing = state == PlaybackState.playing || state == PlaybackState.readyToPlay
                 self.storeEpisodeOnPausedOrStopped(state)
             })
             .store(in: &disposables)
@@ -135,8 +136,7 @@ class CastawayViewModel: ObservableObject {
     
     func playPauseCurrent(playState: Bool) {
         guard currentEpisode != nil else { return }
-        playing = playState
-        if playing {
+        if playState {
             player.resume()
         } else {
             player.pause()
@@ -144,8 +144,7 @@ class CastawayViewModel: ObservableObject {
     }
     
     private func playPauseNew(_ playState: Bool, _ episode: Episode, _ startAt: Int64) {
-        playing = playState
-        if playing {
+        if playState {
             player.play(mediaId: episode.id, startAt: startAt)
         }
     }
