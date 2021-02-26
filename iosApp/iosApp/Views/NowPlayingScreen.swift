@@ -25,20 +25,25 @@ struct NowPlayingScreen: View {
                 Image(uiImage: imageUrl)
                     .resizable()
                     .scaledToFill()
-                    .frame(width: 200, height: 300)
-                    .padding(86)
+                    .frame(width: 200, height: 250)
+                    .padding(48)
             } else {
                 Image(systemName: "mic")
                     .resizable()
                     .scaledToFill()
-                    .frame(width: 200, height: 300)
-                    .padding(86)
+                    .frame(width: 200, height: 250)
+                    .padding(48)
                     .foregroundColor(.gray)
                     .onAppear {
                         guard let imageUrl = viewModel.currentEpisode?.imageUrl else { return }
                         viewModel.loadImage(imageUrl)
                     }
             }
+            
+            Text(viewModel.currentEpisode?.title ?? "")
+                .padding(16)
+                .fixedSize(horizontal: false, vertical: true)
+                .multilineTextAlignment(.center)
             
             HStack(spacing: 30) {
                 Spacer()
@@ -60,7 +65,7 @@ struct NowPlayingScreen: View {
                     Image(systemName: viewModel.playing ? "pause.circle.fill" : "play.circle.fill")
                         .resizable()
                         .scaledToFill()
-                        .frame(width:52, height: 52)
+                        .frame(width:64, height: 64)
                         .foregroundColor(.blue)
                 }
                 
@@ -76,7 +81,7 @@ struct NowPlayingScreen: View {
                     .frame(width: 16, height: 16)
                     .foregroundColor(.blue)
                 Spacer()
-            }
+            }.padding(16)
             
             HStack {
                 Text("\(Utility.formatSecondsToHMS(playbackPosition/1000))")
@@ -84,7 +89,7 @@ struct NowPlayingScreen: View {
                 Spacer()
                 Text("\(Utility.formatSecondsToHMS(duration/1000))")
                     .padding(.trailing, 8)
-            }.padding(.top, 48)
+            }.padding(.top, 36)
             
             Slider(value: $playbackPosition, in: 0...duration, step: 1, onEditingChanged: sliderEditingChanged)
                 .padding(.leading, 8)
