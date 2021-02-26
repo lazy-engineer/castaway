@@ -39,6 +39,13 @@ class CastawayPlayer {
                 }
             }).store(in: &disposables)
         
+        playbackTimeObserver.publisher
+            .sink(receiveValue: { position in
+                if let nowPlayingKey = self.nowPlaying.value {
+                    self.updateMediaItemPosition(nowPlayingKey, position)
+                }
+            }).store(in: &disposables)
+        
         rateObserver = player.observe(\.rate, options: [.initial, .old, .new]) { [weak self] (item, change) in
             guard let self = self else { return }
             
@@ -99,6 +106,14 @@ class CastawayPlayer {
         if let item = playerItems[itemKey] {
             var updatedItem = item
             updatedItem.0.duration = newDuration
+            playerItems.updateValue((updatedItem.0, updatedItem.1), forKey: itemKey)
+        }
+    }
+    
+    private func updateMediaItemPosition(_ itemKey: String, _ newPosition: Int64) {
+        if let item = playerItems[itemKey] {
+            var updatedItem = item
+            updatedItem.0.playbackPosition = newPosition
             playerItems.updateValue((updatedItem.0, updatedItem.1), forKey: itemKey)
         }
     }

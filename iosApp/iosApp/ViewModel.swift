@@ -57,13 +57,17 @@ class CastawayViewModel: ObservableObject {
     
     private func storeEpisodeOnPausedOrStopped(_ state: PlaybackState) {
         if state == PlaybackState.paused || state == PlaybackState.stopped {
-            guard let episode = currentEpisode?
-                    .copy(playbackPosition: PlaybackPosition(
-                        position: playbackPosition.publisher.value,
-                        duration: playbackDuration.publisher.value
-                    )) else { return }
-            storeEpisode(episode: episode)
+            storeCurrentUpdatedEpisode()
         }
+    }
+    
+    private func storeCurrentUpdatedEpisode() {
+        guard let episode = currentEpisode?
+                .copy(playbackPosition: PlaybackPosition(
+                    position: playbackPosition.publisher.value,
+                    duration: playbackDuration.publisher.value
+                )) else { return }
+        storeEpisode(episode: episode)
     }
     
     func loadFeed(_ url: String) {
@@ -106,11 +110,15 @@ class CastawayViewModel: ObservableObject {
     private func publishAndPrepareFeed(_ feed: FeedData) {
         feedTitle = feed.title
         episodes = feed.episodes
-        player.prepare(media: feed.episodes.map{ episode in episode.toMediaData() })
+        prepareEpisodes(feed.episodes)
         
         if let imageUrl = feed.image {
             loadImage(imageUrl)
         }
+    }
+    
+    private func prepareEpisodes(_ episodes: [Episode]) {
+        player.prepare(media: episodes.map{ episode in episode.toMediaData() })
     }
     
     func episodeClicked(episode: Episode, playState: Bool) {
@@ -140,7 +148,6 @@ class CastawayViewModel: ObservableObject {
         if playing {
             player.play(mediaId: episode.id, startAt: startAt)
         }
-        currentEpisode = episode
     }
     
     func forwardCurrentItem() {
