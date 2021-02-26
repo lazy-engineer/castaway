@@ -21,6 +21,7 @@ class CastawayViewModel: ObservableObject {
     var playbackPosition: PlayerTimeObserver
     var playbackDuration: PlayerDurationObserver
     var playbackStatePublisher: CurrentValueSubject<PlaybackState, Never>
+    var nowPlayingPublisher: CurrentValueSubject<String?, Never>
     
     init() {
         storeAndGetFeedUseCase = StoreAndGetFeedUseCase()
@@ -30,6 +31,7 @@ class CastawayViewModel: ObservableObject {
         playbackPosition = player.playbackTimeObserver
         playbackDuration = player.playbackDurationObserver
         playbackStatePublisher = player.playbackState
+        nowPlayingPublisher = player.nowPlaying
         
         observePlaybackState()
     }
@@ -38,6 +40,17 @@ class CastawayViewModel: ObservableObject {
         playbackStatePublisher
             .sink(receiveValue: { state in
                 self.storeEpisodeOnPausedOrStopped(state)
+            })
+            .store(in: &disposables)
+        
+        nowPlayingPublisher
+            .sink(receiveValue: { mediaId in
+                
+                guard let currentId = mediaId else { return }
+                
+                if let index = self.episodes.firstIndex(where: {$0.id == currentId}) {
+                    self.currentEpisode = self.episodes[index]
+                }
             })
             .store(in: &disposables)
     }

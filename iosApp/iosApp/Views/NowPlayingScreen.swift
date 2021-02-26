@@ -52,6 +52,9 @@ struct NowPlayingScreen: View {
                     .scaledToFill()
                     .frame(width: 16, height: 16)
                     .foregroundColor(.blue)
+                    .onTapGesture {
+                        viewModel.skipToPrevious()
+                    }
                 
                 Image(systemName: "gobackward.30")
                     .resizable()
@@ -86,6 +89,10 @@ struct NowPlayingScreen: View {
                     .scaledToFill()
                     .frame(width: 16, height: 16)
                     .foregroundColor(.blue)
+                    .onTapGesture {
+                        viewModel.skipToNext()
+                    }
+                
                 Spacer()
             }.padding(16)
             

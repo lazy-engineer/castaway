@@ -172,11 +172,23 @@ class CastawayPlayer {
     }
     
     func skipToNext() {
+        guard let currentId = nowPlaying.value else { return }
+        guard let index = playlist.firstIndex(of: currentId) else { return }
+        guard playlist.count > index + 1 else { return }
         
+        let nextMediaId = playlist[index + 1]
+        
+        play(mediaId: nextMediaId, startAt: playerItems[nextMediaId]?.0.playbackPosition ?? 0)
     }
     
     func skipToPrevious() {
+        guard let currentId = nowPlaying.value else { return }
+        guard let index = playlist.firstIndex(of: currentId) else { return }
+        guard index - 1 >= 0 else { return }
         
+        let previousMediaId = playlist[index - 1]
+        
+        play(mediaId: previousMediaId, startAt: playerItems[previousMediaId]?.0.playbackPosition ?? 0)
     }
     
     func speed(speed: Float) {
