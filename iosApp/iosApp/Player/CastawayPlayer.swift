@@ -164,11 +164,11 @@ class CastawayPlayer {
     }
     
     func fastForward() {
-        
+        seekTo(position: playbackTimeObserver.publisher.value + 30000)
     }
     
     func rewind() {
-        
+        seekTo(position: playbackTimeObserver.publisher.value - 30000)
     }
     
     func skipToNext() {

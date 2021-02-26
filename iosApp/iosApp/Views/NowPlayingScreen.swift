@@ -58,6 +58,9 @@ struct NowPlayingScreen: View {
                     .scaledToFill()
                     .frame(width: 32, height: 32)
                     .foregroundColor(.blue)
+                    .onTapGesture {
+                        viewModel.replayCurrentItem()
+                    }
                 
                 Button(action: {
                     viewModel.playPauseCurrent(playState: !viewModel.playing)
@@ -74,6 +77,9 @@ struct NowPlayingScreen: View {
                     .scaledToFill()
                     .frame(width: 32, height: 32)
                     .foregroundColor(.blue)
+                    .onTapGesture {
+                        viewModel.forwardCurrentItem()
+                    }
                 
                 Image(systemName: "forward.end.alt")
                     .resizable()
