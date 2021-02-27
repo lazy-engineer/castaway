@@ -12,12 +12,13 @@ struct NowPlayingScreen: View {
         VStack {
             HStack {
                 Spacer()
+                
                 Button(action: {
                     presentationMode.wrappedValue.dismiss()
                 }) {
                     Image(systemName: "chevron.down")
                         .foregroundColor(.blue)
-                        .padding()
+                        .padding(24)
                 }
             }
             
@@ -45,25 +46,28 @@ struct NowPlayingScreen: View {
                 .fixedSize(horizontal: false, vertical: true)
                 .multilineTextAlignment(.center)
             
-            HStack(spacing: 30) {
+            HStack(spacing: 24) {
                 Spacer()
-                Image(systemName: "backward.end.alt")
-                    .resizable()
-                    .scaledToFill()
-                    .frame(width: 16, height: 16)
-                    .foregroundColor(.blue)
-                    .onTapGesture {
-                        viewModel.skipToPrevious()
-                    }
                 
-                Image(systemName: "gobackward.30")
-                    .resizable()
-                    .scaledToFill()
-                    .frame(width: 32, height: 32)
-                    .foregroundColor(.blue)
-                    .onTapGesture {
-                        viewModel.replayCurrentItem()
-                    }
+                Button(action: {
+                    viewModel.skipToPrevious()
+                }) {
+                    Image(systemName: "backward.end.alt")
+                        .resizable()
+                        .scaledToFill()
+                        .frame(width: 16, height: 16)
+                        .foregroundColor(.blue)
+                }
+                
+                Button(action: {
+                    viewModel.replayCurrentItem()
+                }) {
+                    Image(systemName: "gobackward.30")
+                        .resizable()
+                        .scaledToFill()
+                        .frame(width: 32, height: 32)
+                        .foregroundColor(.blue)
+                }
                 
                 Button(action: {
                     viewModel.playPauseCurrent(playState: !viewModel.playing)
@@ -75,39 +79,44 @@ struct NowPlayingScreen: View {
                         .foregroundColor(.blue)
                 }
                 
-                Image(systemName: "goforward.30")
-                    .resizable()
-                    .scaledToFill()
-                    .frame(width: 32, height: 32)
-                    .foregroundColor(.blue)
-                    .onTapGesture {
-                        viewModel.forwardCurrentItem()
-                    }
+                Button(action: {
+                    viewModel.forwardCurrentItem()
+                }) {
+                    Image(systemName: "goforward.30")
+                        .resizable()
+                        .scaledToFill()
+                        .frame(width: 32, height: 32)
+                        .foregroundColor(.blue)
+                }
                 
-                Image(systemName: "forward.end.alt")
-                    .resizable()
-                    .scaledToFill()
-                    .frame(width: 16, height: 16)
-                    .foregroundColor(.blue)
-                    .onTapGesture {
-                        viewModel.skipToNext()
-                    }
+                Button(action: {
+                    viewModel.skipToNext()
+                }) {
+                    Image(systemName: "forward.end.alt")
+                        .resizable()
+                        .scaledToFill()
+                        .frame(width: 16, height: 16)
+                        .foregroundColor(.blue)
+                }
                 
                 Spacer()
-            }.padding(16)
+            }
+            .padding(16)
             
             HStack {
                 Text("\(Utility.formatSecondsToHMS(playbackPosition/1000))")
+                    .font(.subheadline)
                     .padding(.leading, 8)
                 Spacer()
                 Text("\(Utility.formatSecondsToHMS(duration/1000))")
+                    .font(.subheadline)
                     .padding(.trailing, 8)
-            }.padding(.top, 36)
+            }
+            .padding(.top, 36)
             
             Slider(value: $playbackPosition, in: 0...duration, step: 1, onEditingChanged: sliderEditingChanged)
                 .padding(.leading, 8)
                 .padding(.trailing, 8)
-                .padding(.bottom, 48)
                 .onReceive(viewModel.playbackDuration.publisher) { playbackDuration in
                     duration = TimeInterval(playbackDuration)
                 }
@@ -119,6 +128,20 @@ struct NowPlayingScreen: View {
                     guard duration > 1 else { return }
                     playbackPosition = TimeInterval(time)
                 }
+            
+            HStack {
+                Button(action: {
+                    viewModel.playPauseCurrent(playState: !viewModel.playing)
+                }) {
+                    Text("1x")
+                        .foregroundColor(.blue)
+                }
+                .padding(.leading, 24)
+                .padding(.bottom, 24)
+                .padding(.top, 8)
+                
+                Spacer()
+            }
         }
     }
     
