@@ -18,6 +18,7 @@ class CastawayViewModel: ObservableObject {
     @Published var episodes = [Episode]()
     @Published var currentEpisode: Episode?
     @Published var playing: Bool = false
+    @Published var playbackSpeed: Float = 1.0
     var playbackPosition: PlayerTimeObserver
     var playbackDuration: PlayerDurationObserver
     var playbackStatePublisher: CurrentValueSubject<PlaybackState, Never>
@@ -46,12 +47,12 @@ class CastawayViewModel: ObservableObject {
         
         nowPlayingPublisher
             .sink(receiveValue: { mediaId in
-                
                 guard let currentId = mediaId else { return }
                 
                 if let index = self.episodes.firstIndex(where: {$0.id == currentId}) {
                     self.currentEpisode = self.episodes[index]
                 }
+                self.playbackSpeed = 1.0
             })
             .store(in: &disposables)
     }
@@ -173,8 +174,16 @@ class CastawayViewModel: ObservableObject {
         player.speed(speed: speed)
     }
     
-    private func playingState(mediaId: String) -> Bool {
-        return false
+    func changePlaybackSpeed() {
+        let supportedSpeedRates: [Float] = [1.0, 1.5, 2.0]
+        guard let currentIndex = supportedSpeedRates.firstIndex(of: playbackSpeed) else { return }
+        var newIndex = 0
+        if supportedSpeedRates.count > currentIndex + 1 {
+            newIndex = currentIndex + 1
+        }
+        
+        playbackSpeed = supportedSpeedRates[newIndex]
+        playbackSpeed(speed: playbackSpeed)
     }
     
     private func storeEpisode(episode: Episode) {

@@ -131,9 +131,9 @@ struct NowPlayingScreen: View {
             
             HStack {
                 Button(action: {
-                    viewModel.playPauseCurrent(playState: !viewModel.playing)
+                    viewModel.changePlaybackSpeed()
                 }) {
-                    Text("1x")
+                    Text("\(String(format: "%.1f", viewModel.playbackSpeed))x")
                         .foregroundColor(.blue)
                 }
                 .padding(.leading, 24)
