@@ -62,6 +62,22 @@ class CastawayPlayer {
                 self.sendNowPlayingItemKey(currentItem)
             }
         }
+        
+        NotificationCenter.default.addObserver(self, selector: #selector(playerDidFinishPlaying), name: .AVPlayerItemDidPlayToEndTime, object: nil)
+    }
+    
+    @objc func playerDidFinishPlaying(note: NSNotification) {
+        print("Media Item Finished 🎧")
+        finishCurrentItem()
+    }
+    
+    private func finishCurrentItem() {
+        if hasNextItem() {
+            skipToNext()
+        } else {
+            player.pause()
+            playbackState.send(PlaybackState.finished)
+        }
     }
     
     private func sendNowPlayingItemKey(_ currentItem: AVPlayerItem?) {
@@ -187,9 +203,8 @@ class CastawayPlayer {
     }
     
     func skipToNext() {
-        guard let currentId = nowPlaying.value else { return }
-        guard let index = playlist.firstIndex(of: currentId) else { return }
-        guard playlist.count > index + 1 else { return }
+        guard let index = currentIndex() else { return }
+        guard hasNextItem() else { return }
         
         let nextMediaId = playlist[index + 1]
         
@@ -197,13 +212,25 @@ class CastawayPlayer {
     }
     
     func skipToPrevious() {
-        guard let currentId = nowPlaying.value else { return }
-        guard let index = playlist.firstIndex(of: currentId) else { return }
+        guard let index = currentIndex() else { return }
         guard index - 1 >= 0 else { return }
         
         let previousMediaId = playlist[index - 1]
         
         play(mediaId: previousMediaId, startAt: playerItems[previousMediaId]?.0.playbackPosition ?? 0)
+    }
+    
+    private func currentIndex() -> Int? {
+        guard let currentId = nowPlaying.value else { return nil}
+        guard let index = playlist.firstIndex(of: currentId) else { return nil }
+        
+        return index
+    }
+    
+    private func hasNextItem() -> Bool {
+        guard let index = currentIndex() else { return false }
+        
+        return playlist.count > index + 1
     }
     
     func speed(speed: Float) {

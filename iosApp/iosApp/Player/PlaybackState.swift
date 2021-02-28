@@ -13,6 +13,8 @@ public enum PlaybackState : Int {
     case paused = 4
     
     case stopped = 5
+    
+    case finished = 6
 
-    case failed = 6
+    case failed = 7
 }

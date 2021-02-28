@@ -58,7 +58,7 @@ class CastawayViewModel: ObservableObject {
     }
     
     private func storeEpisodeOnPausedOrStopped(_ state: PlaybackState) {
-        if state == PlaybackState.paused || state == PlaybackState.stopped {
+        if state == PlaybackState.paused || state == PlaybackState.stopped || state == PlaybackState.finished {
             storeCurrentUpdatedEpisode()
         }
     }
