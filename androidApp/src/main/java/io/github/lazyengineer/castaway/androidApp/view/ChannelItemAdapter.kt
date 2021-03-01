@@ -61,7 +61,7 @@ class ChannelItemAdapter(private val clickListener: OnItemClickListener) :
 
 	fun bind(item: Episode) {
 	  binding.itemTitle.text = item.title
-	  binding.playItem.setImageResource(playbackResourceId(item.isPlaying))
+	  binding.playItem.setImageResource(playbackResourceId(false))
 
 	  progressBar.progress = ((item.playbackPosition.position / item.playbackPosition.duration) * 100).toInt()
 

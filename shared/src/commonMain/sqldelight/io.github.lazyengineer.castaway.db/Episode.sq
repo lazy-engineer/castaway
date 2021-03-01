@@ -10,7 +10,6 @@ imageUrl TEXT,
 image BLOB,
 author TEXT,
 playbackPosition TEXT AS PlaybackPosition,
-isPlaying INTEGER AS Boolean DEFAULT 0,
 episode INTEGER NOT NULL,
 podcastUrl TEXT NOT NULL,
 FOREIGN KEY(podcastUrl) REFERENCES podcast(url)

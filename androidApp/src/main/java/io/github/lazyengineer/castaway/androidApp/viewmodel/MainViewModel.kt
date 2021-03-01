@@ -60,6 +60,10 @@ class MainViewModel constructor(
   val currentEpisode: LiveData<Episode>
 	get() = _currentEpisode
 
+  private val _playing = MutableLiveData<Boolean>()
+  val playing: LiveData<Boolean>
+	get() = _playing
+
   private val _navigateToFragment = MutableLiveData<Fragment>()
   val navigateToFragment: LiveData<Fragment>
 	get() = _navigateToFragment
@@ -74,11 +78,15 @@ class MainViewModel constructor(
   private fun collectPlaybackState() {
 	viewModelScope.launch {
 	  mediaServiceClient.playbackState.collect {
-		feed.value?.let { feedData ->
-		  _feed.postValue(feed.value?.copy(episodes = feedData.episodes.map { episode ->
-			  episode.copy(isPlaying = playingState(episode.id))
-		  }))
+		currentEpisode.value?.let { episode ->
+	    	_playing.postValue(playingState(episode.id))
 		}
+
+//		feed.value?.let { feedData ->
+//		  _feed.postValue(feed.value?.copy(episodes = feedData.episodes.map { episode ->
+//			  episode.copy(isPlaying = playingState(episode.id))
+//		  }))
+//		}
 	  }
 	}
   }
@@ -237,7 +245,7 @@ class MainViewModel constructor(
 	}
   }
 
-  private fun playingState(mediaId: String): Boolean {
+  fun playingState(mediaId: String): Boolean {
 	val isActive = mediaId == mediaServiceClient.nowPlaying.value.mediaId
 	val isPlaying = mediaServiceClient.playbackState.value.isPlaying
 	return when {

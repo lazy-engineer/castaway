@@ -32,7 +32,6 @@ class MediaPlayerFragment : Fragment() {
   }
   private val initialEpisodeId: String? by lazy { arguments?.getString("id") }
   private val initialImageUrl: String? by lazy { arguments?.getString("imageUrl") }
-  private val initialPlayingState: Boolean by lazy { arguments?.getBoolean("isPlaying") ?: false }
 
   private var seekBarUpdateEnabled: Boolean = true
 
@@ -82,16 +81,16 @@ class MediaPlayerFragment : Fragment() {
 		  nowPlayingEpisode.id == it.id
 		}
 
-		binding.playButton.setImageResource(playbackResourceId(feedEpisode.isPlaying))
+		binding.playButton.setImageResource(playbackResourceId(viewModel.playingState(feedEpisode.id)))
 	  } else {
-		binding.playButton.setImageResource(playbackResourceId(initialPlayingState))
+		binding.playButton.setImageResource(playbackResourceId(viewModel.playingState(initialEpisodeId ?: "")))
 	  }
 	})
   }
 
   private fun observeCurrentEpisode() {
 	viewModel.currentEpisode.observe(viewLifecycleOwner, { episode ->
-	  binding.playButton.setImageResource(playbackResourceId(episode.isPlaying))
+	  binding.playButton.setImageResource(playbackResourceId(viewModel.playingState(episode.id)))
 	  loadEpisodeImage(episode.imageUrl)
 	})
   }
@@ -126,7 +125,7 @@ class MediaPlayerFragment : Fragment() {
   }
 
   private fun initPlayButton() {
-	if (initialPlayingState) {
+	if (viewModel.playingState(initialEpisodeId ?: "")) {
 	  binding.playButton.setImageResource(drawable.ic_pause_circle_filled)
 	}
   }
@@ -206,7 +205,6 @@ class MediaPlayerFragment : Fragment() {
 		val mediaPlayerArgsBundle = bundleOf(
 		  "id" to episode.id,
 		  "imageUrl" to episode.imageUrl,
-		  "isPlaying" to episode.isPlaying,
 		)
 
 		arguments = mediaPlayerArgsBundle

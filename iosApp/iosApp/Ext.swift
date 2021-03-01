@@ -17,7 +17,6 @@ extension Episode {
                 position: position,
                 duration: playbackPosition.duration
             ),
-            isPlaying: isPlaying,
             episode: episode,
             podcastUrl: podcastUrl)
     }
@@ -38,7 +37,6 @@ extension Episode {
                 position: playbackPosition.position,
                 duration: duration
             ),
-            isPlaying: isPlaying,
             episode: episode,
             podcastUrl: podcastUrl)
     }
@@ -56,7 +54,6 @@ extension Episode {
             image: image,
             author: author,
             playbackPosition: playbackPosition,
-            isPlaying: isPlaying,
             episode: episode,
             podcastUrl: podcastUrl)
     }
@@ -121,7 +118,6 @@ extension RSSFeedItem {
             image: nil,
             author: author,
             playbackPosition: PlaybackPosition(position: 0, duration: 1),
-            isPlaying: false,
             episode: index,
             podcastUrl: url)
     }

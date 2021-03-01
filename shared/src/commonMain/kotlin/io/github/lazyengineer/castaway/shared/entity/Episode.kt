@@ -12,7 +12,6 @@ data class Episode(
   val image: Image?,
   val author: String?,
   val playbackPosition: PlaybackPosition,
-  val isPlaying: Boolean = false,
   val episode: Int,
   val podcastUrl: String,
 )
