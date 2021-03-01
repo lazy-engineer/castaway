@@ -11,6 +11,7 @@ extension Episode {
             description: description_,
             audioUrl: audioUrl,
             imageUrl: imageUrl,
+            image: image,
             author: author,
             playbackPosition: PlaybackPosition(
                 position: position,
@@ -31,6 +32,7 @@ extension Episode {
             description: description_,
             audioUrl: audioUrl,
             imageUrl: imageUrl,
+            image: image,
             author: author,
             playbackPosition: PlaybackPosition(
                 position: playbackPosition.position,
@@ -51,6 +53,7 @@ extension Episode {
             description: description_,
             audioUrl: audioUrl,
             imageUrl: imageUrl,
+            image: image,
             author: author,
             playbackPosition: playbackPosition,
             isPlaying: isPlaying,
@@ -64,6 +67,9 @@ extension Episode {
         return MediaData.init(
             mediaId: id,
             mediaUri: audioUrl,
+            title: title,
+            podcastTitle: "Accidental Tech Podcast",
+            image: image,
             playbackPosition: playbackPosition.position,
             duration: playbackPosition.duration
         )
@@ -112,6 +118,7 @@ extension RSSFeedItem {
             description: description,
             audioUrl: audioUrl,
             imageUrl: episodeImage,
+            image: nil,
             author: author,
             playbackPosition: PlaybackPosition(position: 0, duration: 1),
             isPlaying: false,

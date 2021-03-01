@@ -26,6 +26,7 @@ object FeedParser {
 			  audioUrl = episode.media?.url ?: "",
 			  imageUrl = episode.mediaNamespace?.thumbnails?.firstOrNull()?.attributes?.url
 				?: "",
+			  image = null,
 			  author = episode.author ?: "",
 			  playbackPosition = PlaybackPosition(0, Long.MAX_VALUE),
 			  episode = index,
@@ -48,6 +49,7 @@ object FeedParser {
 				?: "",
 			  imageUrl = episode.mediaNamespace?.thumbnails?.firstOrNull()?.attributes?.url
 				?: "",
+			  image = null,
 			  author = episode.authors.firstOrNull()?.uri ?: "",
 			  playbackPosition = PlaybackPosition(0, Long.MAX_VALUE),
 			  episode = index,

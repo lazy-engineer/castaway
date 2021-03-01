@@ -101,8 +101,15 @@ class CastawayViewModel: ObservableObject {
         loadImageUseCase.run(
             url: url,
             onSuccess: { image in
-                print("🖼 \(image)")
+                print("🖼 Feed Image loaded")
                 self.feedImage = image
+                
+                //TODO: Just a workaround for now -> implement store image in episodes properly
+                self.player.prepare(media: self.episodes.map { episode in
+                    var mediaItem = episode.toMediaData()
+                    mediaItem.image = self.feedImage
+                    return mediaItem
+                })
             },
             onError: { error in
                 print("Fail to load Image: \(url) ❌ \(error)")

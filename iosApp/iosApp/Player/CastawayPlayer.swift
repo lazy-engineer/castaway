@@ -1,11 +1,19 @@
 import Foundation
 import AVKit
+import MediaPlayer
 import Combine
 import shared
 
 class CastawayPlayer {
     
     private let player: AVPlayer
+    let playbackTimeObserver: PlayerTimeObserver
+    let playbackDurationObserver: PlayerDurationObserver
+    
+    let playbackState = CurrentValueSubject<PlaybackState, Never>(PlaybackState.unknown)
+    let playbackSpeed = PassthroughSubject<Float, Never>()
+    let nowPlaying = CurrentValueSubject<String?, Never>(nil)
+    
     private var playerItems = [String : (MediaData, AVPlayerItem)]()
     private var playlist = [String]()
     
@@ -17,19 +25,72 @@ class CastawayPlayer {
     private var likelyToKeepUpObserver: Any?
     private var bufferEmptyObserver: Any?
     
-    let playbackTimeObserver: PlayerTimeObserver
-    let playbackDurationObserver: PlayerDurationObserver
-    let playbackState = CurrentValueSubject<PlaybackState, Never>(PlaybackState.unknown)
-    let playbackSpeed = PassthroughSubject<Float, Never>()
-    let nowPlaying = CurrentValueSubject<String?, Never>(nil)
-    
     init() {
         player = AVPlayer.init()
         playbackTimeObserver = PlayerTimeObserver(player: player)
         playbackDurationObserver = PlayerDurationObserver(player: player)
+        initAudioSession()
         observePlayer()
     }
     
+    private func initAudioSession() {
+        do {
+            try AVAudioSession.sharedInstance().setCategory(AVAudioSession.Category.playback, mode: AVAudioSession.Mode.spokenAudio, options: [.allowAirPlay])
+            try AVAudioSession.sharedInstance().setActive(true)
+        } catch {
+            print(error)
+        }
+    }
+    
+    private func setupNotification() {
+        setupMediaPlayerNotificationView()
+        setupNotificationView()
+    }
+    
+    private func setupMediaPlayerNotificationView() {
+        let commandCenter = MPRemoteCommandCenter.shared()
+        
+        commandCenter.playCommand.addTarget { [unowned self] event in
+            self.playCurrent()
+            return .success
+        }
+        
+        commandCenter.pauseCommand.addTarget { [unowned self] event in
+            self.pause()
+            return .success
+        }
+        
+        commandCenter.previousTrackCommand.addTarget { [unowned self] event in
+            self.skipToPrevious()
+            return .success
+        }
+        
+        commandCenter.nextTrackCommand.addTarget { [unowned self] event in
+            self.skipToNext()
+            return .success
+        }
+    }
+    
+    private func setupNotificationView() {
+        guard let currentId = nowPlaying.value else { return }
+        guard let currentItem = playerItems[currentId]?.0 else { return }
+        
+        var nowPlayingInfo = [
+            MPMediaItemPropertyTitle: currentItem.title,
+            MPMediaItemPropertyPodcastTitle: currentItem.podcastTitle,
+            MPMediaItemPropertyPlaybackDuration: currentItem.duration / 1000,
+        ] as [String : Any]
+        
+        if let image = currentItem.image {
+            let artwork = MPMediaItemArtwork(boundsSize: image.size, requestHandler: { (size) -> UIImage in
+                return image
+            })
+            
+            nowPlayingInfo[MPMediaItemPropertyArtwork] = artwork
+        }
+        
+        MPNowPlayingInfoCenter.default().nowPlayingInfo = nowPlayingInfo
+    }
     
     private func observePlayer() {
         playbackDurationObserver.publisher
@@ -60,6 +121,7 @@ class CastawayPlayer {
             if let currentItem = change.newValue {
                 self.observePlayerItem()
                 self.sendNowPlayingItemKey(currentItem)
+                self.setupNotification()
             }
         }
         
@@ -168,6 +230,13 @@ class CastawayPlayer {
         playbackState.send(PlaybackState.playing)
     }
     
+    func playCurrent() {
+        guard let index = currentIndex() else { return }
+        let currentMediaId = playlist[index]
+        
+        play(mediaId: currentMediaId, startAt: playerItems[currentMediaId]?.0.playbackPosition ?? 0)
+    }
+    
     func resume() {
         player.play()
         playbackState.send(PlaybackState.playing)
@@ -221,7 +290,7 @@ class CastawayPlayer {
     }
     
     private func currentIndex() -> Int? {
-        guard let currentId = nowPlaying.value else { return nil}
+        guard let currentId = nowPlaying.value else { return nil }
         guard let index = playlist.firstIndex(of: currentId) else { return nil }
         
         return index

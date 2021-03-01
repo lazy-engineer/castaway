@@ -15,3 +15,6 @@ actual fun ByteArray.toNativeImage(): Image? =
       .let { NSData.dataWithBytes(it, size.toULong()) }
       .let { UIImage.imageWithData(it) }
   }
+
+//TODO: implement UIImage to ByteArray converter
+actual fun UIImage.fromNativeImage(): ByteArray? = null

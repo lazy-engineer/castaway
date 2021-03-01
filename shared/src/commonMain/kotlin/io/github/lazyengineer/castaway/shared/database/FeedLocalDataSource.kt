@@ -6,6 +6,8 @@ import io.github.lazyengineer.castaway.shared.common.Result
 import io.github.lazyengineer.castaway.shared.entity.Episode
 import io.github.lazyengineer.castaway.shared.entity.FeedData
 import io.github.lazyengineer.castaway.shared.entity.PlaybackPosition
+import io.github.lazyengineer.castaway.shared.fromNativeImage
+import io.github.lazyengineer.castaway.shared.toNativeImage
 import iogithublazyengineercastawaydb.EpisodeEntity
 
 class FeedLocalDataSource constructor(private val database: CastawayDatabase) :
@@ -80,6 +82,7 @@ class FeedLocalDataSource constructor(private val database: CastawayDatabase) :
 	  description = this.description,
 	  audioUrl = this.audioUrl,
 	  imageUrl = this.imageUrl,
+	  image = this.image?.toNativeImage(),
 	  author = this.author,
 	  playbackPosition = this.playbackPosition ?: PlaybackPosition(0),
 	  isPlaying = this.isPlaying ?: false,
@@ -96,6 +99,7 @@ class FeedLocalDataSource constructor(private val database: CastawayDatabase) :
 	  description = this.description,
 	  audioUrl = this.audioUrl,
 	  imageUrl = this.imageUrl,
+	  image = this.image?.fromNativeImage(),
 	  author = this.author,
 	  playbackPosition = this.playbackPosition,
 	  isPlaying = this.isPlaying,
