@@ -64,11 +64,12 @@ class FeedLocalDataSource constructor(private val database: CastawayDatabase) :
 
   override suspend fun saveEpisode(episode: Episode): Result<Episode> {
 	val savedEpisode: Episode = database.episodeQueries.transactionWithResult {
+	  val episodeEntity = episode.toEpisodeEntity()
 	  database.episodeQueries.insertEpisode(
-		episode.toEpisodeEntity()
+		episodeEntity
 	  )
 
-	  episode
+	  episodeEntity.toEpisode()
 	}
 
 	return Result.Success(savedEpisode)
