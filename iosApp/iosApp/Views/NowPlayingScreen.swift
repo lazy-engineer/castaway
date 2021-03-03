@@ -35,10 +35,6 @@ struct NowPlayingScreen: View {
                     .frame(width: 200, height: 250)
                     .padding(48)
                     .foregroundColor(.gray)
-                    .onAppear {
-                        guard let imageUrl = viewModel.currentEpisode?.imageUrl else { return }
-                        viewModel.loadImage(imageUrl)
-                    }
             }
             
             Text(viewModel.currentEpisode?.title ?? "")

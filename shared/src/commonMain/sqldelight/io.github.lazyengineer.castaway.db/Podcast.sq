@@ -1,11 +1,12 @@
 CREATE TABLE podcast(
 url TEXT NOT NULL PRIMARY KEY,
 name TEXT NOT NULL,
-image TEXT
+imageUrl TEXT,
+image BLOB
 );
 
 insertPodcast:
-INSERT OR REPLACE INTO podcast(url, name, image) VALUES(?,?,?);
+INSERT OR REPLACE INTO podcast VALUES ?;
 
 selectByUrl:
 SELECT *

@@ -29,13 +29,15 @@ fun initKoin() = initKoin {}
 private val coreModule = module {
   single { createDb() }
   single { HttpClient() }
+  single { ImageLoader(get()) }
   single {
 	FeedRepository(
-		remoteDataSource = FeedRemoteDataSource(get()),
-		localDataSource = FeedLocalDataSource(get())
+	  imageLoader = get(),
+	  remoteDataSource = FeedRemoteDataSource(get()),
+	  localDataSource = FeedLocalDataSource(get()),
 	)
   }
-  single { ImageLoader(get()) }
+
 
   single { GetFeedUseCase(get() as FeedRepository) }
   single { GetStoredFeedUseCase(get() as FeedRepository) }

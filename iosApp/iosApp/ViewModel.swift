@@ -8,7 +8,6 @@ class CastawayViewModel: ObservableObject {
     private let getStoredFeedUseCase: NativeGetStoredFeedUseCase
     private let storeAndGetFeedUseCase: StoreAndGetFeedUseCase
     private let storeEpisodeUseCase: NativeSaveEpisodeUseCase
-    private let loadImageUseCase: NativeLoadImageUseCase
     private let player = CastawayPlayer()
     
     private var disposables = Set<AnyCancellable>()
@@ -28,7 +27,6 @@ class CastawayViewModel: ObservableObject {
         storeAndGetFeedUseCase = StoreAndGetFeedUseCase()
         storeEpisodeUseCase = NativeSaveEpisodeUseCase()
         getStoredFeedUseCase = NativeGetStoredFeedUseCase()
-        loadImageUseCase = NativeLoadImageUseCase()
         playbackPosition = player.playbackTimeObserver
         playbackDuration = player.playbackDurationObserver
         playbackStatePublisher = player.playbackState
@@ -97,33 +95,11 @@ class CastawayViewModel: ObservableObject {
         }
     }
     
-    func loadImage(_ url: String) {
-        loadImageUseCase.run(
-            url: url,
-            onSuccess: { image in
-                print("🖼 Feed Image loaded")
-                self.feedImage = image
-                
-                //TODO: Just a workaround for now -> implement store image in episodes properly
-                self.player.prepare(media: self.episodes.map { episode in
-                    var mediaItem = episode.toMediaData()
-                    mediaItem.image = self.feedImage
-                    return mediaItem
-                })
-            },
-            onError: { error in
-                print("Fail to load Image: \(url) ❌ \(error)")
-            })
-    }
-    
     private func publishAndPrepareFeed(_ feed: FeedData) {
         feedTitle = feed.title
         episodes = feed.episodes
+        feedImage = feed.image
         prepareEpisodes(feed.episodes)
-        
-        if let imageUrl = feed.image {
-            loadImage(imageUrl)
-        }
     }
     
     private func prepareEpisodes(_ episodes: [Episode]) {

@@ -22,10 +22,6 @@ struct StartScreen : View {
                         .clipShape(Rectangle())
                         .cornerRadius(10)
                         .padding(8)
-                        .onAppear {
-                            guard let imageUrl = viewModel.currentEpisode?.imageUrl else { return }
-                            viewModel.loadImage(imageUrl)
-                        }
                 }
                 
                 Text(viewModel.feedTitle)

@@ -9,6 +9,7 @@ import io.github.lazyengineer.castaway.shared.entity.PlaybackPosition
 import io.github.lazyengineer.castaway.shared.fromNativeImage
 import io.github.lazyengineer.castaway.shared.toNativeImage
 import iogithublazyengineercastawaydb.EpisodeEntity
+import iogithublazyengineercastawaydb.Podcast
 
 class FeedLocalDataSource constructor(private val database: CastawayDatabase) :
   LocalFeedDataSource {
@@ -26,7 +27,15 @@ class FeedLocalDataSource constructor(private val database: CastawayDatabase) :
 		  it.toEpisode()
 		}
 
-		Result.Success(FeedData(url = podcast.url, title = podcast.name, image = podcast.image, episodes = episodes))
+		Result.Success(
+		  FeedData(
+			url = podcast.url,
+			title = podcast.name,
+			imageUrl = podcast.imageUrl,
+			image = podcast.image?.toNativeImage(),
+			episodes = episodes
+		  )
+		)
 	  } catch (e: NullPointerException) {
 		Result.Error(e)
 	  }
@@ -49,7 +58,14 @@ class FeedLocalDataSource constructor(private val database: CastawayDatabase) :
 
   override suspend fun saveFeedData(feed: FeedData): Result<FeedData> {
 	val savedFeed: FeedData = database.episodeQueries.transactionWithResult {
-	  database.podcastQueries.insertPodcast(feed.url, feed.title, feed.image)
+	  database.podcastQueries.insertPodcast(
+		Podcast(
+		  url = feed.url,
+		  name = feed.title,
+		  imageUrl = feed.imageUrl,
+		  image = feed.image?.fromNativeImage()
+		)
+	  )
 	  feed.episodes.forEach {
 		database.episodeQueries.insertEpisode(
 		  it.toEpisodeEntity()

@@ -1,6 +1,24 @@
 import shared
 import FeedKit
+import UIKit
 import AVFoundation
+
+extension Episode {
+    func copy(image: UIImage) -> Episode {
+        return doCopy(
+            id: id,
+            title: title,
+            subTitle: subTitle,
+            description: description_,
+            audioUrl: audioUrl,
+            imageUrl: imageUrl,
+            image: image,
+            author: author,
+            playbackPosition: playbackPosition,
+            episode: episode,
+            podcastUrl: podcastUrl)
+    }
+}
 
 extension Episode {
     func copy(position: Int64) -> Episode {
@@ -86,7 +104,8 @@ extension RSSFeed {
         return FeedData(
             url: url,
             title: title!,
-            image: feedImage,
+            imageUrl: feedImage,
+            image: nil,
             episodes: items!.enumerated().compactMap({ $0.element.toEpisode(url: url, image: feedImage, index: Int32($0.offset)) }))
     }
     

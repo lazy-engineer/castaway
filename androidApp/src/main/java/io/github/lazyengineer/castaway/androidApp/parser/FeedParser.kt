@@ -16,7 +16,8 @@ object FeedParser {
 		FeedData(
 		  url = url,
 		  title = this.title,
-		  image = this.iTunes?.image?.attributes?.href,
+		  imageUrl = this.iTunes?.image?.attributes?.href,
+		  image = null,
 		  episodes = this.items.mapIndexed { index, episode ->
 			Episode(
 			  id = UUID.randomUUID().toString(),
@@ -24,8 +25,7 @@ object FeedParser {
 			  subTitle = episode.iTunes?.subtitle ?: "",
 			  description = episode.description,
 			  audioUrl = episode.media?.url ?: "",
-			  imageUrl = episode.mediaNamespace?.thumbnails?.firstOrNull()?.attributes?.url
-				?: "",
+			  imageUrl = episode.mediaNamespace?.thumbnails?.firstOrNull()?.attributes?.url ?: "",
 			  image = null,
 			  author = episode.author ?: "",
 			  playbackPosition = PlaybackPosition(0, Long.MAX_VALUE),
@@ -38,17 +38,16 @@ object FeedParser {
 		FeedData(
 		  url = url,
 		  title = this.title?.value ?: "",
-		  image = this.icon,
+		  imageUrl = this.icon,
+		  image = null,
 		  episodes = this.entries.mapIndexed { index, episode ->
 			Episode(
 			  id = UUID.randomUUID().toString(),
 			  title = episode.title?.value ?: "",
 			  subTitle = "",
 			  description = episode.summary?.value ?: "",
-			  audioUrl = episode.mediaNamespace?.contents?.firstOrNull()?.attributes?.url
-				?: "",
-			  imageUrl = episode.mediaNamespace?.thumbnails?.firstOrNull()?.attributes?.url
-				?: "",
+			  audioUrl = episode.mediaNamespace?.contents?.firstOrNull()?.attributes?.url ?: "",
+			  imageUrl = episode.mediaNamespace?.thumbnails?.firstOrNull()?.attributes?.url ?: "",
 			  image = null,
 			  author = episode.authors.firstOrNull()?.uri ?: "",
 			  playbackPosition = PlaybackPosition(0, Long.MAX_VALUE),
