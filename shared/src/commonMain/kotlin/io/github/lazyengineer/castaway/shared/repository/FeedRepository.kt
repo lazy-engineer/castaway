@@ -1,7 +1,10 @@
 package io.github.lazyengineer.castaway.shared.repository
 
 import co.touchlab.stately.ensureNeverFrozen
+import io.github.lazyengineer.castaway.shared.Image
 import io.github.lazyengineer.castaway.shared.common.Result
+import io.github.lazyengineer.castaway.shared.common.Result.Error
+import io.github.lazyengineer.castaway.shared.common.Result.Success
 import io.github.lazyengineer.castaway.shared.database.LocalFeedDataSource
 import io.github.lazyengineer.castaway.shared.entity.Episode
 import io.github.lazyengineer.castaway.shared.entity.FeedData
@@ -21,11 +24,11 @@ class FeedRepository constructor(
   override suspend fun saveFeed(feed: FeedData): Result<FeedData> {
 	var feedToStore = feed
 
-	if (feed.image == null) {
-	  feed.imageUrl?.let { feedImageUrl ->
+	if (feed.info.image == null) {
+	  feed.info.imageUrl?.let { feedImageUrl ->
 		feedToStore = when (val imageResult = imageLoader.loadImage(feedImageUrl)) {
-		  is Result.Success -> feed.copy(image = imageResult.data)
-		  is Result.Error -> feed
+		  is Success -> feed.copyWithImage(imageResult)
+		  is Error -> feed
 		}
 	  }
 	}
@@ -37,12 +40,7 @@ class FeedRepository constructor(
 	var episodeToStore = episode
 
 	if (episode.image == null) {
-	  episode.imageUrl?.let { episodeImageUrl ->
-		episodeToStore = when (val imageResult = imageLoader.loadImage(episodeImageUrl)) {
-		  is Result.Success -> episode.copy(image = imageResult.data)
-		  is Result.Error -> episode
-		}
-	  }
+	  episodeToStore = episode.loadImage()
 	}
 
 	return localDataSource.saveEpisode(episodeToStore)
@@ -59,4 +57,32 @@ class FeedRepository constructor(
   override suspend fun loadEpisodes(episodeIds: List<String>): Result<List<Episode>> {
 	return localDataSource.loadEpisodes(episodeIds)
   }
+
+  private suspend fun FeedData.copyWithImage(imageResult: Success<Image>) =
+	this.copy(info = this.info.copy(image = imageResult.data), episodes = this.episodes.map {
+	  if (it.image == null) {
+		it.loadImage(imageResult.data)
+	  } else {
+		it
+	  }
+	})
+
+  private suspend fun Episode.loadImage(feedImage: Image? = null) = when {
+	this.imageUrl != null -> this.loadEpisodeImageFromUrl()
+	feedImage != null -> this.copy(image = feedImage)
+	else -> this.loadEpisodeImageFromFeed()
+  }
+
+  private suspend fun Episode.loadEpisodeImageFromUrl() =
+	when (val imageResult = this.imageUrl?.let { imageLoader.loadImage(it) }) {
+	  is Success -> this.copy(image = imageResult.data)
+	  is Error -> this
+	  null -> this
+	}
+
+  private suspend fun Episode.loadEpisodeImageFromFeed() =
+	when (val feedInfo = localDataSource.loadFeedInfo(this.podcastUrl)) {
+	  is Success -> this.copy(image = feedInfo.data.image)
+	  is Error -> this
+	}
 }

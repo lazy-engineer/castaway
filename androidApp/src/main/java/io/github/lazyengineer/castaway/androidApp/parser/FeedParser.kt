@@ -2,6 +2,7 @@ package io.github.lazyengineer.castaway.androidApp.parser
 
 import io.github.lazyengineer.castaway.shared.entity.Episode
 import io.github.lazyengineer.castaway.shared.entity.FeedData
+import io.github.lazyengineer.castaway.shared.entity.FeedInfo
 import io.github.lazyengineer.castaway.shared.entity.PlaybackPosition
 import io.github.lazyengineer.feedparser.model.feed.AtomFeed
 import io.github.lazyengineer.feedparser.model.feed.Feed
@@ -14,10 +15,12 @@ object FeedParser {
 	return when (this) {
 	  is RSSFeed -> {
 		FeedData(
-		  url = url,
-		  title = this.title,
-		  imageUrl = this.iTunes?.image?.attributes?.href,
-		  image = null,
+		  FeedInfo(
+			url = url,
+			title = this.title,
+			imageUrl = this.iTunes?.image?.attributes?.href,
+			image = null
+		  ),
 		  episodes = this.items.mapIndexed { index, episode ->
 			Episode(
 			  id = UUID.randomUUID().toString(),
@@ -36,10 +39,12 @@ object FeedParser {
 	  }
 	  is AtomFeed -> {
 		FeedData(
-		  url = url,
-		  title = this.title?.value ?: "",
-		  imageUrl = this.icon,
-		  image = null,
+		  FeedInfo(
+			url = url,
+			title = this.title?.value ?: "",
+			imageUrl = this.icon,
+			image = null
+		  ),
 		  episodes = this.entries.mapIndexed { index, episode ->
 			Episode(
 			  id = UUID.randomUUID().toString(),

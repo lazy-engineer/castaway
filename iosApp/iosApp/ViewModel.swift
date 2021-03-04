@@ -96,9 +96,9 @@ class CastawayViewModel: ObservableObject {
     }
     
     private func publishAndPrepareFeed(_ feed: FeedData) {
-        feedTitle = feed.title
+        feedTitle = feed.info.title
         episodes = feed.episodes
-        feedImage = feed.image
+        feedImage = feed.info.image
         prepareEpisodes(feed.episodes)
     }
     

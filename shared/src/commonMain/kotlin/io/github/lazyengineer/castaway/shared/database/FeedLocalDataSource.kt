@@ -5,6 +5,7 @@ import io.github.lazyengineer.castaway.db.CastawayDatabase
 import io.github.lazyengineer.castaway.shared.common.Result
 import io.github.lazyengineer.castaway.shared.entity.Episode
 import io.github.lazyengineer.castaway.shared.entity.FeedData
+import io.github.lazyengineer.castaway.shared.entity.FeedInfo
 import io.github.lazyengineer.castaway.shared.entity.PlaybackPosition
 import io.github.lazyengineer.castaway.shared.fromNativeImage
 import io.github.lazyengineer.castaway.shared.toNativeImage
@@ -18,6 +19,25 @@ class FeedLocalDataSource constructor(private val database: CastawayDatabase) :
 	ensureNeverFrozen()
   }
 
+  override suspend fun loadFeedInfo(feedUrl: String): Result<FeedInfo> {
+	return database.episodeQueries.transactionWithResult {
+	  try {
+		val podcast = database.podcastQueries.selectByUrl(feedUrl).executeAsOne()
+
+		Result.Success(
+		  FeedInfo(
+			url = podcast.url,
+			title = podcast.name,
+			imageUrl = podcast.imageUrl,
+			image = podcast.image?.toNativeImage(),
+		  )
+		)
+	  } catch (e: NullPointerException) {
+		Result.Error(e)
+	  }
+	}
+  }
+
   override suspend fun loadFeed(feedUrl: String): Result<FeedData> {
 	return database.episodeQueries.transactionWithResult {
 	  try {
@@ -29,10 +49,12 @@ class FeedLocalDataSource constructor(private val database: CastawayDatabase) :
 
 		Result.Success(
 		  FeedData(
-			url = podcast.url,
-			title = podcast.name,
-			imageUrl = podcast.imageUrl,
-			image = podcast.image?.toNativeImage(),
+			FeedInfo(
+			  url = podcast.url,
+			  title = podcast.name,
+			  imageUrl = podcast.imageUrl,
+			  image = podcast.image?.toNativeImage(),
+			),
 			episodes = episodes
 		  )
 		)
@@ -60,10 +82,10 @@ class FeedLocalDataSource constructor(private val database: CastawayDatabase) :
 	val savedFeed: FeedData = database.episodeQueries.transactionWithResult {
 	  database.podcastQueries.insertPodcast(
 		Podcast(
-		  url = feed.url,
-		  name = feed.title,
-		  imageUrl = feed.imageUrl,
-		  image = feed.image?.fromNativeImage()
+		  url = feed.info.url,
+		  name = feed.info.title,
+		  imageUrl = feed.info.imageUrl,
+		  image = feed.info.image?.fromNativeImage()
 		)
 	  )
 	  feed.episodes.forEach {

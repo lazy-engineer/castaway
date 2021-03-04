@@ -102,10 +102,12 @@ extension RSSFeed {
         let feedImage = self.feedImage()
         
         return FeedData(
-            url: url,
-            title: title!,
-            imageUrl: feedImage,
-            image: nil,
+            info: FeedInfo(
+                url: url,
+                title: title!,
+                imageUrl: feedImage,
+                image: nil
+            ),
             episodes: items!.enumerated().compactMap({ $0.element.toEpisode(url: url, image: feedImage, index: Int32($0.offset)) }))
     }
     
@@ -117,7 +119,7 @@ extension RSSFeed {
         } else if let iTunesFeedImage = iTunes?.iTunesImage?.attributes?.href {
             feedImage = iTunesFeedImage
         }
-
+        
         return feedImage
     }
 }
@@ -125,7 +127,7 @@ extension RSSFeed {
 extension RSSFeedItem {
     func toEpisode(url: String, image: String?, index: Int32) -> Episode? {
         guard let audioUrl = audioUrl() else { return nil }
-        let episodeImage = self.episodeImage(feedImage: image)
+        let episodeImage = self.episodeImage()
         
         return Episode(
             id: UUID.init().uuidString,
@@ -149,18 +151,14 @@ extension RSSFeedItem {
         } else if let mediaUrl = media?.mediaContents?.first?.attributes?.url {
             audioUrl = mediaUrl
         }
-
+        
         return audioUrl
     }
     
-    private func episodeImage(feedImage: String?) -> String? {
-        var episodeImage: String? = feedImage
+    private func episodeImage() -> String? {
+        guard let iTunesImage = iTunes?.iTunesImage?.attributes?.href else { return nil }
         
-        if let iTunesImage = iTunes?.iTunesImage?.attributes?.href {
-            episodeImage = iTunesImage
-        }
-
-        return episodeImage
+        return iTunesImage
     }
 }
 

@@ -18,10 +18,9 @@ actual fun ByteArray.toNativeImage(): Image? =
 	  .let { UIImage.imageWithData(it) }
   }
 
-actual fun UIImage.fromNativeImage(): ByteArray? {
-  return memScoped {
+actual fun UIImage.fromNativeImage(): ByteArray? =
+  memScoped {
 	val nsData = UIImagePNGRepresentation(this@fromNativeImage)
 	val bytes = nsData?.bytes()
 	bytes?.readBytes(nsData.length().toInt())
   }
-}
