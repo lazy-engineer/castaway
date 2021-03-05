@@ -33,7 +33,7 @@ object Version {
   const val gson = "2.8.6"
   const val koin = "3.0.0-alpha-4"
   const val ktor = "1.5.0"
-  const val sqldelight = "1.4.3"
+  const val sqldelight = "1.4.4"
   const val feedparser = "0.1.0"
   const val stately = "1.1.0"
 
@@ -79,6 +79,7 @@ object Library {
   const val ktorAndroid = "io.ktor:ktor-client-android:${Version.ktor}"
   const val ktorIOS = "io.ktor:ktor-client-ios:${Version.ktor}"
   const val sqldelight = "com.squareup.sqldelight:runtime:${Version.sqldelight}"
+  const val sqldelightExt = "com.squareup.sqldelight:coroutines-extensions:${Version.sqldelight}"
   const val sqldelightAndroid = "com.squareup.sqldelight:android-driver:${Version.sqldelight}"
   const val sqldelightIOS = "com.squareup.sqldelight:native-driver:${Version.sqldelight}"
   const val feedparser = "io.github.lazy-engineer:feedparser:${Version.feedparser}"

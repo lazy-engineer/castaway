@@ -33,6 +33,7 @@ kotlin {
 		implementation(Library.stately)
 		implementation(Library.ktor)
 		implementation(Library.sqldelight)
+		implementation(Library.sqldelightExt)
 	  }
 	}
 	val commonTest by getting {
