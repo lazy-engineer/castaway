@@ -9,6 +9,7 @@ import io.github.lazyengineer.castaway.shared.usecase.GetStoredFeedUseCase
 import io.github.lazyengineer.castaway.shared.usecase.LoadImageUseCase
 import io.github.lazyengineer.castaway.shared.usecase.SaveEpisodeUseCase
 import io.github.lazyengineer.castaway.shared.usecase.SaveFeedUseCase
+import io.github.lazyengineer.castaway.shared.usecase.StoredEpisodeFlowableUseCase
 import io.github.lazyengineer.castaway.shared.webservice.FeedRemoteDataSource
 import io.github.lazyengineer.castaway.shared.webservice.ImageLoader
 import io.ktor.client.HttpClient
@@ -38,12 +39,12 @@ private val coreModule = module {
 	)
   }
 
-
   single { GetFeedUseCase(get() as FeedRepository) }
   single { GetStoredFeedUseCase(get() as FeedRepository) }
   single { GetStoredEpisodesUseCase(get() as FeedRepository) }
   single { SaveEpisodeUseCase(get() as FeedRepository) }
   single { SaveFeedUseCase(get() as FeedRepository) }
+  single { StoredEpisodeFlowableUseCase(get() as FeedRepository) }
   single { LoadImageUseCase(get()) }
 }
 

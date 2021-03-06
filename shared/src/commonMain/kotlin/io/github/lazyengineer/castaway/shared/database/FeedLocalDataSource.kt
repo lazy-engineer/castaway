@@ -1,16 +1,20 @@
 package io.github.lazyengineer.castaway.shared.database
 
 import co.touchlab.stately.ensureNeverFrozen
+import com.squareup.sqldelight.runtime.coroutines.asFlow
+import com.squareup.sqldelight.runtime.coroutines.mapToList
 import io.github.lazyengineer.castaway.db.CastawayDatabase
 import io.github.lazyengineer.castaway.shared.common.Result
 import io.github.lazyengineer.castaway.shared.entity.Episode
 import io.github.lazyengineer.castaway.shared.entity.FeedData
 import io.github.lazyengineer.castaway.shared.entity.FeedInfo
-import io.github.lazyengineer.castaway.shared.entity.PlaybackPosition
+import io.github.lazyengineer.castaway.shared.ext.toEpisode
+import io.github.lazyengineer.castaway.shared.ext.toEpisodeEntity
 import io.github.lazyengineer.castaway.shared.fromNativeImage
 import io.github.lazyengineer.castaway.shared.toNativeImage
 import iogithublazyengineercastawaydb.EpisodeEntity
 import iogithublazyengineercastawaydb.Podcast
+import kotlinx.coroutines.flow.Flow
 
 class FeedLocalDataSource constructor(private val database: CastawayDatabase) :
   LocalFeedDataSource {
@@ -78,6 +82,14 @@ class FeedLocalDataSource constructor(private val database: CastawayDatabase) :
 	}
   }
 
+  override fun episodeFlow(episodeIds: List<String>): Flow<List<EpisodeEntity>> {
+	return database.episodeQueries.selectByIds(episodeIds).asFlow().mapToList()
+  }
+
+  override fun episodeFlow(podcastUrl: String): Flow<List<EpisodeEntity>> {
+	return database.episodeQueries.selectByPodcast(podcastUrl).asFlow().mapToList()
+  }
+
   override suspend fun saveFeedData(feed: FeedData): Result<FeedData> {
 	val savedFeed: FeedData = database.episodeQueries.transactionWithResult {
 	  database.podcastQueries.insertPodcast(
@@ -111,37 +123,5 @@ class FeedLocalDataSource constructor(private val database: CastawayDatabase) :
 	}
 
 	return Result.Success(savedEpisode)
-  }
-
-  private fun EpisodeEntity.toEpisode(): Episode {
-	return Episode(
-	  id = this.id,
-	  title = this.title,
-	  subTitle = this.subTitle,
-	  description = this.description,
-	  audioUrl = this.audioUrl,
-	  imageUrl = this.imageUrl,
-	  image = this.image?.toNativeImage(),
-	  author = this.author,
-	  playbackPosition = this.playbackPosition ?: PlaybackPosition(0),
-	  episode = this.episode.toInt(),
-	  podcastUrl = this.podcastUrl,
-	)
-  }
-
-  private fun Episode.toEpisodeEntity(): EpisodeEntity {
-	return EpisodeEntity(
-	  id = this.id,
-	  title = this.title,
-	  subTitle = this.subTitle,
-	  description = this.description,
-	  audioUrl = this.audioUrl,
-	  imageUrl = this.imageUrl,
-	  image = this.image?.fromNativeImage(),
-	  author = this.author,
-	  playbackPosition = this.playbackPosition,
-	  episode = this.episode.toLong(),
-	  podcastUrl = this.podcastUrl,
-	)
   }
 }

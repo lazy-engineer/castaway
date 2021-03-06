@@ -8,8 +8,11 @@ import io.github.lazyengineer.castaway.shared.common.Result.Success
 import io.github.lazyengineer.castaway.shared.database.LocalFeedDataSource
 import io.github.lazyengineer.castaway.shared.entity.Episode
 import io.github.lazyengineer.castaway.shared.entity.FeedData
+import io.github.lazyengineer.castaway.shared.ext.toEpisode
 import io.github.lazyengineer.castaway.shared.webservice.ImageLoader
 import io.github.lazyengineer.castaway.shared.webservice.RemoteFeedDataSource
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.flow
 
 class FeedRepository constructor(
   private val imageLoader: ImageLoader,
@@ -56,6 +59,22 @@ class FeedRepository constructor(
 
   override suspend fun loadEpisodes(episodeIds: List<String>): Result<List<Episode>> {
 	return localDataSource.loadEpisodes(episodeIds)
+  }
+
+  override fun episodeFlow(episodeIds: List<String>) = flow {
+	localDataSource.episodeFlow(episodeIds).collect {
+	  it.forEach { entity ->
+		emit(Success(entity.toEpisode()))
+	  }
+	}
+  }
+
+  override fun episodeFlow(podcastUrl: String) = flow {
+	localDataSource.episodeFlow(podcastUrl).collect {
+	  it.forEach { entity ->
+		emit(Success(entity.toEpisode()))
+	  }
+	}
   }
 
   private suspend fun FeedData.copyWithImage(imageResult: Success<Image>) =
