@@ -8,6 +8,7 @@ class CastawayViewModel: ObservableObject {
     private let getStoredFeedUseCase: NativeGetStoredFeedUseCase
     private let storeAndGetFeedUseCase: StoreAndGetFeedUseCase
     private let storeEpisodeUseCase: NativeSaveEpisodeUseCase
+    private let storedEpisodeFlowableUseCase: NativeStoredEpisodeFlowableUseCase
     private let player = CastawayPlayer()
     
     private var disposables = Set<AnyCancellable>()
@@ -27,6 +28,7 @@ class CastawayViewModel: ObservableObject {
         storeAndGetFeedUseCase = StoreAndGetFeedUseCase()
         storeEpisodeUseCase = NativeSaveEpisodeUseCase()
         getStoredFeedUseCase = NativeGetStoredFeedUseCase()
+        storedEpisodeFlowableUseCase = NativeStoredEpisodeFlowableUseCase()
         playbackPosition = player.playbackTimeObserver
         playbackDuration = player.playbackDurationObserver
         playbackStatePublisher = player.playbackState
@@ -81,6 +83,24 @@ class CastawayViewModel: ObservableObject {
                 print("There is no stored Feed: \(url) ❌ \(error) 👉 💾 Download...")
                 self.fetchFeed(url)
             })
+    }
+    
+    func loadEpisodes(_ feedUrl: String) {
+        storedEpisodeFlowableUseCase.run(
+            feedUrl: feedUrl,
+            onEach: { episode in
+                print("Episode \(episode.id) 💧")
+
+                if self.episodes.firstIndex(where: {$0.id == episode.id}) == nil {
+                    self.player.append(media: episode.toMediaData())
+                    self.episodes.append(episode)
+                    print("\(self.episodes.count) 💦")
+                }
+            },
+            onError: { error in
+                print("Failed to load episodes: ❌ \(error)")
+            },
+            onComplete: {})
     }
     
     private func fetchFeed(_ url: String) {
