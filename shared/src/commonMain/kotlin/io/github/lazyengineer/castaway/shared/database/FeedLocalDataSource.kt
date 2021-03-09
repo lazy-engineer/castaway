@@ -1,6 +1,7 @@
 package io.github.lazyengineer.castaway.shared.database
 
-import co.touchlab.stately.ensureNeverFrozen
+import com.squareup.sqldelight.Transacter
+import com.squareup.sqldelight.TransactionWithReturn
 import com.squareup.sqldelight.runtime.coroutines.asFlow
 import com.squareup.sqldelight.runtime.coroutines.mapToList
 import io.github.lazyengineer.castaway.db.CastawayDatabase
@@ -14,17 +15,17 @@ import io.github.lazyengineer.castaway.shared.fromNativeImage
 import io.github.lazyengineer.castaway.shared.toNativeImage
 import iogithublazyengineercastawaydb.EpisodeEntity
 import iogithublazyengineercastawaydb.Podcast
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flowOn
+import kotlinx.coroutines.withContext
+import kotlin.coroutines.CoroutineContext
 
-class FeedLocalDataSource constructor(private val database: CastawayDatabase) :
+class FeedLocalDataSource constructor(private val database: CastawayDatabase, private val backgroundDispatcher: CoroutineDispatcher) :
   LocalFeedDataSource {
 
-  init {
-	ensureNeverFrozen()
-  }
-
   override suspend fun loadFeedInfo(feedUrl: String): Result<FeedInfo> {
-	return database.episodeQueries.transactionWithResult {
+	return database.episodeQueries.transactionWithContext(backgroundDispatcher) {
 	  try {
 		val podcast = database.podcastQueries.selectByUrl(feedUrl).executeAsOne()
 
@@ -43,7 +44,7 @@ class FeedLocalDataSource constructor(private val database: CastawayDatabase) :
   }
 
   override suspend fun loadFeed(feedUrl: String): Result<FeedData> {
-	return database.episodeQueries.transactionWithResult {
+	return database.episodeQueries.transactionWithContext(backgroundDispatcher) {
 	  try {
 		val podcast = database.podcastQueries.selectByUrl(feedUrl).executeAsOne()
 
@@ -69,7 +70,7 @@ class FeedLocalDataSource constructor(private val database: CastawayDatabase) :
   }
 
   override suspend fun loadEpisodes(episodeIds: List<String>): Result<List<Episode>> {
-	return database.episodeQueries.transactionWithResult {
+	return database.episodeQueries.transactionWithContext(backgroundDispatcher) {
 	  try {
 		val episodes = database.episodeQueries.selectByIds(episodeIds).executeAsList().map {
 		  it.toEpisode()
@@ -83,15 +84,21 @@ class FeedLocalDataSource constructor(private val database: CastawayDatabase) :
   }
 
   override fun episodeFlow(episodeIds: List<String>): Flow<List<EpisodeEntity>> {
-	return database.episodeQueries.selectByIds(episodeIds).asFlow().mapToList()
+	return database.episodeQueries.selectByIds(episodeIds)
+	  .asFlow()
+	  .mapToList()
+	  .flowOn(backgroundDispatcher)
   }
 
   override fun episodeFlow(podcastUrl: String): Flow<List<EpisodeEntity>> {
-	return database.episodeQueries.selectByPodcast(podcastUrl).asFlow().mapToList()
+	return database.episodeQueries.selectByPodcast(podcastUrl)
+	  .asFlow()
+	  .mapToList()
+	  .flowOn(backgroundDispatcher)
   }
 
   override suspend fun saveFeedData(feed: FeedData): Result<FeedData> {
-	val savedFeed: FeedData = database.episodeQueries.transactionWithResult {
+	val savedFeed: FeedData = database.episodeQueries.transactionWithContext(backgroundDispatcher) {
 	  database.podcastQueries.insertPodcast(
 		Podcast(
 		  url = feed.info.url,
@@ -113,7 +120,7 @@ class FeedLocalDataSource constructor(private val database: CastawayDatabase) :
   }
 
   override suspend fun saveEpisode(episode: Episode): Result<Episode> {
-	val savedEpisode: Episode = database.episodeQueries.transactionWithResult {
+	val savedEpisode: Episode = database.episodeQueries.transactionWithContext(backgroundDispatcher) {
 	  val episodeEntity = episode.toEpisodeEntity()
 	  database.episodeQueries.insertEpisode(
 		episodeEntity
@@ -123,5 +130,17 @@ class FeedLocalDataSource constructor(private val database: CastawayDatabase) :
 	}
 
 	return Result.Success(savedEpisode)
+  }
+
+  private suspend fun <R> Transacter.transactionWithContext(
+	coroutineContext: CoroutineContext,
+	noEnclosing: Boolean = false,
+	body: TransactionWithReturn<R>.() -> R
+  ): R {
+	return withContext(coroutineContext) {
+	  this@transactionWithContext.transactionWithResult(noEnclosing) {
+		body()
+	  }
+	}
   }
 }
