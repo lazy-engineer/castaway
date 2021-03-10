@@ -83,16 +83,48 @@ class FeedLocalDataSource constructor(private val database: CastawayDatabase, pr
 	}
   }
 
-  override fun episodeFlow(episodeIds: List<String>): Flow<List<EpisodeEntity>> {
-	return database.episodeQueries.selectByIds(episodeIds)
-	  .asFlow()
+  override fun episodeFlow(episodeIds: List<String>): Flow<List<Episode>> {
+	return database.episodeQueries.selectByIds(
+	  episodeIds,
+	  mapper = { id, title, subTitle, description, audioUrl, imageUrl, image, author, playbackPosition, episode, podcastUrl ->
+		EpisodeEntity(
+		  id = id,
+		  title = title,
+		  subTitle = subTitle,
+		  description = description,
+		  audioUrl = audioUrl,
+		  imageUrl = imageUrl,
+		  image = image,
+		  author = author,
+		  playbackPosition = playbackPosition,
+		  episode = episode,
+		  podcastUrl = podcastUrl,
+		).toEpisode()
+	  }
+	).asFlow()
 	  .mapToList()
 	  .flowOn(backgroundDispatcher)
   }
 
-  override fun episodeFlow(podcastUrl: String): Flow<List<EpisodeEntity>> {
-	return database.episodeQueries.selectByPodcast(podcastUrl)
-	  .asFlow()
+  override fun episodeFlow(podcastUrl: String): Flow<List<Episode>> {
+	return database.episodeQueries.selectByPodcast(
+	  podcastUrl,
+	  mapper = { id, title, subTitle, description, audioUrl, imageUrl, image, author, playbackPosition, episode, podcastUrl ->
+		EpisodeEntity(
+		  id = id,
+		  title = title,
+		  subTitle = subTitle,
+		  description = description,
+		  audioUrl = audioUrl,
+		  imageUrl = imageUrl,
+		  image = image,
+		  author = author,
+		  playbackPosition = playbackPosition,
+		  episode = episode,
+		  podcastUrl = podcastUrl,
+		).toEpisode()
+	  }
+	).asFlow()
 	  .mapToList()
 	  .flowOn(backgroundDispatcher)
   }
