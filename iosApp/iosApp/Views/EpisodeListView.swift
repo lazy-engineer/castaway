@@ -37,9 +37,6 @@ struct EpisodeListView : View {
                 duration = TimeInterval(playbackDuration)
             }
         }
-        .onAppear {
-            viewModel.loadFeed("https://atp.fm/rss")
-        }
         .fullScreenCover(isPresented: $presentNowPlaying, onDismiss: {}) {
             NowPlayingScreen().environmentObject(viewModel)
         }
