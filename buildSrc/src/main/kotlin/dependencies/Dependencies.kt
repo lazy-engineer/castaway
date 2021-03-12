@@ -27,7 +27,7 @@ object Version {
   const val ktxFragment = "1.2.5"
 
   const val ktxCore = "1.3.2"
-  const val coroutines = "1.4.1"
+  const val coroutines = "1.4.3-native-mt"
   const val exoplayer = "2.12.0"
   const val coil = "1.1.0"
   const val gson = "2.8.6"
