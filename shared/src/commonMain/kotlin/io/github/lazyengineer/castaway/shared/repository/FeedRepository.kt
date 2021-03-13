@@ -29,7 +29,7 @@ class FeedRepository constructor(
 	if (feed.info.image == null) {
 	  feed.info.imageUrl?.let { feedImageUrl ->
 		feedToStore = when (val imageResult = imageLoader.loadImage(feedImageUrl)) {
-		  is Success -> feed.copyWithImage(imageResult)
+		  is Success -> feed.copy(info = feed.info.copy(image = imageResult.data))
 		  is Error -> feed
 		}
 	  }
@@ -76,7 +76,7 @@ class FeedRepository constructor(
 	}
   }
 
-  private suspend fun FeedData.copyWithImage(imageResult: Success<Image>) =
+  private suspend fun FeedData.copyWithAllImages(imageResult: Success<Image>) =
 	this.copy(info = this.info.copy(image = imageResult.data), episodes = this.episodes.map {
 	  if (it.image == null) {
 		it.loadImage(imageResult.data)

@@ -139,16 +139,19 @@ class FeedLocalDataSource constructor(private val database: CastawayDatabase, pr
 		  image = feed.info.image?.fromNativeImage()
 		)
 	  )
-	  feed.episodes.forEach {
-		database.episodeQueries.insertEpisode(
-		  it.toEpisodeEntity()
-		)
-	  }
 
 	  feed
 	}
 
+	insertEpisodes(feed.episodes)
+
 	return Result.Success(savedFeed)
+  }
+
+  private suspend fun insertEpisodes(episodes: List<Episode>) {
+	episodes.forEach {
+	  saveEpisode(it)
+	}
   }
 
   override suspend fun saveEpisode(episode: Episode): Result<Episode> {
