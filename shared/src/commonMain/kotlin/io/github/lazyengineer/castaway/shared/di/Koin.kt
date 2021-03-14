@@ -35,7 +35,7 @@ private val coreModule = module {
   single {
 	FeedRepository(
 	  imageLoader = get(),
-	  remoteDataSource = FeedRemoteDataSource(get()),
+	  remoteDataSource = FeedRemoteDataSource(get(), Dispatchers.Default),
 	  localDataSource = FeedLocalDataSource(get(), Dispatchers.Default),
 	)
   }

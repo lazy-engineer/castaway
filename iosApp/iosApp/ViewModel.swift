@@ -90,12 +90,6 @@ class CastawayViewModel: ObservableObject {
             feedUrl: feedUrl,
             onEach: { episode in
                 print("Episode \(episode.id) 💧")
-
-                if self.episodes.firstIndex(where: {$0.id == episode.id}) == nil {
-                    self.player.append(media: episode.toMediaData())
-                    self.episodes.append(episode)
-                    print("\(self.episodes.count) 💦")
-                }
             },
             onError: { error in
                 print("Failed to load episodes: ❌ \(error)")
