@@ -1,15 +1,16 @@
 package io.github.lazyengineer.castaway.shared.usecase
 
-import io.github.lazyengineer.castaway.shared.common.Result
-import io.github.lazyengineer.castaway.shared.common.UseCase
+import co.touchlab.stately.isFrozen
+import io.github.lazyengineer.castaway.shared.common.UseCaseWrapper
 import io.github.lazyengineer.castaway.shared.entity.FeedData
 import io.github.lazyengineer.castaway.shared.repository.FeedDataSource
 
 class GetStoredFeedUseCase constructor(
-	private val feedRepository: FeedDataSource
-) : UseCase<FeedData, String>() {
+  private val feedRepository: FeedDataSource
+) {
 
-  override suspend fun run(feedUrl: String): Result<FeedData> {
-	return feedRepository.loadLocally(feedUrl)
+  operator fun invoke(feedUrl: String) = UseCaseWrapper<FeedData, String> {
+	println("GetStoredFeedUseCase: ${feedRepository.isFrozen}")
+	feedRepository.loadLocally(feedUrl)
   }
 }

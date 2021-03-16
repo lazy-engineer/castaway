@@ -2,6 +2,7 @@ package io.github.lazyengineer.castaway.androidApp.viewmodel
 
 import android.support.v4.media.MediaBrowserCompat.MediaItem
 import android.support.v4.media.MediaBrowserCompat.SubscriptionCallback
+import android.util.Log
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -13,6 +14,7 @@ import io.github.lazyengineer.castaway.shared.entity.Episode
 import io.github.lazyengineer.castaway.shared.entity.FeedData
 import io.github.lazyengineer.castaway.shared.entity.PlaybackPosition
 import io.github.lazyengineer.castaway.shared.usecase.GetStoredFeedUseCase
+import io.github.lazyengineer.castaway.shared.usecase.StoredEpisodeFlowableUseCase
 import io.github.lazyengineer.castawayplayer.MediaServiceClient
 import io.github.lazyengineer.castawayplayer.extention.isPlaying
 import io.github.lazyengineer.castawayplayer.service.Constants.MEDIA_ROOT_ID
@@ -23,15 +25,16 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 class MainViewModel constructor(
-	private val mediaServiceClient: MediaServiceClient,
-	private val getStoredFeedUseCase: GetStoredFeedUseCase,
-	private val storeAndGetFeedUseCase: StoreAndGetFeedUseCase,
+  private val mediaServiceClient: MediaServiceClient,
+  private val getStoredFeedUseCase: GetStoredFeedUseCase,
+  private val storedEpisodeFlowableUseCase: StoredEpisodeFlowableUseCase,
+  private val storeAndGetFeedUseCase: StoreAndGetFeedUseCase,
 ) : ViewModel() {
 
   private val subscriptionCallback = object : SubscriptionCallback() {
 	override fun onChildrenLoaded(
-		parentId: String,
-		children: MutableList<MediaItem>
+	  parentId: String,
+	  children: MutableList<MediaItem>
 	) {
 	  super.onChildrenLoaded(parentId, children)
 	  viewModelScope.launch {
@@ -79,14 +82,14 @@ class MainViewModel constructor(
 	viewModelScope.launch {
 	  mediaServiceClient.playbackState.collect {
 		currentEpisode.value?.let { episode ->
-	    	_playing.postValue(playingState(episode.id))
+		  _playing.postValue(playingState(episode.id))
 		}
 
-//		feed.value?.let { feedData ->
-//		  _feed.postValue(feed.value?.copy(episodes = feedData.episodes.map { episode ->
-//			  episode.copy(isPlaying = playingState(episode.id))
-//		  }))
-//		}
+		//		feed.value?.let { feedData ->
+		//		  _feed.postValue(feed.value?.copy(episodes = feedData.episodes.map { episode ->
+		//			  episode.copy(isPlaying = playingState(episode.id))
+		//		  }))
+		//		}
 	  }
 	}
   }
@@ -111,12 +114,22 @@ class MainViewModel constructor(
 	}
   }
 
+  private fun collect(feedUrl: String) {
+	storedEpisodeFlowableUseCase(feedUrl).subscribe(viewModelScope,
+	  onEach = {
+		Log.d("MainViewModel", "onEach Episode 🍻")
+	  },
+	  onError = {},
+	  onComplete = {}
+	)
+  }
+
   private fun FeedData.postCurrentWithUpdatedPosition(position: Long) {
 	val episode = this.nowPlayingEpisode()
 
 	episode?.let {
 	  _updatedEpisodes.postValue(
-		  listOf(it.withUpdatedPosition(position))
+		listOf(it.withUpdatedPosition(position))
 	  )
 	}
   }
@@ -129,10 +142,10 @@ class MainViewModel constructor(
 
   private fun Episode.withUpdatedPosition(position: Long): Episode {
 	return this.copy(
-		playbackPosition = PlaybackPosition(
-			position = position,
-			duration = mediaServiceClient.nowPlaying.value.duration ?: 1
-		)
+	  playbackPosition = PlaybackPosition(
+		position = position,
+		duration = mediaServiceClient.nowPlaying.value.duration ?: 1
+	  )
 	)
   }
 
@@ -144,24 +157,24 @@ class MainViewModel constructor(
 
   private suspend fun loadFeed(url: String) {
 	withContext(Dispatchers.IO) {
-	  getStoredFeedUseCase(
-		  url,
-		  onSuccess = {
-			  _feed.postValue(it)
-		  },
-		  onError = {},
+	  getStoredFeedUseCase(url).subscribe(
+		this,
+		onSuccess = {
+		  _feed.postValue(it)
+		},
+		onError = {},
 	  )
 	}
   }
 
   private suspend fun fetchFeedFromUrl(url: String) {
 	withContext(Dispatchers.IO) {
-	  storeAndGetFeedUseCase(
-		  url,
-		  onSuccess = {
-			  prepareMediaData(it.episodes)
-		  },
-		  onError = {},
+	  storeAndGetFeedUseCase(url).subscribe(
+		this,
+		onSuccess = {
+		  prepareMediaData(it.episodes)
+		},
+		onError = {},
 	  )
 	}
   }
@@ -176,14 +189,14 @@ class MainViewModel constructor(
 
   private fun List<Episode>.mapToMediaData() = this.map {
 	MediaData(
-		mediaId = it.id,
-		mediaUri = it.audioUrl,
-		displayTitle = it.title,
-		displayIconUri = it.imageUrl,
-		displayDescription = it.description,
-		displaySubtitle = it.subTitle ?: "",
-		playbackPosition = it.playbackPosition.position,
-		duration = it.playbackPosition.duration,
+	  mediaId = it.id,
+	  mediaUri = it.audioUrl,
+	  displayTitle = it.title,
+	  displayIconUri = it.imageUrl,
+	  displayDescription = it.description,
+	  displaySubtitle = it.subTitle ?: "",
+	  playbackPosition = it.playbackPosition.position,
+	  duration = it.playbackPosition.duration,
 	)
   }
 

@@ -32,7 +32,8 @@ ORDER BY episode ASC;
 selectByIds:
 SELECT *
 FROM episodeEntity
-WHERE id IN ?;
+WHERE id IN ?
+ORDER BY episode ASC;
 
 selectAll:
 SELECT * FROM episodeEntity;

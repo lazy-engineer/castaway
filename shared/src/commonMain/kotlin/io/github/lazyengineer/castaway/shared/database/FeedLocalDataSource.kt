@@ -15,17 +15,15 @@ import io.github.lazyengineer.castaway.shared.fromNativeImage
 import io.github.lazyengineer.castaway.shared.toNativeImage
 import iogithublazyengineercastawaydb.EpisodeEntity
 import iogithublazyengineercastawaydb.Podcast
-import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.withContext
 import kotlin.coroutines.CoroutineContext
 
-class FeedLocalDataSource constructor(private val database: CastawayDatabase, private val backgroundDispatcher: CoroutineDispatcher) :
+class FeedLocalDataSource constructor(private val database: CastawayDatabase) :
   LocalFeedDataSource {
 
   override suspend fun loadFeedInfo(feedUrl: String): Result<FeedInfo> {
-	return database.episodeQueries.transactionWithContext(backgroundDispatcher) {
+	return database.episodeQueries.transactionWithResult {
 	  try {
 		val podcast = database.podcastQueries.selectByUrl(feedUrl).executeAsOne()
 
@@ -44,7 +42,7 @@ class FeedLocalDataSource constructor(private val database: CastawayDatabase, pr
   }
 
   override suspend fun loadFeed(feedUrl: String): Result<FeedData> {
-	return database.episodeQueries.transactionWithContext(backgroundDispatcher) {
+	return database.episodeQueries.transactionWithResult {
 	  try {
 		val podcast = database.podcastQueries.selectByUrl(feedUrl).executeAsOne()
 
@@ -70,7 +68,7 @@ class FeedLocalDataSource constructor(private val database: CastawayDatabase, pr
   }
 
   override suspend fun loadEpisodes(episodeIds: List<String>): Result<List<Episode>> {
-	return database.episodeQueries.transactionWithContext(backgroundDispatcher) {
+	return database.episodeQueries.transactionWithResult {
 	  try {
 		val episodes = database.episodeQueries.selectByIds(episodeIds).executeAsList().map {
 		  it.toEpisode()
@@ -103,7 +101,6 @@ class FeedLocalDataSource constructor(private val database: CastawayDatabase, pr
 	  }
 	).asFlow()
 	  .mapToList()
-	  .flowOn(backgroundDispatcher)
   }
 
   override fun episodeFlow(podcastUrl: String): Flow<List<Episode>> {
@@ -126,11 +123,10 @@ class FeedLocalDataSource constructor(private val database: CastawayDatabase, pr
 	  }
 	).asFlow()
 	  .mapToList()
-	  .flowOn(backgroundDispatcher)
   }
 
   override suspend fun saveFeedData(feed: FeedData): Result<FeedData> {
-	val savedFeed: FeedData = database.episodeQueries.transactionWithContext(backgroundDispatcher) {
+	val savedFeed: FeedData = database.episodeQueries.transactionWithResult {
 	  database.podcastQueries.insertPodcast(
 		Podcast(
 		  url = feed.info.url,
@@ -143,7 +139,7 @@ class FeedLocalDataSource constructor(private val database: CastawayDatabase, pr
 	  feed
 	}
 
-	insertEpisodes(feed.episodes)
+	insertEpisodes(feed.episodes.map { it })
 
 	return Result.Success(savedFeed)
   }
@@ -155,7 +151,7 @@ class FeedLocalDataSource constructor(private val database: CastawayDatabase, pr
   }
 
   override suspend fun saveEpisode(episode: Episode): Result<Episode> {
-	val savedEpisode: Episode = database.episodeQueries.transactionWithContext(backgroundDispatcher) {
+	val savedEpisode: Episode = database.episodeQueries.transactionWithResult {
 	  val episodeEntity = episode.toEpisodeEntity()
 	  database.episodeQueries.insertEpisode(
 		episodeEntity

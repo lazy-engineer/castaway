@@ -1,6 +1,5 @@
 package io.github.lazyengineer.castaway.shared.repository
 
-import co.touchlab.stately.ensureNeverFrozen
 import io.github.lazyengineer.castaway.shared.Image
 import io.github.lazyengineer.castaway.shared.common.Result
 import io.github.lazyengineer.castaway.shared.common.Result.Error
@@ -18,10 +17,6 @@ class FeedRepository constructor(
   private val remoteDataSource: RemoteFeedDataSource,
   private val localDataSource: LocalFeedDataSource,
 ) : FeedDataSource {
-
-  init {
-	ensureNeverFrozen()
-  }
 
   override suspend fun saveFeed(feed: FeedData): Result<FeedData> {
 	var feedToStore = feed

@@ -1,38 +1,23 @@
 package io.github.lazyengineer.castaway.shared.usecase
 
-import co.touchlab.stately.ensureNeverFrozen
-import io.github.lazyengineer.castaway.shared.MainScope
+import io.github.lazyengineer.castaway.shared.common.MainScope
 import io.github.lazyengineer.castaway.shared.entity.Episode
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.launch
-import org.koin.core.KoinComponent
-import org.koin.core.inject
 
-class NativeStoredEpisodeFlowableUseCase : KoinComponent {
+class NativeStoredEpisodeFlowableUseCase(
+  private val storedEpisodeFlowable: StoredEpisodeFlowableUseCase
+) {
 
-  private val storedEpisodeFlowable: StoredEpisodeFlowableUseCase by inject()
-  private val coroutineScope = MainScope(Dispatchers.Main)
+  val coroutineScope = MainScope(Dispatchers.Main)
 
-  init {
-	ensureNeverFrozen()
-  }
-
-  fun run(
+  fun subscribe(
 	feedUrl: String,
+	scope: CoroutineScope,
 	onEach: (Episode) -> Unit,
 	onError: (String) -> Unit,
 	onComplete: () -> Unit
-  ) {
-	coroutineScope.launch {
-	  storedEpisodeFlowable(
-		feedUrl,
-		onEach = { onEach(it) },
-		onError = { onError(it.message ?: "Error save") },
-		onComplete = { onComplete() }
-	  ).collect()
-	}
-  }
+  ) = storedEpisodeFlowable(feedUrl).subscribe(scope, onEach, onError, onComplete)
 
   fun onDestroy() {
 	coroutineScope.onDestroy()

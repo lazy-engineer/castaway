@@ -5,10 +5,10 @@ import Combine
 
 class CastawayViewModel: ObservableObject {
     
-    private let getStoredFeedUseCase: NativeGetStoredFeedUseCase
-    private let storeAndGetFeedUseCase: StoreAndGetFeedUseCase
-    private let storeEpisodeUseCase: NativeSaveEpisodeUseCase
-    private let storedEpisodeFlowableUseCase: NativeStoredEpisodeFlowableUseCase
+    private let getStoredFeed: NativeGetStoredFeedUseCase
+    private let storeAndGetFeed: StoreAndGetFeedUseCase
+    private let storeEpisode: NativeSaveEpisodeUseCase
+    private let storedEpisodeFlow: NativeStoredEpisodeFlowableUseCase
     private let player = CastawayPlayer()
     
     private var disposables = Set<AnyCancellable>()
@@ -24,11 +24,20 @@ class CastawayViewModel: ObservableObject {
     var playbackStatePublisher: CurrentValueSubject<PlaybackState, Never>
     var nowPlayingPublisher: CurrentValueSubject<String?, Never>
     
-    init() {
-        storeAndGetFeedUseCase = StoreAndGetFeedUseCase()
-        storeEpisodeUseCase = NativeSaveEpisodeUseCase()
-        getStoredFeedUseCase = NativeGetStoredFeedUseCase()
-        storedEpisodeFlowableUseCase = NativeStoredEpisodeFlowableUseCase()
+    init(
+        getStoredFeedUseCase: NativeGetStoredFeedUseCase,
+        storedEpisodeFlowableUseCase: NativeStoredEpisodeFlowableUseCase,
+        saveEpisodeUseCase: NativeSaveEpisodeUseCase,
+        getFeedUseCase: NativeGetFeedUseCase,
+        saveFeedUseCase: NativeSaveFeedUseCase
+     ) {
+        getStoredFeed = getStoredFeedUseCase
+        storeEpisode = saveEpisodeUseCase
+        storedEpisodeFlow = storedEpisodeFlowableUseCase
+        storeAndGetFeed = StoreAndGetFeedUseCase(
+            getFeedUseCase: getFeedUseCase,
+            saveFeedUseCase: saveFeedUseCase
+        )
         playbackPosition = player.playbackTimeObserver
         playbackDuration = player.playbackDurationObserver
         playbackStatePublisher = player.playbackState
@@ -73,8 +82,9 @@ class CastawayViewModel: ObservableObject {
     }
     
     func loadFeed(_ url: String) {
-        getStoredFeedUseCase.run(
+        getStoredFeed.subscribe(
             url: url,
+            scope: getStoredFeed.coroutineScope,
             onSuccess: { feed in
                 print("Local ✅")
                 self.publishAndPrepareFeed(feed)
@@ -86,8 +96,9 @@ class CastawayViewModel: ObservableObject {
     }
     
     func loadEpisodes(_ feedUrl: String) {
-        storedEpisodeFlowableUseCase.run(
+        storedEpisodeFlow.subscribe(
             feedUrl: feedUrl,
+            scope: storedEpisodeFlow.coroutineScope,
             onEach: { episode in
                 print("Episode \(episode.id) 💧")
             },
@@ -98,7 +109,7 @@ class CastawayViewModel: ObservableObject {
     }
     
     private func fetchFeed(_ url: String) {
-        storeAndGetFeedUseCase.run(url: url) { result in
+        storeAndGetFeed.run(url: url) { result in
             switch result {
             case .success(let feed):
                 print("Fetched 💯")
@@ -184,8 +195,9 @@ class CastawayViewModel: ObservableObject {
     }
     
     private func storeEpisode(episode: Episode) {
-        storeEpisodeUseCase.run(
+        storeEpisode.subscribe(
             episode: episode,
+            scope: storeEpisode.coroutineScope,
             onSuccess: { storedEpisode in
                 print("Stored: 💾 \(storedEpisode.title)")
                 if let index = self.episodes.firstIndex(where: {$0.id == storedEpisode.id}) {

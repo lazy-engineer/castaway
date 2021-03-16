@@ -1,33 +1,21 @@
 package io.github.lazyengineer.castaway.shared.usecase
 
-import co.touchlab.stately.ensureNeverFrozen
-import io.github.lazyengineer.castaway.shared.MainScope
+import io.github.lazyengineer.castaway.shared.common.MainScope
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import org.koin.core.KoinComponent
-import org.koin.core.inject
 
-class NativeGetFeedUseCase : KoinComponent {
+class NativeGetFeedUseCase(
+  private val getFeedUseCase: GetFeedUseCase
+) {
 
-  private val getFeedUseCase: GetFeedUseCase by inject()
-  private val coroutineScope = MainScope(Dispatchers.Main)
+  val coroutineScope = MainScope(Dispatchers.Main)
 
-  init {
-	ensureNeverFrozen()
-  }
-
-  fun run(
+  fun subscribe(
 	url: String,
+	scope: CoroutineScope,
 	onSuccess: (String) -> Unit,
 	onError: (String) -> Unit,
-  ) {
-	coroutineScope.launch {
-	  getFeedUseCase(
-		url,
-		onSuccess = { onSuccess(it) },
-		onError = { onError(it.message ?: "Error fetch") })
-	}
-  }
+  ) = getFeedUseCase(url).subscribe(scope, onSuccess, onError)
 
   fun onDestroy() {
 	coroutineScope.onDestroy()

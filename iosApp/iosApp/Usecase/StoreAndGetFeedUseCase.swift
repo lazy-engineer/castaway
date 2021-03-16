@@ -9,26 +9,31 @@ import FeedKit
  * store the feed object locally and return it from there as a single source of truth
  */
 class StoreAndGetFeedUseCase {
-    private let getFeedUseCase: NativeGetFeedUseCase
-    private let saveFeedUseCase: NativeSaveFeedUseCase
+    private let getFeed: NativeGetFeedUseCase
+    private let saveFeed: NativeSaveFeedUseCase
     
-    init() {
-        getFeedUseCase = NativeGetFeedUseCase()
-        saveFeedUseCase = NativeSaveFeedUseCase()
+    init(
+        getFeedUseCase: NativeGetFeedUseCase,
+        saveFeedUseCase: NativeSaveFeedUseCase
+    ) {
+        getFeed = getFeedUseCase
+        saveFeed = saveFeedUseCase
     }
     
     func run(url: String, completion: @escaping (Swift.Result<FeedData, Error>) -> Void) {
-        getFeedUseCase.run(
+        getFeed.subscribe(
             url: url,
+            scope: getFeed.coroutineScope,
             onSuccess: { xml in
-                self.parseXml(xml, completion: { rssFeed in
+                self.parseXml(xml as String, completion: { rssFeed in
                     
                     switch rssFeed {
                     case .success(let feed):
                         let feeddata = feed.toFeedData(url: url)
                         
-                        self.saveFeedUseCase.run(
+                        self.saveFeed.subscribe(
                             feedData: feeddata,
+                            scope: self.saveFeed.coroutineScope,
                             onSuccess: { savedFeed in
                                 completion(.success(savedFeed))
                             },

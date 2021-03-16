@@ -1,34 +1,22 @@
 package io.github.lazyengineer.castaway.shared.usecase
 
-import co.touchlab.stately.ensureNeverFrozen
 import io.github.lazyengineer.castaway.shared.Image
-import io.github.lazyengineer.castaway.shared.MainScope
+import io.github.lazyengineer.castaway.shared.common.MainScope
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import org.koin.core.KoinComponent
-import org.koin.core.inject
 
-class NativeLoadImageUseCase : KoinComponent {
+class NativeLoadImageUseCase(
+  private val loadImageUseCase: LoadImageUseCase
+) {
 
-  private val loadImageUseCase: LoadImageUseCase by inject()
-  private val coroutineScope = MainScope(Dispatchers.Main)
+  val coroutineScope = MainScope(Dispatchers.Main)
 
-  init {
-	ensureNeverFrozen()
-  }
-
-  fun run(
+  fun subscribe(
 	url: String,
+	scope: CoroutineScope,
 	onSuccess: (Image) -> Unit,
 	onError: (String) -> Unit,
-  ) {
-	coroutineScope.launch {
-	  loadImageUseCase(
-		url,
-		onSuccess = { onSuccess(it) },
-		onError = { onError(it.message ?: "Error load Image") })
-	}
-  }
+  ) = loadImageUseCase(url).subscribe(scope, onSuccess, onError)
 
   fun onDestroy() {
 	coroutineScope.onDestroy()

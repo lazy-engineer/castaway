@@ -13,7 +13,6 @@ import io.github.lazyengineer.castaway.shared.usecase.StoredEpisodeFlowableUseCa
 import io.github.lazyengineer.castaway.shared.webservice.FeedRemoteDataSource
 import io.github.lazyengineer.castaway.shared.webservice.ImageLoader
 import io.ktor.client.HttpClient
-import kotlinx.coroutines.Dispatchers
 import org.koin.core.context.startKoin
 import org.koin.core.module.Module
 import org.koin.dsl.KoinAppDeclaration
@@ -35,8 +34,8 @@ private val coreModule = module {
   single {
 	FeedRepository(
 	  imageLoader = get(),
-	  remoteDataSource = FeedRemoteDataSource(get(), Dispatchers.Default),
-	  localDataSource = FeedLocalDataSource(get(), Dispatchers.Default),
+	  remoteDataSource = FeedRemoteDataSource(get()),
+	  localDataSource = FeedLocalDataSource(get()),
 	)
   }
 

@@ -1,4 +1,4 @@
-package io.github.lazyengineer.castaway.shared
+package io.github.lazyengineer.castaway.shared.common
 
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.CoroutineScope
