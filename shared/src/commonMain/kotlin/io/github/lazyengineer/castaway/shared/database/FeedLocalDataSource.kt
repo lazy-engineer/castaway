@@ -1,11 +1,14 @@
 package io.github.lazyengineer.castaway.shared.database
 
+import co.touchlab.stately.freeze
 import com.squareup.sqldelight.Transacter
 import com.squareup.sqldelight.TransactionWithReturn
 import com.squareup.sqldelight.runtime.coroutines.asFlow
 import com.squareup.sqldelight.runtime.coroutines.mapToList
 import io.github.lazyengineer.castaway.db.CastawayDatabase
 import io.github.lazyengineer.castaway.shared.common.Result
+import io.github.lazyengineer.castaway.shared.common.Result.Error
+import io.github.lazyengineer.castaway.shared.common.Result.Success
 import io.github.lazyengineer.castaway.shared.entity.Episode
 import io.github.lazyengineer.castaway.shared.entity.FeedData
 import io.github.lazyengineer.castaway.shared.entity.FeedInfo
@@ -13,7 +16,6 @@ import io.github.lazyengineer.castaway.shared.ext.toEpisode
 import io.github.lazyengineer.castaway.shared.ext.toEpisodeEntity
 import io.github.lazyengineer.castaway.shared.fromNativeImage
 import io.github.lazyengineer.castaway.shared.toNativeImage
-import iogithublazyengineercastawaydb.EpisodeEntity
 import iogithublazyengineercastawaydb.Podcast
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.withContext
@@ -22,12 +24,16 @@ import kotlin.coroutines.CoroutineContext
 class FeedLocalDataSource constructor(private val database: CastawayDatabase) :
   LocalFeedDataSource {
 
-  override suspend fun loadFeedInfo(feedUrl: String): Result<FeedInfo> {
+  init {
+	freeze()
+  }
+
+  override fun loadFeedInfo(feedUrl: String): Result<FeedInfo> {
 	return database.episodeQueries.transactionWithResult {
 	  try {
 		val podcast = database.podcastQueries.selectByUrl(feedUrl).executeAsOne()
 
-		Result.Success(
+		Success(
 		  FeedInfo(
 			url = podcast.url,
 			title = podcast.name,
@@ -36,12 +42,12 @@ class FeedLocalDataSource constructor(private val database: CastawayDatabase) :
 		  )
 		)
 	  } catch (e: NullPointerException) {
-		Result.Error(e)
+		Error(e)
 	  }
 	}
   }
 
-  override suspend fun loadFeed(feedUrl: String): Result<FeedData> {
+  override fun loadFeed(feedUrl: String): Result<FeedData> {
 	return database.episodeQueries.transactionWithResult {
 	  try {
 		val podcast = database.podcastQueries.selectByUrl(feedUrl).executeAsOne()
@@ -50,7 +56,7 @@ class FeedLocalDataSource constructor(private val database: CastawayDatabase) :
 		  it.toEpisode()
 		}
 
-		Result.Success(
+		Success(
 		  FeedData(
 			FeedInfo(
 			  url = podcast.url,
@@ -62,21 +68,21 @@ class FeedLocalDataSource constructor(private val database: CastawayDatabase) :
 		  )
 		)
 	  } catch (e: NullPointerException) {
-		Result.Error(e)
+		Error(e)
 	  }
 	}
   }
 
-  override suspend fun loadEpisodes(episodeIds: List<String>): Result<List<Episode>> {
+  override fun loadEpisodes(episodeIds: List<String>): Result<List<Episode>> {
 	return database.episodeQueries.transactionWithResult {
 	  try {
 		val episodes = database.episodeQueries.selectByIds(episodeIds).executeAsList().map {
 		  it.toEpisode()
 		}
 
-		Result.Success(episodes)
+		Success(episodes)
 	  } catch (e: NullPointerException) {
-		Result.Error(e)
+		Error(e)
 	  }
 	}
   }
@@ -120,47 +126,64 @@ class FeedLocalDataSource constructor(private val database: CastawayDatabase) :
 		  episode = episode,
 		  podcastUrl = podcastUrl,
 		).toEpisode()
+
+  override fun saveFeedData(feed: FeedInfo, episodes: List<Episode>): Result<FeedData> {
+	val savedFeedInfoResult = insertFeedInfo(feed)
+	val savedEpisodesResult = insertEpisodes(episodes)
+
+	return when (savedFeedInfoResult) {
+	  is Success -> {
+		if (savedEpisodesResult.isNotEmpty()) {
+		  Success(FeedData(info = savedFeedInfoResult.data, episodes = savedEpisodesResult))
+		} else {
+		  Error(Exception("Failed to save episodes"))
+		}
 	  }
-	).asFlow()
-	  .mapToList()
+	  is Error -> Error(Exception("Failed to save feed info"))
+	}
   }
 
-  override suspend fun saveFeedData(feed: FeedData): Result<FeedData> {
-	val savedFeed: FeedData = database.episodeQueries.transactionWithResult {
-	  database.podcastQueries.insertPodcast(
-		Podcast(
-		  url = feed.info.url,
-		  name = feed.info.title,
-		  imageUrl = feed.info.imageUrl,
-		  image = feed.info.image?.fromNativeImage()
+  private fun insertFeedInfo(info: FeedInfo): Result<FeedInfo> {
+	return try {
+	  database.episodeQueries.transactionWithResult {
+		database.podcastQueries.insertPodcast(
+		  Podcast(
+			url = info.url,
+			name = info.title,
+			imageUrl = info.imageUrl,
+			image = info.image?.fromNativeImage()
+		  )
 		)
-	  )
 
-	  feed
-	}
-
-	insertEpisodes(feed.episodes.map { it })
-
-	return Result.Success(savedFeed)
-  }
-
-  private suspend fun insertEpisodes(episodes: List<Episode>) {
-	episodes.forEach {
-	  saveEpisode(it)
+		Success(info)
+	  }
+	} catch (e: Exception) {
+	  Error(e)
 	}
   }
 
-  override suspend fun saveEpisode(episode: Episode): Result<Episode> {
-	val savedEpisode: Episode = database.episodeQueries.transactionWithResult {
-	  val episodeEntity = episode.toEpisodeEntity()
-	  database.episodeQueries.insertEpisode(
-		episodeEntity
-	  )
-
-	  episodeEntity.toEpisode()
+  private fun insertEpisodes(episodes: List<Episode>): List<Episode> {
+	return episodes.mapNotNull { episode ->
+	  when (val savedEpisode = saveEpisode(episode)) {
+		is Success -> savedEpisode.data
+		is Error -> null
+	  }
 	}
+  }
 
-	return Result.Success(savedEpisode)
+  override fun saveEpisode(episode: Episode): Result<Episode> {
+	return try {
+	  database.episodeQueries.transactionWithResult {
+		val episodeEntity = episode.toEpisodeEntity()
+		database.episodeQueries.insertEpisode(
+		  episodeEntity
+		)
+
+		Success(episodeEntity.toEpisode())
+	  }
+	} catch (e: Exception) {
+	  Error(e)
+	}
   }
 
   private suspend fun <R> Transacter.transactionWithContext(

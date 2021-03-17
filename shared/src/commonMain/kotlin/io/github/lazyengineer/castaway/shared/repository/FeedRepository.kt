@@ -19,18 +19,19 @@ class FeedRepository constructor(
 ) : FeedDataSource {
 
   override suspend fun saveFeed(feed: FeedData): Result<FeedData> {
-	var feedToStore = feed
+	var feedToStore = feed.info
 
 	if (feed.info.image == null) {
 	  feed.info.imageUrl?.let { feedImageUrl ->
 		feedToStore = when (val imageResult = imageLoader.loadImage(feedImageUrl)) {
-		  is Success -> feed.copy(info = feed.info.copy(image = imageResult.data))
-		  is Error -> feed
+		  is Success -> feed.info.copy(image = imageResult.data)
+		  is Error -> feed.info
 		}
 	  }
 	}
 
-	return localDataSource.saveFeedData(feedToStore)
+	val episodes = feed.episodes
+	return localDataSource.saveFeedData(feedToStore, episodes)
   }
 
   override suspend fun saveEpisode(episode: Episode): Result<Episode> {
@@ -93,7 +94,7 @@ class FeedRepository constructor(
 	  null -> this
 	}
 
-  private suspend fun Episode.loadEpisodeImageFromFeed() =
+  private fun Episode.loadEpisodeImageFromFeed() =
 	when (val feedInfo = localDataSource.loadFeedInfo(this.podcastUrl)) {
 	  is Success -> this.copy(image = feedInfo.data.image)
 	  is Error -> this
