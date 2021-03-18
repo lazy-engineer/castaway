@@ -30,10 +30,12 @@ kotlin {
 	  dependencies {
 		implementation(Library.koin)
 		implementation(Library.coroutines)
-		implementation(Library.stately)
 		implementation(Library.ktor)
 		implementation(Library.sqldelight)
 		implementation(Library.sqldelightExt)
+		implementation(Library.stately)
+		implementation(Library.isostate)
+		implementation(Library.isostateCollection)
 	  }
 	}
 	val commonTest by getting {
