@@ -30,6 +30,7 @@ class CastawayPlayer {
         playbackTimeObserver = PlayerTimeObserver(player: player)
         playbackDurationObserver = PlayerDurationObserver(player: player)
         initAudioSession()
+        initPlayerCommandCenter()
         observePlayer()
     }
     
@@ -42,12 +43,7 @@ class CastawayPlayer {
         }
     }
     
-    private func setupNotification() {
-        setupMediaPlayerNotificationView()
-        setupNotificationView()
-    }
-    
-    private func setupMediaPlayerNotificationView() {
+    private func initPlayerCommandCenter() {
         let commandCenter = MPRemoteCommandCenter.shared()
         
         commandCenter.playCommand.addTarget { [unowned self] event in
@@ -121,7 +117,7 @@ class CastawayPlayer {
             if let currentItem = change.newValue {
                 self.observePlayerItem()
                 self.sendNowPlayingItemKey(currentItem)
-                self.setupNotification()
+                self.setupNotificationView()
             }
         }
         
