@@ -2,30 +2,21 @@ package io.github.lazyengineer.castaway.shared.common
 
 import co.touchlab.stately.freeze
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onCompletion
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 
 sealed class UseCase<out Type, in Params>(private val suspender: suspend () -> Result<Type>) where Type : Any {
-
-  init {
-	freeze()
-  }
 
   fun subscribe(
 	scope: CoroutineScope,
 	onSuccess: (Type) -> Unit,
 	onError: (String) -> Unit
   ) = scope.launch {
-	val result = withContext(Dispatchers.Default) {
-	  suspender()
-	}
-	when (result) {
+	when (val result = suspender()) {
 	  is Result.Success -> {
 		onSuccess(result.data.freeze())
 	  }

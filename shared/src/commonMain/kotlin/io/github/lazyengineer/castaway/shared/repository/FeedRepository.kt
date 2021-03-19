@@ -1,5 +1,6 @@
 package io.github.lazyengineer.castaway.shared.repository
 
+import co.touchlab.stately.ensureNeverFrozen
 import io.github.lazyengineer.castaway.shared.Image
 import io.github.lazyengineer.castaway.shared.common.Result
 import io.github.lazyengineer.castaway.shared.common.Result.Error
@@ -18,6 +19,10 @@ class FeedRepository constructor(
   private val localDataSource: LocalFeedDataSource,
 ) : FeedDataSource {
 
+  init {
+	ensureNeverFrozen()
+  }
+
   override suspend fun saveFeed(feed: FeedData): Result<FeedData> {
 	var feedToStore = feed.info
 
@@ -30,8 +35,7 @@ class FeedRepository constructor(
 	  }
 	}
 
-	val episodes = feed.episodes
-	return localDataSource.saveFeedData(feedToStore, episodes)
+	return localDataSource.saveFeedData(feedToStore, feed.episodes)
   }
 
   override suspend fun saveEpisode(episode: Episode): Result<Episode> {
@@ -94,7 +98,7 @@ class FeedRepository constructor(
 	  null -> this
 	}
 
-  private fun Episode.loadEpisodeImageFromFeed() =
+  private suspend fun Episode.loadEpisodeImageFromFeed() =
 	when (val feedInfo = localDataSource.loadFeedInfo(this.podcastUrl)) {
 	  is Success -> this.copy(image = feedInfo.data.image)
 	  is Error -> this
