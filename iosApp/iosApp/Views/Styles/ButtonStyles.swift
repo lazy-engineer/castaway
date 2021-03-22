@@ -1,7 +1,7 @@
 import SwiftUI
 
-struct ColorfulButtonStyle: ButtonStyle {
-    func makeBody(configuration: Self.Configuration) -> some View {
+public struct ColorfulButtonStyle: ButtonStyle {
+    public func makeBody(configuration: Self.Configuration) -> some View {
         configuration.label
             .contentShape(Circle())
             .background(
@@ -11,8 +11,8 @@ struct ColorfulButtonStyle: ButtonStyle {
     }
 }
 
-struct ColorfulToggleStyle: ToggleStyle {
-    func makeBody(configuration: Self.Configuration) -> some View {
+public struct ColorfulToggleStyle: ToggleStyle {
+    public func makeBody(configuration: Self.Configuration) -> some View {
         Button(action: {
             configuration.isOn.toggle()
         }) {

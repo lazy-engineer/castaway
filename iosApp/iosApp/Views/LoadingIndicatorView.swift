@@ -8,6 +8,7 @@ struct LoadingIndicatorView : View {
     var body: some View {
         Text("Loading \(dots)")
             .font(.title2)
+            .frame(minWidth: 0, maxWidth: .infinity, minHeight: 0, maxHeight: .infinity)
             .onReceive(timer, perform: { _ in
                 if self.dots.count == 3 {
                     self.dots = ""

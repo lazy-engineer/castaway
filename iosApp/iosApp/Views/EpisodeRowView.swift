@@ -4,6 +4,8 @@ import shared
 
 struct EpisodeRowView: View {
     
+    @EnvironmentObject var theme: ThemeNeumorphismLight
+    
     @State var episode: Episode
     let playing: Bool
     let playbackTime: TimeInterval
@@ -18,7 +20,7 @@ struct EpisodeRowView: View {
                     .frame(minWidth: 0, maxWidth: .infinity, alignment: .leading)
                 Button {} label: {
                     Image(systemName: playing ? "pause" : "play")
-                        .foregroundColor(.blue)
+                        .foregroundColor(theme.colorPalette.primary)
                         .padding()
                         .onTapGesture(perform: {
                             onPlayPause(!playing)

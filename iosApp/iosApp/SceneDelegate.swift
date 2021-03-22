@@ -15,12 +15,14 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
             saveFeedUseCase: sharedComponent.provideSaveFeedUseCase()
         )
         
-        let startScreen = StartScreen().environmentObject(viewModel)
+        let appTheme = ThemeNeumorphismLight()
+        
+        let startScreen = StartScreen().environmentObject(viewModel).environmentObject(appTheme)
         
         // Use a UIHostingController as window root view controller.
         if let windowScene = scene as? UIWindowScene {
             let window = UIWindow(windowScene: windowScene)
-            window.rootViewController = UIHostingController(rootView: ContentView())
+            window.rootViewController = UIHostingController(rootView: startScreen)
             self.window = window
             window.makeKeyAndVisible()
         }

@@ -1,7 +1,7 @@
 import SwiftUI
 
 extension Color {
-    static let lightThemeBackground = Color(red: 225 / 255, green: 225 / 255, blue: 235 / 255)
+    static let lightThemeBackground = Color(red: 225 / 255, green: 234 / 255, blue: 252 / 255)
     
     static let lightThemeDarkShadow = Color.black.opacity(0.2)
     static let lightThemeLightShadow = Color.white.opacity(0.7)

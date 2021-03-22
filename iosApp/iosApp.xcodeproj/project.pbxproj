@@ -22,6 +22,7 @@
 		A27E339925D84E4A0028343E /* NowPlayingScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = A27E339825D84E4A0028343E /* NowPlayingScreen.swift */; };
 		A27E659C2607EEEF00B6AA09 /* ButtonStyles.swift in Sources */ = {isa = PBXBuildFile; fileRef = A27E659B2607EEEF00B6AA09 /* ButtonStyles.swift */; };
 		A27E65A42607F26F00B6AA09 /* Color.swift in Sources */ = {isa = PBXBuildFile; fileRef = A27E65A32607F26F00B6AA09 /* Color.swift */; };
+		A27E65A82608ED4D00B6AA09 /* ThemeNeumorphismLight.swift in Sources */ = {isa = PBXBuildFile; fileRef = A27E65A72608ED4D00B6AA09 /* ThemeNeumorphismLight.swift */; };
 		A2899F0F25F97E5C002333E8 /* LoadingIndicatorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2899F0E25F97E5C002333E8 /* LoadingIndicatorView.swift */; };
 		A2ACEE3625B05BC600F4BD52 /* CastawayPlayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2ACEE3525B05BC600F4BD52 /* CastawayPlayer.swift */; };
 		A2ACEE3C25B3A49B00F4BD52 /* Utility.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2ACEE3B25B3A49B00F4BD52 /* Utility.swift */; };
@@ -92,6 +93,7 @@
 		A27E339825D84E4A0028343E /* NowPlayingScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NowPlayingScreen.swift; sourceTree = "<group>"; };
 		A27E659B2607EEEF00B6AA09 /* ButtonStyles.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ButtonStyles.swift; sourceTree = "<group>"; };
 		A27E65A32607F26F00B6AA09 /* Color.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Color.swift; sourceTree = "<group>"; };
+		A27E65A72608ED4D00B6AA09 /* ThemeNeumorphismLight.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThemeNeumorphismLight.swift; sourceTree = "<group>"; };
 		A2899F0E25F97E5C002333E8 /* LoadingIndicatorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoadingIndicatorView.swift; sourceTree = "<group>"; };
 		A2ACEE3525B05BC600F4BD52 /* CastawayPlayer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CastawayPlayer.swift; sourceTree = "<group>"; };
 		A2ACEE3B25B3A49B00F4BD52 /* Utility.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Utility.swift; sourceTree = "<group>"; };
@@ -221,6 +223,7 @@
 			children = (
 				A27E659B2607EEEF00B6AA09 /* ButtonStyles.swift */,
 				A27E65A32607F26F00B6AA09 /* Color.swift */,
+				A27E65A72608ED4D00B6AA09 /* ThemeNeumorphismLight.swift */,
 			);
 			path = Styles;
 			sourceTree = "<group>";
@@ -428,6 +431,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A27E65A82608ED4D00B6AA09 /* ThemeNeumorphismLight.swift in Sources */,
 				A27E339925D84E4A0028343E /* NowPlayingScreen.swift in Sources */,
 				7555FF7F242A565900829871 /* AppDelegate.swift in Sources */,
 				A2D4B2A725E6EECA006714E6 /* PlayerDurationObserver.swift in Sources */,

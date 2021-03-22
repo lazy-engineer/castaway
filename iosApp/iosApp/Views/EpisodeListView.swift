@@ -2,6 +2,7 @@ import SwiftUI
 
 struct EpisodeListView : View {
     
+    @EnvironmentObject var theme: ThemeNeumorphismLight
     @EnvironmentObject var viewModel: CastawayViewModel
     @State private var currentTime: TimeInterval = 0
     @State private var duration: TimeInterval = 1
@@ -36,10 +37,14 @@ struct EpisodeListView : View {
             .onReceive(viewModel.playbackDuration.publisher) { playbackDuration in
                 duration = TimeInterval(playbackDuration)
             }
+            .environmentObject(theme)
         }
         .fullScreenCover(isPresented: $presentNowPlaying, onDismiss: {}) {
-            NowPlayingScreen().environmentObject(viewModel)
+            NowPlayingScreen()
+                .environmentObject(viewModel)
+                .environmentObject(theme)
         }
+        .colorMultiply(theme.colorPalette.background)
     }
 }
 
