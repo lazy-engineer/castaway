@@ -24,7 +24,9 @@ struct EpisodeRowView: View {
                             onPlayPause(!playing)
                         })
                 }
-            }.frame(height: 60)
+            }
+            .contentShape(Rectangle())
+            .frame(height: 60)
             .onTapGesture(perform: {
                 onEpisodeClicked()
             })
