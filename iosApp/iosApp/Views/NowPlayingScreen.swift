@@ -34,7 +34,7 @@ struct NowPlayingScreen: View {
                             .frame(width: 300, height: 300)
                             .shadow(color: theme.colorPalette.darkShadow, radius: /*@START_MENU_TOKEN@*/10/*@END_MENU_TOKEN@*/, x: 10, y: 10)
                             .shadow(color: theme.colorPalette.lightShadow, radius: /*@START_MENU_TOKEN@*/10/*@END_MENU_TOKEN@*/, x: -5, y: -5)
-                        
+
                         Image(uiImage: imageUrl)
                             .resizable()
                             .scaledToFill()
@@ -49,9 +49,9 @@ struct NowPlayingScreen: View {
                         .scaledToFill()
                         .frame(width: 200, height: 250)
                         .foregroundColor(theme.colorPalette.background)
-                        .clipShape(RoundedRectangle(cornerRadius: 25))
                         .shadow(color: theme.colorPalette.darkShadow, radius: /*@START_MENU_TOKEN@*/10/*@END_MENU_TOKEN@*/, x: 10, y: 10)
                         .shadow(color: theme.colorPalette.lightShadow, radius: /*@START_MENU_TOKEN@*/10/*@END_MENU_TOKEN@*/, x: -5, y: -5)
+                        .padding(24)
                 }
                 
                 Text(viewModel.currentEpisode?.title ?? "")
@@ -66,7 +66,7 @@ struct NowPlayingScreen: View {
                         viewModel.replayCurrentItem()
                     }) {
                         Image(systemName: "gobackward.30")
-                            .frame(width: 60, height: 60)
+                            .frame(width: 20, height: 20)
                             .foregroundColor(theme.colorPalette.primary)
                     }
                     .buttonStyle(theme.style.roundButtonStyle)
@@ -74,7 +74,7 @@ struct NowPlayingScreen: View {
                     Toggle(isOn: $viewModel.playing) {
                         Image(systemName: viewModel.playing ? "pause.fill" : "play.fill")
                             .foregroundColor(viewModel.playing ? .white : theme.colorPalette.primary)
-                            .frame(width: 80, height: 80)
+                            .frame(width: 50, height: 50)
                     }
                     .onChange(of: viewModel.playing, perform: { value in
                         viewModel.playPauseCurrent(playState: viewModel.playing)
@@ -86,7 +86,7 @@ struct NowPlayingScreen: View {
                         viewModel.forwardCurrentItem()
                     }) {
                         Image(systemName: "goforward.30")
-                            .frame(width: 60, height: 60)
+                            .frame(width: 20, height: 20)
                             .foregroundColor(theme.colorPalette.primary)
                     }
                     .buttonStyle(theme.style.roundButtonStyle)
@@ -152,7 +152,7 @@ struct NowPlayingScreen: View {
 #if DEBUG
 struct NowPlayingScreen_Previews: PreviewProvider {
     static var previews: some View {
-        NowPlayingScreen()
+        NowPlayingScreen().environmentObject(ThemeNeumorphismLight())
     }
 }
 #endif

@@ -3,6 +3,7 @@ import SwiftUI
 public struct ColorfulButtonStyle: ButtonStyle {
     public func makeBody(configuration: Self.Configuration) -> some View {
         configuration.label
+            .padding()
             .contentShape(Circle())
             .background(
                 ColorfulBackground(isHighlighted: configuration.isPressed, shape: Circle())
@@ -17,6 +18,7 @@ public struct ColorfulToggleStyle: ToggleStyle {
             configuration.isOn.toggle()
         }) {
             configuration.label
+                .padding()
                 .contentShape(Circle())
         }
         .background(
