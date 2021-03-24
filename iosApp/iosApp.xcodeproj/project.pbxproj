@@ -37,6 +37,8 @@
 		A2D4B2B425EC49CB006714E6 /* shared.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 7555FFB1242A642300829871 /* shared.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		A2D8CC9C25E6E8EF0018C342 /* PlayerTimeObserver.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2D8CC9B25E6E8EF0018C342 /* PlayerTimeObserver.swift */; };
 		A2EC0CC525E2865F0050E0B5 /* EpisodeListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2EC0CC425E2865F0050E0B5 /* EpisodeListView.swift */; };
+		A2FBD872260B690D00D15C7F /* PodcastHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2FBD871260B690D00D15C7F /* PodcastHeaderView.swift */; };
+		A2FBD876260B6D4000D15C7F /* PlaybackSliderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2FBD875260B6D4000D15C7F /* PlaybackSliderView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -105,6 +107,8 @@
 		A2D4B2A625E6EECA006714E6 /* PlayerDurationObserver.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerDurationObserver.swift; sourceTree = "<group>"; };
 		A2D8CC9B25E6E8EF0018C342 /* PlayerTimeObserver.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerTimeObserver.swift; sourceTree = "<group>"; };
 		A2EC0CC425E2865F0050E0B5 /* EpisodeListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EpisodeListView.swift; sourceTree = "<group>"; };
+		A2FBD871260B690D00D15C7F /* PodcastHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PodcastHeaderView.swift; sourceTree = "<group>"; };
+		A2FBD875260B6D4000D15C7F /* PlaybackSliderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaybackSliderView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -258,6 +262,8 @@
 				A216F9CC25AD993900A52C6D /* EpisodeRowView.swift */,
 				A27E339825D84E4A0028343E /* NowPlayingScreen.swift */,
 				A2899F0E25F97E5C002333E8 /* LoadingIndicatorView.swift */,
+				A2FBD871260B690D00D15C7F /* PodcastHeaderView.swift */,
+				A2FBD875260B6D4000D15C7F /* PlaybackSliderView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -431,6 +437,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A2FBD872260B690D00D15C7F /* PodcastHeaderView.swift in Sources */,
 				A27E65A82608ED4D00B6AA09 /* ThemeNeumorphismLight.swift in Sources */,
 				A27E339925D84E4A0028343E /* NowPlayingScreen.swift in Sources */,
 				7555FF7F242A565900829871 /* AppDelegate.swift in Sources */,
@@ -450,6 +457,7 @@
 				A2EC0CC525E2865F0050E0B5 /* EpisodeListView.swift in Sources */,
 				7555FF83242A565900829871 /* StartScreen.swift in Sources */,
 				A2B6ACC025B5F2A50052C128 /* Ext.swift in Sources */,
+				A2FBD876260B6D4000D15C7F /* PlaybackSliderView.swift in Sources */,
 				A205065F25C732A600D90A98 /* MediaData.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

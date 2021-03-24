@@ -6,8 +6,6 @@ struct NowPlayingScreen: View {
     
     @EnvironmentObject var theme: ThemeNeumorphismLight
     @EnvironmentObject var viewModel: CastawayViewModel
-    @State private var playbackPosition: TimeInterval = 0
-    @State private var duration: TimeInterval = 1
     
     var body: some View {
         ZStack {
@@ -55,6 +53,7 @@ struct NowPlayingScreen: View {
                 }
                 
                 Text(viewModel.currentEpisode?.title ?? "")
+                    .font(.headline).bold().foregroundColor(theme.colorPalette.textColor)
                     .padding(.top, 24)
                     .fixedSize(horizontal: false, vertical: true)
                     .multilineTextAlignment(.center)
@@ -95,38 +94,16 @@ struct NowPlayingScreen: View {
                 }
                 .padding(16)
                 
-                HStack {
-                    Text("\(Utility.formatSecondsToHMS(playbackPosition/1000))")
-                        .font(.subheadline)
-                        .padding(.leading, 8)
-                    Spacer()
-                    Text("\(Utility.formatSecondsToHMS(duration/1000))")
-                        .font(.subheadline)
-                        .padding(.trailing, 8)
-                }
-                .padding(.top, 36)
-                
-                Slider(value: $playbackPosition, in: 0...duration, step: 1, onEditingChanged: sliderEditingChanged)
-                    .padding(.leading, 8)
-                    .padding(.trailing, 8)
-                    .onReceive(viewModel.playbackDuration.publisher) { playbackDuration in
-                        duration = TimeInterval(playbackDuration)
-                    }
-                    .onReceive(viewModel.playbackStatePublisher) { state in
-                        guard state == PlaybackState.playing else { return }
-                        viewModel.playbackPosition.pause(false)
-                    }
-                    .onReceive(viewModel.playbackPosition.publisher) { time in
-                        guard duration > 1 else { return }
-                        playbackPosition = TimeInterval(time)
-                    }
-                
+                PlaybackSliderView()
+                    .environmentObject(viewModel)
+                    .environmentObject(theme)
+
                 HStack {
                     Button(action: {
                         viewModel.changePlaybackSpeed()
                     }) {
                         Text("\(String(format: "%.1f", viewModel.playbackSpeed))x")
-                            .foregroundColor(theme.colorPalette.primary)
+                            .foregroundColor(theme.colorPalette.primary).bold()
                     }
                     .padding(.leading, 24)
                     .padding(.bottom, 24)
@@ -138,14 +115,6 @@ struct NowPlayingScreen: View {
                 Spacer()
             }
         }.edgesIgnoringSafeArea(.all)
-    }
-    
-    private func sliderEditingChanged(editingStarted: Bool) {
-        if editingStarted {
-            viewModel.playbackPosition.pause(true)
-        } else {
-            viewModel.seekTo(positionMillis: Int64(playbackPosition))
-        }
     }
 }
 
