@@ -11,6 +11,7 @@ public class ThemeNeumorphismLight: ObservableObject {
         public private(set) var secondary: Color
         public private(set) var primaryVariant: Color
         
+        public private(set) var textColor: Color
         public private(set) var background: Color
         public private(set) var darkShadow: Color
         public private(set) var lightShadow: Color
@@ -22,6 +23,7 @@ public class ThemeNeumorphismLight: ObservableObject {
             self.primary = .blueGradientStart
             self.secondary = .blueGradientEnd
             self.primaryVariant = .blueGradientEnd
+            self.textColor = .textColor
             self.background = .lightThemeBackground
             self.darkShadow = Color.black.opacity(0.2)
             self.lightShadow = Color.white.opacity(0.7)
