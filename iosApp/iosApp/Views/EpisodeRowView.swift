@@ -13,29 +13,41 @@ struct EpisodeRowView: View {
     let onEpisodeClicked: () -> Void
     let onPlayPause: (Bool) -> Void
     
+    @State var playingState = false
+    
     var body: some View {
-        VStack {
-            HStack {
+        HStack {
+            VStack {
                 Text(episode.title)
+                    .font(.headline).bold().foregroundColor(theme.colorPalette.textColor)
                     .frame(minWidth: 0, maxWidth: .infinity, alignment: .leading)
-                Button {} label: {
-                    Image(systemName: playing ? "pause" : "play")
-                        .foregroundColor(theme.colorPalette.primary)
-                        .padding()
-                        .onTapGesture(perform: {
-                            onPlayPause(!playing)
-                        })
-                }
+                
+                ProgressView(value: playbackTime, total: playbackDuration)
+                    .padding(0)
             }
-            .contentShape(Rectangle())
-            .frame(height: 60)
-            .onTapGesture(perform: {
-                onEpisodeClicked()
-            })
+            .padding(.trailing, 16)
             
-            ProgressView(value: playbackTime, total: playbackDuration)
-                .padding(0)
+            Toggle(isOn: $playingState) {
+                Image(systemName: playing ? "pause.fill" : "play.fill")
+                    .foregroundColor(playing ? .white : theme.colorPalette.primary)
+            }
+            .onChange(of: playingState, perform: { value in
+                onPlayPause(playingState)
+            })
+            .onChange(of: playing, perform: { value in
+                playingState = !playing
+            })
+            .toggleStyle(theme.style.roundToggleButtonStyle)
         }
+        .contentShape(Rectangle())
+        .frame(height: 70)
+        .padding(.leading, 16)
+        .padding(.trailing, 16)
+        .padding(.bottom, 8)
+        .padding(.top, 8)
+        .onTapGesture(perform: {
+            onEpisodeClicked()
+        })
     }
 }
 
