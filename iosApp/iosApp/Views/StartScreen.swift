@@ -10,35 +10,11 @@ struct StartScreen : View {
             if viewModel.episodes.isEmpty {
                 LoadingIndicatorView().onAppear() {
                     viewModel.loadFeed("https://atp.fm/rss")
-                }.background(theme.colorPalette.background)
-            } else {
-                
-                HStack {
-                    if let imageUrl = viewModel.feedImage {
-                        Image(uiImage: imageUrl)
-                            .resizable()
-                            .scaledToFill()
-                            .frame(width: 48, height: 48)
-                            .cornerRadius(10)
-                            .padding(8)
-                    } else {
-                        Image(systemName: "mic")
-                            .frame(width: 48, height: 48)
-                            .foregroundColor(Color.white)
-                            .background(Color.black)
-                            .clipShape(Rectangle())
-                            .cornerRadius(10)
-                            .padding(8)
-                    }
-                    
-                    Text(viewModel.feedTitle)
-                        .font(.title)
-                        .minimumScaleFactor(0.7)
-                        .lineLimit(1)
-                        .padding(.trailing, 8)
-                    Spacer()
                 }
-                
+            } else {
+                PodcastHeaderView(feedImage: viewModel.feedImage, feedTitle: viewModel.feedTitle)
+                    .environmentObject(theme)
+            
                 EpisodeListView()
                     .environmentObject(viewModel)
                     .environmentObject(theme)
