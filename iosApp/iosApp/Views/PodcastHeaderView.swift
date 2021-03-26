@@ -21,16 +21,16 @@ struct PodcastHeaderView: View {
                     RoundedRectangle(cornerRadius: 25.0)
                         .fill(theme.colorPalette.background)
                         .frame(width: 150, height: 150)
-                        .shadow(color: theme.colorPalette.darkShadow, radius: /*@START_MENU_TOKEN@*/10/*@END_MENU_TOKEN@*/, x: 10, y: 10)
-                        .shadow(color: theme.colorPalette.lightShadow, radius: /*@START_MENU_TOKEN@*/10/*@END_MENU_TOKEN@*/, x: -5, y: -5)
+                        .shadow(color: theme.colorPalette.dropShadow, radius: /*@START_MENU_TOKEN@*/10/*@END_MENU_TOKEN@*/, x: 10, y: 10)
+                        .shadow(color: theme.colorPalette.reflection, radius: /*@START_MENU_TOKEN@*/10/*@END_MENU_TOKEN@*/, x: -5, y: -5)
 
                     Image(uiImage: imageUrl)
                         .resizable()
                         .scaledToFill()
                         .frame(width: 145, height: 145)
                         .clipShape(RoundedRectangle(cornerRadius: 24.0))
-                        .shadow(color: theme.colorPalette.darkShadow, radius: /*@START_MENU_TOKEN@*/10/*@END_MENU_TOKEN@*/, x: 10, y: 10)
-                        .shadow(color: theme.colorPalette.lightShadow, radius: /*@START_MENU_TOKEN@*/10/*@END_MENU_TOKEN@*/, x: -5, y: -5)
+                        .shadow(color: theme.colorPalette.dropShadow, radius: /*@START_MENU_TOKEN@*/10/*@END_MENU_TOKEN@*/, x: 10, y: 10)
+                        .shadow(color: theme.colorPalette.reflection, radius: /*@START_MENU_TOKEN@*/10/*@END_MENU_TOKEN@*/, x: -5, y: -5)
                 }
             } else {
                 Image(systemName: "mic")
@@ -38,8 +38,8 @@ struct PodcastHeaderView: View {
                     .scaledToFill()
                     .frame(width: 120, height: 120)
                     .foregroundColor(theme.colorPalette.background)
-                    .shadow(color: theme.colorPalette.darkShadow, radius: 5, x: 5, y: 5)
-                    .shadow(color: theme.colorPalette.lightShadow, radius: 5, x: -5, y: -5)
+                    .shadow(color: theme.colorPalette.dropShadow, radius: 5, x: 5, y: 5)
+                    .shadow(color: theme.colorPalette.reflection, radius: 5, x: -5, y: -5)
                     .padding(24)
             }
         }

@@ -19,8 +19,8 @@ struct NowPlayingScreen: View {
                     RoundedRectangle(cornerRadius: 25.0)
                         .fill(theme.colorPalette.background)
                         .frame(width: 180, height: 4)
-                        .shadow(color: theme.colorPalette.darkerShadow, radius: 3, x: 5, y: 3)
-                        .shadow(color: theme.colorPalette.lighterShadow, radius: 4, x: -2, y: -2)
+                        .shadow(color: theme.colorPalette.intenseDropShadow, radius: 3, x: 5, y: 3)
+                        .shadow(color: theme.colorPalette.intenseReflection, radius: 4, x: -2, y: -2)
                         .padding(.top, 64)
                         .padding(.bottom, 48)
                 }
@@ -30,16 +30,16 @@ struct NowPlayingScreen: View {
                         RoundedRectangle(cornerRadius: 25.0)
                             .fill(theme.colorPalette.background)
                             .frame(width: 300, height: 300)
-                            .shadow(color: theme.colorPalette.darkShadow, radius: /*@START_MENU_TOKEN@*/10/*@END_MENU_TOKEN@*/, x: 10, y: 10)
-                            .shadow(color: theme.colorPalette.lightShadow, radius: /*@START_MENU_TOKEN@*/10/*@END_MENU_TOKEN@*/, x: -5, y: -5)
+                            .shadow(color: theme.colorPalette.dropShadow, radius: /*@START_MENU_TOKEN@*/10/*@END_MENU_TOKEN@*/, x: 10, y: 10)
+                            .shadow(color: theme.colorPalette.reflection, radius: /*@START_MENU_TOKEN@*/10/*@END_MENU_TOKEN@*/, x: -5, y: -5)
 
                         Image(uiImage: imageUrl)
                             .resizable()
                             .scaledToFill()
                             .frame(width: 292, height: 292)
                             .clipShape(RoundedRectangle(cornerRadius: 25.0))
-                            .shadow(color: theme.colorPalette.darkShadow, radius: /*@START_MENU_TOKEN@*/10/*@END_MENU_TOKEN@*/, x: 10, y: 10)
-                            .shadow(color: theme.colorPalette.lightShadow, radius: /*@START_MENU_TOKEN@*/10/*@END_MENU_TOKEN@*/, x: -5, y: -5)
+                            .shadow(color: theme.colorPalette.dropShadow, radius: /*@START_MENU_TOKEN@*/10/*@END_MENU_TOKEN@*/, x: 10, y: 10)
+                            .shadow(color: theme.colorPalette.reflection, radius: /*@START_MENU_TOKEN@*/10/*@END_MENU_TOKEN@*/, x: -5, y: -5)
                     }
                 } else {
                     Image(systemName: "mic")
@@ -47,8 +47,8 @@ struct NowPlayingScreen: View {
                         .scaledToFill()
                         .frame(width: 200, height: 250)
                         .foregroundColor(theme.colorPalette.background)
-                        .shadow(color: theme.colorPalette.darkShadow, radius: /*@START_MENU_TOKEN@*/10/*@END_MENU_TOKEN@*/, x: 10, y: 10)
-                        .shadow(color: theme.colorPalette.lightShadow, radius: /*@START_MENU_TOKEN@*/10/*@END_MENU_TOKEN@*/, x: -5, y: -5)
+                        .shadow(color: theme.colorPalette.dropShadow, radius: /*@START_MENU_TOKEN@*/10/*@END_MENU_TOKEN@*/, x: 10, y: 10)
+                        .shadow(color: theme.colorPalette.reflection, radius: /*@START_MENU_TOKEN@*/10/*@END_MENU_TOKEN@*/, x: -5, y: -5)
                         .padding(24)
                 }
                 

@@ -13,11 +13,11 @@ public class ThemeNeumorphismLight: ObservableObject {
         
         public private(set) var textColor: Color
         public private(set) var background: Color
-        public private(set) var darkShadow: Color
-        public private(set) var lightShadow: Color
+        public private(set) var dropShadow: Color
+        public private(set) var reflection: Color
         
-        public private(set) var darkerShadow: Color
-        public private(set) var lighterShadow: Color
+        public private(set) var intenseDropShadow: Color
+        public private(set) var intenseReflection: Color
         
         public init() {
             self.primary = .blueGradientStart
@@ -25,11 +25,11 @@ public class ThemeNeumorphismLight: ObservableObject {
             self.primaryVariant = .blueGradientEnd
             self.textColor = .textColor
             self.background = .lightThemeBackground
-            self.darkShadow = Color.black.opacity(0.2)
-            self.lightShadow = Color.white.opacity(0.7)
+            self.dropShadow = Color.black.opacity(0.2)
+            self.reflection = Color.white.opacity(0.7)
             
-            self.darkerShadow = Color.black.opacity(0.4)
-            self.lighterShadow = Color.white
+            self.intenseDropShadow = Color.black.opacity(0.4)
+            self.intenseReflection = Color.white
         }
     }
     
