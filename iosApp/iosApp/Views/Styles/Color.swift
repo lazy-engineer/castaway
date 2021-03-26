@@ -10,8 +10,8 @@ extension Color {
     static let darkGradientStart = Color(red: 50 / 255, green: 60 / 255, blue: 65 / 255)
     static let darkGradientEnd = Color(red: 25 / 255, green: 25 / 255, blue: 30 / 255)
     
-    static let blueGradientStart = Color(red: 96 / 255, green: 137 / 255, blue: 255 / 255)
-    static let blueGradientEnd = Color(red: 48 / 255, green: 68 / 255, blue: 125 / 255)
+    static let blueGradientStart = Color(red: 66 / 255, green: 165 / 255, blue: 245 / 255)
+    static let blueGradientEnd = Color(red: 13 / 255, green: 71 / 255, blue: 161 / 255)
 }
 
 extension LinearGradient {
