@@ -60,13 +60,12 @@ struct NowPlayingScreen: View {
                 
                 HStack(spacing: 24) {
                     Spacer()
-                    
+      
                     Button(action: {
                         viewModel.replayCurrentItem()
                     }) {
                         Image(systemName: "gobackward.30")
                             .frame(width: 20, height: 20)
-                            .foregroundColor(theme.colorPalette.primary)
                     }
                     .buttonStyle(theme.style.roundButtonStyle)
                     
@@ -86,7 +85,6 @@ struct NowPlayingScreen: View {
                     }) {
                         Image(systemName: "goforward.30")
                             .frame(width: 20, height: 20)
-                            .foregroundColor(theme.colorPalette.primary)
                     }
                     .buttonStyle(theme.style.roundButtonStyle)
                     

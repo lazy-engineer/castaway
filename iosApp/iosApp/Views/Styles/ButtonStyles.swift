@@ -3,6 +3,7 @@ import SwiftUI
 public struct ColorfulButtonStyle: ButtonStyle {
     public func makeBody(configuration: Self.Configuration) -> some View {
         configuration.label
+            .foregroundColor(configuration.isPressed ? .white : Color.blueGradientStart)
             .padding()
             .contentShape(Circle())
             .background(
