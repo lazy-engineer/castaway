@@ -52,6 +52,7 @@ struct NowPlayingScreen: View {
                 Text(viewModel.currentEpisode?.title ?? "")
                     .font(.headline).bold().foregroundColor(theme.colorPalette.textColor)
                     .padding(.top, 24)
+                    .lineLimit(2)
                     .fixedSize(horizontal: false, vertical: true)
                     .multilineTextAlignment(.center)
                 
