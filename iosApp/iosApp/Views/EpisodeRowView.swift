@@ -22,8 +22,7 @@ struct EpisodeRowView: View {
                     .font(.headline).bold().foregroundColor(theme.colorPalette.textColor)
                     .frame(minWidth: 0, maxWidth: .infinity, alignment: .leading)
                 
-                ProgressView(value: playbackTime, total: playbackDuration)
-                    .padding(0)
+                PlaybackProgressView(playbackProgress: CGFloat(playbackTime / playbackDuration))
             }
             .padding(.trailing, 16)
             

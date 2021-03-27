@@ -39,6 +39,7 @@
 		A2EC0CC525E2865F0050E0B5 /* EpisodeListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2EC0CC425E2865F0050E0B5 /* EpisodeListView.swift */; };
 		A2FBD872260B690D00D15C7F /* PodcastHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2FBD871260B690D00D15C7F /* PodcastHeaderView.swift */; };
 		A2FBD876260B6D4000D15C7F /* PlaybackSliderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2FBD875260B6D4000D15C7F /* PlaybackSliderView.swift */; };
+		A2FBD87A260E973A00D15C7F /* PlaybackProgressView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2FBD879260E973900D15C7F /* PlaybackProgressView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -109,6 +110,7 @@
 		A2EC0CC425E2865F0050E0B5 /* EpisodeListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EpisodeListView.swift; sourceTree = "<group>"; };
 		A2FBD871260B690D00D15C7F /* PodcastHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PodcastHeaderView.swift; sourceTree = "<group>"; };
 		A2FBD875260B6D4000D15C7F /* PlaybackSliderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaybackSliderView.swift; sourceTree = "<group>"; };
+		A2FBD879260E973900D15C7F /* PlaybackProgressView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaybackProgressView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -264,6 +266,7 @@
 				A2899F0E25F97E5C002333E8 /* LoadingIndicatorView.swift */,
 				A2FBD871260B690D00D15C7F /* PodcastHeaderView.swift */,
 				A2FBD875260B6D4000D15C7F /* PlaybackSliderView.swift */,
+				A2FBD879260E973900D15C7F /* PlaybackProgressView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -456,6 +459,7 @@
 				A27E659C2607EEEF00B6AA09 /* ButtonStyles.swift in Sources */,
 				A2EC0CC525E2865F0050E0B5 /* EpisodeListView.swift in Sources */,
 				7555FF83242A565900829871 /* StartScreen.swift in Sources */,
+				A2FBD87A260E973A00D15C7F /* PlaybackProgressView.swift in Sources */,
 				A2B6ACC025B5F2A50052C128 /* Ext.swift in Sources */,
 				A2FBD876260B6D4000D15C7F /* PlaybackSliderView.swift in Sources */,
 				A205065F25C732A600D90A98 /* MediaData.swift in Sources */,
