@@ -12,18 +12,15 @@ struct NowPlayingScreen: View {
             theme.colorPalette.background
             
             VStack {
-                
                 Button(action: {
                     presentationMode.wrappedValue.dismiss()
                 }) {
-                    RoundedRectangle(cornerRadius: 25.0)
-                        .fill(theme.colorPalette.background)
-                        .frame(width: 180, height: 4)
-                        .shadow(color: theme.colorPalette.intenseDropShadow, radius: 3, x: 5, y: 3)
-                        .shadow(color: theme.colorPalette.intenseReflection, radius: 4, x: -2, y: -2)
+                    Capsule()
+                        .fill(Color.clear)
+                        .frame(width: 180, height: 0)
                         .padding(.top, 64)
                         .padding(.bottom, 48)
-                }
+                }.buttonStyle(theme.style.underlineButtonStyle)
                 
                 if let imageUrl = viewModel.feedImage {
                     ZStack {
@@ -103,8 +100,9 @@ struct NowPlayingScreen: View {
                         Text("\(String(format: "%.1f", viewModel.playbackSpeed))x")
                             .foregroundColor(theme.colorPalette.primary).bold()
                     }
+                    .buttonStyle(theme.style.underlineButtonStyle)
                     .padding(.leading, 24)
-                    .padding(.bottom, 24)
+                    .padding(.bottom, 64)
                     .padding(.top, 8)
                     
                     Spacer()

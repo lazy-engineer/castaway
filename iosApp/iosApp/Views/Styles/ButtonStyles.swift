@@ -13,6 +13,21 @@ public struct ColorfulButtonStyle: ButtonStyle {
     }
 }
 
+public struct UnderlineStyle: ButtonStyle {
+    
+    public func makeBody(configuration: Self.Configuration) -> some View {
+        configuration.label
+            .foregroundColor(Color.blueGradientStart)
+            .padding(8)
+            .background(
+                UnderlineBackground(isHighlighted: configuration.isPressed, shape: Capsule())
+                    .frame(height: 5)
+                    .padding(.top, 30)
+            )
+        
+    }
+}
+
 public struct PillStyle: ButtonStyle {
     public func makeBody(configuration: Self.Configuration) -> some View {
         configuration.label
@@ -179,4 +194,50 @@ struct PillBackground<S: Shape>: View {
     }
 }
 
+struct UnderlineBackground<S: Shape>: View {
+    var isHighlighted: Bool
+    var shape: S
+    
+    var body: some View {
+        ZStack {
+            if isHighlighted {
+                shape
+                    .fill(Color.lightThemeBackground)
+                    .overlay(
+                        Capsule()
+                            .stroke(Color.lightThemeDarkShadow, lineWidth: 2)
+                            .blur(radius: 3)
+                            .mask(Capsule().fill(LinearGradient.init(gradient: Gradient(colors: [Color.black, Color.clear]), startPoint: .top, endPoint: .bottom)))
+                    )
+                    .overlay(
+                        Capsule()
+                            .stroke(Color.lightThemeLightShadow, lineWidth: 3)
+                            .offset(y: -1)
+                            .blur(radius: 2)
+                            .mask(Capsule().fill(LinearGradient.init(gradient: Gradient(colors: [Color.black, Color.clear]), startPoint: .bottom, endPoint: .top)))
+                    )
+                    .shadow(color: Color.lightThemeDarkShadow, radius: 3, x: -3, y: -3)
+                    .shadow(color: Color.lightThemeLightShadow, radius: 5, x: 5, y: 5)
+            } else {
+                shape
+                    .fill(Color.lightThemeBackground)
+                    .overlay(
+                        Capsule()
+                            .stroke(Color.white, lineWidth: 2)
+                            .blur(radius: 2)
+                            .mask(Capsule().fill(LinearGradient.init(gradient: Gradient(colors: [Color.black, Color.clear]), startPoint: .top, endPoint: .bottom)))
+                    )
+                    .overlay(
+                        Capsule()
+                            .stroke(Color.black.opacity(0.4), lineWidth: 3)
+                            .offset(y: -1)
+                            .blur(radius: 1)
+                            .mask(Capsule().fill(LinearGradient.init(gradient: Gradient(colors: [Color.black, Color.clear]), startPoint: .bottom, endPoint: .top)))
+                    )
+                    .shadow(color: Color.lightThemeDarkShadow, radius: 2, x: 2, y: 2)
+                    .shadow(color: Color.lightThemeLightShadow, radius: 2, x: -2, y: -2)
+            }
+        }
+    }
+}
 
