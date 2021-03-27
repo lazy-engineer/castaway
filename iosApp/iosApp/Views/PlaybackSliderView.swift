@@ -32,7 +32,29 @@ struct PlaybackSliderView: View {
                 Circle()
                     .fill(theme.colorPalette.primary)
                     .frame(width: positionCircleSize, height: positionCircleSize)
-                    .background(Circle().stroke(Color.white, lineWidth: 24))
+                    .background(
+                        Circle()
+                            .fill(theme.colorPalette.background)
+                            .frame(width: 25, height: 25)
+                            .overlay(Circle().stroke(LinearGradient(theme.colorPalette.background, Color.gray.opacity(0.2)), lineWidth: 3))
+                            .overlay(
+                                Circle()
+                                    .stroke(theme.colorPalette.dropShadow, lineWidth: 2)
+                                    .blur(radius: 4)
+                                    .offset(x: 2, y: 2)
+                                    .mask(Circle().fill(LinearGradient(Color.black, Color.clear)))
+                            )
+                            .overlay(
+                                Circle()
+                                    .stroke(theme.colorPalette.reflection, lineWidth: 4)
+                                    .blur(radius: 4)
+                                    .offset(x: -2, y: -2)
+                                    .mask(Circle().fill(LinearGradient(Color.clear, Color.black)))
+                            )
+                            .shadow(color: theme.colorPalette.dropShadow, radius: 2, x: 1, y: 2)
+                            .shadow(color: theme.colorPalette.reflection, radius: 2, x: -1, y: -2)
+                        
+                    )
                     .offset(x: playbackOffset + offsetPadding)
                     .gesture(
                         DragGesture()
@@ -45,7 +67,6 @@ struct PlaybackSliderView: View {
                                     
                                     playbackPosition = TimeInterval(time)
                                     playbackProgress = CGFloat(playbackPosition / duration)
-                                    print(playbackProgress)
                                 }
                             })
                             .onEnded({ value in
