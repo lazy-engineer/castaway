@@ -13,6 +13,19 @@ public struct ColorfulButtonStyle: ButtonStyle {
     }
 }
 
+public struct PillStyle: ButtonStyle {
+    public func makeBody(configuration: Self.Configuration) -> some View {
+        configuration.label
+            .foregroundColor(Color.blueGradientStart)
+            .padding(8)
+            .contentShape(Capsule())
+            .background(
+                PillBackground(isHighlighted: configuration.isPressed, shape: Capsule())
+            )
+            .animation(nil)
+    }
+}
+
 public struct ColorfulToggleStyle: ToggleStyle {
     public func makeBody(configuration: Self.Configuration) -> some View {
         Button(action: {
@@ -130,3 +143,40 @@ struct ColorfulBackground<S: Shape>: View {
         }
     }
 }
+
+struct PillBackground<S: Shape>: View {
+    var isHighlighted: Bool
+    var shape: S
+    
+    var body: some View {
+        ZStack {
+            if isHighlighted {
+                shape
+                    .fill(LinearGradient(Color.lightThemeBackground.opacity(0.2), Color.lightThemeBackground))
+                    .shadow(color: Color.lightThemeDarkShadow, radius: 5, x: -5, y: -5)
+                    .shadow(color: Color.lightThemeLightShadow, radius: 5, x: 5, y: 5)
+            } else {
+                shape
+                    .fill(Color.lightThemeBackground)
+                    .overlay(
+                        Capsule()
+                            .stroke(Color.white, lineWidth: 8)
+                            .blur(radius: 4)
+                            .offset(x: 2, y: 2)
+                            .mask(Capsule().fill(LinearGradient(Color.black, Color.clear)))
+                    )
+                    .overlay(
+                        Capsule()
+                            .stroke(Color.lightThemeDarkShadow, lineWidth: 8)
+                            .blur(radius: 4)
+                            .offset(x: -2, y: -2)
+                            .mask(Capsule().fill(LinearGradient(Color.clear, Color.black)))
+                    )
+                    .shadow(color: Color.lightThemeDarkShadow, radius: 5, x: 5, y: 5)
+                    .shadow(color: Color.lightThemeLightShadow, radius: 5, x: -5, y: -5)
+            }
+        }
+    }
+}
+
+

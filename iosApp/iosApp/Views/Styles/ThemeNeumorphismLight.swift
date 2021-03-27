@@ -35,10 +35,12 @@ public class ThemeNeumorphismLight: ObservableObject {
     
     public struct Style {
         public private(set) var roundButtonStyle: ColorfulButtonStyle
+        public private(set) var pillButtonStyle: PillStyle
         public private(set) var roundToggleButtonStyle: ColorfulToggleStyle
         
         public init() {
             self.roundButtonStyle = ColorfulButtonStyle()
+            self.pillButtonStyle = PillStyle()
             self.roundToggleButtonStyle = ColorfulToggleStyle()
         }
     }
