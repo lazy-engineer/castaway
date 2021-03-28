@@ -4,7 +4,7 @@ struct NowPlayingScreen: View {
     
     @Environment(\.presentationMode) var presentationMode
     
-    @EnvironmentObject var theme: ThemeNeumorphismLight
+    @EnvironmentObject var theme: ThemeNeumorphism
     @EnvironmentObject var viewModel: CastawayViewModel
     
     var body: some View {
@@ -118,7 +118,7 @@ struct NowPlayingScreen: View {
 #if DEBUG
 struct NowPlayingScreen_Previews: PreviewProvider {
     static var previews: some View {
-        NowPlayingScreen().environmentObject(ThemeNeumorphismLight())
+        NowPlayingScreen().environmentObject(ThemeNeumorphism())
     }
 }
 #endif

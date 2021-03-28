@@ -1,47 +1,25 @@
 import SwiftUI
 
-public struct ColorfulButtonStyle: ButtonStyle {
+public struct NeumorphismCircleButtonStyle: ButtonStyle {
+    let themeMode: ThemeMode
+   
     public func makeBody(configuration: Self.Configuration) -> some View {
-        configuration.label
-            .foregroundColor(configuration.isPressed ? .white : Color.blueGradientStart)
+        let theme = ThemeNeumorphism(mode: self.themeMode)
+        
+        return configuration.label
+            .foregroundColor(configuration.isPressed ? .white : theme.colorPalette.primary)
             .padding()
             .contentShape(Circle())
             .background(
-                ColorfulBackground(isHighlighted: configuration.isPressed, shape: Circle())
+                PrimaryHighlightedCircleBackground(theme: theme, isHighlighted: configuration.isPressed, shape: Circle())
             )
             .animation(nil)
     }
 }
 
-public struct UnderlineStyle: ButtonStyle {
+public struct NeumorphismCircleToggleStyle: ToggleStyle {
+    let themeMode: ThemeMode
     
-    public func makeBody(configuration: Self.Configuration) -> some View {
-        configuration.label
-            .foregroundColor(Color.blueGradientStart)
-            .padding(8)
-            .background(
-                UnderlineBackground(isHighlighted: configuration.isPressed, shape: Capsule())
-                    .frame(height: 5)
-                    .padding(.top, 30)
-            )
-        
-    }
-}
-
-public struct PillStyle: ButtonStyle {
-    public func makeBody(configuration: Self.Configuration) -> some View {
-        configuration.label
-            .foregroundColor(Color.blueGradientStart)
-            .padding(8)
-            .contentShape(Capsule())
-            .background(
-                PillBackground(isHighlighted: configuration.isPressed, shape: Capsule())
-            )
-            .animation(nil)
-    }
-}
-
-public struct ColorfulToggleStyle: ToggleStyle {
     public func makeBody(configuration: Self.Configuration) -> some View {
         Button(action: {
             configuration.isOn.toggle()
@@ -51,78 +29,47 @@ public struct ColorfulToggleStyle: ToggleStyle {
                 .contentShape(Circle())
         }
         .background(
-            ColorfulBackground(isHighlighted: configuration.isOn, shape: Circle())
+            PrimaryHighlightedCircleBackground(theme: ThemeNeumorphism(mode: themeMode), isHighlighted: configuration.isOn, shape: Circle())
         )
     }
 }
 
-struct RectangleButtonStyle: ButtonStyle {
+public struct NeumorphismUnderlineStyle: ButtonStyle {
+    let themeMode: ThemeMode
     
-    func makeBody(configuration: Self.Configuration) -> some View {
-        configuration.label
-            .padding(30)
-            .contentShape(RoundedRectangle(cornerRadius: 25.0))
+    public func makeBody(configuration: Self.Configuration) -> some View {
+        let theme = ThemeNeumorphism(mode: self.themeMode)
+        
+        return configuration.label
+            .foregroundColor(theme.colorPalette.primary)
+            .padding(8)
             .background(
-                RoundedRectangle(cornerRadius: 25.0)
-                    .fill(Color.lightThemeBackground)
-                    .shadow(color: Color.lightThemeDarkShadow, radius: /*@START_MENU_TOKEN@*/10/*@END_MENU_TOKEN@*/, x: 10, y: 10)
-                    .shadow(color: Color.lightThemeLightShadow, radius: /*@START_MENU_TOKEN@*/10/*@END_MENU_TOKEN@*/, x: -5, y: -5)
+                UnderlineBackground(theme: theme, isHighlighted: configuration.isPressed, shape: Capsule())
+                    .frame(height: 5)
+                    .padding(.top, 30)
             )
     }
 }
 
-struct RoundButtonStyle: ButtonStyle {
+public struct NeumorphismPillStyle: ButtonStyle {
+    let themeMode: ThemeMode
     
-    func makeBody(configuration: Self.Configuration) -> some View {
-        configuration.label
-            .padding(30)
-            .contentShape(Circle())
+    public func makeBody(configuration: Self.Configuration) -> some View {
+        let theme = ThemeNeumorphism(mode: self.themeMode)
+        
+        return configuration.label
+            .foregroundColor(theme.colorPalette.primary)
+            .padding(8)
+            .contentShape(Capsule())
             .background(
-                Circle()
-                    .fill(Color.lightThemeBackground)
-                    .shadow(color: Color.lightThemeDarkShadow, radius: /*@START_MENU_TOKEN@*/10/*@END_MENU_TOKEN@*/, x: 10, y: 10)
-                    .shadow(color: Color.lightThemeLightShadow, radius: /*@START_MENU_TOKEN@*/10/*@END_MENU_TOKEN@*/, x: -5, y: -5)
+                NeumorphismPillBackground(theme: theme, isHighlighted: configuration.isPressed, shape: Capsule())
             )
+            .animation(nil)
     }
 }
 
-struct SimpleButtonStyle: ButtonStyle {
-    
-    func makeBody(configuration: Self.Configuration) -> some View {
-        configuration.label
-            .padding(30)
-            .contentShape(Circle())
-            .background(
-                Group {
-                    if configuration.isPressed {
-                        Circle()
-                            .fill(Color.lightThemeBackground)
-                            .overlay(
-                                Circle()
-                                    .stroke(Color.white, lineWidth: 4)
-                                    .blur(radius: 4)
-                                    .offset(x: 2, y: 2)
-                                    .mask(Circle().fill(LinearGradient(Color.black, Color.clear)))
-                            )
-                            .overlay(
-                                Circle()
-                                    .stroke(Color.lightThemeDarkShadow, lineWidth: 8)
-                                    .blur(radius: 4)
-                                    .offset(x: -2, y: -2)
-                                    .mask(Circle().fill(LinearGradient(Color.clear, Color.black)))
-                            )
-                    } else {
-                        Circle()
-                            .fill(Color.lightThemeBackground)
-                            .shadow(color: Color.lightThemeDarkShadow, radius: 10, x: 10, y: 10)
-                            .shadow(color: Color.lightThemeLightShadow, radius: 10, x: -5, y: -5)
-                    }
-                }
-            )
-    }
-}
-
-struct ColorfulBackground<S: Shape>: View {
+struct PrimaryHighlightedCircleBackground<S: Shape>: View {
+    var theme: ThemeNeumorphism
     var isHighlighted: Bool
     var shape: S
     
@@ -130,36 +77,37 @@ struct ColorfulBackground<S: Shape>: View {
         ZStack {
             if isHighlighted {
                 shape
-                    .fill(LinearGradient(Color.blueGradientEnd, Color.blueGradientStart))
-                    .overlay(shape.stroke(LinearGradient(Color.blueGradientStart, Color.blueGradientEnd), lineWidth: 4))
-                    .shadow(color: Color.lightThemeDarkShadow, radius: 10, x: -10, y: -10)
-                    .shadow(color: Color.lightThemeLightShadow, radius: 10, x: 10, y: 10)
+                    .fill(LinearGradient(theme.colorPalette.secondary, theme.colorPalette.primary))
+                    .overlay(shape.stroke(LinearGradient(theme.colorPalette.primary, theme.colorPalette.secondary), lineWidth: 4))
+                    .shadow(color: theme.colorPalette.dropShadow, radius: 10, x: -10, y: -10)
+                    .shadow(color: theme.colorPalette.reflection, radius: 10, x: 10, y: 10)
             } else {
                 shape
-                    .fill(Color.lightThemeBackground)
-                    .overlay(shape.stroke(LinearGradient(Color.gray.opacity(0.2), Color.lightThemeBackground), lineWidth: 4))
+                    .fill(theme.colorPalette.background)
+                    .overlay(shape.stroke(LinearGradient(theme.colorPalette.backgroundGradient, theme.colorPalette.background), lineWidth: 4))
                     .overlay(
                         Circle()
-                            .stroke(Color.white, lineWidth: 4)
+                            .stroke(theme.colorPalette.intenseReflection, lineWidth: 4)
                             .blur(radius: 4)
                             .offset(x: 2, y: 2)
                             .mask(Circle().fill(LinearGradient(Color.black, Color.clear)))
                     )
                     .overlay(
                         Circle()
-                            .stroke(Color.lightThemeDarkShadow, lineWidth: 8)
+                            .stroke(theme.colorPalette.dropShadow, lineWidth: 8)
                             .blur(radius: 4)
                             .offset(x: -2, y: -2)
                             .mask(Circle().fill(LinearGradient(Color.clear, Color.black)))
                     )
-                    .shadow(color: Color.lightThemeDarkShadow, radius: 10, x: 10, y: 10)
-                    .shadow(color: Color.lightThemeLightShadow, radius: 10, x: -10, y: -10)
+                    .shadow(color: theme.colorPalette.dropShadow, radius: 10, x: 10, y: 10)
+                    .shadow(color: theme.colorPalette.reflection, radius: 10, x: -10, y: -10)
             }
         }
     }
 }
 
-struct PillBackground<S: Shape>: View {
+struct NeumorphismPillBackground<S: Shape>: View {
+    var theme: ThemeNeumorphism
     var isHighlighted: Bool
     var shape: S
     
@@ -167,34 +115,35 @@ struct PillBackground<S: Shape>: View {
         ZStack {
             if isHighlighted {
                 shape
-                    .fill(LinearGradient(Color.lightThemeBackground.opacity(0.2), Color.lightThemeBackground))
-                    .shadow(color: Color.lightThemeDarkShadow, radius: 5, x: -5, y: -5)
-                    .shadow(color: Color.lightThemeLightShadow, radius: 5, x: 5, y: 5)
+                    .fill(LinearGradient(theme.colorPalette.dropShadow, theme.colorPalette.background))
+                    .shadow(color: theme.colorPalette.dropShadow, radius: 5, x: -5, y: -5)
+                    .shadow(color: theme.colorPalette.reflection, radius: 5, x: 5, y: 5)
             } else {
                 shape
-                    .fill(Color.lightThemeBackground)
+                    .fill(theme.colorPalette.background)
                     .overlay(
                         Capsule()
-                            .stroke(Color.white, lineWidth: 8)
+                            .stroke(theme.colorPalette.intenseReflection, lineWidth: 8)
                             .blur(radius: 4)
                             .offset(x: 2, y: 2)
                             .mask(Capsule().fill(LinearGradient(Color.black, Color.clear)))
                     )
                     .overlay(
                         Capsule()
-                            .stroke(Color.lightThemeDarkShadow, lineWidth: 8)
+                            .stroke(theme.colorPalette.dropShadow, lineWidth: 8)
                             .blur(radius: 4)
                             .offset(x: -2, y: -2)
                             .mask(Capsule().fill(LinearGradient(Color.clear, Color.black)))
                     )
-                    .shadow(color: Color.lightThemeDarkShadow, radius: 5, x: 5, y: 5)
-                    .shadow(color: Color.lightThemeLightShadow, radius: 5, x: -5, y: -5)
+                    .shadow(color: theme.colorPalette.dropShadow, radius: 5, x: 5, y: 5)
+                    .shadow(color: theme.colorPalette.reflection, radius: 5, x: -5, y: -5)
             }
         }
     }
 }
 
 struct UnderlineBackground<S: Shape>: View {
+    var theme: ThemeNeumorphism
     var isHighlighted: Bool
     var shape: S
     
@@ -202,42 +151,41 @@ struct UnderlineBackground<S: Shape>: View {
         ZStack {
             if isHighlighted {
                 shape
-                    .fill(Color.lightThemeBackground)
+                    .fill(theme.colorPalette.background)
                     .overlay(
                         Capsule()
-                            .stroke(Color.lightThemeDarkShadow, lineWidth: 2)
+                            .stroke(theme.colorPalette.dropShadow, lineWidth: 2)
                             .blur(radius: 3)
                             .mask(Capsule().fill(LinearGradient.init(gradient: Gradient(colors: [Color.black, Color.clear]), startPoint: .top, endPoint: .bottom)))
                     )
                     .overlay(
                         Capsule()
-                            .stroke(Color.lightThemeLightShadow, lineWidth: 3)
+                            .stroke(theme.colorPalette.reflection, lineWidth: 3)
                             .offset(y: -1)
                             .blur(radius: 2)
                             .mask(Capsule().fill(LinearGradient.init(gradient: Gradient(colors: [Color.black, Color.clear]), startPoint: .bottom, endPoint: .top)))
                     )
-                    .shadow(color: Color.lightThemeDarkShadow, radius: 3, x: -3, y: -3)
-                    .shadow(color: Color.lightThemeLightShadow, radius: 5, x: 5, y: 5)
+                    .shadow(color: theme.colorPalette.dropShadow, radius: 3, x: -3, y: -3)
+                    .shadow(color: theme.colorPalette.reflection, radius: 5, x: 5, y: 5)
             } else {
                 shape
-                    .fill(Color.lightThemeBackground)
+                    .fill(theme.colorPalette.background)
                     .overlay(
                         Capsule()
-                            .stroke(Color.white, lineWidth: 2)
+                            .stroke(theme.colorPalette.intenseReflection, lineWidth: 2)
                             .blur(radius: 2)
                             .mask(Capsule().fill(LinearGradient.init(gradient: Gradient(colors: [Color.black, Color.clear]), startPoint: .top, endPoint: .bottom)))
                     )
                     .overlay(
                         Capsule()
-                            .stroke(Color.black.opacity(0.4), lineWidth: 3)
+                            .stroke(theme.colorPalette.intenseDropShadow, lineWidth: 3)
                             .offset(y: -1)
                             .blur(radius: 1)
                             .mask(Capsule().fill(LinearGradient.init(gradient: Gradient(colors: [Color.black, Color.clear]), startPoint: .bottom, endPoint: .top)))
                     )
-                    .shadow(color: Color.lightThemeDarkShadow, radius: 2, x: 2, y: 2)
-                    .shadow(color: Color.lightThemeLightShadow, radius: 2, x: -2, y: -2)
+                    .shadow(color: theme.colorPalette.dropShadow, radius: 2, x: 2, y: 2)
+                    .shadow(color: theme.colorPalette.reflection, radius: 2, x: -2, y: -2)
             }
         }
     }
 }
-

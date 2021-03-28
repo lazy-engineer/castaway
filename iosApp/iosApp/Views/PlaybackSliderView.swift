@@ -2,7 +2,7 @@ import SwiftUI
 
 struct PlaybackSliderView: View {
     
-    @EnvironmentObject var theme: ThemeNeumorphismLight
+    @EnvironmentObject var theme: ThemeNeumorphism
     @EnvironmentObject var viewModel: CastawayViewModel
     @State private var playbackPosition: TimeInterval = 0
     @State private var duration: TimeInterval = 1
@@ -36,7 +36,7 @@ struct PlaybackSliderView: View {
                         Circle()
                             .fill(theme.colorPalette.background)
                             .frame(width: 25, height: 25)
-                            .overlay(Circle().stroke(LinearGradient(theme.colorPalette.background, Color.gray.opacity(0.2)), lineWidth: 3))
+                            .overlay(Circle().stroke(LinearGradient(theme.colorPalette.background, theme.colorPalette.backgroundGradient), lineWidth: 3))
                             .overlay(
                                 Circle()
                                     .stroke(theme.colorPalette.dropShadow, lineWidth: 2)

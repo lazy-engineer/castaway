@@ -2,7 +2,7 @@ import SwiftUI
 
 struct PodcastHeaderView: View {
     
-    @EnvironmentObject var theme: ThemeNeumorphismLight
+    @EnvironmentObject var theme: ThemeNeumorphism
     
     @State var feedImage: UIImage?
     @State var feedTitle: String

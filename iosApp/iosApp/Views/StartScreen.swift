@@ -2,7 +2,7 @@ import SwiftUI
 
 struct StartScreen : View {
     
-    @EnvironmentObject var theme: ThemeNeumorphismLight
+    @EnvironmentObject var theme: ThemeNeumorphism
     @EnvironmentObject var viewModel: CastawayViewModel
     
     var body: some View {
@@ -11,6 +11,7 @@ struct StartScreen : View {
                 LoadingIndicatorView().onAppear() {
                     viewModel.loadFeed("https://atp.fm/rss")
                 }
+                .environmentObject(theme)
             } else {
                 PodcastHeaderView(feedImage: viewModel.feedImage, feedTitle: viewModel.feedTitle)
                     .environmentObject(theme)

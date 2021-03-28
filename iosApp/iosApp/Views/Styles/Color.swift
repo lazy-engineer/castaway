@@ -12,6 +12,7 @@ extension Color {
     
     static let blueGradientStart = Color(red: 66 / 255, green: 165 / 255, blue: 245 / 255)
     static let blueGradientEnd = Color(red: 13 / 255, green: 71 / 255, blue: 161 / 255)
+    static let blueGradientMiddle = Color(red: 25 / 255, green: 118 / 255, blue: 210 / 255)
 }
 
 extension LinearGradient {

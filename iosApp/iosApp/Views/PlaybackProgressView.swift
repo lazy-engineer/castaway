@@ -2,7 +2,7 @@ import SwiftUI
 
 struct PlaybackProgressView: View {
     
-    @EnvironmentObject var theme: ThemeNeumorphismLight
+    @EnvironmentObject var theme: ThemeNeumorphism
     
     let playbackProgress: CGFloat
     let offsetPadding: CGFloat
@@ -50,6 +50,6 @@ struct PlaybackProgressView: View {
 struct PlaybackProgressView_Previews: PreviewProvider {
     static var previews: some View {
         PlaybackProgressView(playbackProgress: 0.25)
-            .environmentObject(ThemeNeumorphismLight())
+            .environmentObject(ThemeNeumorphism())
     }
 }

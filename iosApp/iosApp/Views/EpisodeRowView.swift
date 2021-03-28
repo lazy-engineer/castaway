@@ -4,7 +4,7 @@ import shared
 
 struct EpisodeRowView: View {
     
-    @EnvironmentObject var theme: ThemeNeumorphismLight
+    @EnvironmentObject var theme: ThemeNeumorphism
     
     @State var episode: Episode
     let playing: Bool

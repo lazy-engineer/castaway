@@ -2,7 +2,7 @@ import SwiftUI
 
 struct EpisodeListView : View {
     
-    @EnvironmentObject var theme: ThemeNeumorphismLight
+    @EnvironmentObject var theme: ThemeNeumorphism
     @EnvironmentObject var viewModel: CastawayViewModel
     @State private var currentTime: TimeInterval = 0
     @State private var duration: TimeInterval = 1

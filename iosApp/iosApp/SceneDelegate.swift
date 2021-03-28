@@ -15,7 +15,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
             saveFeedUseCase: sharedComponent.provideSaveFeedUseCase()
         )
         
-        let appTheme = ThemeNeumorphismLight()
+        let appTheme = ThemeNeumorphism()
         
         let startScreen = StartScreen().environmentObject(viewModel).environmentObject(appTheme)
         
