@@ -46,7 +46,7 @@ public struct NeumorphismUnderlineStyle: ButtonStyle {
             .background(
                 UnderlineBackground(theme: theme, isHighlighted: configuration.isPressed, shape: Capsule())
                     .frame(height: 5)
-                    .padding(.top, 30)
+                    .padding(.top, 32)
             )
     }
 }
@@ -183,8 +183,8 @@ struct UnderlineBackground<S: Shape>: View {
                             .blur(radius: 1)
                             .mask(Capsule().fill(LinearGradient.init(gradient: Gradient(colors: [Color.black, Color.clear]), startPoint: .bottom, endPoint: .top)))
                     )
-                    .shadow(color: theme.colorPalette.dropShadow, radius: 2, x: 2, y: 2)
-                    .shadow(color: theme.colorPalette.reflection, radius: 2, x: -2, y: -2)
+                    .shadow(color: theme.colorPalette.dropShadow, radius: 3, x: 3, y: 3)
+                    .shadow(color: theme.colorPalette.reflection, radius: 3, x: -3, y: -3)
             }
         }
     }

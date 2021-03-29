@@ -18,7 +18,7 @@ struct NowPlayingScreen: View {
                     Capsule()
                         .fill(Color.clear)
                         .frame(width: 180, height: 0)
-                        .padding(.top, 64)
+                        .padding(.top, 32)
                         .padding(.bottom, 48)
                 }.buttonStyle(theme.style.underlineButtonStyle)
                 

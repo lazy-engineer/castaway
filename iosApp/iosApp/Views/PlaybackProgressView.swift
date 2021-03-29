@@ -23,13 +23,13 @@ struct PlaybackProgressView: View {
                     .frame(height: 5)
                     .overlay(
                         Capsule()
-                            .stroke(theme.colorPalette.intenseDropShadow, lineWidth: 2)
+                            .stroke(theme.colorPalette.intenseDropShadow, lineWidth: 3)
                             .blur(radius: 2)
                             .mask(Capsule().fill(LinearGradient.init(gradient: Gradient(colors: [Color.black, Color.clear]), startPoint: .top, endPoint: .bottom)))
                     )
                     .overlay(
                         Capsule()
-                            .stroke(theme.colorPalette.intenseReflection, lineWidth: 3)
+                            .stroke(theme.colorPalette.intenseReflection, lineWidth: 1)
                             .offset(y: -1)
                             .blur(radius: 1)
                             .mask(Capsule().fill(LinearGradient.init(gradient: Gradient(colors: [Color.black, Color.clear]), startPoint: .bottom, endPoint: .top)))
