@@ -15,17 +15,28 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
             saveFeedUseCase: sharedComponent.provideSaveFeedUseCase()
         )
         
-        let appTheme = ThemeNeumorphism()
+        let themeScheme = themeModeFromUserInterfaceStyle(UITraitCollection.current.userInterfaceStyle)
+        let appTheme = ThemeNeumorphism(mode: themeScheme)
         
         let startScreen = StartScreen().environmentObject(viewModel).environmentObject(appTheme)
         
         // Use a UIHostingController as window root view controller.
         if let windowScene = scene as? UIWindowScene {
             let window = UIWindow(windowScene: windowScene)
+            
             window.rootViewController = UIHostingController(rootView: startScreen)
             self.window = window
             window.makeKeyAndVisible()
         }
+    }
+    
+    func themeModeFromUserInterfaceStyle(_ userInterfaceStyle: UIUserInterfaceStyle) -> ThemeMode {
+        if userInterfaceStyle == .light {
+            return .light
+        } else if userInterfaceStyle == .dark {
+            return .dark
+        }
+        return .light
     }
     
     func sceneDidDisconnect(_ scene: UIScene) {
