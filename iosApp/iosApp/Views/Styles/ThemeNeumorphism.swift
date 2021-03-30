@@ -2,6 +2,7 @@ import SwiftUI
 
 public class ThemeNeumorphism: ObservableObject {
     
+    @Published public var mode: ThemeMode
     @Published public var colorPalette: ColorPalette
     @Published public var style: Style
     
@@ -64,13 +65,27 @@ public class ThemeNeumorphism: ObservableObject {
     }
     
     public init(mode: ThemeMode = .dark) {
+        self.mode = mode
+        self.colorPalette = ColorPalette(mode)
+        self.style = Style(mode)
+    }
+    
+    func changeThemeMode(mode: ThemeMode) {
+        self.mode = mode
+        self.colorPalette = ColorPalette(mode)
+        self.style = Style(mode)
+    }
+    
+    func switchThemeMode() {
         switch mode {
         case .dark:
-            self.colorPalette = ColorPalette(.dark)
-            self.style = Style(.dark)
-        case .light:
+            self.mode = .light
             self.colorPalette = ColorPalette(.light)
             self.style = Style(.light)
+        case .light:
+            self.mode = .dark
+            self.colorPalette = ColorPalette(.dark)
+            self.style = Style(.dark)
         }
     }
 }
