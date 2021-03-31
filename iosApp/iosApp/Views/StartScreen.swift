@@ -13,12 +13,14 @@ struct StartScreen : View {
                 }
                 .environmentObject(theme)
             } else {
-                PodcastHeaderView(feedImage: viewModel.feedImage, feedTitle: viewModel.feedTitle)
-                    .environmentObject(theme)
-            
-                EpisodeListView()
-                    .environmentObject(viewModel)
-                    .environmentObject(theme)
+                ScrollView {
+                    PodcastHeaderView(feedImage: viewModel.feedImage, feedTitle: viewModel.feedTitle)
+                        .environmentObject(theme)
+                    
+                    EpisodeListView()
+                        .environmentObject(viewModel)
+                        .environmentObject(theme)
+                }
             }
         }.background(theme.colorPalette.background.edgesIgnoringSafeArea(.all))
     }
