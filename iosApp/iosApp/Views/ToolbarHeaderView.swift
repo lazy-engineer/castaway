@@ -17,7 +17,7 @@ struct ToolbarHeaderView: View {
                             .frame(width: 50, height: 50)
                             .shadow(color: theme.colorPalette.dropShadow, radius: 5, x: 5, y: 5)
                             .shadow(color: theme.colorPalette.reflection, radius: 5, x: -5, y: -5)
-                        
+
                         Image(uiImage: imageUrl)
                             .resizable()
                             .scaledToFill()
@@ -31,11 +31,11 @@ struct ToolbarHeaderView: View {
                     Image(systemName: "mic")
                         .resizable()
                         .scaledToFill()
-                        .frame(width: 32, height: 32)
+                        .frame(width: 24, height: 24)
                         .foregroundColor(theme.colorPalette.background)
-                        .shadow(color: theme.colorPalette.dropShadow, radius: 5, x: 5, y: 5)
-                        .shadow(color: theme.colorPalette.reflection, radius: 5, x: -5, y: -5)
-                        .padding(8)
+                        .shadow(color: theme.colorPalette.dropShadow, radius: 2, x: 2, y: 2)
+                        .shadow(color: theme.colorPalette.reflection, radius: 2, x: -2, y: -2)
+                        .padding()
                 }
                 
                 Text(feedTitle)

@@ -48,13 +48,17 @@ struct PodcastHeaderView: View {
                         .resizable()
                         .scaledToFill()
                         .onReceive(self.time, perform: { _ in
-                            scaleOnScroll(geometry.frame(in: .global).minY, maxImageSize: 120)
+                            scaleOnScroll(geometry.frame(in: .global).minY, maxImageSize: 80)
                         })
+                        .onAppear {
+                            size = 80
+                        }
                 }
                 .frame(width: size, height: size)
                 .foregroundColor(theme.colorPalette.background)
                 .shadow(color: theme.colorPalette.dropShadow, radius: 5, x: 5, y: 5)
                 .shadow(color: theme.colorPalette.reflection, radius: 5, x: -5, y: -5)
+                .padding(.bottom, 24)
             }
         }
         .padding(.top, 24)
