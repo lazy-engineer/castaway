@@ -5,6 +5,8 @@ struct StartScreen : View {
     @EnvironmentObject var theme: ThemeNeumorphism
     @EnvironmentObject var viewModel: CastawayViewModel
     
+    @State var showToolbarHeader = false
+    
     var body: some View {
         VStack {
             if viewModel.episodes.isEmpty {
@@ -13,14 +15,27 @@ struct StartScreen : View {
                 }
                 .environmentObject(theme)
             } else {
-                ScrollView {
-                    PodcastHeaderView(feedImage: viewModel.feedImage, feedTitle: viewModel.feedTitle)
-                        .environmentObject(theme)
+                ZStack(alignment: .top, content: {
                     
-                    EpisodeListView()
-                        .environmentObject(viewModel)
+                    ScrollView {
+                        PodcastHeaderView(feedImage: viewModel.feedImage, feedTitle: viewModel.feedTitle) { outOfSight in
+                            withAnimation {
+                                showToolbarHeader = outOfSight
+                            }
+                        }
                         .environmentObject(theme)
-                }
+                        
+                        EpisodeListView()
+                            .environmentObject(viewModel)
+                            .environmentObject(theme)
+                    }
+                    
+                    
+                    if showToolbarHeader {
+                        ToolbarHeaderView(feedImage: viewModel.feedImage, feedTitle: viewModel.feedTitle)
+                            .environmentObject(theme)
+                    }
+                })
             }
         }.background(theme.colorPalette.background.edgesIgnoringSafeArea(.all))
     }

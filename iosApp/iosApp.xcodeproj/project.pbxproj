@@ -41,6 +41,7 @@
 		A2FBD876260B6D4000D15C7F /* PlaybackSliderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2FBD875260B6D4000D15C7F /* PlaybackSliderView.swift */; };
 		A2FBD87A260E973A00D15C7F /* PlaybackProgressView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2FBD879260E973900D15C7F /* PlaybackProgressView.swift */; };
 		A2FBD8802610BC7C00D15C7F /* ThemeMode.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2FBD87F2610BC7C00D15C7F /* ThemeMode.swift */; };
+		A2FBD8842616573800D15C7F /* ToolbarHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2FBD8832616573800D15C7F /* ToolbarHeaderView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -113,6 +114,7 @@
 		A2FBD875260B6D4000D15C7F /* PlaybackSliderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaybackSliderView.swift; sourceTree = "<group>"; };
 		A2FBD879260E973900D15C7F /* PlaybackProgressView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaybackProgressView.swift; sourceTree = "<group>"; };
 		A2FBD87F2610BC7C00D15C7F /* ThemeMode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThemeMode.swift; sourceTree = "<group>"; };
+		A2FBD8832616573800D15C7F /* ToolbarHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToolbarHeaderView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -270,6 +272,7 @@
 				A2FBD871260B690D00D15C7F /* PodcastHeaderView.swift */,
 				A2FBD875260B6D4000D15C7F /* PlaybackSliderView.swift */,
 				A2FBD879260E973900D15C7F /* PlaybackProgressView.swift */,
+				A2FBD8832616573800D15C7F /* ToolbarHeaderView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -457,6 +460,7 @@
 				A216F9C125AA45D400A52C6D /* StoreAndGetFeedUseCase.swift in Sources */,
 				A245927825CCA34900916A2C /* PlaybackState.swift in Sources */,
 				A27E65A42607F26F00B6AA09 /* Color.swift in Sources */,
+				A2FBD8842616573800D15C7F /* ToolbarHeaderView.swift in Sources */,
 				7555FF81242A565900829871 /* SceneDelegate.swift in Sources */,
 				A2BB7BEA25A4C4EE007E7F6B /* ViewModel.swift in Sources */,
 				A27E659C2607EEEF00B6AA09 /* ButtonStyles.swift in Sources */,
