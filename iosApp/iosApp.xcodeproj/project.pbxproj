@@ -42,6 +42,8 @@
 		A2FBD87A260E973A00D15C7F /* PlaybackProgressView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2FBD879260E973900D15C7F /* PlaybackProgressView.swift */; };
 		A2FBD8802610BC7C00D15C7F /* ThemeMode.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2FBD87F2610BC7C00D15C7F /* ThemeMode.swift */; };
 		A2FBD8842616573800D15C7F /* ToolbarHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2FBD8832616573800D15C7F /* ToolbarHeaderView.swift */; };
+		A2FBD888261675EB00D15C7F /* PodcastScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2FBD887261675EB00D15C7F /* PodcastScreen.swift */; };
+		A2FBD88C26179F7C00D15C7F /* OnBoardingScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2FBD88B26179F7C00D15C7F /* OnBoardingScreen.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -115,6 +117,8 @@
 		A2FBD879260E973900D15C7F /* PlaybackProgressView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaybackProgressView.swift; sourceTree = "<group>"; };
 		A2FBD87F2610BC7C00D15C7F /* ThemeMode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThemeMode.swift; sourceTree = "<group>"; };
 		A2FBD8832616573800D15C7F /* ToolbarHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToolbarHeaderView.swift; sourceTree = "<group>"; };
+		A2FBD887261675EB00D15C7F /* PodcastScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PodcastScreen.swift; sourceTree = "<group>"; };
+		A2FBD88B26179F7C00D15C7F /* OnBoardingScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnBoardingScreen.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -273,6 +277,8 @@
 				A2FBD875260B6D4000D15C7F /* PlaybackSliderView.swift */,
 				A2FBD879260E973900D15C7F /* PlaybackProgressView.swift */,
 				A2FBD8832616573800D15C7F /* ToolbarHeaderView.swift */,
+				A2FBD887261675EB00D15C7F /* PodcastScreen.swift */,
+				A2FBD88B26179F7C00D15C7F /* OnBoardingScreen.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -452,6 +458,7 @@
 				7555FF7F242A565900829871 /* AppDelegate.swift in Sources */,
 				A2D4B2A725E6EECA006714E6 /* PlayerDurationObserver.swift in Sources */,
 				A2ACEE3625B05BC600F4BD52 /* CastawayPlayer.swift in Sources */,
+				A2FBD88C26179F7C00D15C7F /* OnBoardingScreen.swift in Sources */,
 				A2D8CC9C25E6E8EF0018C342 /* PlayerTimeObserver.swift in Sources */,
 				A2899F0F25F97E5C002333E8 /* LoadingIndicatorView.swift in Sources */,
 				A2ACEE3C25B3A49B00F4BD52 /* Utility.swift in Sources */,
@@ -468,6 +475,7 @@
 				A2FBD8802610BC7C00D15C7F /* ThemeMode.swift in Sources */,
 				7555FF83242A565900829871 /* StartScreen.swift in Sources */,
 				A2FBD87A260E973A00D15C7F /* PlaybackProgressView.swift in Sources */,
+				A2FBD888261675EB00D15C7F /* PodcastScreen.swift in Sources */,
 				A2B6ACC025B5F2A50052C128 /* Ext.swift in Sources */,
 				A2FBD876260B6D4000D15C7F /* PlaybackSliderView.swift in Sources */,
 				A205065F25C732A600D90A98 /* MediaData.swift in Sources */,

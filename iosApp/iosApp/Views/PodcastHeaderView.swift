@@ -73,7 +73,7 @@ struct PodcastHeaderView: View {
         let maxSize: CGFloat = maxImageSize
         
         withAnimation {
-            if geometryMinY < -100 {
+            if geometryMinY < -minSize {
                 outOfSight(true)
             } else {
                 outOfSight(false)

@@ -5,39 +5,21 @@ struct StartScreen : View {
     @EnvironmentObject var theme: ThemeNeumorphism
     @EnvironmentObject var viewModel: CastawayViewModel
     
-    @State var showToolbarHeader = false
-    
+    @State var showOnboarding = true
+        
     var body: some View {
-        VStack {
-            if viewModel.episodes.isEmpty {
-                LoadingIndicatorView().onAppear() {
-                    viewModel.loadFeed("https://atp.fm/rss")
+        ZStack {
+            PodcastScreen()
+                .environmentObject(viewModel)
+                .environmentObject(theme)
+            
+            if showOnboarding {
+                OnBoardingScreen() { finished in
+                    showOnboarding = !finished
                 }
                 .environmentObject(theme)
-            } else {
-                ZStack(alignment: .top, content: {
-                    
-                    ScrollView {
-                        PodcastHeaderView(feedImage: viewModel.feedImage, feedTitle: viewModel.feedTitle) { outOfSight in
-                            withAnimation {
-                                showToolbarHeader = outOfSight
-                            }
-                        }
-                        .environmentObject(theme)
-                        
-                        EpisodeListView()
-                            .environmentObject(viewModel)
-                            .environmentObject(theme)
-                    }
-                    
-                    
-                    if showToolbarHeader {
-                        ToolbarHeaderView(feedImage: viewModel.feedImage, feedTitle: viewModel.feedTitle)
-                            .environmentObject(theme)
-                    }
-                })
             }
-        }.background(theme.colorPalette.background.edgesIgnoringSafeArea(.all))
+        }
     }
 }
 
