@@ -12,6 +12,33 @@ struct OnBoardingScreen: View {
         VStack {
             Spacer()
             
+            if isDarkTheme {
+                Image(systemName: "moon.fill")
+                    .resizable()
+                    .scaledToFit()
+                    .frame(width: 100, height: 100)
+                    .selfSizeMask(
+                            LinearGradient(
+                                gradient: Gradient(colors: [Color.blueGradientStart, Color.blueGradientEnd]),
+                                startPoint: .top,
+                                endPoint: .bottom)
+                        )
+                    .shadow(color: theme.colorPalette.dropShadow, radius: 10, x: 10, y: 10)
+                    .padding(48)
+            } else {
+                Circle()
+                    .scaledToFit()
+                    .frame(width: 100, height: 100)
+                    .selfSizeMask(
+                            LinearGradient(
+                                gradient: Gradient(colors: [Color.yellow, Color.red]),
+                                startPoint: .topTrailing,
+                                endPoint: .bottom)
+                        )
+                    .shadow(color: theme.colorPalette.dropShadow, radius: 10, x: 10, y: 10)
+                    .padding(48)
+            }
+         
             Text("Choose your Style")
                 .font(.title2)
                 .bold()

@@ -44,6 +44,7 @@
 		A2FBD8842616573800D15C7F /* ToolbarHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2FBD8832616573800D15C7F /* ToolbarHeaderView.swift */; };
 		A2FBD888261675EB00D15C7F /* PodcastScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2FBD887261675EB00D15C7F /* PodcastScreen.swift */; };
 		A2FBD88C26179F7C00D15C7F /* OnBoardingScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2FBD88B26179F7C00D15C7F /* OnBoardingScreen.swift */; };
+		A2FBD890261906D600D15C7F /* View.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2FBD88F261906D600D15C7F /* View.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -119,6 +120,7 @@
 		A2FBD8832616573800D15C7F /* ToolbarHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToolbarHeaderView.swift; sourceTree = "<group>"; };
 		A2FBD887261675EB00D15C7F /* PodcastScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PodcastScreen.swift; sourceTree = "<group>"; };
 		A2FBD88B26179F7C00D15C7F /* OnBoardingScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnBoardingScreen.swift; sourceTree = "<group>"; };
+		A2FBD88F261906D600D15C7F /* View.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = View.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -235,6 +237,7 @@
 		A27E659A2607EE8800B6AA09 /* Styles */ = {
 			isa = PBXGroup;
 			children = (
+				A2FBD88F261906D600D15C7F /* View.swift */,
 				A27E659B2607EEEF00B6AA09 /* ButtonStyles.swift */,
 				A27E65A32607F26F00B6AA09 /* Color.swift */,
 				A27E65A72608ED4D00B6AA09 /* ThemeNeumorphism.swift */,
@@ -464,6 +467,7 @@
 				A2ACEE3C25B3A49B00F4BD52 /* Utility.swift in Sources */,
 				A216F9CD25AD993900A52C6D /* EpisodeRowView.swift in Sources */,
 				A2BB7BF925A4D548007E7F6B /* Koin.swift in Sources */,
+				A2FBD890261906D600D15C7F /* View.swift in Sources */,
 				A216F9C125AA45D400A52C6D /* StoreAndGetFeedUseCase.swift in Sources */,
 				A245927825CCA34900916A2C /* PlaybackState.swift in Sources */,
 				A27E65A42607F26F00B6AA09 /* Color.swift in Sources */,
