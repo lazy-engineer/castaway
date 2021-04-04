@@ -5,12 +5,12 @@ struct OnBoardingScreen: View {
     @EnvironmentObject var theme: ThemeNeumorphism
     
     @State var isDarkTheme: Bool = false
+    @State var imageOffset: CGSize = .zero
     
     let onFinished: (Bool) -> Void
     
     var body: some View {
         VStack {
-            Spacer()
             
             if isDarkTheme {
                 Image(systemName: "moon.fill")
@@ -18,31 +18,62 @@ struct OnBoardingScreen: View {
                     .scaledToFit()
                     .frame(width: 100, height: 100)
                     .selfSizeMask(
-                            LinearGradient(
-                                gradient: Gradient(colors: [Color.blueGradientStart, Color.blueGradientEnd]),
-                                startPoint: .top,
-                                endPoint: .bottom)
-                        )
+                        LinearGradient(
+                            gradient: Gradient(colors: [Color.blueGradientStart, Color.blueGradientEnd]),
+                            startPoint: .top,
+                            endPoint: .bottom)
+                    )
                     .shadow(color: theme.colorPalette.dropShadow, radius: 10, x: 10, y: 10)
+                    .padding(.top, 80)
                     .padding(48)
+                    .transition(.move(edge: .top))
+                    .animation(.easeOut(duration: 1))
             } else {
                 Circle()
                     .scaledToFit()
                     .frame(width: 100, height: 100)
                     .selfSizeMask(
-                            LinearGradient(
-                                gradient: Gradient(colors: [Color.yellow, Color.red]),
-                                startPoint: .topTrailing,
-                                endPoint: .bottom)
-                        )
+                        LinearGradient(
+                            gradient: Gradient(colors: [Color.yellow, Color.red]),
+                            startPoint: .topTrailing,
+                            endPoint: .bottom)
+                    )
                     .shadow(color: theme.colorPalette.dropShadow, radius: 10, x: 10, y: 10)
+                    .padding(.top, 80)
                     .padding(48)
+                    .transition(.move(edge: .top))
+                    .animation(.easeOut(duration: 1))
             }
-         
-            Text("Choose your Style")
+            
+            Text("Choose Your Destiny")
                 .font(.title2)
                 .bold()
                 .foregroundColor(theme.colorPalette.textColor)
+            
+            if isDarkTheme {
+                VStack(spacing: 0) {
+                    Text("\"The night is darkest just before the dawn. And I promise you, the dawn is coming.\"")
+                        .font(.headline)
+                        .bold()
+                        .foregroundColor(theme.colorPalette.textColor)
+                        .multilineTextAlignment(.center)
+                    
+                    Text("- Harvey Dent")
+                        .font(.headline)
+                        .italic()
+                        .foregroundColor(theme.colorPalette.textColor)
+                }
+                .padding()
+            } else {
+                Text("\"- Hamid: What's that? \n - Rambo: It's blue light. \n - Hamid: What does it do? \n - Rambo: It turns blue.\"")
+                    .font(.headline)
+                    .bold()
+                    .foregroundColor(theme.colorPalette.textColor)
+                    .multilineTextAlignment(.center)
+                    .padding()
+            }
+            
+            Spacer()
             
             HStack {
                 Spacer()
@@ -63,7 +94,7 @@ struct OnBoardingScreen: View {
                             }
                         }
                     })
-                    .toggleStyle(SwitchToggleStyle(tint: theme.colorPalette.primary))
+                    .toggleStyle(theme.style.textToggleStyle)
                     .labelsHidden()
                     .padding(16)
                     .onAppear {
@@ -83,8 +114,7 @@ struct OnBoardingScreen: View {
                 
                 Spacer()
             }
-            
-            Spacer()
+            .padding(.bottom, 48)
             
             Button(action: {
                 onFinished(true)
