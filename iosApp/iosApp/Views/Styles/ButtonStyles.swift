@@ -2,7 +2,7 @@ import SwiftUI
 
 public struct NeumorphismCircleButtonStyle: ButtonStyle {
     let themeMode: ThemeMode
-   
+    
     public func makeBody(configuration: Self.Configuration) -> some View {
         let theme = ThemeNeumorphism(mode: self.themeMode)
         
@@ -31,6 +31,81 @@ public struct NeumorphismCircleToggleStyle: ToggleStyle {
         .background(
             PrimaryHighlightedCircleBackground(theme: ThemeNeumorphism(mode: themeMode), isHighlighted: configuration.isOn, shape: Circle())
         )
+    }
+}
+
+public struct NeumorphismTextToggleStyle: ToggleStyle {
+    let themeMode: ThemeMode
+    
+    @State var offset: CGSize = .zero
+    
+    public func makeBody(configuration: Self.Configuration) -> some View {
+        let theme = ThemeNeumorphism(mode: self.themeMode)
+        
+        return ZStack {
+            RoundedRectangle(cornerRadius: 10)
+                .fill(theme.colorPalette.background)
+                .frame(width: 160, height: 48)
+                .overlay(
+                    RoundedRectangle(cornerRadius: 10)
+                        .stroke(theme.colorPalette.intenseDropShadow, lineWidth: 4)
+                        .blur(radius: 4)
+                        .mask(RoundedRectangle(cornerRadius: 10).fill(LinearGradient.init(gradient: Gradient(colors: [Color.black, Color.clear]), startPoint: .top, endPoint: .bottom)))
+                )
+                .overlay(
+                    RoundedRectangle(cornerRadius: 10)
+                        .stroke(theme.colorPalette.intenseReflection, lineWidth: 4)
+                        .offset(y: -4)
+                        .blur(radius: 4)
+                        .mask(RoundedRectangle(cornerRadius: 10).fill(LinearGradient.init(gradient: Gradient(colors: [Color.black, Color.clear]), startPoint: .bottom, endPoint: .top)))
+                )
+            
+            HStack {
+                Spacer().frame(width: 0)
+                
+                RoundedRectangle(cornerRadius: 10)
+                    .fill(theme.colorPalette.background)
+                    .offset(offset)
+                    .frame(width: 80)
+                    .shadow(color: theme.colorPalette.reflection, radius: 5, x: -5, y: -5)
+                    .shadow(color: theme.colorPalette.dropShadow, radius: 5, x: 5, y: 5)
+                    .onAppear {
+                        self.offset = configuration.isOn ? CGSize(width: 40, height: 0) : CGSize(width: -40, height: 0)
+                    }
+                
+                Spacer().frame(width: 0)
+            }
+            .frame(width: 160, height: 48)
+            
+            HStack {
+                Text("Light")
+                    .font(.headline).bold().foregroundColor(theme.colorPalette.textColor)
+                    .padding(16)
+                    .contentShape(RoundedRectangle(cornerRadius: 10))
+                    .onTapGesture {
+                        configuration.isOn = false
+                        
+                        withAnimation {
+                            self.offset = CGSize(width: -40, height: 0)
+                        }
+                    }
+                
+                Spacer()
+                
+                Text("Dark")
+                    .font(.headline).bold().foregroundColor(theme.colorPalette.textColor)
+                    .padding(16)
+                    .contentShape(RoundedRectangle(cornerRadius: 10))
+                    .onTapGesture {
+                        configuration.isOn = true
+                        
+                        withAnimation {
+                            self.offset = CGSize(width: 40, height: 0)
+                        }
+                    }
+            }
+            .frame(width: 160, height: 48)
+        }
     }
 }
 

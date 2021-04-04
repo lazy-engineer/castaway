@@ -55,12 +55,14 @@ public class ThemeNeumorphism: ObservableObject {
         public private(set) var pillButtonStyle: NeumorphismPillStyle
         public private(set) var underlineButtonStyle: NeumorphismUnderlineStyle
         public private(set) var roundToggleButtonStyle: NeumorphismCircleToggleStyle
+        public private(set) var textToggleStyle: NeumorphismTextToggleStyle
         
         public init(_ themeMode: ThemeMode = .dark) {
             self.roundButtonStyle = NeumorphismCircleButtonStyle(themeMode: themeMode)
             self.pillButtonStyle = NeumorphismPillStyle(themeMode: themeMode)
             self.underlineButtonStyle = NeumorphismUnderlineStyle(themeMode: themeMode)
             self.roundToggleButtonStyle = NeumorphismCircleToggleStyle(themeMode: themeMode)
+            self.textToggleStyle = NeumorphismTextToggleStyle(themeMode: themeMode)
         }
     }
     
