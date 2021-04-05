@@ -33,6 +33,9 @@ struct PodcastScreen: View {
                     if showToolbarHeader {
                         ToolbarHeaderView(feedImage: viewModel.feedImage, feedTitle: viewModel.feedTitle)
                             .environmentObject(theme)
+                            .transition(.move(edge: .top))
+                            .animation(.easeInOut(duration: 0.5))
+                            .zIndex(1.0)
                     }
                 })
             }
