@@ -4,7 +4,7 @@ struct OnBoardingScreen: View {
     
     @EnvironmentObject var theme: ThemeNeumorphism
     
-    @State var isDarkTheme: Bool = false
+    @State var isDarkTheme: Bool
     @State var imageOffset: CGSize = .zero
     
     let onFinished: (Bool) -> Void
@@ -132,7 +132,7 @@ struct OnBoardingScreen: View {
 #if DEBUG
 struct OnBoardingScreen_Previews: PreviewProvider {
     static var previews: some View {
-        OnBoardingScreen() { _ in }.environmentObject(ThemeNeumorphism())
+        OnBoardingScreen(isDarkTheme: true) { _ in }.environmentObject(ThemeNeumorphism())
     }
 }
 #endif

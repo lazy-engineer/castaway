@@ -14,11 +14,20 @@ struct StartScreen : View {
                 .environmentObject(theme)
             
             if showOnboarding {
-                OnBoardingScreen() { finished in
+                OnBoardingScreen(isDarkTheme: isDarkTheme()) { finished in
                     showOnboarding = !finished
                 }
                 .environmentObject(theme)
             }
+        }
+    }
+    
+    private func isDarkTheme() -> Bool {
+        switch theme.mode {
+        case .dark:
+            return true
+        case .light:
+            return false
         }
     }
 }
