@@ -128,7 +128,13 @@ class CastawayViewModel: ObservableObject {
     }
     
     private func prepareEpisodes(_ episodes: [Episode]) {
-        player.prepare(media: episodes.map{ episode in episode.toMediaData() })
+        player.prepare {
+            episodes.map { episode in
+                guard episode.image == nil else { return episode.toMediaData() }
+                guard let image = feedImage else { return episode.toMediaData() }
+                return episode.copy(image: image).toMediaData()
+            }
+        }
     }
     
     func episodeClicked(episode: Episode, playState: Bool) {
