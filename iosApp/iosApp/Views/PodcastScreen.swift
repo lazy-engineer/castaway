@@ -44,8 +44,10 @@ struct PodcastScreen: View {
     }
 }
 
+#if DEBUG
 struct PodcastScreen_Previews: PreviewProvider {
     static var previews: some View {
         PodcastScreen()
     }
 }
+#endif

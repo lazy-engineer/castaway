@@ -47,9 +47,11 @@ struct PlaybackProgressView: View {
     }
 }
 
+#if DEBUG
 struct PlaybackProgressView_Previews: PreviewProvider {
     static var previews: some View {
         PlaybackProgressView(playbackProgress: 0.25)
             .environmentObject(ThemeNeumorphism())
     }
 }
+#endif

@@ -63,9 +63,12 @@ struct ToolbarHeaderView: View {
         }
     }
 }
+
+#if DEBUG
 struct ToolbarHeaderView_Previews: PreviewProvider {
     static var previews: some View {
         ToolbarHeaderView(feedImage: nil, feedTitle: "Awesome Podcast")
             .environmentObject(ThemeNeumorphism(mode: .light))
     }
 }
+#endif

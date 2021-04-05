@@ -99,8 +99,10 @@ struct PlaybackSliderView: View {
     }
 }
 
+#if DEBUG
 struct PlaybackSliderView_Previews: PreviewProvider {
     static var previews: some View {
         PlaybackSliderView()
     }
 }
+#endif

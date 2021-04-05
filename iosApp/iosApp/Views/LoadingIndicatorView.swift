@@ -21,8 +21,10 @@ struct LoadingIndicatorView : View {
     }
 }
 
+#if DEBUG
 struct LoadingIndicatorView_Previews: PreviewProvider {
     static var previews: some View {
         LoadingIndicatorView()
     }
 }
+#endif

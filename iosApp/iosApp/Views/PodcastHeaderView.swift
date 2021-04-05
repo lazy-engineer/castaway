@@ -96,9 +96,11 @@ struct PodcastHeaderView: View {
     }
 }
 
+#if DEBUG
 struct PodcastHeaderView_Previews: PreviewProvider {
     static var previews: some View {
         PodcastHeaderView(feedImage: nil, feedTitle: "Awesome Podcast") { _ in }
             .environmentObject(ThemeNeumorphism(mode: .light))
     }
 }
+#endif
