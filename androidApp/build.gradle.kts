@@ -5,11 +5,23 @@ plugins {
   id("com.android.application")
   kotlin("android")
   kotlin("android.extensions")
+  kotlin("kapt")
 }
 
 dependencies {
   implementation(project(":shared"))
   implementation(project(":castawayplayer"))
+
+  add(org.jetbrains.kotlin.gradle.plugin.PLUGIN_CLASSPATH_CONFIGURATION_NAME, Library.composeCompiler)
+  implementation(Library.composeRuntime)
+  implementation(Library.composeUi)
+  implementation(Library.composeUiTooling)
+  implementation(Library.composeFoundation)
+  implementation(Library.composeMaterial)
+  implementation(Library.composeMaterialIconsCore)
+  implementation(Library.composeMaterialIconsExtended)
+  implementation(Library.composeActivity)
+  implementation(Library.composeViewModel)
 
   implementation(Library.viewmodelKtx)
   implementation(Library.activityKtx)
@@ -51,6 +63,7 @@ android {
 
   kotlinOptions {
 	jvmTarget = "1.8"
+	useIR = true
   }
 
   buildFeatures {

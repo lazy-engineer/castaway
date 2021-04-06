@@ -14,10 +14,10 @@ object App {
 
 object Version {
 
-  const val kotlin = "1.4.21"
-  const val gradle = "4.1.1"
+  const val kotlin = "1.4.31"
+  const val gradle = "4.1.2"
 
-  const val appcompat = "1.1.0"
+  const val appcompat = "1.3.0-rc01"
   const val constraintlayout = "2.0.4"
   const val material = "1.2.1"
   const val media = "1.2.1"
@@ -25,6 +25,7 @@ object Version {
   const val lifecycleExtensions = "2.2.0"
   const val ktxActivity = "1.1.0"
   const val ktxFragment = "1.2.5"
+  const val compose = "1.0.0-beta03"
 
   const val ktxCore = "1.3.2"
   const val coroutines = "1.4.3-native-mt"
@@ -87,6 +88,18 @@ object Library {
   const val stately = "co.touchlab:stately-common:${Version.stately}"
   const val isostate = "co.touchlab:stately-isolate:${Version.isostate}"
   const val isostateCollection = "co.touchlab:stately-iso-collections:${Version.isostate}"
+
+  const val composeCompiler = "androidx.compose.compiler:compiler:${Version.compose}"
+  const val composeRuntime = "androidx.compose.runtime:runtime:${Version.compose}"
+  const val composeUi = "androidx.compose.ui:ui:${Version.compose}"
+  const val composeUiTooling = "androidx.compose.ui:ui-tooling:${Version.compose}"
+  const val composeFoundation = "androidx.compose.foundation:foundation:${Version.compose}"
+  const val composeMaterial = "androidx.compose.material:material:${Version.compose}"
+  const val composeMaterialIconsCore = "androidx.compose.material:material-icons-core:${Version.compose}"
+  const val composeMaterialIconsExtended = "androidx.compose.material:material-icons-extended:${Version.compose}"
+  const val composeActivity = "androidx.activity:activity-compose:1.3.0-alpha03"
+  const val composeViewModel = "androidx.lifecycle:lifecycle-viewmodel-compose:1.0.0-alpha02"
+  const val composeUiTests = "androidx.compose.ui:ui-test-junit4:${Version.compose}"
 
   const val coroutines = "org.jetbrains.kotlinx:kotlinx-coroutines-core:${Version.coroutines}"
   const val coroutinesAndroid = "org.jetbrains.kotlinx:kotlinx-coroutines-android:${Version.coroutines}"
