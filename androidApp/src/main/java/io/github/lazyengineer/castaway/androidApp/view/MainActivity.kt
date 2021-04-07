@@ -2,11 +2,14 @@ package io.github.lazyengineer.castaway.androidApp.view
 
 import android.os.Bundle
 import android.widget.Toast
+import androidx.activity.compose.setContent
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.commit
 import io.github.lazyengineer.castaway.androidApp.R.id
 import io.github.lazyengineer.castaway.androidApp.databinding.ActivityMainBinding
+import io.github.lazyengineer.castaway.androidApp.view.screen.StartScreen
+import io.github.lazyengineer.castaway.androidApp.view.style.ThemeNeumorphism
 import io.github.lazyengineer.castaway.androidApp.viewmodel.MainViewModel
 import io.github.lazyengineer.castaway.shared.Greeting
 import io.github.lazyengineer.castaway.shared.entity.FeedData
@@ -23,7 +26,11 @@ class MainActivity : AppCompatActivity() {
 
   override fun onCreate(savedInstanceState: Bundle?) {
 	super.onCreate(savedInstanceState)
-	setContentView(binding.root)
+	setContent {
+	  ThemeNeumorphism {
+		StartScreen()
+	  }
+	}
 
 	binding.bottomNav.setOnNavigationItemSelectedListener { item ->
 	  when (item.itemId) {
@@ -57,7 +64,7 @@ class MainActivity : AppCompatActivity() {
 	  showFeed(feed)
 	})
 
-	initFragment()
+//	initFragment()
   }
 
   private fun initFragment() {
