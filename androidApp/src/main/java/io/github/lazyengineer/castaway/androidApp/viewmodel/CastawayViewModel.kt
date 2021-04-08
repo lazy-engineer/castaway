@@ -24,7 +24,7 @@ import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
-class MainViewModel constructor(
+class CastawayViewModel constructor(
   private val mediaServiceClient: MediaServiceClient,
   private val getStoredFeedUseCase: GetStoredFeedUseCase,
   private val storedEpisodeFlowableUseCase: StoredEpisodeFlowableUseCase,
@@ -38,6 +38,7 @@ class MainViewModel constructor(
 	) {
 	  super.onChildrenLoaded(parentId, children)
 	  viewModelScope.launch {
+		Log.d("CastawayViewModel", "load Feed")
 		loadFeed(TEST_URL)
 	  }
 	  /**
@@ -72,6 +73,7 @@ class MainViewModel constructor(
 	get() = _navigateToFragment
 
   init {
+	fetchFeed()
 	subscribeToMediaService()
 	collectPlaybackState()
 	collectPlaybackPositions()
@@ -151,6 +153,7 @@ class MainViewModel constructor(
 
   fun fetchFeed() {
 	viewModelScope.launch {
+	  Log.d("CastawayViewModel", "fetch Feed")
 	  fetchFeedFromUrl(TEST_URL)
 	}
   }
@@ -172,9 +175,13 @@ class MainViewModel constructor(
 	  storeAndGetFeedUseCase(url).subscribe(
 		this,
 		onSuccess = {
+		  Log.d("CastawayViewModel", "fetch onSuccess: ${it.info}")
+
 		  prepareMediaData(it.episodes)
 		},
-		onError = {},
+		onError = {
+		  Log.d("CastawayViewModel", "fetch onError")
+		},
 	  )
 	}
   }
@@ -275,6 +282,6 @@ class MainViewModel constructor(
 
   companion object {
 
-	const val TEST_URL = "https://feeds.feedburner.com/blogspot/androiddevelopersbackstage"
+	const val TEST_URL = "https://atp.fm/rss"
   }
 }

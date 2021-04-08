@@ -10,7 +10,7 @@ import io.github.lazyengineer.castaway.androidApp.R.id
 import io.github.lazyengineer.castaway.androidApp.databinding.ActivityMainBinding
 import io.github.lazyengineer.castaway.androidApp.view.screen.StartScreen
 import io.github.lazyengineer.castaway.androidApp.view.style.ThemeNeumorphism
-import io.github.lazyengineer.castaway.androidApp.viewmodel.MainViewModel
+import io.github.lazyengineer.castaway.androidApp.viewmodel.CastawayViewModel
 import io.github.lazyengineer.castaway.shared.Greeting
 import io.github.lazyengineer.castaway.shared.entity.FeedData
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -22,13 +22,13 @@ fun greet(): String {
 class MainActivity : AppCompatActivity() {
 
   private val binding: ActivityMainBinding by lazy { ActivityMainBinding.inflate(layoutInflater) }
-  private val viewModel: MainViewModel by viewModel()
+  private val viewModel: CastawayViewModel by viewModel()
 
   override fun onCreate(savedInstanceState: Bundle?) {
 	super.onCreate(savedInstanceState)
 	setContent {
 	  ThemeNeumorphism {
-		StartScreen()
+		StartScreen(viewModel)
 	  }
 	}
 

@@ -10,13 +10,13 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import io.github.lazyengineer.castaway.androidApp.databinding.FragmentFeedEpisodesBinding
 import io.github.lazyengineer.castaway.androidApp.view.ChannelItemAdapter.OnItemClickListener
 import io.github.lazyengineer.castaway.androidApp.view.ChannelItemAdapter.ViewHolder
-import io.github.lazyengineer.castaway.androidApp.viewmodel.MainViewModel
+import io.github.lazyengineer.castaway.androidApp.viewmodel.CastawayViewModel
 import io.github.lazyengineer.castaway.shared.entity.Episode
 import io.github.lazyengineer.castaway.shared.entity.FeedData
 
 class FeedEpisodesFragment : Fragment(), OnItemClickListener {
 
-  private val viewModel: MainViewModel by activityViewModels()
+  private val viewModel: CastawayViewModel by activityViewModels()
   private val binding: FragmentFeedEpisodesBinding by lazy { FragmentFeedEpisodesBinding.inflate(layoutInflater) }
 
   private lateinit var episodesAdapter: ChannelItemAdapter

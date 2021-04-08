@@ -3,7 +3,7 @@ package io.github.lazyengineer.castaway.androidApp.di
 import android.content.ComponentName
 import coil.ImageLoader
 import io.github.lazyengineer.castaway.androidApp.usecase.StoreAndGetFeedUseCase
-import io.github.lazyengineer.castaway.androidApp.viewmodel.MainViewModel
+import io.github.lazyengineer.castaway.androidApp.viewmodel.CastawayViewModel
 import io.github.lazyengineer.castaway.shared.repository.FeedRepository
 import io.github.lazyengineer.castawayplayer.MediaServiceClient
 import io.github.lazyengineer.castawayplayer.config.MediaServiceConfig
@@ -33,5 +33,5 @@ val appModule = module {
 	StoreAndGetFeedUseCase(get() as FeedRepository)
   }
 
-  viewModel { MainViewModel(get(), get(), get(), get()) }
+  viewModel { CastawayViewModel(get(), get(), get(), get()) }
 }

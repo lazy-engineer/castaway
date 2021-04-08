@@ -15,7 +15,7 @@ import androidx.fragment.app.activityViewModels
 import coil.load
 import io.github.lazyengineer.castaway.androidApp.R.drawable
 import io.github.lazyengineer.castaway.androidApp.databinding.FragmentMediaPlayerBinding
-import io.github.lazyengineer.castaway.androidApp.viewmodel.MainViewModel
+import io.github.lazyengineer.castaway.androidApp.viewmodel.CastawayViewModel
 import io.github.lazyengineer.castaway.shared.entity.Episode
 import io.github.lazyengineer.castaway.shared.entity.PlaybackPosition
 import java.util.concurrent.TimeUnit.MILLISECONDS
@@ -23,7 +23,7 @@ import java.util.concurrent.TimeUnit.MINUTES
 
 class MediaPlayerFragment : Fragment() {
 
-  private val viewModel: MainViewModel by activityViewModels()
+  private val viewModel: CastawayViewModel by activityViewModels()
 
   private val binding: FragmentMediaPlayerBinding by lazy {
 	FragmentMediaPlayerBinding.inflate(
