@@ -4,8 +4,6 @@ import android.support.v4.media.MediaBrowserCompat.MediaItem
 import android.support.v4.media.MediaBrowserCompat.SubscriptionCallback
 import android.util.Log
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import io.github.lazyengineer.castaway.androidApp.usecase.StoreAndGetFeedUseCase
@@ -20,6 +18,8 @@ import io.github.lazyengineer.castawayplayer.extention.isPlaying
 import io.github.lazyengineer.castawayplayer.service.Constants.MEDIA_ROOT_ID
 import io.github.lazyengineer.castawayplayer.source.MediaData
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -52,28 +52,31 @@ class CastawayViewModel constructor(
 	}
   }
 
-  private val _feed = MutableLiveData<FeedData>()
-  val feed: LiveData<FeedData>
+  private val _feed = MutableStateFlow<FeedData?>(null)
+  val feed: StateFlow<FeedData?>
 	get() = _feed
 
-  private val _updatedEpisodes = MutableLiveData<List<Episode>>()
-  val updatedEpisodes: LiveData<List<Episode>>
+  private val _updatedEpisodes = MutableStateFlow(emptyList<Episode>())
+  val updatedEpisodes: StateFlow<List<Episode>>
 	get() = _updatedEpisodes
 
-  private val _currentEpisode = MutableLiveData<Episode>()
-  val currentEpisode: LiveData<Episode>
+  private val _currentEpisode = MutableStateFlow<Episode?>(null)
+  val currentEpisode: StateFlow<Episode?>
 	get() = _currentEpisode
 
-  private val _playing = MutableLiveData<Boolean>()
-  val playing: LiveData<Boolean>
+  private val _playing = MutableStateFlow(false)
+  val playing: StateFlow<Boolean>
 	get() = _playing
 
-  private val _navigateToFragment = MutableLiveData<Fragment>()
-  val navigateToFragment: LiveData<Fragment>
+  private val _navigateToFragment = MutableStateFlow<Fragment?>(null)
+  val navigateToFragment: StateFlow<Fragment?>
 	get() = _navigateToFragment
 
   init {
-	fetchFeed()
+	viewModelScope.launch {
+	  loadFeed(TEST_URL)
+	}
+
 	subscribeToMediaService()
 	collectPlaybackState()
 	collectPlaybackPositions()
@@ -84,7 +87,7 @@ class CastawayViewModel constructor(
 	viewModelScope.launch {
 	  mediaServiceClient.playbackState.collect {
 		currentEpisode.value?.let { episode ->
-		  _playing.postValue(playingState(episode.id))
+		  _playing.value = playingState(episode.id)
 		}
 
 		//		feed.value?.let { feedData ->
@@ -111,7 +114,7 @@ class CastawayViewModel constructor(
 		  mediaData.mediaId == episode.id
 		}
 
-		feedEpisode?.let { _currentEpisode.postValue(it) }
+		feedEpisode?.let { _currentEpisode.value = it }
 	  }
 	}
   }
@@ -130,9 +133,7 @@ class CastawayViewModel constructor(
 	val episode = this.nowPlayingEpisode()
 
 	episode?.let {
-	  _updatedEpisodes.postValue(
-		listOf(it.withUpdatedPosition(position))
-	  )
+	  _updatedEpisodes.value = listOf(it.withUpdatedPosition(position))
 	}
   }
 
@@ -160,12 +161,16 @@ class CastawayViewModel constructor(
 
   private suspend fun loadFeed(url: String) {
 	withContext(Dispatchers.IO) {
+	  Log.d("CastawayViewModel", "load Feed")
 	  getStoredFeedUseCase(url).subscribe(
 		this,
 		onSuccess = {
-		  _feed.postValue(it)
+		  Log.d("CastawayViewModel", "load Feed onSuccess")
+		  _feed.value = it
 		},
-		onError = {},
+		onError = {
+		  fetchFeed()
+		},
 	  )
 	}
   }
