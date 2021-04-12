@@ -31,6 +31,7 @@ object Version {
   const val coroutines = "1.4.3-native-mt"
   const val exoplayer = "2.12.0"
   const val coil = "1.1.0"
+  const val coilCompose = "0.6.2"
   const val gson = "2.8.6"
   const val koin = "3.0.0-alpha-4"
   const val ktor = "1.5.0"
@@ -76,6 +77,7 @@ object Library {
   const val exoplayerUI = "com.google.android.exoplayer:exoplayer-ui:${Version.exoplayer}"
 
   const val coil = "io.coil-kt:coil:${Version.coil}"
+  const val coilCompose = "com.google.accompanist:accompanist-coil:${Version.coilCompose}"
   const val gson = "com.google.code.gson:gson:${Version.gson}"
   const val ktor = "io.ktor:ktor-client-core:${Version.ktor}"
   const val ktorAndroid = "io.ktor:ktor-client-android:${Version.ktor}"

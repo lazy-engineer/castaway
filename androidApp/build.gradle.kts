@@ -36,6 +36,7 @@ dependencies {
   implementation(Library.koinViewmodel)
 
   implementation(Library.coil)
+  implementation(Library.coilCompose)
   implementation(Library.gson)
   implementation(Library.feedparser)
 }
