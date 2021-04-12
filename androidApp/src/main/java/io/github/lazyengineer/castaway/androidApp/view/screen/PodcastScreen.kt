@@ -1,5 +1,6 @@
 package io.github.lazyengineer.castaway.androidApp.view.screen
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.lazy.LazyColumn
@@ -30,7 +31,7 @@ fun PodcastScreen(modifier: Modifier = Modifier, viewModel: CastawayViewModel) {
 	  }
 
 	  items(feed.value?.episodes ?: emptyList()) { item ->
-		EpisodeRowView(item.title)
+		EpisodeRowView(modifier = modifier.clickable { }, title = item.title) {}
 	  }
 	}
   }

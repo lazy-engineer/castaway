@@ -1,5 +1,6 @@
 package io.github.lazyengineer.castaway.androidApp.view
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -10,15 +11,25 @@ import androidx.compose.material.Divider
 import androidx.compose.material.Icon
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons.Filled
+import androidx.compose.material.icons.filled.Pause
 import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import io.github.lazyengineer.castaway.androidApp.view.EpisodeRowState.EpisodeLoading
+import io.github.lazyengineer.castaway.androidApp.view.EpisodeRowState.EpisodePaused
+import io.github.lazyengineer.castaway.androidApp.view.EpisodeRowState.EpisodePlayed
+import io.github.lazyengineer.castaway.androidApp.view.EpisodeRowState.EpisodePlaying
 
 @Composable
-fun EpisodeRowView(title: String) {
-  Column {
+fun EpisodeRowView(
+  modifier: Modifier = Modifier,
+  state: EpisodeRowState = EpisodePaused,
+  title: String,
+  onPlayPause: (Boolean) -> Unit
+) {
+  Column(modifier = modifier) {
 	Row(
 	  modifier = Modifier.height(70.dp).fillMaxSize().padding(8.dp),
 	  horizontalArrangement = Arrangement.SpaceBetween,
@@ -26,8 +37,22 @@ fun EpisodeRowView(title: String) {
 	) {
 	  Text(title, modifier = Modifier.weight(5f))
 
-	  Icon(Filled.PlayArrow, "play", modifier = Modifier.padding(8.dp).weight(1f))
+	  val playPauseImage = when (state) {
+		EpisodePaused -> Filled.PlayArrow
+		EpisodePlaying -> Filled.Pause
+		EpisodeLoading -> Filled.PlayArrow
+		EpisodePlayed -> Filled.PlayArrow
+	  }
+
+	  Icon(playPauseImage, "play/pause", modifier = Modifier.padding(8.dp).weight(1f).clickable { onPlayPause(true) })
 	}
 	Divider()
   }
+}
+
+sealed class EpisodeRowState {
+  object EpisodePaused : EpisodeRowState()
+  object EpisodePlaying : EpisodeRowState()
+  object EpisodeLoading : EpisodeRowState()
+  object EpisodePlayed : EpisodeRowState()
 }
