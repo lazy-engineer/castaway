@@ -26,6 +26,7 @@ object Version {
   const val ktxActivity = "1.1.0"
   const val ktxFragment = "1.2.5"
   const val compose = "1.0.0-beta03"
+  const val composeNavigation = "1.0.0-alpha09"
 
   const val ktxCore = "1.3.2"
   const val coroutines = "1.4.3-native-mt"
@@ -101,6 +102,7 @@ object Library {
   const val composeMaterialIconsExtended = "androidx.compose.material:material-icons-extended:${Version.compose}"
   const val composeActivity = "androidx.activity:activity-compose:1.3.0-alpha03"
   const val composeViewModel = "androidx.lifecycle:lifecycle-viewmodel-compose:1.0.0-alpha02"
+  const val composeNavigation = "androidx.navigation:navigation-compose:${Version.composeNavigation}"
   const val composeUiTests = "androidx.compose.ui:ui-test-junit4:${Version.compose}"
 
   const val coroutines = "org.jetbrains.kotlinx:kotlinx-coroutines-core:${Version.coroutines}"

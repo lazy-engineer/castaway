@@ -14,9 +14,10 @@ import androidx.compose.ui.unit.dp
 import io.github.lazyengineer.castaway.androidApp.view.EpisodeRowView
 import io.github.lazyengineer.castaway.androidApp.view.PodcastHeaderView
 import io.github.lazyengineer.castaway.androidApp.viewmodel.CastawayViewModel
+import io.github.lazyengineer.castaway.shared.entity.Episode
 
 @Composable
-fun PodcastScreen(modifier: Modifier = Modifier, viewModel: CastawayViewModel) {
+fun PodcastScreen(modifier: Modifier = Modifier, viewModel: CastawayViewModel, episodeSelected: (episode: Episode) -> Unit) {
 
   val feed = viewModel.feed.collectAsState()
 
@@ -36,7 +37,7 @@ fun PodcastScreen(modifier: Modifier = Modifier, viewModel: CastawayViewModel) {
 
 	  items(feed.value?.episodes ?: emptyList()) { item ->
 		EpisodeRowView(modifier = modifier.clickable {
-		  viewModel.episodeClicked(item)
+		  episodeSelected(item)
 		}, title = item.title) {
 		  viewModel.mediaItemClicked(item.id)
 		}

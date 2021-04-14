@@ -22,6 +22,7 @@ dependencies {
   implementation(Library.composeMaterialIconsExtended)
   implementation(Library.composeActivity)
   implementation(Library.composeViewModel)
+  implementation(Library.composeNavigation)
 
   implementation(Library.viewmodelKtx)
   implementation(Library.activityKtx)
