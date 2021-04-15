@@ -15,7 +15,9 @@ fun StartScreen(viewModel: CastawayViewModel) {
   NavHost(navController, startDestination = Screen.OnBoarding.route) {
 	composable(Screen.OnBoarding.route) {
 	  OnBoardingScreen {
-		navController.navigate(Screen.Podcast.route)
+		navController.navigate(Screen.Podcast.route) {
+		  popUpTo(navController.graph.startDestination) { inclusive = true }
+		}
 	  }
 	}
 	composable(Screen.Podcast.route) {
