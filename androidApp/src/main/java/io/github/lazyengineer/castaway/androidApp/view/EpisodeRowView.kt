@@ -17,15 +17,15 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import io.github.lazyengineer.castaway.androidApp.view.EpisodeRowState.EpisodeLoading
-import io.github.lazyengineer.castaway.androidApp.view.EpisodeRowState.EpisodePaused
-import io.github.lazyengineer.castaway.androidApp.view.EpisodeRowState.EpisodePlayed
-import io.github.lazyengineer.castaway.androidApp.view.EpisodeRowState.EpisodePlaying
+import io.github.lazyengineer.castaway.androidApp.view.EpisodeState.EpisodeLoading
+import io.github.lazyengineer.castaway.androidApp.view.EpisodeState.EpisodePaused
+import io.github.lazyengineer.castaway.androidApp.view.EpisodeState.EpisodePlayed
+import io.github.lazyengineer.castaway.androidApp.view.EpisodeState.EpisodePlaying
 
 @Composable
 fun EpisodeRowView(
   modifier: Modifier = Modifier,
-  state: EpisodeRowState = EpisodePaused,
+  state: EpisodeState = EpisodePaused,
   title: String,
   onPlayPause: (Boolean) -> Unit
 ) {
@@ -50,9 +50,9 @@ fun EpisodeRowView(
   }
 }
 
-sealed class EpisodeRowState {
-  object EpisodePaused : EpisodeRowState()
-  object EpisodePlaying : EpisodeRowState()
-  object EpisodeLoading : EpisodeRowState()
-  object EpisodePlayed : EpisodeRowState()
+sealed class EpisodeState {
+  object EpisodePaused : EpisodeState()
+  object EpisodePlaying : EpisodeState()
+  object EpisodeLoading : EpisodeState()
+  object EpisodePlayed : EpisodeState()
 }
