@@ -37,6 +37,7 @@ fun PodcastScreen(modifier: Modifier = Modifier, viewModel: CastawayViewModel, e
 
 	  items(feed.value?.episodes ?: emptyList()) { item ->
 		EpisodeRowView(modifier = modifier.clickable {
+		  viewModel.episodeClicked(item)
 		  episodeSelected(item)
 		}, title = item.title) {
 		  viewModel.mediaItemClicked(item.id)

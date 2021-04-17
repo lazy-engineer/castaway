@@ -56,10 +56,6 @@ class CastawayViewModel constructor(
   val feed: StateFlow<FeedData?>
 	get() = _feed
 
-  private val _updatedEpisodes = MutableStateFlow(emptyList<Episode>())
-  val updatedEpisodes: StateFlow<List<Episode>>
-	get() = _updatedEpisodes
-
   private val _currentEpisode = MutableStateFlow<Episode?>(null)
   val currentEpisode: StateFlow<Episode?>
 	get() = _currentEpisode
@@ -68,19 +64,35 @@ class CastawayViewModel constructor(
   val playing: StateFlow<Boolean>
 	get() = _playing
 
+  private val _playbackPosition = MutableStateFlow(0L)
+  val playbackPosition: StateFlow<Long>
+	get() = _playbackPosition
+
+  private val _playbackDuration = MutableStateFlow(1L)
+  val playbackDuration: StateFlow<Long>
+	get() = _playbackDuration
+
+  private val _playbackSpeed = MutableStateFlow(1f)
+  val playbackSpeed: StateFlow<Float>
+	get() = _playbackSpeed
+
+  private val _updatedEpisodes = MutableStateFlow(emptyList<Episode>())
+  val updatedEpisodes: StateFlow<List<Episode>>
+	get() = _updatedEpisodes
+
   private val _navigateToFragment = MutableStateFlow<Fragment?>(null)
   val navigateToFragment: StateFlow<Fragment?>
 	get() = _navigateToFragment
 
   init {
-	viewModelScope.launch {
-	  loadFeed(TEST_URL)
-	}
-
 	subscribeToMediaService()
 	collectPlaybackState()
 	collectPlaybackPositions()
 	collectNowPlaying()
+
+	viewModelScope.launch {
+	  loadFeed(TEST_URL)
+	}
   }
 
   private fun collectPlaybackState() {
@@ -102,6 +114,7 @@ class CastawayViewModel constructor(
   private fun collectPlaybackPositions() {
 	viewModelScope.launch {
 	  mediaServiceClient.playbackPosition.collect { position ->
+		_playbackPosition.value = position
 		feed.value?.postCurrentWithUpdatedPosition(position)
 	  }
 	}
@@ -114,7 +127,10 @@ class CastawayViewModel constructor(
 		  mediaData.mediaId == episode.id
 		}
 
-		feedEpisode?.let { _currentEpisode.value = it }
+		feedEpisode?.let {
+		  _currentEpisode.value = it
+		  mediaData.duration?.let { duration -> _playbackDuration.value = duration }
+		}
 	  }
 	}
   }
