@@ -14,7 +14,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
 
 @Composable
-fun PlaybackProgressView(modifier: Modifier) {
+fun PlaybackProgressView(modifier: Modifier, @FloatRange(from = 0.0, to = 1.0) progress: Float) {
   Box(
 	modifier = modifier
   ) {
