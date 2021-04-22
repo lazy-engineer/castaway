@@ -1,8 +1,7 @@
 CREATE TABLE podcast(
 url TEXT NOT NULL PRIMARY KEY,
 name TEXT NOT NULL,
-imageUrl TEXT,
-image BLOB
+imageUrl TEXT
 );
 
 insertPodcast:

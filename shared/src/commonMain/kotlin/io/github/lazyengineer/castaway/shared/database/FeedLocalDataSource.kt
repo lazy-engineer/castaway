@@ -14,8 +14,6 @@ import io.github.lazyengineer.castaway.shared.entity.FeedData
 import io.github.lazyengineer.castaway.shared.entity.FeedInfo
 import io.github.lazyengineer.castaway.shared.ext.toEpisode
 import io.github.lazyengineer.castaway.shared.ext.toEpisodeEntity
-import io.github.lazyengineer.castaway.shared.fromNativeImage
-import io.github.lazyengineer.castaway.shared.toNativeImage
 import iogithublazyengineercastawaydb.EpisodeEntity
 import iogithublazyengineercastawaydb.Podcast
 import kotlinx.coroutines.CoroutineDispatcher
@@ -40,7 +38,6 @@ class FeedLocalDataSource constructor(private val database: CastawayDatabase, pr
 			url = podcast.url,
 			title = podcast.name,
 			imageUrl = podcast.imageUrl,
-			image = podcast.image?.toNativeImage(),
 		  )
 		)
 	  } catch (e: NullPointerException) {
@@ -64,7 +61,6 @@ class FeedLocalDataSource constructor(private val database: CastawayDatabase, pr
 			  url = podcast.url,
 			  title = podcast.name,
 			  imageUrl = podcast.imageUrl,
-			  image = podcast.image?.toNativeImage(),
 			),
 			episodes = episodes
 		  )
@@ -92,7 +88,7 @@ class FeedLocalDataSource constructor(private val database: CastawayDatabase, pr
   override fun episodeFlow(episodeIds: List<String>): Flow<List<Episode>> {
 	return database.episodeQueries.selectByIds(
 	  episodeIds,
-	  mapper = { id, title, subTitle, description, audioUrl, imageUrl, image, author, playbackPosition, episode, podcastUrl ->
+	  mapper = { id, title, subTitle, description, audioUrl, imageUrl, author, playbackPosition, episode, podcastUrl ->
 		EpisodeEntity(
 		  id = id,
 		  title = title,
@@ -100,7 +96,6 @@ class FeedLocalDataSource constructor(private val database: CastawayDatabase, pr
 		  description = description,
 		  audioUrl = audioUrl,
 		  imageUrl = imageUrl,
-		  image = image,
 		  author = author,
 		  playbackPosition = playbackPosition,
 		  episode = episode,
@@ -114,7 +109,7 @@ class FeedLocalDataSource constructor(private val database: CastawayDatabase, pr
   override fun episodeFlow(podcastUrl: String): Flow<List<Episode>> {
 	return database.episodeQueries.selectByPodcast(
 	  podcastUrl,
-	  mapper = { id, title, subTitle, description, audioUrl, imageUrl, image, author, playbackPosition, episode, podcastUrl ->
+	  mapper = { id, title, subTitle, description, audioUrl, imageUrl, author, playbackPosition, episode, podcastUrl ->
 		EpisodeEntity(
 		  id = id,
 		  title = title,
@@ -122,7 +117,6 @@ class FeedLocalDataSource constructor(private val database: CastawayDatabase, pr
 		  description = description,
 		  audioUrl = audioUrl,
 		  imageUrl = imageUrl,
-		  image = image,
 		  author = author,
 		  playbackPosition = playbackPosition,
 		  episode = episode,
@@ -157,7 +151,6 @@ class FeedLocalDataSource constructor(private val database: CastawayDatabase, pr
 			url = info.url,
 			name = info.title,
 			imageUrl = info.imageUrl,
-			image = info.image?.fromNativeImage()
 		  )
 		)
 

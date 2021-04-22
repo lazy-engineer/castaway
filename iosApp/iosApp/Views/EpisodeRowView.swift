@@ -66,7 +66,7 @@ struct EpisodeRowView_Previews: PreviewProvider {
     }
 }
 
-let dummy_episode_1 = Episode(id: "String", title: "ADB 148: [Constraint|Motion][Layout|Editor] Tooooooooo Long Title. Wow even longer", subTitle: "String?", description: "String?", audioUrl: "String", imageUrl: "String?", image: nil, author: "String?", playbackPosition: PlaybackPosition(position: 0, duration: 1), episode: 1, podcastUrl: "String")
+let dummy_episode_1 = Episode(id: "String", title: "ADB 148: [Constraint|Motion][Layout|Editor] Tooooooooo Long Title. Wow even longer", subTitle: "String?", description: "String?", audioUrl: "String", imageUrl: "String?", author: "String?", playbackPosition: PlaybackPosition(position: 0, duration: 1), episode: 1, podcastUrl: "String")
 
-let dummy_episode_2 = Episode(id: "String", title: "Episode 154: It's a Wrap!", subTitle: "String?", description: "String?", audioUrl: "String", imageUrl: "String?", image: nil, author: "String?", playbackPosition: PlaybackPosition(position: 0, duration: 1), episode: 2, podcastUrl: "String")
+let dummy_episode_2 = Episode(id: "String", title: "Episode 154: It's a Wrap!", subTitle: "String?", description: "String?", audioUrl: "String", imageUrl: "String?", author: "String?", playbackPosition: PlaybackPosition(position: 0, duration: 1), episode: 2, podcastUrl: "String")
 #endif

@@ -123,14 +123,12 @@ class CastawayViewModel: ObservableObject {
     private func publishAndPrepareFeed(_ feed: FeedData) {
         feedTitle = feed.info.title
         episodes = feed.episodes
-        feedImage = feed.info.image
         prepareEpisodes(feed.episodes)
     }
     
     private func prepareEpisodes(_ episodes: [Episode]) {
         player.prepare {
             episodes.map { episode in
-                guard episode.image == nil else { return episode.toMediaData() }
                 guard let image = feedImage else { return episode.toMediaData() }
                 return episode.copy(image: image).toMediaData()
             }

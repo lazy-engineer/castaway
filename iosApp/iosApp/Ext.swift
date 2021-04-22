@@ -12,7 +12,6 @@ extension Episode {
             description: description_,
             audioUrl: audioUrl,
             imageUrl: imageUrl,
-            image: image,
             author: author,
             playbackPosition: playbackPosition,
             episode: episode,
@@ -29,7 +28,6 @@ extension Episode {
             description: description_,
             audioUrl: audioUrl,
             imageUrl: imageUrl,
-            image: image,
             author: author,
             playbackPosition: PlaybackPosition(
                 position: position,
@@ -49,7 +47,6 @@ extension Episode {
             description: description_,
             audioUrl: audioUrl,
             imageUrl: imageUrl,
-            image: image,
             author: author,
             playbackPosition: PlaybackPosition(
                 position: playbackPosition.position,
@@ -69,7 +66,6 @@ extension Episode {
             description: description_,
             audioUrl: audioUrl,
             imageUrl: imageUrl,
-            image: image,
             author: author,
             playbackPosition: playbackPosition,
             episode: episode,
@@ -84,7 +80,6 @@ extension Episode {
             mediaUri: audioUrl,
             title: title,
             podcastTitle: "Accidental Tech Podcast",
-            image: image,
             playbackPosition: playbackPosition.position,
             duration: playbackPosition.duration
         )
@@ -105,10 +100,9 @@ extension RSSFeed {
             info: FeedInfo(
                 url: url,
                 title: title!,
-                imageUrl: feedImage,
-                image: nil
+                imageUrl: feedImage
             ),
-            episodes: items!.enumerated().compactMap({ $0.element.toEpisode(url: url, image: feedImage, index: Int32($0.offset)) }))
+            episodes: items!.enumerated().compactMap({ $0.element.toEpisode(url: url, index: Int32($0.offset)) }))
     }
     
     private func feedImage() -> String? {
@@ -125,7 +119,7 @@ extension RSSFeed {
 }
 
 extension RSSFeedItem {
-    func toEpisode(url: String, image: String?, index: Int32) -> Episode? {
+    func toEpisode(url: String, index: Int32) -> Episode? {
         guard let audioUrl = audioUrl() else { return nil }
         let episodeImage = self.episodeImage()
         
@@ -136,7 +130,6 @@ extension RSSFeedItem {
             description: description,
             audioUrl: audioUrl,
             imageUrl: episodeImage,
-            image: nil,
             author: author,
             playbackPosition: PlaybackPosition(position: 0, duration: 1),
             episode: index,

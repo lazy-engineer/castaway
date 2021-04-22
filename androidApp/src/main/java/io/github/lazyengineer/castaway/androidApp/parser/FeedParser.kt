@@ -19,7 +19,6 @@ object FeedParser {
 			url = url,
 			title = this.title,
 			imageUrl = this.iTunes?.image?.attributes?.href,
-			image = null
 		  ),
 		  episodes = this.items.mapIndexed { index, episode ->
 			Episode(
@@ -29,7 +28,6 @@ object FeedParser {
 			  description = episode.description,
 			  audioUrl = episode.media?.url ?: "",
 			  imageUrl = episode.mediaNamespace?.thumbnails?.firstOrNull()?.attributes?.url ?: "",
-			  image = null,
 			  author = episode.author ?: "",
 			  playbackPosition = PlaybackPosition(0, Long.MAX_VALUE),
 			  episode = index,
@@ -43,7 +41,6 @@ object FeedParser {
 			url = url,
 			title = this.title?.value ?: "",
 			imageUrl = this.icon,
-			image = null
 		  ),
 		  episodes = this.entries.mapIndexed { index, episode ->
 			Episode(
@@ -53,7 +50,6 @@ object FeedParser {
 			  description = episode.summary?.value ?: "",
 			  audioUrl = episode.mediaNamespace?.contents?.firstOrNull()?.attributes?.url ?: "",
 			  imageUrl = episode.mediaNamespace?.thumbnails?.firstOrNull()?.attributes?.url ?: "",
-			  image = null,
 			  author = episode.authors.firstOrNull()?.uri ?: "",
 			  playbackPosition = PlaybackPosition(0, Long.MAX_VALUE),
 			  episode = index,
