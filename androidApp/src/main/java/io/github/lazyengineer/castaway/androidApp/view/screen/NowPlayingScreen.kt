@@ -13,7 +13,6 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
 import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Slider
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons.Filled
@@ -35,6 +34,7 @@ import io.github.lazyengineer.castaway.androidApp.view.EpisodeState.EpisodeLoadi
 import io.github.lazyengineer.castaway.androidApp.view.EpisodeState.EpisodePaused
 import io.github.lazyengineer.castaway.androidApp.view.EpisodeState.EpisodePlayed
 import io.github.lazyengineer.castaway.androidApp.view.EpisodeState.EpisodePlaying
+import io.github.lazyengineer.castaway.androidApp.view.PlaybackProgressView
 import io.github.lazyengineer.castaway.androidApp.viewmodel.CastawayViewModel
 import java.util.concurrent.TimeUnit.HOURS
 import java.util.concurrent.TimeUnit.MILLISECONDS
@@ -47,13 +47,14 @@ fun NowPlayingScreen(
   viewModel: CastawayViewModel,
   state: EpisodeState = EpisodePaused
 ) {
-
   val feed = viewModel.feed.collectAsState()
   val episode = viewModel.currentEpisode.collectAsState()
   val episodeTitle = episode.value?.title ?: ""
   val episodeImageUrl = feed.value?.info?.imageUrl ?: ""
-  val playbackPosition = viewModel.playbackPosition.collectAsState()
+  val playbackPosition = viewModel.playbackPosition.collectAsState(0L)
   val playbackDuration = viewModel.playbackDuration.collectAsState()
+
+  val playbackProgress = playbackPosition.value.toFloat() / playbackDuration.value
 
   Surface(modifier = modifier.fillMaxSize()) {
 	Column(horizontalAlignment = Alignment.CenterHorizontally) {
@@ -97,16 +98,13 @@ fun NowPlayingScreen(
 		}
 	  }
 
-	  Column(modifier = Modifier.fillMaxWidth().padding(top = 64.dp, start = 16.dp, end = 16.dp)) {
-		Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
+	  Column(modifier = Modifier.fillMaxWidth().padding(top = 64.dp)) {
+		Row(modifier = Modifier.fillMaxWidth().padding(start = 16.dp, end = 16.dp), horizontalArrangement = Arrangement.SpaceBetween) {
 		  Text(playbackPosition.value.millisToTxt())
 		  Text(playbackDuration.value.millisToTxt())
 		}
 
-		Slider(
-		  value = playbackPosition.value.toFloat() / playbackDuration.value,
-		  onValueChange = {}
-		)
+		PlaybackProgressView(modifier = Modifier.fillMaxWidth(), playbackProgress)
 	  }
 	}
   }
