@@ -8,7 +8,6 @@ import androidx.lifecycle.viewModelScope
 import io.github.lazyengineer.castaway.androidApp.usecase.StoreAndGetFeedUseCase
 import io.github.lazyengineer.castaway.shared.entity.Episode
 import io.github.lazyengineer.castaway.shared.entity.FeedData
-import io.github.lazyengineer.castaway.shared.entity.PlaybackPosition
 import io.github.lazyengineer.castaway.shared.usecase.GetStoredFeedUseCase
 import io.github.lazyengineer.castaway.shared.usecase.StoredEpisodeFlowableUseCase
 import io.github.lazyengineer.castawayplayer.MediaServiceClient
@@ -74,18 +73,21 @@ class CastawayViewModel constructor(
   val playbackSpeed: StateFlow<Float>
 	get() = _playbackSpeed
 
-  private val _updatedEpisodes = MutableStateFlow(emptyList<Episode>())
-  val updatedEpisodes: StateFlow<List<Episode>>
-	get() = _updatedEpisodes
-
   init {
 	subscribeToMediaService()
+	collectConnectionState()
 	collectPlaybackState()
 	collectPlaybackPositions()
 	collectNowPlaying()
+  }
 
+  private fun collectConnectionState() {
 	viewModelScope.launch {
-	  loadFeed(TEST_URL)
+	  mediaServiceClient.isConnected.collect { connected ->
+		if (connected) {
+		  loadFeed(TEST_URL)
+		}
+	  }
 	}
   }
 
@@ -95,12 +97,6 @@ class CastawayViewModel constructor(
 		currentEpisode.value?.let { episode ->
 		  _playing.value = playingState(episode.id)
 		}
-
-		//		feed.value?.let { feedData ->
-		//		  _feed.postValue(feed.value?.copy(episodes = feedData.episodes.map { episode ->
-		//			  episode.copy(isPlaying = playingState(episode.id))
-		//		  }))
-		//		}
 	  }
 	}
   }
@@ -109,7 +105,6 @@ class CastawayViewModel constructor(
 	viewModelScope.launch {
 	  mediaServiceClient.playbackPosition.collect { position ->
 		_playbackPosition.value = position
-		feed.value?.postCurrentWithUpdatedPosition(position)
 	  }
 	}
   }
@@ -139,30 +134,7 @@ class CastawayViewModel constructor(
 	)
   }
 
-  private fun FeedData.postCurrentWithUpdatedPosition(position: Long) {
-	val episode = this.nowPlayingEpisode()
-
-	episode?.let {
-	  _updatedEpisodes.value = listOf(it.withUpdatedPosition(position))
-	}
-  }
-
-  private fun FeedData.nowPlayingEpisode(): Episode? {
-	return this.episodes.find { episode ->
-	  episode.id == mediaServiceClient.nowPlaying.value.mediaId
-	}
-  }
-
-  private fun Episode.withUpdatedPosition(position: Long): Episode {
-	return this.copy(
-	  playbackPosition = PlaybackPosition(
-		position = position,
-		duration = mediaServiceClient.nowPlaying.value.duration ?: 1
-	  )
-	)
-  }
-
-  fun fetchFeed() {
+  private fun fetchFeed() {
 	viewModelScope.launch {
 	  Log.d("CastawayViewModel", "fetch Feed")
 	  fetchFeedFromUrl(TEST_URL)
@@ -171,11 +143,10 @@ class CastawayViewModel constructor(
 
   private suspend fun loadFeed(url: String) {
 	withContext(Dispatchers.IO) {
-	  Log.d("CastawayViewModel", "load Feed")
 	  getStoredFeedUseCase(url).subscribe(
 		this,
 		onSuccess = {
-		  Log.d("CastawayViewModel", "load Feed onSuccess")
+		  prepareMediaData(it.episodes)
 		  _feed.value = it
 		},
 		onError = {
