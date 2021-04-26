@@ -18,7 +18,8 @@ import androidx.compose.ui.unit.dp
 @Composable
 fun PlaybackProgressView(modifier: Modifier, @FloatRange(from = 0.0, to = 1.0) progress: Float) {
   Box(modifier = modifier.height(48.dp)) {
-	PlaybackTrack(modifier = Modifier.align(Alignment.CenterStart).fillMaxWidth(), playbackPosition = progress)
+	val center = Modifier.align(Alignment.CenterStart)
+	PlaybackTrack(modifier = center.fillMaxWidth(), playbackPosition = progress)
   }
 }
 
@@ -26,8 +27,8 @@ fun PlaybackProgressView(modifier: Modifier, @FloatRange(from = 0.0, to = 1.0) p
 private fun PlaybackTrack(
   modifier: Modifier,
   playbackPosition: Float,
-  trackColor: Color = MaterialTheme.colors.primary,
-  progressColor: Color = MaterialTheme.colors.secondary,
+  trackColor: Color = MaterialTheme.colors.primary.copy(.25f),
+  progressColor: Color = MaterialTheme.colors.primary,
   thumbDp: Dp = 16.dp,
   trackStrokeWidth: Dp = 4.dp,
 ) {
