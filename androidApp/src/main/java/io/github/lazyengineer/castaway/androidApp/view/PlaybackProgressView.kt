@@ -28,7 +28,11 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 
 @Composable
-fun PlaybackProgressView(modifier: Modifier, @FloatRange(from = 0.0, to = 1.0) progress: Float) {
+fun PlaybackProgressView(
+  modifier: Modifier,
+  @FloatRange(from = 0.0, to = 1.0) progress: Float,
+  interactionSource: MutableInteractionSource = remember { MutableInteractionSource() }
+) {
   BoxWithConstraints(modifier = modifier.height(48.dp)) {
 	val widthDp = with(LocalDensity.current) {
 	  constraints.maxWidth.toFloat().toDp()
@@ -39,8 +43,12 @@ fun PlaybackProgressView(modifier: Modifier, @FloatRange(from = 0.0, to = 1.0) p
 	val offset = (widthDp - thumbSize) * progress
 
 	PlaybackTrack(modifier = center.fillMaxWidth(), playbackPosition = progress)
-	PlaybackThumb(modifier = center, thumbOffset = offset, thumbSize = thumbSize)
-
+	PlaybackThumb(
+	  modifier = center,
+	  thumbOffset = offset,
+	  thumbSize = thumbSize,
+	  interactionSource = interactionSource,
+	)
   }
 }
 
@@ -83,9 +91,10 @@ private fun PlaybackThumb(
   thumbOffset: Dp,
   thumbSize: Dp,
   thumbColor: Color = MaterialTheme.colors.primary,
-  interactionSource: MutableInteractionSource  = remember { MutableInteractionSource() },
+  interactionSource: MutableInteractionSource,
 ) {
   Box(modifier.padding(start = thumbOffset)) {
+
 	Surface(
 	  shape = CircleShape,
 	  color = thumbColor,
