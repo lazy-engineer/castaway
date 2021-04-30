@@ -14,7 +14,7 @@ object App {
 
 object Version {
 
-  const val kotlin = "1.4.31"
+  const val kotlin = "1.4.32"
   const val gradle = "4.1.2"
 
   const val appcompat = "1.3.0-rc01"
@@ -25,7 +25,7 @@ object Version {
   const val lifecycleExtensions = "2.2.0"
   const val ktxActivity = "1.1.0"
   const val ktxFragment = "1.2.5"
-  const val compose = "1.0.0-beta03"
+  const val compose = "1.0.0-beta05"
   const val composeNavigation = "1.0.0-alpha09"
 
   const val ktxCore = "1.3.2"

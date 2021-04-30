@@ -1,5 +1,5 @@
 buildscript {
-  val kotlinVersion by extra("1.4.31")
+  val kotlinVersion by extra("1.4.32")
   val gradleVersion by extra("4.1.2")
   val sqldelightVersion by extra("1.4.3")
 
