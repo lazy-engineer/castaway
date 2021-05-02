@@ -53,8 +53,7 @@ fun PlaybackProgressView(
 	  modifier = center.pointerInput(Unit) {
 		detectDragGestures { change, dragAmount ->
 		  change.consumeAllChanges()
-		  offsetPosition.value = (offsetPosition.value + dragAmount.x)
-			.coerceIn(minPx, maxPx)
+		  offsetPosition.value = (offsetPosition.value + dragAmount.x).coerceIn(minPx, maxPx)
 		}
 	  },
 	  thumbOffset = offsetPosition.value,
