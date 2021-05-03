@@ -109,7 +109,7 @@ private fun PlaybackThumb(
 	Surface(
 	  shape = CircleShape,
 	  color = thumbColor,
-	  modifier = Modifier
+	  modifier = modifier
 		.focusable(interactionSource = interactionSource)
 		.indication(
 		  interactionSource = interactionSource,
