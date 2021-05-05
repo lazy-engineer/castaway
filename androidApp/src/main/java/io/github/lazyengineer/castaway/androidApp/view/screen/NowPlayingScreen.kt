@@ -57,7 +57,7 @@ fun NowPlayingScreen(
   val playbackDuration = viewModel.playbackDuration.collectAsState()
 
   val playbackProgress = playbackPosition.value.toFloat() / playbackDuration.value
-  var value = remember { mutableStateOf(playbackProgress) }
+  val value = remember { mutableStateOf(playbackProgress) }
 
   Surface(modifier = modifier.fillMaxSize()) {
 	Column(horizontalAlignment = Alignment.CenterHorizontally) {
