@@ -57,7 +57,7 @@ fun PlaybackProgressView(
   modifier: Modifier,
   @FloatRange(from = 0.0, to = 1.0) progress: Float,
   onValueChange: (Float) -> Unit,
-  onValueChangeFinished: (() -> Unit)? = null,
+  onValueChangeFinished: ((Float) -> Unit)? = null,
   interactionSource: MutableInteractionSource = remember { MutableInteractionSource() }
 ) {
   val scope = rememberCoroutineScope()
@@ -91,10 +91,10 @@ fun PlaybackProgressView(
 		  position.holder.animateTo(target, TweenSpec(durationMillis = 100), velocity) {
 			position.onHolderValueUpdated(this.value)
 		  }
-		  onValueChangeFinished?.invoke()
+		  onValueChangeFinished?.invoke(progress)
 		}
 	  } else {
-		onValueChangeFinished?.invoke()
+		onValueChangeFinished?.invoke(progress)
 	  }
 	}
 

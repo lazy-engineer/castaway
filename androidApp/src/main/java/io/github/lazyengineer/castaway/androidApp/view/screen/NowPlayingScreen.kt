@@ -107,7 +107,9 @@ fun NowPlayingScreen(
 		  Text(playbackDuration.value.millisToTxt())
 		}
 
-		PlaybackProgressView(modifier = Modifier.fillMaxWidth(), value.value, { value.value = it })
+		PlaybackProgressView(modifier = Modifier.fillMaxWidth(), value.value, { value.value = it }, onValueChangeFinished = {
+		  viewModel.seekTo((it * playbackDuration.value).toLong())
+		})
 	  }
 	}
   }
