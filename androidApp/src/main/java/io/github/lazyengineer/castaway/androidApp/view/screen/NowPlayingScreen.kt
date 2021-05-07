@@ -31,11 +31,6 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import com.google.accompanist.coil.CoilImage
-import io.github.lazyengineer.castaway.androidApp.view.EpisodeState
-import io.github.lazyengineer.castaway.androidApp.view.EpisodeState.EpisodeLoading
-import io.github.lazyengineer.castaway.androidApp.view.EpisodeState.EpisodePaused
-import io.github.lazyengineer.castaway.androidApp.view.EpisodeState.EpisodePlayed
-import io.github.lazyengineer.castaway.androidApp.view.EpisodeState.EpisodePlaying
 import io.github.lazyengineer.castaway.androidApp.view.PlaybackProgressView
 import io.github.lazyengineer.castaway.androidApp.viewmodel.CastawayViewModel
 import java.util.concurrent.TimeUnit.HOURS
@@ -47,10 +42,10 @@ fun NowPlayingScreen(
   modifier: Modifier = Modifier,
   episodeId: String,
   viewModel: CastawayViewModel,
-  state: EpisodeState = EpisodePaused
 ) {
   val feed = viewModel.feed.collectAsState()
   val episode = viewModel.currentEpisode.collectAsState()
+  val playing = viewModel.playing.collectAsState()
   val episodeTitle = episode.value?.title ?: ""
   val episodeImageUrl = feed.value?.info?.imageUrl ?: ""
   val playbackPosition = viewModel.playbackPosition.collectAsState(0L)
@@ -85,11 +80,10 @@ fun NowPlayingScreen(
 		IconButton(onClick = {
 		  viewModel.mediaItemClicked(episodeId)
 		}, modifier = Modifier.padding(start = 48.dp, end = 48.dp).size(64.dp)) {
-		  val playPauseImage = when (state) {
-			EpisodePaused -> Filled.PlayCircleFilled
-			EpisodePlaying -> Filled.PauseCircleFilled
-			EpisodeLoading -> Filled.PlayCircleFilled
-			EpisodePlayed -> Filled.PlayCircleFilled
+
+		  val playPauseImage = when {
+			playing.value -> Filled.PauseCircleFilled
+			else -> Filled.PlayCircleFilled
 		  }
 
 		  Icon(playPauseImage, "play/pause", modifier = Modifier.size(64.dp))

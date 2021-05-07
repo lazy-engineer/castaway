@@ -5,7 +5,6 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.navigate
 import androidx.navigation.compose.rememberNavController
-import io.github.lazyengineer.castaway.androidApp.view.EpisodeState
 import io.github.lazyengineer.castaway.androidApp.viewmodel.CastawayViewModel
 
 @Composable
@@ -30,10 +29,6 @@ fun StartScreen(viewModel: CastawayViewModel) {
 	  NowPlayingScreen(
 		episodeId = backStackEntry.arguments?.get("episodeId") as String,
 		viewModel = viewModel,
-		state = when {
-		  viewModel.playing.value -> EpisodeState.EpisodePlaying
-		  else -> EpisodeState.EpisodePaused
-		},
 	  )
 	}
   }
