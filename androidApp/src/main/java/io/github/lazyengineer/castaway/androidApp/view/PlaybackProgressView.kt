@@ -77,9 +77,6 @@ fun PlaybackProgressView(
 	val isRtl = LocalLayoutDirection.current == LayoutDirection.Rtl
 	val maxPx = constraints.maxWidth.toFloat()
 	val minPx = 0f
-	val widthDp = with(LocalDensity.current) {
-	  maxPx.toDp()
-	}
 
 	position.setBounds(minPx, maxPx)
 
@@ -134,11 +131,7 @@ fun PlaybackProgressView(
 		position.snapTo(position.holder.value + it)
 	  }
 	)
-
-	val center = Modifier.align(Alignment.CenterStart)
-	val thumbSize = 20.dp
-	val offset = (widthDp - thumbSize) * progress
-
+	
 	LaunchedEffect(interactionSource) {
 	  interactionSource.interactions.collect { interaction ->
 		when (interaction) {
@@ -149,9 +142,35 @@ fun PlaybackProgressView(
 	  }
 	}
 
+	PlaybackProgressImpl(
+	  modifier = press.then(drag),
+	  progress = progress,
+	  width = maxPx,
+	  interactionSource = interactionSource,
+	)
+  }
+}
+
+@Composable
+fun PlaybackProgressImpl(
+  modifier: Modifier,
+  progress: Float,
+  width: Float,
+  interactionSource: MutableInteractionSource,
+) {
+
+  val widthDp = with(LocalDensity.current) {
+	width.toDp()
+  }
+
+  Box(modifier) {
+	val center = Modifier.align(Alignment.CenterStart)
+	val thumbSize = 20.dp
+	val offset = (widthDp - thumbSize) * progress
+
 	PlaybackTrack(modifier = center.fillMaxWidth(), playbackPosition = progress)
 	PlaybackThumb(
-	  modifier = center.then(press).then(drag),
+	  modifier = center,
 	  thumbOffset = offset,
 	  thumbSize = thumbSize,
 	  interactionSource = interactionSource,
