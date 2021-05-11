@@ -23,8 +23,6 @@ import androidx.compose.material.icons.filled.PlayCircleFilled
 import androidx.compose.material.icons.filled.Replay30
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -49,10 +47,10 @@ fun NowPlayingScreen(
   val episodeTitle = episode.value?.title ?: ""
   val episodeImageUrl = feed.value?.info?.imageUrl ?: ""
   val playbackPosition = viewModel.playbackPosition.collectAsState(0L)
+  val playbackPositionTxt = viewModel.playbackPositionTxt.collectAsState()
   val playbackDuration = viewModel.playbackDuration.collectAsState()
 
   val playbackProgress = playbackPosition.value.toFloat() / playbackDuration.value
-  val value = remember { mutableStateOf(playbackProgress) }
 
   Surface(modifier = modifier.fillMaxSize()) {
 	Column(horizontalAlignment = Alignment.CenterHorizontally) {
@@ -78,7 +76,7 @@ fun NowPlayingScreen(
 		  Icon(Filled.Replay30, "replay 30 second", modifier = Modifier.size(48.dp))
 		}
 		IconButton(onClick = {
-		  viewModel.mediaItemClicked(episodeId)
+		  viewModel.mediaItemClicked(episode.value?.id ?: episodeId)
 		}, modifier = Modifier.padding(start = 48.dp, end = 48.dp).size(64.dp)) {
 
 		  val playPauseImage = when {
@@ -97,17 +95,29 @@ fun NowPlayingScreen(
 
 	  Column(modifier = Modifier.fillMaxWidth().padding(top = 64.dp)) {
 		Row(modifier = Modifier.fillMaxWidth().padding(start = 16.dp, end = 16.dp), horizontalArrangement = Arrangement.SpaceBetween) {
-		  Text(playbackPosition.value.millisToTxt())
+		  Text(playbackPositionTxt.value)
 		  Text(playbackDuration.value.millisToTxt())
 		}
 
-		PlaybackProgressView(modifier = Modifier.fillMaxWidth(), value.value, { value.value = it }, onValueChangeFinished = {
-		  viewModel.seekTo((it * playbackDuration.value).toLong())
-		})
+		PlaybackProgressView(
+		  modifier = Modifier.fillMaxWidth().padding(start = 16.dp, end = 16.dp),
+		  progress = playbackProgress,
+		  onValueChange = {
+			viewModel.editingPlaybackPosition(it.progressToPosition(playbackDuration.value))
+		  },
+		  onValueChangeStarted = {
+			viewModel.editingPlayback(true)
+		  },
+		  onValueChangeFinished = {
+			viewModel.editingPlayback(false)
+			viewModel.seekTo(it.progressToPosition(playbackDuration.value))
+		  })
 	  }
 	}
   }
 }
+
+private fun Float.progressToPosition(playbackDuration: Long) = (this * playbackDuration).toLong()
 
 fun Long.millisToTxt() = String.format(
   "%02d:%02d:%02d",
