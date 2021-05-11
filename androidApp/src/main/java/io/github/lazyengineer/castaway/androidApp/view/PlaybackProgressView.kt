@@ -131,10 +131,13 @@ fun PlaybackProgressView(
 		position.snapTo(position.holder.value + it)
 	  }
 	)
-	
+
 	LaunchedEffect(interactionSource) {
 	  interactionSource.interactions.collect { interaction ->
 		when (interaction) {
+		  is Press -> {
+			onValueChangeStarted?.invoke()
+		  }
 		  is Start -> {
 			onValueChangeStarted?.invoke()
 		  }
