@@ -6,7 +6,6 @@ import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import io.github.lazyengineer.castaway.androidApp.usecase.StoreAndGetFeedUseCase
-import io.github.lazyengineer.castaway.androidApp.view.screen.millisToTxt
 import io.github.lazyengineer.castaway.shared.entity.Episode
 import io.github.lazyengineer.castaway.shared.entity.FeedData
 import io.github.lazyengineer.castaway.shared.usecase.GetStoredFeedUseCase
@@ -76,10 +75,6 @@ class CastawayViewModel constructor(
 
   private val _playbackEditing = MutableStateFlow(false)
 
-  private val _playbackPositionTxt = MutableStateFlow(0L.millisToTxt())
-  val playbackPositionTxt: StateFlow<String>
-	get() = _playbackPositionTxt
-
   init {
 	subscribeToMediaService()
 	collectConnectionState()
@@ -111,7 +106,6 @@ class CastawayViewModel constructor(
   private fun collectPlaybackPositions() {
 	viewModelScope.launch {
 	  mediaServiceClient.playbackPosition.collect { position ->
-		_playbackPositionTxt.value = position.millisToTxt()
 		if (_playbackEditing.value.not()) _playbackPosition.value = position
 	  }
 	}

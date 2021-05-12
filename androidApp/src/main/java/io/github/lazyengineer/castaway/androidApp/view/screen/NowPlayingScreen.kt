@@ -47,7 +47,6 @@ fun NowPlayingScreen(
   val episodeTitle = episode.value?.title ?: ""
   val episodeImageUrl = feed.value?.info?.imageUrl ?: ""
   val playbackPosition = viewModel.playbackPosition.collectAsState(0L)
-  val playbackPositionTxt = viewModel.playbackPositionTxt.collectAsState()
   val playbackDuration = viewModel.playbackDuration.collectAsState()
 
   val playbackProgress = playbackPosition.value.toFloat() / playbackDuration.value
@@ -95,7 +94,7 @@ fun NowPlayingScreen(
 
 	  Column(modifier = Modifier.fillMaxWidth().padding(top = 64.dp)) {
 		Row(modifier = Modifier.fillMaxWidth().padding(start = 16.dp, end = 16.dp), horizontalArrangement = Arrangement.SpaceBetween) {
-		  Text(playbackPositionTxt.value)
+		  Text(playbackPosition.value.millisToTxt())
 		  Text(playbackDuration.value.millisToTxt())
 		}
 
