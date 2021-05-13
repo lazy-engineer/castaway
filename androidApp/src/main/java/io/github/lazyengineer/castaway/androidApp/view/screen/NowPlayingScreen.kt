@@ -1,6 +1,7 @@
 package io.github.lazyengineer.castaway.androidApp.view.screen
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -48,6 +49,7 @@ fun NowPlayingScreen(
   val episodeImageUrl = feed.value?.info?.imageUrl ?: ""
   val playbackPosition = viewModel.playbackPosition.collectAsState(0L)
   val playbackDuration = viewModel.playbackDuration.collectAsState()
+  val playbackSpeed = viewModel.playbackSpeed.collectAsState()
 
   val playbackProgress = playbackPosition.value.toFloat() / playbackDuration.value
 
@@ -112,6 +114,10 @@ fun NowPlayingScreen(
 			viewModel.seekTo(it.progressToPosition(playbackDuration.value))
 		  })
 	  }
+
+	  Text(text = "${playbackSpeed.value}x", modifier = Modifier.align(alignment = Alignment.Start).padding(start = 16.dp).clickable {
+	    viewModel.changePlaybackSpeed()
+	  })
 	}
   }
 }

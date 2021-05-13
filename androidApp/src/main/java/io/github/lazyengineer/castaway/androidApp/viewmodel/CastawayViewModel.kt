@@ -119,7 +119,7 @@ class CastawayViewModel constructor(
 		}
 
 		feedEpisode?.let {
-		  _currentEpisode.value = it
+		  _currentEpisode.emit(it)
 		  mediaData.duration?.let { duration -> _playbackDuration.value = duration }
 		}
 	  }
@@ -249,6 +249,20 @@ class CastawayViewModel constructor(
 	if (mediaServiceClient.isConnected.value) {
 	  mediaServiceClient.speed(speed)
 	}
+  }
+
+
+  fun changePlaybackSpeed() {
+	val supportedSpeedRates = listOf(1.0f, 1.5f, 2.0f)
+	val currentIndex = supportedSpeedRates.indexOf(_playbackSpeed.value)
+
+	var newIndex = 0
+	if (supportedSpeedRates.size > currentIndex + 1) {
+	  newIndex = currentIndex + 1
+	}
+
+	_playbackSpeed.value = supportedSpeedRates[newIndex]
+	playbackSpeed(_playbackSpeed.value)
   }
 
   fun playingState(mediaId: String): Boolean {
