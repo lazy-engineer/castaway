@@ -33,5 +33,5 @@ val appModule = module {
 	StoreAndGetFeedUseCase(get() as FeedRepository)
   }
 
-  viewModel { CastawayViewModel(get(), get(), get(), get()) }
+  viewModel { CastawayViewModel(get(), get(), get(), get(), get()) }
 }

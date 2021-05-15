@@ -9,6 +9,7 @@ import io.github.lazyengineer.castaway.androidApp.usecase.StoreAndGetFeedUseCase
 import io.github.lazyengineer.castaway.shared.entity.Episode
 import io.github.lazyengineer.castaway.shared.entity.FeedData
 import io.github.lazyengineer.castaway.shared.usecase.GetStoredFeedUseCase
+import io.github.lazyengineer.castaway.shared.usecase.SaveEpisodeUseCase
 import io.github.lazyengineer.castaway.shared.usecase.StoredEpisodeFlowableUseCase
 import io.github.lazyengineer.castawayplayer.MediaServiceClient
 import io.github.lazyengineer.castawayplayer.extention.isPlaying
@@ -24,6 +25,7 @@ import kotlinx.coroutines.withContext
 class CastawayViewModel constructor(
   private val mediaServiceClient: MediaServiceClient,
   private val getStoredFeedUseCase: GetStoredFeedUseCase,
+  private val saveEpisodeUseCase: SaveEpisodeUseCase,
   private val storedEpisodeFlowableUseCase: StoredEpisodeFlowableUseCase,
   private val storeAndGetFeedUseCase: StoreAndGetFeedUseCase,
 ) : ViewModel() {
@@ -97,6 +99,7 @@ class CastawayViewModel constructor(
 	viewModelScope.launch {
 	  mediaServiceClient.playbackState.collect {
 		currentEpisode.value?.let { episode ->
+		  storeEpisode(episode)
 		  _playing.value = playingState(episode.id)
 		}
 	  }
@@ -143,6 +146,15 @@ class CastawayViewModel constructor(
 	}
   }
 
+  private fun storeCurrentEpisode() {
+	currentEpisode.value?.let { currentEpisode ->
+	  viewModelScope.launch {
+		Log.d("CastawayViewModel", "store current episode")
+		storeEpisode(currentEpisode)
+	  }
+	}
+  }
+
   private suspend fun loadFeed(url: String) {
 	withContext(Dispatchers.IO) {
 	  getStoredFeedUseCase(url).subscribe(
@@ -169,6 +181,21 @@ class CastawayViewModel constructor(
 		},
 		onError = {
 		  Log.d("CastawayViewModel", "fetch onError")
+		},
+	  )
+	}
+  }
+
+  private suspend fun storeEpisode(episode: Episode) {
+	withContext(Dispatchers.IO) {
+	  saveEpisodeUseCase(episode).subscribe(
+		this,
+		onSuccess = {
+		  Log.d("CastawayViewModel", "save onSuccess: ${it}")
+
+		},
+		onError = {
+		  Log.d("CastawayViewModel", "save onError")
 		},
 	  )
 	}
@@ -250,7 +277,6 @@ class CastawayViewModel constructor(
 	  mediaServiceClient.speed(speed)
 	}
   }
-
 
   fun changePlaybackSpeed() {
 	val supportedSpeedRates = listOf(1.0f, 1.5f, 2.0f)
