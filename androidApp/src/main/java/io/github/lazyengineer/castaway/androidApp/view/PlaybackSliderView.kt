@@ -50,7 +50,7 @@ import kotlinx.coroutines.launch
 import kotlin.math.abs
 
 @Composable
-fun PlaybackProgressView(
+fun PlaybackSliderView(
   modifier: Modifier,
   @FloatRange(from = 0.0, to = 1.0) progress: Float,
   onValueChange: (Float) -> Unit,

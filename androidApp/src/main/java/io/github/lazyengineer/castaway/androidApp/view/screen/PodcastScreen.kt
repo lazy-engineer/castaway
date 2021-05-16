@@ -20,6 +20,10 @@ import io.github.lazyengineer.castaway.shared.entity.Episode
 fun PodcastScreen(modifier: Modifier = Modifier, viewModel: CastawayViewModel, episodeSelected: (episode: Episode) -> Unit) {
 
   val feed = viewModel.feed.collectAsState()
+  val playbackPosition = viewModel.playbackPosition.collectAsState(0L)
+  val playbackDuration = viewModel.playbackDuration.collectAsState()
+
+  val playbackProgress = playbackPosition.value.toFloat() / playbackDuration.value
 
   Surface(modifier = modifier.fillMaxSize()) {
 	LazyColumn(
@@ -36,10 +40,14 @@ fun PodcastScreen(modifier: Modifier = Modifier, viewModel: CastawayViewModel, e
 	  }
 
 	  items(feed.value?.episodes ?: emptyList()) { item ->
-		EpisodeRowView(modifier = modifier.clickable {
-		  viewModel.episodeClicked(item)
-		  episodeSelected(item)
-		}, title = item.title) {
+		EpisodeRowView(
+		  modifier = modifier.clickable {
+			viewModel.episodeClicked(item)
+			episodeSelected(item)
+		  },
+		  title = item.title,
+		  progress = item.playbackPosition.position.toFloat() / item.playbackPosition.duration
+		) {
 		  viewModel.mediaItemClicked(item.id)
 		}
 	  }

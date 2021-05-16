@@ -34,11 +34,11 @@ fun PlaybackProgressView(
 
 	if (playbackPosition > 0) {
 
-	  val sliderValue = Offset(start.x + (end.x - start.x) * playbackPosition, center.y)
+	  val progressOffset = Offset(start.x + (end.x - start.x) * playbackPosition, center.y)
 	  drawLine(
 		progressColor,
 		start,
-		sliderValue,
+		progressOffset,
 		trackStrokeWidth.toPx(),
 		Round
 	  )

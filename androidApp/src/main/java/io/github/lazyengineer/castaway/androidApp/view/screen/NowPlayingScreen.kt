@@ -30,7 +30,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import com.google.accompanist.coil.CoilImage
-import io.github.lazyengineer.castaway.androidApp.view.PlaybackProgressView
+import io.github.lazyengineer.castaway.androidApp.view.PlaybackSliderView
 import io.github.lazyengineer.castaway.androidApp.viewmodel.CastawayViewModel
 import java.util.concurrent.TimeUnit.HOURS
 import java.util.concurrent.TimeUnit.MILLISECONDS
@@ -100,7 +100,7 @@ fun NowPlayingScreen(
 		  Text(playbackDuration.value.millisToTxt())
 		}
 
-		PlaybackProgressView(
+		PlaybackSliderView(
 		  modifier = Modifier.fillMaxWidth().padding(start = 16.dp, end = 16.dp),
 		  progress = playbackProgress,
 		  onValueChange = {

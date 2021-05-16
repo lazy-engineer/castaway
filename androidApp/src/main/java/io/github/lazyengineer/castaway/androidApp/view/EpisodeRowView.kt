@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.Divider
@@ -27,6 +28,7 @@ fun EpisodeRowView(
   modifier: Modifier = Modifier,
   state: EpisodeState = EpisodePaused,
   title: String,
+  progress: Float,
   onPlayPause: (Boolean) -> Unit
 ) {
   Column(modifier = modifier) {
@@ -46,6 +48,9 @@ fun EpisodeRowView(
 
 	  Icon(playPauseImage, "play/pause", modifier = Modifier.padding(8.dp).weight(1f).clickable { onPlayPause(true) })
 	}
+
+	PlaybackProgressView(modifier = Modifier.fillMaxWidth(), playbackPosition = progress, padding = 0.dp)
+
 	Divider()
   }
 }
