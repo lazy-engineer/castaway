@@ -23,6 +23,7 @@ import androidx.compose.material.icons.filled.PauseCircleFilled
 import androidx.compose.material.icons.filled.PlayCircleFilled
 import androidx.compose.material.icons.filled.Replay30
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.State
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -51,7 +52,7 @@ fun NowPlayingScreen(
   val playbackDuration = viewModel.playbackDuration.collectAsState()
   val playbackSpeed = viewModel.playbackSpeed.collectAsState()
 
-  val playbackProgress = playbackPosition.value.toFloat() / playbackDuration.value
+  val playbackProgress = playbackProgress(playbackPosition, playbackDuration)
 
   Surface(modifier = modifier.fillMaxSize()) {
 	Column(horizontalAlignment = Alignment.CenterHorizontally) {
@@ -116,9 +117,20 @@ fun NowPlayingScreen(
 	  }
 
 	  Text(text = "${playbackSpeed.value}x", modifier = Modifier.align(alignment = Alignment.Start).padding(start = 16.dp).clickable {
-	    viewModel.changePlaybackSpeed()
+		viewModel.changePlaybackSpeed()
 	  })
 	}
+  }
+}
+
+private fun playbackProgress(
+  playbackPosition: State<Long>,
+  playbackDuration: State<Long>
+): Float {
+  return when {
+	playbackDuration.value <= 0 -> 0f
+	playbackDuration.value <= 0 -> 0f
+	else -> playbackPosition.value / playbackDuration.value.toFloat()
   }
 }
 
