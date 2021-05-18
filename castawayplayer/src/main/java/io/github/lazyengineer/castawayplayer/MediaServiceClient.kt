@@ -30,9 +30,9 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 
 class MediaServiceClient private constructor(
-	context: Context,
-	serviceComponent: ComponentName,
-	private val config: MediaServiceConfig
+  context: Context,
+  serviceComponent: ComponentName,
+  private val config: MediaServiceConfig
 ) {
 
   val rootMediaId: String get() = mediaBrowser.root
@@ -48,30 +48,29 @@ class MediaServiceClient private constructor(
   val networkFailure: StateFlow<Boolean> = _networkFailure
   val playbackPosition: StateFlow<Long> = _playbackPosition
 
-  private val mediaDataSource = Injector.getInstance(context, config)
-	.provideMediaSource()
+  private val mediaDataSource = Injector.getInstance(context, config).provideMediaSource()
   private val mediaBrowserConnectionCallback = MediaBrowserConnectionCallback(context)
   private lateinit var mediaController: MediaControllerCompat
   private val transportControls: MediaControllerCompat.TransportControls
 	get() = mediaController.transportControls
 
   private val mediaBrowser = MediaBrowserCompat(
-	  context,
-	  serviceComponent,
-	  mediaBrowserConnectionCallback, null,
+	context,
+	serviceComponent,
+	mediaBrowserConnectionCallback, null,
   ).apply { connect() }
 
   suspend fun subscribe(
-	  parentId: String,
-	  callback: MediaBrowserCompat.SubscriptionCallback
+	parentId: String,
+	callback: MediaBrowserCompat.SubscriptionCallback
   ) {
 	mediaBrowser.subscribe(parentId, callback)
 	updatePlaybackPosition()
   }
 
   fun unsubscribe(
-	  parentId: String,
-	  callback: MediaBrowserCompat.SubscriptionCallback
+	parentId: String,
+	callback: MediaBrowserCompat.SubscriptionCallback
   ) {
 	mediaBrowser.unsubscribe(parentId, callback)
   }
@@ -85,8 +84,8 @@ class MediaServiceClient private constructor(
   }
 
   fun playMediaId(
-	  mediaId: String,
-	  pauseAllowed: Boolean = true
+	mediaId: String,
+	pauseAllowed: Boolean = true
   ) {
 	val isPrepared = playbackState.value.isPrepared
 	if (isPrepared && mediaId == nowPlaying.value.mediaId) {
@@ -95,8 +94,8 @@ class MediaServiceClient private constructor(
 		  playbackState.isPlaying -> if (pauseAllowed) transportControls.pause() else Unit
 		  playbackState.isPlayEnabled -> transportControls.play()
 		  else -> Log.w(
-			  MediaServiceClient::class.java.simpleName,
-			  "Playable item clicked but neither play nor pause are enabled! (mediaId=$mediaId)"
+			MediaServiceClient::class.java.simpleName,
+			"Playable item clicked but neither play nor pause are enabled! (mediaId=$mediaId)"
 		  )
 		}
 	  }
@@ -144,17 +143,17 @@ class MediaServiceClient private constructor(
   }
 
   private fun sendCommand(
-	  command: String,
-	  parameters: Bundle?,
-	  resultCallback: ((Int, Bundle?) -> Unit)
+	command: String,
+	parameters: Bundle?,
+	resultCallback: ((Int, Bundle?) -> Unit)
   ) = if (mediaBrowser.isConnected) {
 	mediaController.sendCommand(command, parameters, object : ResultReceiver(Handler()) {
-		override fun onReceiveResult(
-			resultCode: Int,
-			resultData: Bundle?
-		) {
-			resultCallback(resultCode, resultData)
-		}
+	  override fun onReceiveResult(
+		resultCode: Int,
+		resultData: Bundle?
+	  ) {
+		resultCallback(resultCode, resultData)
+	  }
 	})
 	true
   } else {
@@ -212,12 +211,12 @@ class MediaServiceClient private constructor(
 	override fun onQueueChanged(queue: MutableList<MediaSessionCompat.QueueItem>?) = Unit
 
 	override fun onSessionEvent(
-		event: String?,
-		extras: Bundle?
+	  event: String?,
+	  extras: Bundle?
 	) {
 	  super.onSessionEvent(event, extras)
 	  when (event) {
-		  NETWORK_FAILURE -> _networkFailure.value = true
+		NETWORK_FAILURE -> _networkFailure.value = true
 	  }
 	}
 
@@ -235,18 +234,18 @@ class MediaServiceClient private constructor(
 
 	@Suppress("PropertyName")
 	private val NOTHING_PLAYING: MediaData = MediaData(
-		mediaId = "",
-		mediaUri = "",
-		displayTitle = "",
+	  mediaId = "",
+	  mediaUri = "",
+	  displayTitle = "",
 	)
 
 	@Volatile
 	private var instance: MediaServiceClient? = null
 
 	fun getInstance(
-		context: Context,
-		serviceComponent: ComponentName,
-		config: MediaServiceConfig = MediaServiceConfig()
+	  context: Context,
+	  serviceComponent: ComponentName,
+	  config: MediaServiceConfig = MediaServiceConfig()
 	) = instance ?: synchronized(this) {
 	  instance ?: MediaServiceClient(context, serviceComponent, config).also { instance = it }
 	}
