@@ -2,12 +2,14 @@ package io.github.lazyengineer.castaway.androidApp.viewmodel
 
 import android.support.v4.media.MediaBrowserCompat.MediaItem
 import android.support.v4.media.MediaBrowserCompat.SubscriptionCallback
+import android.support.v4.media.session.PlaybackStateCompat
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import io.github.lazyengineer.castaway.androidApp.usecase.StoreAndGetFeedUseCase
 import io.github.lazyengineer.castaway.shared.entity.Episode
 import io.github.lazyengineer.castaway.shared.entity.FeedData
+import io.github.lazyengineer.castaway.shared.entity.PlaybackPosition
 import io.github.lazyengineer.castaway.shared.usecase.GetStoredFeedUseCase
 import io.github.lazyengineer.castaway.shared.usecase.SaveEpisodeUseCase
 import io.github.lazyengineer.castaway.shared.usecase.StoredEpisodeFlowableUseCase
@@ -99,7 +101,7 @@ class CastawayViewModel constructor(
 	viewModelScope.launch {
 	  mediaServiceClient.playbackState.collect {
 		currentEpisode.value?.let { episode ->
-		  storeEpisode(episode)
+		  storeEpisodeOnPausedOrStopped(episode, it)
 		  _playing.value = playingState(episode.id)
 		}
 	  }
@@ -183,6 +185,18 @@ class CastawayViewModel constructor(
 		  Log.d("CastawayViewModel", "fetch onError")
 		},
 	  )
+	}
+  }
+
+  private suspend fun storeEpisodeOnPausedOrStopped(episode: Episode, playbackState: PlaybackStateCompat) {
+	if (playbackState.state == PlaybackStateCompat.STATE_PAUSED || playbackState.state == PlaybackStateCompat.STATE_STOPPED) {
+	  val updatedEpisode = episode.copy(
+		playbackPosition = PlaybackPosition(
+		  position = playbackState.position,
+		  duration = playbackDuration.value
+		)
+	  )
+	  storeEpisode(updatedEpisode)
 	}
   }
 
