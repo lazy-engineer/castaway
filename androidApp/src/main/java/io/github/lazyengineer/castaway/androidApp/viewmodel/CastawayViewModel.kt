@@ -39,7 +39,6 @@ class CastawayViewModel constructor(
 	) {
 	  super.onChildrenLoaded(parentId, children)
 	  viewModelScope.launch {
-		Log.d("CastawayViewModel", "load Feed")
 		loadFeed(TEST_URL)
 	  }
 	  /**
@@ -143,7 +142,7 @@ class CastawayViewModel constructor(
 
   private fun fetchFeed() {
 	viewModelScope.launch {
-	  Log.d("CastawayViewModel", "fetch Feed")
+	  Log.d("CastawayViewModel", "Fetch: $TEST_URL 🌐")
 	  fetchFeedFromUrl(TEST_URL)
 	}
   }
@@ -151,7 +150,7 @@ class CastawayViewModel constructor(
   private fun storeCurrentEpisode() {
 	currentEpisode.value?.let { currentEpisode ->
 	  viewModelScope.launch {
-		Log.d("CastawayViewModel", "store current episode")
+		Log.d("CastawayViewModel", "Store current: ${currentEpisode.title} 👉 💾 ")
 		storeEpisode(currentEpisode)
 	  }
 	}
@@ -162,10 +161,12 @@ class CastawayViewModel constructor(
 	  getStoredFeedUseCase(url).subscribe(
 		this,
 		onSuccess = {
+		  Log.d("CastawayViewModel", "Local ✅")
 		  prepareMediaData(it.episodes)
 		  _feed.value = it
 		},
 		onError = {
+		  Log.d("CastawayViewModel", "There is no stored Feed: $url ❌ $it 👉 💾 Download...")
 		  fetchFeed()
 		},
 	  )
@@ -177,12 +178,12 @@ class CastawayViewModel constructor(
 	  storeAndGetFeedUseCase(url).subscribe(
 		this,
 		onSuccess = {
-		  Log.d("CastawayViewModel", "fetch onSuccess: ${it.info}")
+		  Log.d("CastawayViewModel", "Fetched 💯")
 
 		  prepareMediaData(it.episodes)
 		},
 		onError = {
-		  Log.d("CastawayViewModel", "fetch onError")
+		  Log.d("CastawayViewModel", "Error fetching: ❌ $it")
 		},
 	  )
 	}
@@ -205,11 +206,10 @@ class CastawayViewModel constructor(
 	  saveEpisodeUseCase(episode).subscribe(
 		this,
 		onSuccess = {
-		  Log.d("CastawayViewModel", "save onSuccess: ${it}")
-
+		  Log.d("CastawayViewModel", "Stored: 💾 ${it.title}")
 		},
 		onError = {
-		  Log.d("CastawayViewModel", "save onError")
+		  Log.d("CastawayViewModel", "Error storing: ❌ $it")
 		},
 	  )
 	}
