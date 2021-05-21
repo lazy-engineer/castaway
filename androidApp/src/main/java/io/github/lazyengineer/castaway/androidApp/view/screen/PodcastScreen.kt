@@ -19,7 +19,8 @@ import io.github.lazyengineer.castaway.shared.entity.Episode
 @Composable
 fun PodcastScreen(modifier: Modifier = Modifier, viewModel: CastawayViewModel, episodeSelected: (episode: Episode) -> Unit) {
 
-  val feed = viewModel.feed.collectAsState()
+  val feedInfo = viewModel.feedInfo.collectAsState()
+  val episodes = viewModel.episodes.collectAsState()
   val playbackPosition = viewModel.playbackPosition.collectAsState(0L)
   val playbackDuration = viewModel.playbackDuration.collectAsState()
 
@@ -34,12 +35,12 @@ fun PodcastScreen(modifier: Modifier = Modifier, viewModel: CastawayViewModel, e
 	  item {
 		PodcastHeaderView(
 		  modifier = Modifier.fillMaxSize(),
-		  title = feed.value?.info?.title ?: "Some Awesome Podcast",
-		  imageUrl = feed.value?.info?.imageUrl ?: "",
+		  title = feedInfo.value?.title ?: "Some Awesome Podcast",
+		  imageUrl = feedInfo.value?.imageUrl ?: "",
 		)
 	  }
 
-	  items(feed.value?.episodes ?: emptyList()) { item ->
+	  items(episodes.value) { item ->
 		EpisodeRowView(
 		  modifier = modifier.clickable {
 			viewModel.episodeClicked(item)

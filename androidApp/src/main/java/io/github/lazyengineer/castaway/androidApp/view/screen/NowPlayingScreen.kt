@@ -43,11 +43,11 @@ fun NowPlayingScreen(
   episodeId: String,
   viewModel: CastawayViewModel,
 ) {
-  val feed = viewModel.feed.collectAsState()
+  val feedInfo = viewModel.feedInfo.collectAsState()
   val episode = viewModel.currentEpisode.collectAsState()
   val playing = viewModel.playing.collectAsState()
   val episodeTitle = episode.value?.title ?: ""
-  val episodeImageUrl = feed.value?.info?.imageUrl ?: ""
+  val episodeImageUrl = feedInfo.value?.imageUrl ?: ""
   val playbackPosition = viewModel.playbackPosition.collectAsState(0L)
   val playbackDuration = viewModel.playbackDuration.collectAsState()
   val playbackSpeed = viewModel.playbackSpeed.collectAsState()

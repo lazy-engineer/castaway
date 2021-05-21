@@ -8,7 +8,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import io.github.lazyengineer.castaway.androidApp.usecase.StoreAndGetFeedUseCase
 import io.github.lazyengineer.castaway.shared.entity.Episode
-import io.github.lazyengineer.castaway.shared.entity.FeedData
+import io.github.lazyengineer.castaway.shared.entity.FeedInfo
 import io.github.lazyengineer.castaway.shared.entity.PlaybackPosition
 import io.github.lazyengineer.castaway.shared.usecase.GetStoredFeedUseCase
 import io.github.lazyengineer.castaway.shared.usecase.SaveEpisodeUseCase
@@ -52,9 +52,13 @@ class CastawayViewModel constructor(
 	}
   }
 
-  private val _feed = MutableStateFlow<FeedData?>(null)
-  val feed: StateFlow<FeedData?>
-	get() = _feed
+  private val _feedInfo = MutableStateFlow<FeedInfo?>(null)
+  val feedInfo: StateFlow<FeedInfo?>
+	get() = _feedInfo
+
+  private val _episodes = MutableStateFlow<List<Episode>>(listOf())
+  val episodes: StateFlow<List<Episode>>
+	get() = _episodes
 
   private val _currentEpisode = MutableStateFlow<Episode?>(null)
   val currentEpisode: StateFlow<Episode?>
@@ -111,6 +115,8 @@ class CastawayViewModel constructor(
 	viewModelScope.launch {
 	  mediaServiceClient.playbackPosition.collect { position ->
 		if (_playbackEditing.value.not()) _playbackPosition.value = position
+
+		_currentEpisode.value = _currentEpisode.value?.copy(playbackPosition = PlaybackPosition(position = position))
 	  }
 	}
   }
@@ -118,7 +124,7 @@ class CastawayViewModel constructor(
   private fun collectNowPlaying() {
 	viewModelScope.launch {
 	  mediaServiceClient.nowPlaying.collect { mediaData ->
-		val feedEpisode = feed.value?.episodes?.firstOrNull { episode ->
+		val feedEpisode = _episodes.value.firstOrNull { episode ->
 		  mediaData.mediaId == episode.id
 		}
 
@@ -163,7 +169,8 @@ class CastawayViewModel constructor(
 		onSuccess = {
 		  Log.d("CastawayViewModel", "Local ✅")
 		  prepareMediaData(it.episodes)
-		  _feed.value = it
+		  _feedInfo.value = it.info
+		  _episodes.value = it.episodes
 		},
 		onError = {
 		  Log.d("CastawayViewModel", "There is no stored Feed: $url ❌ $it 👉 💾 Download...")
