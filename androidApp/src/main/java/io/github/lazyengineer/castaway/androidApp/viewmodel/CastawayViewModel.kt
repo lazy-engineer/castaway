@@ -115,8 +115,19 @@ class CastawayViewModel constructor(
 	viewModelScope.launch {
 	  mediaServiceClient.playbackPosition.collect { position ->
 		if (_playbackEditing.value.not()) _playbackPosition.value = position
+		updateCurrentEpisodePlaybackPosition()
+	  }
+	}
+  }
 
-		_currentEpisode.value = _currentEpisode.value?.copy(playbackPosition = PlaybackPosition(position = position))
+  private fun updateCurrentEpisodePlaybackPosition() {
+	currentEpisode.value?.let { currentEpisode ->
+	  _episodes.value = episodes.value.map {
+		if (it.id == currentEpisode.id) {
+		  it.copy(playbackPosition = PlaybackPosition(position = playbackPosition.value, duration = playbackDuration.value))
+		} else {
+		  it
+		}
 	  }
 	}
   }
@@ -197,7 +208,7 @@ class CastawayViewModel constructor(
   }
 
   private suspend fun storeEpisodeOnPausedOrStopped(episode: Episode, playbackState: PlaybackStateCompat) {
-	if (playbackState.state == PlaybackStateCompat.STATE_PAUSED || playbackState.state == PlaybackStateCompat.STATE_STOPPED) {
+	if (playbackState.onPausedOrStopped()) {
 	  val updatedEpisode = episode.copy(
 		playbackPosition = PlaybackPosition(
 		  position = playbackState.position,
@@ -207,6 +218,8 @@ class CastawayViewModel constructor(
 	  storeEpisode(updatedEpisode)
 	}
   }
+
+  private fun PlaybackStateCompat.onPausedOrStopped() = (state == PlaybackStateCompat.STATE_PAUSED || state == PlaybackStateCompat.STATE_STOPPED)
 
   private suspend fun storeEpisode(episode: Episode) {
 	withContext(Dispatchers.IO) {
