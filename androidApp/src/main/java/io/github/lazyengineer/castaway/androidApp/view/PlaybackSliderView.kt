@@ -55,7 +55,7 @@ fun PlaybackSliderView(
   @FloatRange(from = 0.0, to = 1.0) progress: Float,
   onValueChange: (Float) -> Unit,
   onValueChangeStarted: (() -> Unit)? = null,
-  onValueChangeFinished: ((Float) -> Unit)? = null,
+  onValueChangeFinished: (() -> Unit)? = null,
   interactionSource: MutableInteractionSource = remember { MutableInteractionSource() }
 ) {
   val scope = rememberCoroutineScope()
@@ -86,10 +86,10 @@ fun PlaybackSliderView(
 		  position.holder.animateTo(target, TweenSpec(durationMillis = 100), velocity) {
 			position.onHolderValueUpdated(this.value)
 		  }
-		  onValueChangeFinished?.invoke(progress)
+		  onValueChangeFinished?.invoke()
 		}
 	  } else {
-		onValueChangeFinished?.invoke(progress)
+		onValueChangeFinished?.invoke()
 	  }
 	}
 

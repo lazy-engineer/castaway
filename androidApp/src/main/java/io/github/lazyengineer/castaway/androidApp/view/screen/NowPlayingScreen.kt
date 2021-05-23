@@ -112,7 +112,7 @@ fun NowPlayingScreen(
 		  },
 		  onValueChangeFinished = {
 			viewModel.editingPlayback(false)
-			viewModel.seekTo(it.progressToPosition(playbackDuration.value))
+			viewModel.seekTo(viewModel.playbackPosition.value)
 		  })
 	  }
 
