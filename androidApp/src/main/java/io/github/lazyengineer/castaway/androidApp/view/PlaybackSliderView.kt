@@ -230,15 +230,15 @@ private fun PlaybackThumb(
 
 private class SliderPosition(
   initial: Float = 0f,
-  val valueRange: ClosedFloatingPointRange<Float> = 0f..1f,
+  valueRange: ClosedFloatingPointRange<Float> = 0f..1f,
   /*@IntRange(from = 0)*/
   steps: Int = 0,
   val scope: CoroutineScope,
   var onValueChange: (Float) -> Unit
 ) {
 
-  internal val startValue: Float = valueRange.start
-  internal val endValue: Float = valueRange.endInclusive
+  val startValue: Float = valueRange.start
+  val endValue: Float = valueRange.endInclusive
 
   init {
 	require(steps >= 0) {
@@ -246,7 +246,7 @@ private class SliderPosition(
 	}
   }
 
-  internal var scaledValue: Float = initial
+  var scaledValue: Float = initial
 	set(value) {
 	  val scaled = scale(startValue, endValue, value, startPx, endPx)
 	  // floating point error due to rescaling
@@ -260,7 +260,7 @@ private class SliderPosition(
   private var endPx = Float.MAX_VALUE
   private var startPx = Float.MIN_VALUE
 
-  internal fun setBounds(min: Float, max: Float) {
+  fun setBounds(min: Float, max: Float) {
 	if (startPx == min && endPx == max) return
 	val newValue = scale(startPx, endPx, holder.value, min, max)
 	startPx = min
@@ -272,22 +272,22 @@ private class SliderPosition(
 	snapTo(newValue)
   }
 
-  internal val tickFractions: List<Float> =
+  val tickFractions: List<Float> =
 	if (steps == 0) emptyList() else List(steps + 2) { it.toFloat() / (steps + 1) }
 
-  internal var anchorsPx: List<Float> = emptyList()
+  var anchorsPx: List<Float> = emptyList()
 	private set
 
-  internal val holder = Animatable(scale(startValue, endValue, initial, startPx, endPx))
+  val holder = Animatable(scale(startValue, endValue, initial, startPx, endPx))
 
-  internal fun snapTo(newValue: Float) {
+  fun snapTo(newValue: Float) {
 	scope.launch {
 	  holder.snapTo(newValue)
 	  onHolderValueUpdated(holder.value)
 	}
   }
 
-  internal val onHolderValueUpdated: (value: Float) -> Unit = {
+  val onHolderValueUpdated: (value: Float) -> Unit = {
 	onValueChange(scale(startPx, endPx, it, startValue, endValue))
   }
 }
