@@ -1,11 +1,10 @@
 buildscript {
   val kotlinVersion by extra("1.4.32")
-  val gradleVersion by extra("4.1.2")
+  val gradleVersion by extra("4.2.1")
   val sqldelightVersion by extra("1.4.3")
 
   repositories {
 	gradlePluginPortal()
-	jcenter()
 	google()
 	mavenCentral()
   }
@@ -20,7 +19,6 @@ buildscript {
 allprojects {
   repositories {
 	google()
-	jcenter()
 	mavenCentral()
 	maven(url = "https://dl.bintray.com/ekito/koin")
   }
