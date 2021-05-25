@@ -34,7 +34,6 @@ dependencies {
 
   implementation(Library.koin)
   implementation(Library.koinAndroid)
-  implementation(Library.koinViewmodel)
 
   implementation(Library.coil)
   implementation(Library.coilCompose)

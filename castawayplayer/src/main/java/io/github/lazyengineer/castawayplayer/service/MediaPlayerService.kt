@@ -136,7 +136,7 @@ class MediaPlayerService : MediaBrowserServiceCompat() {
   }
 
   private fun onPlaybackSpeedChanged() = { playbackSpeed: Float ->
-	exoPlayer.setPlaybackParameters(PlaybackParameters(playbackSpeed))
+	exoPlayer.playbackParameters = PlaybackParameters(playbackSpeed)
   }
 
   private fun onMediaItemPrepared() = { itemToPlay: MediaData, playWhenReady: Boolean, extras: Bundle? ->
@@ -218,8 +218,8 @@ class MediaPlayerService : MediaBrowserServiceCompat() {
 	val initialWindowIndex = if (itemToPlay == null) 0 else mediaSource.indexOf(itemToPlay)
 
 	exoPlayer.playWhenReady = playWhenReady
-	exoPlayer.stop(true)
-	exoPlayer.setPlaybackParameters(PlaybackParameters(config.playbackSpeed))
+	exoPlayer.stop()
+	exoPlayer.playbackParameters = PlaybackParameters(config.playbackSpeed)
 
 	val playerMediaSource = mediaSource.map { it.asMediaMetadata() }.toMediaSource(dataSourceFactory)
 	exoPlayer.setMediaSource(playerMediaSource)
@@ -236,7 +236,7 @@ class MediaPlayerService : MediaBrowserServiceCompat() {
   override fun onTaskRemoved(rootIntent: Intent) {
 	storeRecentPlayableMedia()
 	super.onTaskRemoved(rootIntent)
-	exoPlayer.stop(true)
+	exoPlayer.stop()
   }
 
   override fun onDestroy() {

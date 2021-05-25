@@ -4,6 +4,7 @@ import android.content.ComponentName
 import android.content.Context
 import android.os.Bundle
 import android.os.Handler
+import android.os.Looper
 import android.os.ResultReceiver
 import android.support.v4.media.MediaBrowserCompat
 import android.support.v4.media.MediaMetadataCompat
@@ -147,7 +148,7 @@ class MediaServiceClient private constructor(
 	parameters: Bundle?,
 	resultCallback: ((Int, Bundle?) -> Unit)
   ) = if (mediaBrowser.isConnected) {
-	mediaController.sendCommand(command, parameters, object : ResultReceiver(Handler()) {
+	mediaController.sendCommand(command, parameters, object : ResultReceiver(Handler(Looper.getMainLooper())) {
 	  override fun onReceiveResult(
 		resultCode: Int,
 		resultData: Bundle?

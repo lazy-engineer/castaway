@@ -1,5 +1,6 @@
 package io.github.lazyengineer.castaway.androidApp.view.screen
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -11,6 +12,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
 import androidx.compose.material.MaterialTheme
@@ -30,7 +32,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import com.google.accompanist.coil.CoilImage
+import com.google.accompanist.coil.rememberCoilPainter
+import com.google.accompanist.imageloading.ImageLoadState.Error
+import com.google.accompanist.imageloading.ImageLoadState.Loading
 import io.github.lazyengineer.castaway.androidApp.view.PlaybackSliderView
 import io.github.lazyengineer.castaway.androidApp.viewmodel.CastawayViewModel
 import java.util.concurrent.TimeUnit.HOURS
@@ -59,14 +63,22 @@ fun NowPlayingScreen(
 	  Box(modifier = Modifier.padding(top = 48.dp, bottom = 48.dp)) {
 		Box(modifier = Modifier.size(300.dp).clip(RoundedCornerShape(25f)).background(MaterialTheme.colors.primary))
 
-		CoilImage(
-		  data = episodeImageUrl,
-		  contentDescription = "Podcast header image",
+		val painter = rememberCoilPainter(episodeImageUrl)
+
+		Image(
+		  painter = painter,
 		  modifier = Modifier.size(300.dp).padding(5.dp).clip(RoundedCornerShape(25f)),
-		  error = {
-			Icon(Filled.Mic, "podcast header icon", modifier = Modifier.size(150.dp), tint = Color.Gray)
-		  }
+		  contentDescription = "Podcast header image",
 		)
+
+		when (painter.loadState) {
+		  is Loading -> {
+			CircularProgressIndicator(Modifier.align(Alignment.Center))
+		  }
+		  is Error -> {
+			Icon(Filled.Mic, "Podcast header icon", modifier = Modifier.size(150.dp), tint = Color.Gray)
+		  }
+		}
 	  }
 
 	  Text(episodeTitle, modifier = Modifier.padding(bottom = 16.dp))

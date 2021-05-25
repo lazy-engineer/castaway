@@ -3,7 +3,6 @@ package io.github.lazyengineer.castaway.androidApp.view.screen
 import androidx.compose.runtime.Composable
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import androidx.navigation.compose.navigate
 import androidx.navigation.compose.rememberNavController
 import io.github.lazyengineer.castaway.androidApp.viewmodel.CastawayViewModel
 
@@ -16,7 +15,7 @@ fun StartScreen(viewModel: CastawayViewModel) {
 	composable(Screen.OnBoarding.route) {
 	  OnBoardingScreen {
 		navController.navigate(Screen.Podcast.route) {
-		  popUpTo(navController.graph.startDestination) { inclusive = true }
+		  popUpTo(navController.graph.startDestinationId) { inclusive = true }
 		}
 	  }
 	}
