@@ -18,15 +18,17 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import io.github.lazyengineer.castaway.androidApp.view.EpisodeState.EpisodeLoading
-import io.github.lazyengineer.castaway.androidApp.view.EpisodeState.EpisodePaused
-import io.github.lazyengineer.castaway.androidApp.view.EpisodeState.EpisodePlayed
-import io.github.lazyengineer.castaway.androidApp.view.EpisodeState.EpisodePlaying
+import io.github.lazyengineer.castaway.androidApp.view.EpisodeRowState.Buffering
+import io.github.lazyengineer.castaway.androidApp.view.EpisodeRowState.Downloading
+import io.github.lazyengineer.castaway.androidApp.view.EpisodeRowState.Paused
+import io.github.lazyengineer.castaway.androidApp.view.EpisodeRowState.Played
+import io.github.lazyengineer.castaway.androidApp.view.EpisodeRowState.Playing
+import io.github.lazyengineer.castaway.androidApp.view.EpisodeRowState.Unplayed
 
 @Composable
 fun EpisodeRowView(
   modifier: Modifier = Modifier,
-  state: EpisodeState = EpisodePaused,
+  state: EpisodeRowState = Paused,
   title: String,
   progress: Float,
   onPlayPause: (Boolean) -> Unit
@@ -40,10 +42,12 @@ fun EpisodeRowView(
 	  Text(title, modifier = Modifier.weight(5f))
 
 	  val playPauseImage = when (state) {
-		EpisodePaused -> Filled.PlayArrow
-		EpisodePlaying -> Filled.Pause
-		EpisodeLoading -> Filled.PlayArrow
-		EpisodePlayed -> Filled.PlayArrow
+		Paused -> Filled.PlayArrow
+		Playing -> Filled.Pause
+		Played -> Filled.PlayArrow
+		Buffering -> Filled.PlayArrow
+		Downloading -> Filled.PlayArrow
+		Unplayed -> Filled.PlayArrow
 	  }
 
 	  Icon(playPauseImage, "play/pause", modifier = Modifier.padding(8.dp).weight(1f).clickable { onPlayPause(true) })
@@ -55,9 +59,17 @@ fun EpisodeRowView(
   }
 }
 
-sealed class EpisodeState {
-  object EpisodePaused : EpisodeState()
-  object EpisodePlaying : EpisodeState()
-  object EpisodeLoading : EpisodeState()
-  object EpisodePlayed : EpisodeState()
+sealed class EpisodeRowState {
+  object Unplayed : EpisodeRowState()
+  object Playing : EpisodeRowState()
+  object Paused : EpisodeRowState()
+  object Buffering : EpisodeRowState()
+  object Downloading : EpisodeRowState()
+  object Played : EpisodeRowState()
+}
+
+sealed class EpisodeRowEvent {
+  object Play : EpisodeRowEvent()
+  object Pause : EpisodeRowEvent()
+  object Click: EpisodeRowEvent()
 }
