@@ -37,6 +37,7 @@ import com.google.accompanist.imageloading.ImageLoadState.Error
 import com.google.accompanist.imageloading.ImageLoadState.Loading
 import io.github.lazyengineer.castaway.androidApp.view.PlaybackSliderView
 import io.github.lazyengineer.castaway.androidApp.viewmodel.CastawayViewModel
+import io.github.lazyengineer.castaway.androidApp.viewmodel.UiEvent
 import java.util.concurrent.TimeUnit.HOURS
 import java.util.concurrent.TimeUnit.MILLISECONDS
 import java.util.concurrent.TimeUnit.MINUTES
@@ -85,12 +86,12 @@ fun NowPlayingScreen(
 
 	  Row(modifier = Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.Center) {
 		IconButton(onClick = {
-		  viewModel.replayCurrentItem()
+		  viewModel.handleUiEvent(UiEvent.NowPlayingEvent.Rewind)
 		}) {
 		  Icon(Filled.Replay30, "replay 30 second", modifier = Modifier.size(48.dp))
 		}
 		IconButton(onClick = {
-		  viewModel.mediaItemClicked(episode.value?.id ?: episodeId)
+		  viewModel.handleUiEvent(UiEvent.NowPlayingEvent.MediaItemClicked(episode.value?.id ?: episodeId))
 		}, modifier = Modifier.padding(start = 48.dp, end = 48.dp).size(64.dp)) {
 
 		  val playPauseImage = when {
@@ -101,7 +102,7 @@ fun NowPlayingScreen(
 		  Icon(playPauseImage, "play/pause", modifier = Modifier.size(64.dp))
 		}
 		IconButton(onClick = {
-		  viewModel.forwardCurrentItem()
+		  viewModel.handleUiEvent(UiEvent.NowPlayingEvent.FastForward)
 		}) {
 		  Icon(Filled.Forward30, "fast forward 30 second", modifier = Modifier.size(48.dp))
 		}
@@ -117,19 +118,19 @@ fun NowPlayingScreen(
 		  modifier = Modifier.fillMaxWidth().padding(start = 16.dp, end = 16.dp),
 		  progress = playbackProgress,
 		  onValueChange = {
-			viewModel.editingPlaybackPosition(it.progressToPosition(playbackDuration.value))
+			viewModel.handleUiEvent(UiEvent.NowPlayingEvent.EditingPlaybackPosition(it.progressToPosition(playbackDuration.value)))
 		  },
 		  onValueChangeStarted = {
-			viewModel.editingPlayback(true)
+			viewModel.handleUiEvent(UiEvent.NowPlayingEvent.EditingPlayback(true))
 		  },
 		  onValueChangeFinished = {
-			viewModel.editingPlayback(false)
-			viewModel.seekTo(viewModel.playbackPosition.value)
+			viewModel.handleUiEvent(UiEvent.NowPlayingEvent.EditingPlayback(false))
+			viewModel.handleUiEvent(UiEvent.NowPlayingEvent.SeekTo(viewModel.playbackPosition.value))
 		  })
 	  }
 
 	  Text(text = "${playbackSpeed.value}x", modifier = Modifier.align(alignment = Alignment.Start).padding(start = 16.dp).clickable {
-		viewModel.changePlaybackSpeed()
+		viewModel.handleUiEvent(UiEvent.NowPlayingEvent.ChangePlaybackSpeed)
 	  })
 	}
   }

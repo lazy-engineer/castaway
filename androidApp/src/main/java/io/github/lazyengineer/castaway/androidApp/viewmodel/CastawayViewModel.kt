@@ -7,6 +7,19 @@ import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import io.github.lazyengineer.castaway.androidApp.usecase.StoreAndGetFeedUseCase
+import io.github.lazyengineer.castaway.androidApp.view.EpisodeRowState
+import io.github.lazyengineer.castaway.androidApp.viewmodel.UiEvent.EpisodeRowEvent.Click
+import io.github.lazyengineer.castaway.androidApp.viewmodel.UiEvent.EpisodeRowEvent.Pause
+import io.github.lazyengineer.castaway.androidApp.viewmodel.UiEvent.EpisodeRowEvent.Play
+import io.github.lazyengineer.castaway.androidApp.viewmodel.UiEvent.NowPlayingEvent
+import io.github.lazyengineer.castaway.androidApp.viewmodel.UiEvent.NowPlayingEvent.ChangePlaybackSpeed
+import io.github.lazyengineer.castaway.androidApp.viewmodel.UiEvent.NowPlayingEvent.EditingPlayback
+import io.github.lazyengineer.castaway.androidApp.viewmodel.UiEvent.NowPlayingEvent.EditingPlaybackPosition
+import io.github.lazyengineer.castaway.androidApp.viewmodel.UiEvent.NowPlayingEvent.EpisodeClicked
+import io.github.lazyengineer.castaway.androidApp.viewmodel.UiEvent.NowPlayingEvent.FastForward
+import io.github.lazyengineer.castaway.androidApp.viewmodel.UiEvent.NowPlayingEvent.MediaItemClicked
+import io.github.lazyengineer.castaway.androidApp.viewmodel.UiEvent.NowPlayingEvent.Rewind
+import io.github.lazyengineer.castaway.androidApp.viewmodel.UiEvent.NowPlayingEvent.SeekTo
 import io.github.lazyengineer.castaway.shared.entity.Episode
 import io.github.lazyengineer.castaway.shared.entity.FeedInfo
 import io.github.lazyengineer.castaway.shared.entity.PlaybackPosition
@@ -20,6 +33,7 @@ import io.github.lazyengineer.castawayplayer.source.MediaData
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -51,6 +65,12 @@ class CastawayViewModel constructor(
 	   */
 	}
   }
+
+  private val _episodeRowState = MutableStateFlow<EpisodeRowState>(EpisodeRowState.Unplayed)
+  val episodeRowState = _episodeRowState.asStateFlow()
+
+  private val _nowPlayingState = MutableStateFlow<EpisodeRowState>(EpisodeRowState.Unplayed)
+  val nowPlayingState = _nowPlayingState.asStateFlow()
 
   private val _feedInfo = MutableStateFlow<FeedInfo?>(null)
   val feedInfo: StateFlow<FeedInfo?>
@@ -262,13 +282,13 @@ class CastawayViewModel constructor(
 	}
   }
 
-  fun mediaItemClicked(clickedItemId: String) {
+  private fun mediaItemClicked(clickedItemId: String) {
 	if (mediaServiceClient.isConnected.value) {
 	  mediaServiceClient.playMediaId(clickedItemId)
 	}
   }
 
-  fun episodeClicked(clickedItem: Episode) {
+  private fun episodeClicked(clickedItem: Episode) {
 	if (mediaServiceClient.isConnected.value) {
 	  if (!playingState(clickedItem.id)) {
 		mediaServiceClient.playMediaId(clickedItem.id)
@@ -276,43 +296,43 @@ class CastawayViewModel constructor(
 	}
   }
 
-  fun forwardCurrentItem() {
+  private fun forwardCurrentItem() {
 	if (mediaServiceClient.isConnected.value) {
 	  mediaServiceClient.fastForward()
 	}
   }
 
-  fun replayCurrentItem() {
+  private fun replayCurrentItem() {
 	if (mediaServiceClient.isConnected.value) {
 	  mediaServiceClient.rewind()
 	}
   }
 
-  fun skipToPrevious() {
+  private fun skipToPrevious() {
 	if (mediaServiceClient.isConnected.value) {
 	  mediaServiceClient.skipToPrevious()
 	}
   }
 
-  fun skipToNext() {
+  private fun skipToNext() {
 	if (mediaServiceClient.isConnected.value) {
 	  mediaServiceClient.skipToNext()
 	}
   }
 
-  fun seekTo(positionMillis: Long) {
+  private fun seekTo(positionMillis: Long) {
 	if (mediaServiceClient.isConnected.value) {
 	  mediaServiceClient.seekTo(positionMillis)
 	}
   }
 
-  fun playbackSpeed(speed: Float) {
+  private fun playbackSpeed(speed: Float) {
 	if (mediaServiceClient.isConnected.value) {
 	  mediaServiceClient.speed(speed)
 	}
   }
 
-  fun changePlaybackSpeed() {
+  private fun changePlaybackSpeed() {
 	val supportedSpeedRates = listOf(1.0f, 1.5f, 2.0f)
 	val currentIndex = supportedSpeedRates.indexOf(_playbackSpeed.value)
 
@@ -335,12 +355,31 @@ class CastawayViewModel constructor(
 	}
   }
 
-  fun editingPlayback(editing: Boolean) {
+  private fun editingPlayback(editing: Boolean) {
 	_playbackEditing.value = editing
   }
 
-  fun editingPlaybackPosition(position: Long) {
+  private fun editingPlaybackPosition(position: Long) {
 	_playbackPosition.value = position
+  }
+
+  fun handleUiEvent(uiEvent: UiEvent) {
+	when (uiEvent) {
+	  Click -> TODO()
+	  Pause -> TODO()
+	  Play -> TODO()
+
+	  NowPlayingEvent.Pause -> TODO()
+	  NowPlayingEvent.Play -> TODO()
+	  FastForward -> forwardCurrentItem()
+	  Rewind -> replayCurrentItem()
+	  ChangePlaybackSpeed -> changePlaybackSpeed()
+	  is EditingPlayback -> editingPlayback(uiEvent.editing)
+	  is EditingPlaybackPosition -> editingPlaybackPosition(uiEvent.position)
+	  is SeekTo -> seekTo(uiEvent.positionMillis)
+	  is MediaItemClicked -> mediaItemClicked(uiEvent.itemId)
+	  is EpisodeClicked -> episodeClicked(uiEvent.item)
+	}
   }
 
   override fun onCleared() {
@@ -351,5 +390,27 @@ class CastawayViewModel constructor(
   companion object {
 
 	const val TEST_URL = "https://atp.fm/rss"
+  }
+}
+
+sealed class UiEvent {
+
+  sealed class EpisodeRowEvent : UiEvent() {
+	object Play : EpisodeRowEvent()
+	object Pause : EpisodeRowEvent()
+	object Click : EpisodeRowEvent()
+  }
+
+  sealed class NowPlayingEvent : UiEvent() {
+	object Play : NowPlayingEvent()
+	object Pause : NowPlayingEvent()
+	object Rewind : NowPlayingEvent()
+	object FastForward : NowPlayingEvent()
+	object ChangePlaybackSpeed : NowPlayingEvent()
+	data class EpisodeClicked(val item: Episode) : NowPlayingEvent()
+	data class MediaItemClicked(val itemId: String) : NowPlayingEvent()
+	data class SeekTo(val positionMillis: Long) : NowPlayingEvent()
+	data class EditingPlaybackPosition(val position: Long) : NowPlayingEvent()
+	data class EditingPlayback(val editing: Boolean) : NowPlayingEvent()
   }
 }

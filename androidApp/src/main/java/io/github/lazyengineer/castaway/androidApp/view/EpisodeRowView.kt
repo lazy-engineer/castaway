@@ -67,9 +67,3 @@ sealed class EpisodeRowState {
   object Downloading : EpisodeRowState()
   object Played : EpisodeRowState()
 }
-
-sealed class EpisodeRowEvent {
-  object Play : EpisodeRowEvent()
-  object Pause : EpisodeRowEvent()
-  object Click: EpisodeRowEvent()
-}
