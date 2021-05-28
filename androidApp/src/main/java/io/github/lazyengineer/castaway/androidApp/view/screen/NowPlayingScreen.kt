@@ -25,7 +25,6 @@ import androidx.compose.material.icons.filled.PauseCircleFilled
 import androidx.compose.material.icons.filled.PlayCircleFilled
 import androidx.compose.material.icons.filled.Replay30
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.State
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -36,6 +35,7 @@ import com.google.accompanist.coil.rememberCoilPainter
 import com.google.accompanist.imageloading.ImageLoadState.Error
 import com.google.accompanist.imageloading.ImageLoadState.Loading
 import io.github.lazyengineer.castaway.androidApp.view.PlaybackSliderView
+import io.github.lazyengineer.castaway.androidApp.view.screen.NowPlayingState.Playing
 import io.github.lazyengineer.castaway.androidApp.viewmodel.CastawayViewModel
 import io.github.lazyengineer.castaway.androidApp.viewmodel.UiEvent
 import java.util.concurrent.TimeUnit.HOURS
@@ -48,23 +48,14 @@ fun NowPlayingScreen(
   episodeId: String,
   viewModel: CastawayViewModel,
 ) {
-  val feedInfo = viewModel.feedInfo.collectAsState()
-  val episode = viewModel.currentEpisode.collectAsState()
-  val playing = viewModel.playing.collectAsState()
-  val episodeTitle = episode.value?.title ?: ""
-  val episodeImageUrl = feedInfo.value?.imageUrl ?: ""
-  val playbackPosition = viewModel.playbackPosition.collectAsState(0L)
-  val playbackDuration = viewModel.playbackDuration.collectAsState()
-  val playbackSpeed = viewModel.playbackSpeed.collectAsState()
-
-  val playbackProgress = playbackProgress(playbackPosition, playbackDuration)
+  val nowPlayingState = viewModel.nowPlayingState.collectAsState()
 
   Surface(modifier = modifier.fillMaxSize()) {
 	Column(horizontalAlignment = Alignment.CenterHorizontally) {
 	  Box(modifier = Modifier.padding(top = 48.dp, bottom = 48.dp)) {
 		Box(modifier = Modifier.size(300.dp).clip(RoundedCornerShape(25f)).background(MaterialTheme.colors.primary))
 
-		val painter = rememberCoilPainter(episodeImageUrl)
+		val painter = rememberCoilPainter(nowPlayingState.value.episode?.imageUrl)
 
 		Image(
 		  painter = painter,
@@ -82,7 +73,7 @@ fun NowPlayingScreen(
 		}
 	  }
 
-	  Text(episodeTitle, modifier = Modifier.padding(bottom = 16.dp))
+	  Text(nowPlayingState.value.episode?.title ?: "", modifier = Modifier.padding(bottom = 16.dp))
 
 	  Row(modifier = Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.Center) {
 		IconButton(onClick = {
@@ -91,11 +82,11 @@ fun NowPlayingScreen(
 		  Icon(Filled.Replay30, "replay 30 second", modifier = Modifier.size(48.dp))
 		}
 		IconButton(onClick = {
-		  viewModel.handleUiEvent(UiEvent.NowPlayingEvent.MediaItemClicked(episode.value?.id ?: episodeId))
+		  viewModel.handleUiEvent(UiEvent.NowPlayingEvent.MediaItemClicked(nowPlayingState.value.episode?.id ?: episodeId))
 		}, modifier = Modifier.padding(start = 48.dp, end = 48.dp).size(64.dp)) {
 
-		  val playPauseImage = when {
-			playing.value -> Filled.PauseCircleFilled
+		  val playPauseImage = when (nowPlayingState.value) {
+			is Playing -> Filled.PauseCircleFilled
 			else -> Filled.PlayCircleFilled
 		  }
 
@@ -110,40 +101,71 @@ fun NowPlayingScreen(
 
 	  Column(modifier = Modifier.fillMaxWidth().padding(top = 64.dp)) {
 		Row(modifier = Modifier.fillMaxWidth().padding(start = 16.dp, end = 16.dp), horizontalArrangement = Arrangement.SpaceBetween) {
-		  Text(playbackPosition.value.millisToTxt())
-		  Text(playbackDuration.value.millisToTxt())
+		  Text(nowPlayingState.value.episode?.playbackPosition?.millisToTxt() ?: "")
+		  Text(nowPlayingState.value.episode?.playbackDuration?.millisToTxt() ?: "")
 		}
 
 		PlaybackSliderView(
 		  modifier = Modifier.fillMaxWidth().padding(start = 16.dp, end = 16.dp),
-		  progress = playbackProgress,
+		  progress = playbackProgress(
+			nowPlayingState.value.episode?.playbackPosition ?: 0L,
+			nowPlayingState.value.episode?.playbackDuration ?: 1L
+		  ),
 		  onValueChange = {
-			viewModel.handleUiEvent(UiEvent.NowPlayingEvent.EditingPlaybackPosition(it.progressToPosition(playbackDuration.value)))
+			viewModel.handleUiEvent(
+			  UiEvent.NowPlayingEvent.EditingPlaybackPosition(
+				it.progressToPosition(
+				  nowPlayingState.value.episode?.playbackDuration ?: 1
+				)
+			  )
+			)
 		  },
 		  onValueChangeStarted = {
 			viewModel.handleUiEvent(UiEvent.NowPlayingEvent.EditingPlayback(true))
 		  },
 		  onValueChangeFinished = {
 			viewModel.handleUiEvent(UiEvent.NowPlayingEvent.EditingPlayback(false))
-			viewModel.handleUiEvent(UiEvent.NowPlayingEvent.SeekTo(viewModel.playbackPosition.value))
+			viewModel.handleUiEvent(UiEvent.NowPlayingEvent.SeekTo(viewModel.nowPlayingState.value.episode?.playbackPosition ?: 0))
 		  })
 	  }
 
-	  Text(text = "${playbackSpeed.value}x", modifier = Modifier.align(alignment = Alignment.Start).padding(start = 16.dp).clickable {
-		viewModel.handleUiEvent(UiEvent.NowPlayingEvent.ChangePlaybackSpeed)
-	  })
+	  Text(
+		text = "${nowPlayingState.value.episode?.playbackSpeed ?: 1f}x",
+		modifier = Modifier.align(alignment = Alignment.Start).padding(start = 16.dp).clickable {
+		  viewModel.handleUiEvent(UiEvent.NowPlayingEvent.ChangePlaybackSpeed)
+		})
 	}
   }
 }
 
+sealed class NowPlayingState(val episode: NowPlayingEpisode? = null) {
+  object Loading : NowPlayingState()
+  data class Playing(val playingEpisode: NowPlayingEpisode) : NowPlayingState(playingEpisode)
+  data class Paused(val pausedEpisode: NowPlayingEpisode) : NowPlayingState(pausedEpisode)
+  object Buffering : NowPlayingState()
+  object Played : NowPlayingState()
+}
+
+data class NowPlayingEpisode(
+  val id: String,
+  val title: String,
+  val subTitle: String?,
+  val audioUrl: String,
+  val imageUrl: String?,
+  val author: String?,
+  val playbackPosition: Long = 0,
+  val playbackDuration: Long = 1,
+  val playbackSpeed: Float = 1f,
+)
+
 private fun playbackProgress(
-  playbackPosition: State<Long>,
-  playbackDuration: State<Long>
+  playbackPosition: Long,
+  playbackDuration: Long
 ): Float {
   return when {
-	playbackDuration.value <= 0 -> 0f
-	playbackDuration.value <= 0 -> 0f
-	else -> playbackPosition.value / playbackDuration.value.toFloat()
+	playbackDuration <= 0 -> 0f
+	playbackDuration <= 0 -> 0f
+	else -> playbackPosition / playbackDuration.toFloat()
   }
 }
 
