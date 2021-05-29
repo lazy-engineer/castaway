@@ -16,16 +16,12 @@ import io.github.lazyengineer.castaway.androidApp.view.PodcastHeaderView
 import io.github.lazyengineer.castaway.androidApp.viewmodel.CastawayViewModel
 import io.github.lazyengineer.castaway.androidApp.viewmodel.UiEvent
 import io.github.lazyengineer.castaway.shared.entity.Episode
+import io.github.lazyengineer.castaway.shared.entity.FeedData
 
 @Composable
 fun PodcastScreen(modifier: Modifier = Modifier, viewModel: CastawayViewModel, episodeSelected: (episode: Episode) -> Unit) {
 
-  val feedInfo = viewModel.feedInfo.collectAsState()
-  val episodes = viewModel.episodes.collectAsState()
-  val playbackPosition = viewModel.playbackPosition.collectAsState(0L)
-  val playbackDuration = viewModel.playbackDuration.collectAsState()
-
-  val playbackProgress = playbackPosition.value.toFloat() / playbackDuration.value
+  val podcastState = viewModel.podcastState.collectAsState()
 
   Surface(modifier = modifier.fillMaxSize()) {
 	LazyColumn(
@@ -36,12 +32,12 @@ fun PodcastScreen(modifier: Modifier = Modifier, viewModel: CastawayViewModel, e
 	  item {
 		PodcastHeaderView(
 		  modifier = Modifier.fillMaxSize(),
-		  title = feedInfo.value?.title ?: "Some Awesome Podcast",
-		  imageUrl = feedInfo.value?.imageUrl ?: "",
+		  title = podcastState.value.feed?.info?.title ?: "Some Awesome Podcast",
+		  imageUrl = podcastState.value.feed?.info?.imageUrl ?: "",
 		)
 	  }
 
-	  items(episodes.value) { item ->
+	  items(podcastState.value.feed?.episodes ?: emptyList()) { item ->
 		EpisodeRowView(
 		  modifier = modifier.clickable {
 			viewModel.handleUiEvent(UiEvent.NowPlayingEvent.EpisodeClicked(item))
@@ -55,4 +51,9 @@ fun PodcastScreen(modifier: Modifier = Modifier, viewModel: CastawayViewModel, e
 	  }
 	}
   }
+}
+
+sealed class PodcastState(val feed: FeedData? = null) {
+  object Loading : PodcastState()
+  data class Loaded(val loadedFeed: FeedData) : PodcastState(loadedFeed)
 }
