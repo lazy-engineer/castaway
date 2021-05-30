@@ -126,8 +126,10 @@ class CastawayViewModel constructor(
   private fun collectPlaybackState() {
 	viewModelScope.launch {
 	  mediaServiceClient.playbackState.collect {
-		nowPlayingState.value.episode?.let { episode ->
-		  // storeEpisodeOnPausedOrStopped(episode, it, episode.playbackDuration)
+		nowPlayingState.value.episode?.let { playingEpisode ->
+		  podcastState.value.feed?.episodes?.mapPlayingEpisodeToEpisode(playingEpisode)?.let { episode ->
+			storeEpisodeOnPausedOrStopped(episode, it, episode.playbackPosition.duration)
+		  }
 		}
 	  }
 	}
@@ -181,7 +183,9 @@ class CastawayViewModel constructor(
 	nowPlayingState.value.episode?.let { currentEpisode ->
 	  viewModelScope.launch {
 		Log.d("CastawayViewModel", "Store current: ${currentEpisode.title} 👉 💾 ")
-		//storeEpisode(currentEpisode)
+		podcastState.value.feed?.episodes?.mapPlayingEpisodeToEpisode(currentEpisode)?.let { episode ->
+		  storeEpisode(episode)
+		}
 	  }
 	}
   }
@@ -417,6 +421,25 @@ class CastawayViewModel constructor(
   override fun onCleared() {
 	super.onCleared()
 	mediaServiceClient.unsubscribe(MEDIA_ROOT_ID, subscriptionCallback)
+  }
+
+  private fun List<Episode>.mapPlayingEpisodeToEpisode(playingEpisode: NowPlayingEpisode) = this.first {
+	playingEpisode.id == it.id
+  }.joinToEpisode(playingEpisode)
+
+  private fun Episode.joinToEpisode(playingEpisode: NowPlayingEpisode): Episode {
+	return Episode(
+	  id = id,
+	  title = playingEpisode.title,
+	  subTitle = playingEpisode.subTitle,
+	  description = description,
+	  audioUrl = playingEpisode.audioUrl,
+	  imageUrl = playingEpisode.imageUrl,
+	  author = playingEpisode.author,
+	  playbackPosition = PlaybackPosition(playingEpisode.playbackPosition, playingEpisode.playbackDuration),
+	  episode = episode,
+	  podcastUrl = podcastUrl,
+	)
   }
 
   companion object {
