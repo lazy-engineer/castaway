@@ -164,7 +164,6 @@ private fun playbackProgress(
 ): Float {
   return when {
 	playbackDuration <= 0 -> 0f
-	playbackDuration <= 0 -> 0f
 	else -> playbackPosition / playbackDuration.toFloat()
   }
 }
