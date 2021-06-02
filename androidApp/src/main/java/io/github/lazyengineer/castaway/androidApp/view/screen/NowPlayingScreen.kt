@@ -26,18 +26,23 @@ import androidx.compose.material.icons.filled.PlayCircleFilled
 import androidx.compose.material.icons.filled.Replay30
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import com.google.accompanist.coil.rememberCoilPainter
-import com.google.accompanist.imageloading.ImageLoadState.Error
-import com.google.accompanist.imageloading.ImageLoadState.Loading
+import com.google.accompanist.imageloading.ImageLoadState
 import io.github.lazyengineer.castaway.androidApp.view.PlaybackSliderView
+import io.github.lazyengineer.castaway.androidApp.view.screen.NowPlayingState.Buffering
+import io.github.lazyengineer.castaway.androidApp.view.screen.NowPlayingState.Loading
+import io.github.lazyengineer.castaway.androidApp.view.screen.NowPlayingState.Paused
+import io.github.lazyengineer.castaway.androidApp.view.screen.NowPlayingState.Played
 import io.github.lazyengineer.castaway.androidApp.view.screen.NowPlayingState.Playing
+import io.github.lazyengineer.castaway.androidApp.view.util.rememberFlowWithLifecycle
 import io.github.lazyengineer.castaway.androidApp.viewmodel.CastawayViewModel
-import io.github.lazyengineer.castaway.androidApp.viewmodel.UiEvent
+import io.github.lazyengineer.castaway.androidApp.viewmodel.UiEvent.NowPlayingEvent
 import java.util.concurrent.TimeUnit.HOURS
 import java.util.concurrent.TimeUnit.MILLISECONDS
 import java.util.concurrent.TimeUnit.MINUTES
@@ -45,103 +50,144 @@ import java.util.concurrent.TimeUnit.MINUTES
 @Composable
 fun NowPlayingScreen(
   modifier: Modifier = Modifier,
-  episodeId: String,
   viewModel: CastawayViewModel,
 ) {
-  val nowPlayingState = viewModel.nowPlayingState.collectAsState()
+  val viewState by rememberFlowWithLifecycle(viewModel.nowPlayingState).collectAsState(Loading)
 
+  NowPlayingScreen(modifier, viewState) {
+	viewModel.submitEvent(it)
+  }
+}
+
+@Composable
+internal fun NowPlayingScreen(
+  modifier: Modifier = Modifier,
+  state: NowPlayingState,
+  event: (NowPlayingEvent) -> Unit
+) {
   Surface(modifier = modifier.fillMaxSize()) {
-	Column(horizontalAlignment = Alignment.CenterHorizontally) {
-	  Box(modifier = Modifier.padding(top = 48.dp, bottom = 48.dp)) {
-		Box(modifier = Modifier.size(300.dp).clip(RoundedCornerShape(25f)).background(MaterialTheme.colors.primary))
 
-		val painter = rememberCoilPainter(nowPlayingState.value.episode?.imageUrl)
+	when (state) {
+	  Buffering -> {
 
-		Image(
-		  painter = painter,
-		  modifier = Modifier.size(300.dp).padding(5.dp).clip(RoundedCornerShape(25f)),
-		  contentDescription = "Podcast header image",
-		)
+	  }
+	  Loading -> {
 
-		when (painter.loadState) {
-		  is Loading -> {
-			CircularProgressIndicator(Modifier.align(Alignment.Center))
-		  }
-		  is Error -> {
-			Icon(Filled.Mic, "Podcast header icon", modifier = Modifier.size(150.dp), tint = Color.Gray)
-		  }
+	  }
+	  Played -> {
+
+	  }
+	  is Paused -> {
+		NowPlayingView(modifier, state.episode, false) {
+		  event(it)
 		}
 	  }
-
-	  Text(nowPlayingState.value.episode?.title ?: "", modifier = Modifier.padding(bottom = 16.dp))
-
-	  Row(modifier = Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.Center) {
-		IconButton(onClick = {
-		  viewModel.handleUiEvent(UiEvent.NowPlayingEvent.Rewind)
-		}) {
-		  Icon(Filled.Replay30, "replay 30 second", modifier = Modifier.size(48.dp))
-		}
-		IconButton(onClick = {
-		  viewModel.handleUiEvent(UiEvent.NowPlayingEvent.MediaItemClicked(nowPlayingState.value.episode?.id ?: episodeId))
-		}, modifier = Modifier.padding(start = 48.dp, end = 48.dp).size(64.dp)) {
-
-		  val playPauseImage = when (nowPlayingState.value) {
-			is Playing -> Filled.PauseCircleFilled
-			else -> Filled.PlayCircleFilled
-		  }
-
-		  Icon(playPauseImage, "play/pause", modifier = Modifier.size(64.dp))
-		}
-		IconButton(onClick = {
-		  viewModel.handleUiEvent(UiEvent.NowPlayingEvent.FastForward)
-		}) {
-		  Icon(Filled.Forward30, "fast forward 30 second", modifier = Modifier.size(48.dp))
+	  is Playing -> {
+		NowPlayingView(modifier, state.episode, true) {
+		  event(it)
 		}
 	  }
-
-	  Column(modifier = Modifier.fillMaxWidth().padding(top = 64.dp)) {
-		Row(modifier = Modifier.fillMaxWidth().padding(start = 16.dp, end = 16.dp), horizontalArrangement = Arrangement.SpaceBetween) {
-		  Text(nowPlayingState.value.episode?.playbackPosition?.millisToTxt() ?: "")
-		  Text(nowPlayingState.value.episode?.playbackDuration?.millisToTxt() ?: "")
-		}
-
-		PlaybackSliderView(
-		  modifier = Modifier.fillMaxWidth().padding(start = 16.dp, end = 16.dp),
-		  progress = playbackProgress(
-			nowPlayingState.value.episode?.playbackPosition ?: 0L,
-			nowPlayingState.value.episode?.playbackDuration ?: 1L
-		  ),
-		  onValueChange = {
-			viewModel.handleUiEvent(
-			  UiEvent.NowPlayingEvent.EditingPlaybackPosition(
-				it.progressToPosition(
-				  nowPlayingState.value.episode?.playbackDuration ?: 1
-				)
-			  )
-			)
-		  },
-		  onValueChangeStarted = {
-			viewModel.handleUiEvent(UiEvent.NowPlayingEvent.EditingPlayback(true))
-		  },
-		  onValueChangeFinished = {
-			viewModel.handleUiEvent(UiEvent.NowPlayingEvent.EditingPlayback(false))
-			viewModel.handleUiEvent(UiEvent.NowPlayingEvent.SeekTo(viewModel.nowPlayingState.value.episode?.playbackPosition ?: 0))
-		  })
-	  }
-
-	  Text(
-		text = "${nowPlayingState.value.episode?.playbackSpeed ?: 1f}x",
-		modifier = Modifier.align(alignment = Alignment.Start).padding(start = 16.dp).clickable {
-		  viewModel.handleUiEvent(UiEvent.NowPlayingEvent.ChangePlaybackSpeed)
-		})
 	}
   }
 }
 
-sealed class NowPlayingState(val episode: NowPlayingEpisode? = null) {
+@Composable
+internal fun NowPlayingView(
+  modifier: Modifier = Modifier,
+  episode: NowPlayingEpisode,
+  playing: Boolean,
+  event: (NowPlayingEvent) -> Unit
+) {
+  Column(horizontalAlignment = Alignment.CenterHorizontally) {
+	Box(modifier = Modifier.padding(top = 48.dp, bottom = 48.dp)) {
+	  Box(modifier = Modifier.size(300.dp).clip(RoundedCornerShape(25f)).background(MaterialTheme.colors.primary))
+
+	  val painter = rememberCoilPainter(episode.imageUrl)
+
+	  Image(
+		painter = painter,
+		modifier = Modifier.size(300.dp).padding(5.dp).clip(RoundedCornerShape(25f)),
+		contentDescription = "Podcast header image",
+	  )
+
+	  when (painter.loadState) {
+		is ImageLoadState.Loading -> {
+		  CircularProgressIndicator(Modifier.align(Alignment.Center))
+		}
+		is ImageLoadState.Error -> {
+		  Icon(Filled.Mic, "Podcast header icon", modifier = Modifier.size(150.dp), tint = Color.Gray)
+		}
+	  }
+	}
+
+	Text(episode.title, modifier = Modifier.padding(bottom = 16.dp))
+
+	Row(modifier = Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.Center) {
+	  IconButton(onClick = {
+		event(NowPlayingEvent.Rewind)
+	  }) {
+		Icon(Filled.Replay30, "replay 30 second", modifier = Modifier.size(48.dp))
+	  }
+	  IconButton(onClick = {
+		event(NowPlayingEvent.MediaItemClicked(episode.id))
+	  }, modifier = Modifier.padding(start = 48.dp, end = 48.dp).size(64.dp)) {
+
+		val playPauseImage = when (playing) {
+		  true -> Filled.PauseCircleFilled
+		  else -> Filled.PlayCircleFilled
+		}
+
+		Icon(playPauseImage, "play/pause", modifier = Modifier.size(64.dp))
+	  }
+	  IconButton(onClick = {
+		event(NowPlayingEvent.FastForward)
+	  }) {
+		Icon(Filled.Forward30, "fast forward 30 second", modifier = Modifier.size(48.dp))
+	  }
+	}
+
+	Column(modifier = Modifier.fillMaxWidth().padding(top = 64.dp)) {
+	  Row(modifier = Modifier.fillMaxWidth().padding(start = 16.dp, end = 16.dp), horizontalArrangement = Arrangement.SpaceBetween) {
+		Text(episode.playbackPosition.millisToTxt())
+		Text(episode.playbackDuration.millisToTxt())
+	  }
+
+	  PlaybackSliderView(
+		modifier = Modifier.fillMaxWidth().padding(start = 16.dp, end = 16.dp),
+		progress = playbackProgress(
+		  episode.playbackPosition,
+		  episode.playbackDuration
+		),
+		onValueChange = {
+		  event(
+			NowPlayingEvent.EditingPlaybackPosition(
+			  it.progressToPosition(
+				episode.playbackDuration
+			  )
+			)
+		  )
+		},
+		onValueChangeStarted = {
+		  event(NowPlayingEvent.EditingPlayback(true))
+		},
+		onValueChangeFinished = {
+		  event(NowPlayingEvent.EditingPlayback(false))
+		  event(NowPlayingEvent.SeekTo(episode.playbackPosition))
+		})
+	}
+
+	Text(
+	  text = "${episode.playbackSpeed}x",
+	  modifier = Modifier.align(alignment = Alignment.Start).padding(start = 16.dp).clickable {
+		event(NowPlayingEvent.ChangePlaybackSpeed)
+	  })
+  }
+}
+
+sealed class NowPlayingState {
   object Loading : NowPlayingState()
-  data class Playing(val playingEpisode: NowPlayingEpisode) : NowPlayingState(playingEpisode)
-  data class Paused(val pausedEpisode: NowPlayingEpisode) : NowPlayingState(pausedEpisode)
+  data class Playing(val episode: NowPlayingEpisode) : NowPlayingState()
+  data class Paused(val episode: NowPlayingEpisode) : NowPlayingState()
   object Buffering : NowPlayingState()
   object Played : NowPlayingState()
 }

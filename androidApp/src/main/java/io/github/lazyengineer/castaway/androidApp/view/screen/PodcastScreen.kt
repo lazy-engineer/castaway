@@ -40,13 +40,13 @@ fun PodcastScreen(modifier: Modifier = Modifier, viewModel: CastawayViewModel, e
 	  items(podcastState.value.feed?.episodes ?: emptyList()) { item ->
 		EpisodeRowView(
 		  modifier = modifier.clickable {
-			viewModel.handleUiEvent(UiEvent.NowPlayingEvent.EpisodeClicked(item))
+			viewModel.submitEvent(UiEvent.NowPlayingEvent.EpisodeClicked(item))
 			episodeSelected(item)
 		  },
 		  title = item.title,
 		  progress = item.playbackPosition.position.toFloat() / item.playbackPosition.duration
 		) {
-		  viewModel.handleUiEvent(UiEvent.NowPlayingEvent.MediaItemClicked(item.id))
+		  viewModel.submitEvent(UiEvent.NowPlayingEvent.MediaItemClicked(item.id))
 		}
 	  }
 	}

@@ -26,7 +26,6 @@ fun StartScreen(viewModel: CastawayViewModel) {
 	}
 	composable(Screen.NowPlaying.route + "/{episodeId}") { backStackEntry ->
 	  NowPlayingScreen(
-		episodeId = backStackEntry.arguments?.get("episodeId") as String,
 		viewModel = viewModel,
 	  )
 	}
