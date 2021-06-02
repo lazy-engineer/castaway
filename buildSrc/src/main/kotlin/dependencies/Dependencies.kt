@@ -99,6 +99,7 @@ object Library {
   const val composeMaterialIconsCore = "androidx.compose.material:material-icons-core:${Version.compose}"
   const val composeMaterialIconsExtended = "androidx.compose.material:material-icons-extended:${Version.compose}"
   const val composeActivity = "androidx.activity:activity-compose:1.3.0-alpha03"
+  const val composeLifecycle = "androidx.lifecycle:lifecycle-runtime-ktx:2.4.0-alpha01"
   const val composeViewModel = "androidx.lifecycle:lifecycle-viewmodel-compose:1.0.0-alpha02"
   const val composeNavigation = "androidx.navigation:navigation-compose:${Version.composeNavigation}"
   const val composeUiTests = "androidx.compose.ui:ui-test-junit4:${Version.compose}"
