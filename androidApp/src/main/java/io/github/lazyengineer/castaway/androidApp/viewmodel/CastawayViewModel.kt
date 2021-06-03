@@ -8,8 +8,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import io.github.lazyengineer.castaway.androidApp.usecase.StoreAndGetFeedUseCase
 import io.github.lazyengineer.castaway.androidApp.view.EpisodeRowState
-import io.github.lazyengineer.castaway.androidApp.view.screen.NowPlayingEpisode
-import io.github.lazyengineer.castaway.androidApp.view.screen.NowPlayingState
+import io.github.lazyengineer.castaway.androidApp.view.nowplaying.NowPlayingEpisode
+import io.github.lazyengineer.castaway.androidApp.view.nowplaying.NowPlayingState
 import io.github.lazyengineer.castaway.androidApp.view.screen.PodcastState
 import io.github.lazyengineer.castaway.androidApp.viewmodel.UiEvent.EpisodeRowEvent.Click
 import io.github.lazyengineer.castaway.androidApp.viewmodel.UiEvent.EpisodeRowEvent.Pause

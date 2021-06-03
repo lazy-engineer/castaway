@@ -1,4 +1,4 @@
-package io.github.lazyengineer.castaway.androidApp.view.screen
+package io.github.lazyengineer.castaway.androidApp.view.nowplaying
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -35,11 +35,11 @@ import androidx.compose.ui.unit.dp
 import com.google.accompanist.coil.rememberCoilPainter
 import com.google.accompanist.imageloading.ImageLoadState
 import io.github.lazyengineer.castaway.androidApp.view.PlaybackSliderView
-import io.github.lazyengineer.castaway.androidApp.view.screen.NowPlayingState.Buffering
-import io.github.lazyengineer.castaway.androidApp.view.screen.NowPlayingState.Loading
-import io.github.lazyengineer.castaway.androidApp.view.screen.NowPlayingState.Paused
-import io.github.lazyengineer.castaway.androidApp.view.screen.NowPlayingState.Played
-import io.github.lazyengineer.castaway.androidApp.view.screen.NowPlayingState.Playing
+import io.github.lazyengineer.castaway.androidApp.view.nowplaying.NowPlayingState.Buffering
+import io.github.lazyengineer.castaway.androidApp.view.nowplaying.NowPlayingState.Loading
+import io.github.lazyengineer.castaway.androidApp.view.nowplaying.NowPlayingState.Paused
+import io.github.lazyengineer.castaway.androidApp.view.nowplaying.NowPlayingState.Played
+import io.github.lazyengineer.castaway.androidApp.view.nowplaying.NowPlayingState.Playing
 import io.github.lazyengineer.castaway.androidApp.view.util.rememberFlowWithLifecycle
 import io.github.lazyengineer.castaway.androidApp.viewmodel.CastawayViewModel
 import io.github.lazyengineer.castaway.androidApp.viewmodel.UiEvent.NowPlayingEvent
@@ -183,26 +183,6 @@ internal fun NowPlayingView(
 	  })
   }
 }
-
-sealed class NowPlayingState {
-  object Loading : NowPlayingState()
-  data class Playing(val episode: NowPlayingEpisode) : NowPlayingState()
-  data class Paused(val episode: NowPlayingEpisode) : NowPlayingState()
-  object Buffering : NowPlayingState()
-  object Played : NowPlayingState()
-}
-
-data class NowPlayingEpisode(
-  val id: String,
-  val title: String,
-  val subTitle: String?,
-  val audioUrl: String,
-  val imageUrl: String?,
-  val author: String?,
-  val playbackPosition: Long = 0,
-  val playbackDuration: Long = 1,
-  val playbackSpeed: Float = 1f,
-)
 
 private fun playbackProgress(
   playbackPosition: Long,
