@@ -123,14 +123,18 @@ internal fun NowPlayingView(
 	Text(episode.title, modifier = Modifier.padding(bottom = 16.dp))
 
 	Row(modifier = Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.Center) {
-	  IconButton(onClick = {
-		event(NowPlayingEvent.Rewind)
-	  }) {
+	  IconButton(
+		onClick = {
+		  event(NowPlayingEvent.Rewind)
+		}) {
 		Icon(Filled.Replay30, "replay 30 second", modifier = Modifier.size(48.dp))
 	  }
-	  IconButton(onClick = {
-		event(NowPlayingEvent.MediaItemClicked(episode.id))
-	  }, modifier = Modifier.padding(start = 48.dp, end = 48.dp).size(64.dp)) {
+
+	  IconButton(
+		modifier = Modifier.padding(start = 48.dp, end = 48.dp).size(64.dp),
+		onClick = {
+		  event(NowPlayingEvent.PlayPause(episode.id))
+		}) {
 
 		val playPauseImage = when (playing) {
 		  true -> Filled.PauseCircleFilled

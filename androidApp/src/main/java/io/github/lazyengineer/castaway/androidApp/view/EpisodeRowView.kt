@@ -28,7 +28,7 @@ import io.github.lazyengineer.castaway.androidApp.view.EpisodeRowState.Unplayed
 @Composable
 fun EpisodeRowView(
   modifier: Modifier = Modifier,
-  state: EpisodeRowState = Paused,
+  state: EpisodeRowState = Unplayed,
   title: String,
   progress: Float,
   onPlayPause: (Boolean) -> Unit

@@ -11,16 +11,12 @@ import io.github.lazyengineer.castaway.androidApp.view.EpisodeRowState
 import io.github.lazyengineer.castaway.androidApp.view.nowplaying.NowPlayingEpisode
 import io.github.lazyengineer.castaway.androidApp.view.nowplaying.NowPlayingState
 import io.github.lazyengineer.castaway.androidApp.view.screen.PodcastState
-import io.github.lazyengineer.castaway.androidApp.viewmodel.UiEvent.EpisodeRowEvent.Click
-import io.github.lazyengineer.castaway.androidApp.viewmodel.UiEvent.EpisodeRowEvent.Pause
-import io.github.lazyengineer.castaway.androidApp.viewmodel.UiEvent.EpisodeRowEvent.Play
-import io.github.lazyengineer.castaway.androidApp.viewmodel.UiEvent.NowPlayingEvent
+import io.github.lazyengineer.castaway.androidApp.viewmodel.UiEvent.EpisodeRowEvent
 import io.github.lazyengineer.castaway.androidApp.viewmodel.UiEvent.NowPlayingEvent.ChangePlaybackSpeed
 import io.github.lazyengineer.castaway.androidApp.viewmodel.UiEvent.NowPlayingEvent.EditingPlayback
 import io.github.lazyengineer.castaway.androidApp.viewmodel.UiEvent.NowPlayingEvent.EditingPlaybackPosition
-import io.github.lazyengineer.castaway.androidApp.viewmodel.UiEvent.NowPlayingEvent.EpisodeClicked
 import io.github.lazyengineer.castaway.androidApp.viewmodel.UiEvent.NowPlayingEvent.FastForward
-import io.github.lazyengineer.castaway.androidApp.viewmodel.UiEvent.NowPlayingEvent.MediaItemClicked
+import io.github.lazyengineer.castaway.androidApp.viewmodel.UiEvent.NowPlayingEvent.PlayPause
 import io.github.lazyengineer.castaway.androidApp.viewmodel.UiEvent.NowPlayingEvent.Rewind
 import io.github.lazyengineer.castaway.androidApp.viewmodel.UiEvent.NowPlayingEvent.SeekTo
 import io.github.lazyengineer.castaway.shared.entity.Episode
@@ -72,7 +68,7 @@ class CastawayViewModel constructor(
 
   private val _playbackEditing = MutableStateFlow(false)
 
-  private val pendingEvents = MutableSharedFlow<UiEvent>()
+  private val _pendingEvents = MutableSharedFlow<UiEvent>()
 
   init {
 	subscribeToMediaService()
@@ -85,27 +81,22 @@ class CastawayViewModel constructor(
 
   private fun collectUiEvents() {
 	viewModelScope.launch {
-	  pendingEvents.collect { uiEvent ->
+	  _pendingEvents.collect { uiEvent ->
 		when (uiEvent) {
-		  Click -> {
+		  is EpisodeRowEvent.Click -> {
+			episodeClicked(uiEvent.item)
 		  }
-		  Pause -> {
-		  }
-		  Play -> {
+		  is EpisodeRowEvent.PlayPause -> {
+			mediaItemClicked(uiEvent.itemId)
 		  }
 
-		  NowPlayingEvent.Pause -> {
-		  }
-		  NowPlayingEvent.Play -> {
-		  }
 		  FastForward -> forwardCurrentItem()
 		  Rewind -> replayCurrentItem()
 		  ChangePlaybackSpeed -> changePlaybackSpeed()
 		  is EditingPlayback -> editingPlayback(uiEvent.editing)
 		  is EditingPlaybackPosition -> editingPlaybackPosition(uiEvent.position)
 		  is SeekTo -> seekTo(uiEvent.positionMillis)
-		  is MediaItemClicked -> mediaItemClicked(uiEvent.itemId)
-		  is EpisodeClicked -> episodeClicked(uiEvent.item)
+		  is PlayPause -> mediaItemClicked(uiEvent.itemId)
 		}
 	  }
 	}
@@ -143,6 +134,7 @@ class CastawayViewModel constructor(
 
 		  val state = nowPlayingEpisode.playbackPlayingState(playbackPlayingState(nowPlayingEpisode.id))
 		  _nowPlayingState.emit(state)
+		  _episodeRowState.emit(EpisodeRowState.Playing)
 		}
 	  }
 	}
@@ -442,7 +434,7 @@ class CastawayViewModel constructor(
 
   fun submitEvent(uiEvent: UiEvent) {
 	viewModelScope.launch {
-	  pendingEvents.emit(uiEvent)
+	  _pendingEvents.emit(uiEvent)
 	}
   }
 
@@ -479,21 +471,17 @@ class CastawayViewModel constructor(
 sealed class UiEvent {
 
   sealed class EpisodeRowEvent : UiEvent() {
-	object Play : EpisodeRowEvent()
-	object Pause : EpisodeRowEvent()
-	object Click : EpisodeRowEvent()
+	data class PlayPause(val itemId: String) : EpisodeRowEvent()
+	data class Click(val item: Episode) : EpisodeRowEvent()
   }
 
   sealed class NowPlayingEvent : UiEvent() {
-	object Play : NowPlayingEvent()
-	object Pause : NowPlayingEvent()
 	object Rewind : NowPlayingEvent()
 	object FastForward : NowPlayingEvent()
 	object ChangePlaybackSpeed : NowPlayingEvent()
-	data class EpisodeClicked(val item: Episode) : NowPlayingEvent()
-	data class MediaItemClicked(val itemId: String) : NowPlayingEvent()
 	data class SeekTo(val positionMillis: Long) : NowPlayingEvent()
 	data class EditingPlaybackPosition(val position: Long) : NowPlayingEvent()
 	data class EditingPlayback(val editing: Boolean) : NowPlayingEvent()
+	data class PlayPause(val itemId: String) : NowPlayingEvent()
   }
 }
