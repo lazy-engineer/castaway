@@ -16,21 +16,20 @@ import androidx.compose.ui.unit.dp
 import io.github.lazyengineer.castaway.androidApp.view.EpisodeRowState
 import io.github.lazyengineer.castaway.androidApp.view.EpisodeRowView
 import io.github.lazyengineer.castaway.androidApp.view.PodcastHeaderView
-import io.github.lazyengineer.castaway.androidApp.view.screen.PodcastState.Loaded
+import io.github.lazyengineer.castaway.androidApp.view.nowplaying.NowPlayingEpisode
 import io.github.lazyengineer.castaway.androidApp.view.util.rememberFlowWithLifecycle
 import io.github.lazyengineer.castaway.androidApp.viewmodel.CastawayViewModel
 import io.github.lazyengineer.castaway.androidApp.viewmodel.UiEvent.EpisodeRowEvent
-import io.github.lazyengineer.castaway.shared.entity.Episode
 import io.github.lazyengineer.castaway.shared.entity.FeedData
 
 @Composable
 fun PodcastScreen(
   modifier: Modifier = Modifier,
   viewModel: CastawayViewModel,
-  episodeSelected: (episode: Episode) -> Unit,
+  episodeSelected: (episode: NowPlayingEpisode) -> Unit,
 ) {
   val episodeState by rememberFlowWithLifecycle(viewModel.episodeRowState).collectAsState(EpisodeRowState.Unplayed)
-  val podcastState by rememberFlowWithLifecycle(viewModel.podcastState).collectAsState(PodcastState.Loading)
+  val podcastState by rememberFlowWithLifecycle(viewModel.state).collectAsState(PodcastViewState.Empty)
 
   PodcastScreen(
 	modifier,
@@ -48,16 +47,24 @@ fun PodcastScreen(
 @Composable
 internal fun PodcastScreen(
   modifier: Modifier = Modifier,
-  state: PodcastState,
+  state: PodcastViewState,
   episodeState: EpisodeRowState,
   event: (EpisodeRowEvent) -> Unit,
-  episodeSelected: (episode: Episode) -> Unit,
+  episodeSelected: (episode: NowPlayingEpisode) -> Unit,
 ) {
   Surface(modifier = modifier.fillMaxSize()) {
 
-	when (state) {
-	  PodcastState.Loading -> PodcastLoadingScreen(modifier)
-	  is Loaded -> PodcastScreen(modifier, state.loadedFeed, episodeState, event, episodeSelected)
+	when (state.loading) {
+	  true -> PodcastLoadingScreen(modifier)
+	  false -> PodcastScreen(
+		modifier,
+		state.title,
+		state.imageUrl,
+		state.episodes,
+		episodeState,
+		event,
+		episodeSelected
+	  )
 	}
   }
 }
@@ -74,10 +81,12 @@ internal fun PodcastLoadingScreen(
 @Composable
 internal fun PodcastScreen(
   modifier: Modifier = Modifier,
-  feed: FeedData,
+  feedTitle: String,
+  feedImageUrl: String,
+  episodes: List<NowPlayingEpisode>,
   episodeState: EpisodeRowState,
   event: (EpisodeRowEvent) -> Unit,
-  episodeSelected: (episode: Episode) -> Unit,
+  episodeSelected: (episode: NowPlayingEpisode) -> Unit,
 ) {
   Surface(modifier = modifier.fillMaxSize()) {
 	LazyColumn(
@@ -88,12 +97,12 @@ internal fun PodcastScreen(
 	  item {
 		PodcastHeaderView(
 		  modifier = Modifier.fillMaxSize(),
-		  title = feed.info.title,
-		  imageUrl = feed.info.imageUrl ?: "",
+		  title = feedTitle,
+		  imageUrl = feedImageUrl,
 		)
 	  }
 
-	  items(feed.episodes, key = { it.id }) { item ->
+	  items(episodes, key = { it.id }) { item ->
 		EpisodeRowView(
 		  modifier = modifier.clickable {
 			event(EpisodeRowEvent.Click(item))
@@ -101,7 +110,7 @@ internal fun PodcastScreen(
 		  },
 		  state = episodeState,
 		  title = item.title,
-		  progress = item.playbackPosition.position.toFloat() / item.playbackPosition.duration
+		  progress = item.playbackPosition.toFloat() / item.playbackDuration
 		) {
 		  event(EpisodeRowEvent.PlayPause(item.id))
 		}
@@ -113,4 +122,17 @@ internal fun PodcastScreen(
 sealed class PodcastState(val feed: FeedData? = null) {
   object Loading : PodcastState()
   data class Loaded(val loadedFeed: FeedData) : PodcastState(loadedFeed)
+}
+
+data class PodcastViewState(
+  val loading: Boolean = true,
+  val title: String = "",
+  val imageUrl: String = "",
+  val episodes: List<NowPlayingEpisode> = emptyList(),
+) {
+
+  companion object {
+
+	val Empty = PodcastViewState()
+  }
 }

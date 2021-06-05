@@ -10,7 +10,7 @@ import io.github.lazyengineer.castaway.androidApp.usecase.StoreAndGetFeedUseCase
 import io.github.lazyengineer.castaway.androidApp.view.EpisodeRowState
 import io.github.lazyengineer.castaway.androidApp.view.nowplaying.NowPlayingEpisode
 import io.github.lazyengineer.castaway.androidApp.view.nowplaying.NowPlayingState
-import io.github.lazyengineer.castaway.androidApp.view.screen.PodcastState
+import io.github.lazyengineer.castaway.androidApp.view.screen.PodcastViewState
 import io.github.lazyengineer.castaway.androidApp.viewmodel.UiEvent.EpisodeRowEvent
 import io.github.lazyengineer.castaway.androidApp.viewmodel.UiEvent.NowPlayingEvent.ChangePlaybackSpeed
 import io.github.lazyengineer.castaway.androidApp.viewmodel.UiEvent.NowPlayingEvent.EditingPlayback
@@ -20,7 +20,6 @@ import io.github.lazyengineer.castaway.androidApp.viewmodel.UiEvent.NowPlayingEv
 import io.github.lazyengineer.castaway.androidApp.viewmodel.UiEvent.NowPlayingEvent.Rewind
 import io.github.lazyengineer.castaway.androidApp.viewmodel.UiEvent.NowPlayingEvent.SeekTo
 import io.github.lazyengineer.castaway.shared.entity.Episode
-import io.github.lazyengineer.castaway.shared.entity.FeedData
 import io.github.lazyengineer.castaway.shared.entity.PlaybackPosition
 import io.github.lazyengineer.castaway.shared.usecase.GetStoredFeedUseCase
 import io.github.lazyengineer.castaway.shared.usecase.SaveEpisodeUseCase
@@ -30,10 +29,12 @@ import io.github.lazyengineer.castawayplayer.extention.isPlaying
 import io.github.lazyengineer.castawayplayer.service.Constants.MEDIA_ROOT_ID
 import io.github.lazyengineer.castawayplayer.source.MediaData
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
@@ -63,12 +64,27 @@ class CastawayViewModel constructor(
   private val _nowPlayingState = MutableStateFlow<NowPlayingState>(NowPlayingState.Loading)
   val nowPlayingState = _nowPlayingState.asStateFlow()
 
-  private val _podcastState = MutableStateFlow<PodcastState>(PodcastState.Loading)
-  val podcastState = _podcastState.asStateFlow()
-
+  private val feedLoading = MutableStateFlow(false)
+  private val feedTitle = MutableStateFlow("")
+  private val feedImageUrl = MutableStateFlow("")
+  private val episodes = MutableStateFlow<List<Episode>>(emptyList())
   private val _playbackEditing = MutableStateFlow(false)
 
   private val _pendingEvents = MutableSharedFlow<UiEvent>()
+
+  val state: Flow<PodcastViewState> = combine(
+	feedLoading,
+	feedTitle,
+	feedImageUrl,
+	episodes,
+  ) { loading, title, imageUrl, episodes ->
+	PodcastViewState(
+	  loading = loading,
+	  title = title,
+	  imageUrl = imageUrl,
+	  episodes = episodes.map { it.toPlayingEpisode() },
+	)
+  }
 
   init {
 	subscribeToMediaService()
@@ -115,7 +131,7 @@ class CastawayViewModel constructor(
   private fun collectNowPlaying() {
 	viewModelScope.launch {
 	  mediaServiceClient.nowPlaying.collect { mediaData ->
-		val feedEpisode = podcastState.value.feed?.episodes?.firstOrNull { episode ->
+		val feedEpisode = episodes.value.firstOrNull { episode ->
 		  mediaData.mediaId == episode.id
 		}
 
@@ -134,7 +150,11 @@ class CastawayViewModel constructor(
 
 		  val state = nowPlayingEpisode.playbackPlayingState(playbackPlayingState(nowPlayingEpisode.id))
 		  _nowPlayingState.emit(state)
-		  _episodeRowState.emit(EpisodeRowState.Playing)
+
+		  when (state) {
+			is NowPlayingState.Playing -> _episodeRowState.emit(EpisodeRowState.Playing)
+			else -> _episodeRowState.emit(EpisodeRowState.Paused)
+		  }
 		}
 	  }
 	}
@@ -154,7 +174,7 @@ class CastawayViewModel constructor(
 		val playingState = nowPlayingEpisode.playbackPlayingState(playbackState.isPlaying)
 		_nowPlayingState.emit(playingState)
 
-		podcastState.value.feed?.episodes?.mapPlayingEpisodeToEpisode(nowPlayingEpisode)?.let { episode ->
+		episodes.value.mapPlayingEpisodeToEpisode(nowPlayingEpisode).let { episode ->
 		  storeEpisodeOnPausedOrStopped(episode, playbackState, episode.playbackPosition.duration)
 		}
 	  }
@@ -191,18 +211,16 @@ class CastawayViewModel constructor(
 
   private fun updateCurrentEpisodePlaybackPosition() {
 	playingOrPaused { episode ->
-	  val updatedEpisodes = podcastState.value.feed?.episodes?.map {
+	  val updatedEpisodes = episodes.value.map {
 		if (it.id == episode.id) {
 		  it.copy(playbackPosition = PlaybackPosition(position = episode.playbackPosition, duration = episode.playbackDuration))
 		} else {
 		  it
 		}
-	  } ?: run { emptyList() }
+	  }
 
-	  _podcastState.value.feed?.let {
-		viewModelScope.launch {
-		  _podcastState.emit(PodcastState.Loaded(it.copy(episodes = updatedEpisodes)))
-		}
+	  viewModelScope.launch {
+		episodes.emit(updatedEpisodes)
 	  }
 	}
   }
@@ -228,11 +246,14 @@ class CastawayViewModel constructor(
 	withContext(Dispatchers.IO) {
 	  getStoredFeedUseCase(url).subscribe(
 		this,
-		onSuccess = {
+		onSuccess = { feed ->
 		  Log.d("CastawayViewModel", "Local ✅")
-		  prepareMediaData(it.episodes)
+		  prepareMediaData(feed.episodes)
 		  viewModelScope.launch {
-			_podcastState.emit(PodcastState.Loaded(FeedData(info = it.info, episodes = it.episodes)))
+			feedLoading.emit(false)
+			feedTitle.emit(feed.info.title)
+			feedImageUrl.emit(feed.info.imageUrl ?: "")
+			episodes.emit(feed.episodes)
 		  }
 		},
 		onError = {
@@ -320,7 +341,7 @@ class CastawayViewModel constructor(
 	}
   }
 
-  private fun episodeClicked(clickedItem: Episode) {
+  private fun episodeClicked(clickedItem: NowPlayingEpisode) {
 	if (mediaServiceClient.isConnected.value) {
 	  if (!playbackPlayingState(clickedItem.id)) {
 		mediaServiceClient.playMediaId(clickedItem.id)
@@ -462,6 +483,19 @@ class CastawayViewModel constructor(
 	)
   }
 
+  private fun Episode.toPlayingEpisode(): NowPlayingEpisode {
+	return NowPlayingEpisode(
+	  id = id,
+	  title = title,
+	  subTitle = subTitle,
+	  audioUrl = audioUrl,
+	  imageUrl = imageUrl,
+	  author = author,
+	  playbackPosition = playbackPosition.position,
+	  playbackDuration = playbackPosition.duration,
+	)
+  }
+
   companion object {
 
 	const val TEST_URL = "https://atp.fm/rss"
@@ -472,7 +506,7 @@ sealed class UiEvent {
 
   sealed class EpisodeRowEvent : UiEvent() {
 	data class PlayPause(val itemId: String) : EpisodeRowEvent()
-	data class Click(val item: Episode) : EpisodeRowEvent()
+	data class Click(val item: NowPlayingEpisode) : EpisodeRowEvent()
   }
 
   sealed class NowPlayingEvent : UiEvent() {
