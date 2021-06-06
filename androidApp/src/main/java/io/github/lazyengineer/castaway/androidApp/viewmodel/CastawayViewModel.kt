@@ -7,10 +7,9 @@ import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import io.github.lazyengineer.castaway.androidApp.usecase.StoreAndGetFeedUseCase
-import io.github.lazyengineer.castaway.androidApp.view.EpisodeRowState
 import io.github.lazyengineer.castaway.androidApp.view.nowplaying.NowPlayingEpisode
 import io.github.lazyengineer.castaway.androidApp.view.nowplaying.NowPlayingState
-import io.github.lazyengineer.castaway.androidApp.view.screen.PodcastViewState
+import io.github.lazyengineer.castaway.androidApp.view.podcast.PodcastViewState
 import io.github.lazyengineer.castaway.androidApp.viewmodel.UiEvent.EpisodeRowEvent
 import io.github.lazyengineer.castaway.androidApp.viewmodel.UiEvent.NowPlayingEvent.ChangePlaybackSpeed
 import io.github.lazyengineer.castaway.androidApp.viewmodel.UiEvent.NowPlayingEvent.EditingPlayback
@@ -58,9 +57,6 @@ class CastawayViewModel constructor(
 	}
   }
 
-  private val _episodeRowState = MutableStateFlow<EpisodeRowState>(EpisodeRowState.Unplayed)
-  val episodeRowState = _episodeRowState.asStateFlow()
-
   private val _nowPlayingState = MutableStateFlow<NowPlayingState>(NowPlayingState.Loading)
   val nowPlayingState = _nowPlayingState.asStateFlow()
 
@@ -68,8 +64,8 @@ class CastawayViewModel constructor(
   private val feedTitle = MutableStateFlow("")
   private val feedImageUrl = MutableStateFlow("")
   private val episodes = MutableStateFlow<List<Episode>>(emptyList())
-  private val _playbackEditing = MutableStateFlow(false)
 
+  private val _playbackEditing = MutableStateFlow(false)
   private val _pendingEvents = MutableSharedFlow<UiEvent>()
 
   val state: Flow<PodcastViewState> = combine(
@@ -148,13 +144,8 @@ class CastawayViewModel constructor(
 			playbackSpeed = 1f,
 		  )
 
-		  val state = nowPlayingEpisode.playbackPlayingState(playbackPlayingState(nowPlayingEpisode.id))
+		  val state = nowPlayingEpisode.playingState(playingState(nowPlayingEpisode.id))
 		  _nowPlayingState.emit(state)
-
-		  when (state) {
-			is NowPlayingState.Playing -> _episodeRowState.emit(EpisodeRowState.Playing)
-			else -> _episodeRowState.emit(EpisodeRowState.Paused)
-		  }
 		}
 	  }
 	}
@@ -171,7 +162,7 @@ class CastawayViewModel constructor(
   private fun handlePlaybackState(playbackState: PlaybackStateCompat) {
 	playingOrPaused { nowPlayingEpisode ->
 	  viewModelScope.launch {
-		val playingState = nowPlayingEpisode.playbackPlayingState(playbackState.isPlaying)
+		val playingState = nowPlayingEpisode.playingState(playbackState.isPlaying)
 		_nowPlayingState.emit(playingState)
 
 		episodes.value.mapPlayingEpisodeToEpisode(nowPlayingEpisode).let { episode ->
@@ -201,7 +192,7 @@ class CastawayViewModel constructor(
 	}
   }
 
-  private fun NowPlayingEpisode.playbackPlayingState(playing: Boolean): NowPlayingState {
+  private fun NowPlayingEpisode.playingState(playing: Boolean): NowPlayingState {
 	return if (playing) {
 	  NowPlayingState.Playing(this)
 	} else {
@@ -343,7 +334,7 @@ class CastawayViewModel constructor(
 
   private fun episodeClicked(clickedItem: NowPlayingEpisode) {
 	if (mediaServiceClient.isConnected.value) {
-	  if (!playbackPlayingState(clickedItem.id)) {
+	  if (!playingState(clickedItem.id)) {
 		mediaServiceClient.playMediaId(clickedItem.id)
 	  }
 	}
@@ -416,7 +407,7 @@ class CastawayViewModel constructor(
 	return supportedSpeedRates[newIndex]
   }
 
-  private fun playbackPlayingState(mediaId: String): Boolean {
+  private fun playingState(mediaId: String): Boolean {
 	val isActive = mediaId == mediaServiceClient.nowPlaying.value.mediaId
 	val isPlaying = mediaServiceClient.playbackState.value.isPlaying
 	return when {
@@ -493,6 +484,7 @@ class CastawayViewModel constructor(
 	  author = author,
 	  playbackPosition = playbackPosition.position,
 	  playbackDuration = playbackPosition.duration,
+	  playing = playingState(id)
 	)
   }
 

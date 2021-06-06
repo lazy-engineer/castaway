@@ -1,4 +1,4 @@
-package io.github.lazyengineer.castaway.androidApp.view
+package io.github.lazyengineer.castaway.androidApp.view.podcast
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -18,19 +18,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import io.github.lazyengineer.castaway.androidApp.view.EpisodeRowState.Buffering
-import io.github.lazyengineer.castaway.androidApp.view.EpisodeRowState.Downloading
-import io.github.lazyengineer.castaway.androidApp.view.EpisodeRowState.Paused
-import io.github.lazyengineer.castaway.androidApp.view.EpisodeRowState.Played
-import io.github.lazyengineer.castaway.androidApp.view.EpisodeRowState.Playing
-import io.github.lazyengineer.castaway.androidApp.view.EpisodeRowState.Unplayed
+import io.github.lazyengineer.castaway.androidApp.view.PlaybackProgressView
 
 @Composable
 fun EpisodeRowView(
   modifier: Modifier = Modifier,
-  state: EpisodeRowState = Unplayed,
-  title: String,
-  progress: Float,
+  state: EpisodeRowState = EpisodeRowState.Empty,
   onPlayPause: (Boolean) -> Unit
 ) {
   Column(modifier = modifier) {
@@ -39,31 +32,18 @@ fun EpisodeRowView(
 	  horizontalArrangement = Arrangement.SpaceBetween,
 	  verticalAlignment = Alignment.CenterVertically,
 	) {
-	  Text(title, modifier = Modifier.weight(5f))
+	  Text(state.title, modifier = Modifier.weight(5f))
 
-	  val playPauseImage = when (state) {
-		Paused -> Filled.PlayArrow
-		Playing -> Filled.Pause
-		Played -> Filled.PlayArrow
-		Buffering -> Filled.PlayArrow
-		Downloading -> Filled.PlayArrow
-		Unplayed -> Filled.PlayArrow
+	  val playPauseImage = when (state.playing) {
+		true -> Filled.Pause
+		else -> Filled.PlayArrow
 	  }
 
 	  Icon(playPauseImage, "play/pause", modifier = Modifier.padding(8.dp).weight(1f).clickable { onPlayPause(true) })
 	}
 
-	PlaybackProgressView(modifier = Modifier.fillMaxWidth(), playbackPosition = progress, padding = 0.dp)
+	PlaybackProgressView(modifier = Modifier.fillMaxWidth(), playbackPosition = state.progress, padding = 0.dp)
 
 	Divider()
   }
-}
-
-sealed class EpisodeRowState {
-  object Unplayed : EpisodeRowState()
-  object Playing : EpisodeRowState()
-  object Paused : EpisodeRowState()
-  object Buffering : EpisodeRowState()
-  object Downloading : EpisodeRowState()
-  object Played : EpisodeRowState()
 }

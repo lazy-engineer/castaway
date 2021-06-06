@@ -1,4 +1,4 @@
-package io.github.lazyengineer.castaway.androidApp.view
+package io.github.lazyengineer.castaway.androidApp.view.podcast
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Column

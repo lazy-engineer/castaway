@@ -10,4 +10,5 @@ data class NowPlayingEpisode(
   val playbackPosition: Long = 0,
   val playbackDuration: Long = 1,
   val playbackSpeed: Float = 1f,
+  val playing: Boolean = false,
 )

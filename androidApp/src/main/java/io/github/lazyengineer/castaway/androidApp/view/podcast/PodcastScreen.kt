@@ -1,4 +1,4 @@
-package io.github.lazyengineer.castaway.androidApp.view.screen
+package io.github.lazyengineer.castaway.androidApp.view.podcast
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.PaddingValues
@@ -13,14 +13,10 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import io.github.lazyengineer.castaway.androidApp.view.EpisodeRowState
-import io.github.lazyengineer.castaway.androidApp.view.EpisodeRowView
-import io.github.lazyengineer.castaway.androidApp.view.PodcastHeaderView
 import io.github.lazyengineer.castaway.androidApp.view.nowplaying.NowPlayingEpisode
 import io.github.lazyengineer.castaway.androidApp.view.util.rememberFlowWithLifecycle
 import io.github.lazyengineer.castaway.androidApp.viewmodel.CastawayViewModel
 import io.github.lazyengineer.castaway.androidApp.viewmodel.UiEvent.EpisodeRowEvent
-import io.github.lazyengineer.castaway.shared.entity.FeedData
 
 @Composable
 fun PodcastScreen(
@@ -28,13 +24,11 @@ fun PodcastScreen(
   viewModel: CastawayViewModel,
   episodeSelected: (episode: NowPlayingEpisode) -> Unit,
 ) {
-  val episodeState by rememberFlowWithLifecycle(viewModel.episodeRowState).collectAsState(EpisodeRowState.Unplayed)
   val podcastState by rememberFlowWithLifecycle(viewModel.state).collectAsState(PodcastViewState.Empty)
 
   PodcastScreen(
 	modifier,
 	podcastState,
-	episodeState,
 	event = {
 	  viewModel.submitEvent(it)
 	},
@@ -48,7 +42,6 @@ fun PodcastScreen(
 internal fun PodcastScreen(
   modifier: Modifier = Modifier,
   state: PodcastViewState,
-  episodeState: EpisodeRowState,
   event: (EpisodeRowEvent) -> Unit,
   episodeSelected: (episode: NowPlayingEpisode) -> Unit,
 ) {
@@ -61,7 +54,6 @@ internal fun PodcastScreen(
 		state.title,
 		state.imageUrl,
 		state.episodes,
-		episodeState,
 		event,
 		episodeSelected
 	  )
@@ -84,7 +76,6 @@ internal fun PodcastScreen(
   feedTitle: String,
   feedImageUrl: String,
   episodes: List<NowPlayingEpisode>,
-  episodeState: EpisodeRowState,
   event: (EpisodeRowEvent) -> Unit,
   episodeSelected: (episode: NowPlayingEpisode) -> Unit,
 ) {
@@ -108,31 +99,11 @@ internal fun PodcastScreen(
 			event(EpisodeRowEvent.Click(item))
 			episodeSelected(item)
 		  },
-		  state = episodeState,
-		  title = item.title,
-		  progress = item.playbackPosition.toFloat() / item.playbackDuration
+		  state = EpisodeRowState(playing = item.playing, title = item.title, progress = item.playbackPosition.toFloat() / item.playbackDuration),
 		) {
 		  event(EpisodeRowEvent.PlayPause(item.id))
 		}
 	  }
 	}
-  }
-}
-
-sealed class PodcastState(val feed: FeedData? = null) {
-  object Loading : PodcastState()
-  data class Loaded(val loadedFeed: FeedData) : PodcastState(loadedFeed)
-}
-
-data class PodcastViewState(
-  val loading: Boolean = true,
-  val title: String = "",
-  val imageUrl: String = "",
-  val episodes: List<NowPlayingEpisode> = emptyList(),
-) {
-
-  companion object {
-
-	val Empty = PodcastViewState()
   }
 }
