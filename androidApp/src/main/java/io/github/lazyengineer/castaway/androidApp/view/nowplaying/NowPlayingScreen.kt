@@ -35,11 +35,6 @@ import androidx.compose.ui.unit.dp
 import com.google.accompanist.coil.rememberCoilPainter
 import com.google.accompanist.imageloading.ImageLoadState
 import io.github.lazyengineer.castaway.androidApp.view.PlaybackSliderView
-import io.github.lazyengineer.castaway.androidApp.view.nowplaying.NowPlayingState.Buffering
-import io.github.lazyengineer.castaway.androidApp.view.nowplaying.NowPlayingState.Loading
-import io.github.lazyengineer.castaway.androidApp.view.nowplaying.NowPlayingState.Paused
-import io.github.lazyengineer.castaway.androidApp.view.nowplaying.NowPlayingState.Played
-import io.github.lazyengineer.castaway.androidApp.view.nowplaying.NowPlayingState.Playing
 import io.github.lazyengineer.castaway.androidApp.view.util.rememberFlowWithLifecycle
 import io.github.lazyengineer.castaway.androidApp.viewmodel.CastawayViewModel
 import io.github.lazyengineer.castaway.androidApp.viewmodel.UiEvent.NowPlayingEvent
@@ -52,7 +47,7 @@ fun NowPlayingScreen(
   modifier: Modifier = Modifier,
   viewModel: CastawayViewModel,
 ) {
-  val viewState by rememberFlowWithLifecycle(viewModel.nowPlayingState).collectAsState(Loading)
+  val viewState by rememberFlowWithLifecycle(viewModel.nowPlayingState).collectAsState(NowPlayingState.Empty)
 
   NowPlayingScreen(modifier, viewState) {
 	viewModel.submitEvent(it)
@@ -67,25 +62,17 @@ internal fun NowPlayingScreen(
 ) {
   Surface(modifier = modifier.fillMaxSize()) {
 
-	when (state) {
-	  Buffering -> {
+	when {
+	  state.loading -> {
 
 	  }
-	  Loading -> {
-
-	  }
-	  Played -> {
-
-	  }
-	  is Paused -> {
-		NowPlayingView(modifier, state.episode, false) {
+	  state.episode != null -> {
+		NowPlayingView(modifier, state.episode, state.playing) {
 		  event(it)
 		}
 	  }
-	  is Playing -> {
-		NowPlayingView(modifier, state.episode, true) {
-		  event(it)
-		}
+	  else -> {
+
 	  }
 	}
   }

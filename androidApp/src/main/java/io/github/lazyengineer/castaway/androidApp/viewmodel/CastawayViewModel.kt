@@ -57,7 +57,7 @@ class CastawayViewModel constructor(
 	}
   }
 
-  private val _nowPlayingState = MutableStateFlow<NowPlayingState>(NowPlayingState.Loading)
+  private val _nowPlayingState = MutableStateFlow(NowPlayingState.Empty)
   val nowPlayingState = _nowPlayingState.asStateFlow()
 
   private val feedLoading = MutableStateFlow(false)
@@ -68,7 +68,7 @@ class CastawayViewModel constructor(
   private val _playbackEditing = MutableStateFlow(false)
   private val _pendingEvents = MutableSharedFlow<UiEvent>()
 
-  val state: Flow<PodcastViewState> = combine(
+  val podcastState: Flow<PodcastViewState> = combine(
 	feedLoading,
 	feedTitle,
 	feedImageUrl,
@@ -160,7 +160,7 @@ class CastawayViewModel constructor(
   }
 
   private fun handlePlaybackState(playbackState: PlaybackStateCompat) {
-	playingOrPaused { nowPlayingEpisode ->
+	nowPlayingState.value.episode?.let { nowPlayingEpisode ->
 	  viewModelScope.launch {
 		val playingState = nowPlayingEpisode.playingState(playbackState.isPlaying)
 		_nowPlayingState.emit(playingState)
@@ -168,17 +168,6 @@ class CastawayViewModel constructor(
 		episodes.value.mapPlayingEpisodeToEpisode(nowPlayingEpisode).let { episode ->
 		  storeEpisodeOnPausedOrStopped(episode, playbackState, episode.playbackPosition.duration)
 		}
-	  }
-	}
-  }
-
-  private fun playingOrPaused(block: (NowPlayingEpisode) -> Unit) {
-	when (val state = nowPlayingState.value) {
-	  is NowPlayingState.Paused -> {
-		block(state.episode)
-	  }
-	  is NowPlayingState.Playing -> {
-		block(state.episode)
 	  }
 	}
   }
@@ -193,15 +182,11 @@ class CastawayViewModel constructor(
   }
 
   private fun NowPlayingEpisode.playingState(playing: Boolean): NowPlayingState {
-	return if (playing) {
-	  NowPlayingState.Playing(this)
-	} else {
-	  NowPlayingState.Paused(this)
-	}
+	return nowPlayingState.value.copy(episode = this, playing = playing)
   }
 
   private fun updateCurrentEpisodePlaybackPosition() {
-	playingOrPaused { episode ->
+	nowPlayingState.value.episode?.let { episode ->
 	  val updatedEpisodes = episodes.value.map {
 		if (it.id == episode.id) {
 		  it.copy(playbackPosition = PlaybackPosition(position = episode.playbackPosition, duration = episode.playbackDuration))
@@ -377,20 +362,10 @@ class CastawayViewModel constructor(
   }
 
   private fun changePlaybackSpeed() {
-	when (val state = nowPlayingState.value) {
-	  is NowPlayingState.Playing -> {
-		val playbackSpeed = nextSupportedPlaybackSpeed(state.episode.playbackSpeed)
-		emitNowPlayingState(NowPlayingState.Playing(state.episode.copy(playbackSpeed = playbackSpeed)))
-		playbackSpeed(playbackSpeed)
-	  }
-	  is NowPlayingState.Paused -> {
-		val playbackSpeed = nextSupportedPlaybackSpeed(state.episode.playbackSpeed)
-		emitNowPlayingState(NowPlayingState.Paused(state.episode.copy(playbackSpeed = playbackSpeed)))
-		playbackSpeed(playbackSpeed)
-	  }
-	  NowPlayingState.Buffering -> TODO()
-	  NowPlayingState.Loading -> TODO()
-	  NowPlayingState.Played -> TODO()
+	nowPlayingState.value.episode?.let {
+	  val playbackSpeed = nextSupportedPlaybackSpeed(it.playbackSpeed)
+	  emitNowPlayingState(nowPlayingState.value.copy(episode = it.copy(playbackSpeed = playbackSpeed)))
+	  playbackSpeed(playbackSpeed)
 	}
   }
 
@@ -422,19 +397,8 @@ class CastawayViewModel constructor(
   }
 
   private fun editingPlaybackPosition(position: Long) {
-	when (val state = nowPlayingState.value) {
-	  is NowPlayingState.Playing -> {
-		emitNowPlayingState(NowPlayingState.Playing(state.episode.copy(playbackPosition = position)))
-	  }
-	  is NowPlayingState.Paused -> {
-		emitNowPlayingState(NowPlayingState.Paused(state.episode.copy(playbackPosition = position)))
-	  }
-	  NowPlayingState.Buffering -> {
-	  } //TODO()
-	  NowPlayingState.Loading -> {
-	  } //TODO()
-	  NowPlayingState.Played -> {
-	  } //TODO()
+	nowPlayingState.value.episode?.let {
+	  emitNowPlayingState(nowPlayingState.value.copy(episode = it.copy(playbackPosition = position)))
 	}
   }
 

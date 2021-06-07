@@ -24,7 +24,7 @@ fun PodcastScreen(
   viewModel: CastawayViewModel,
   episodeSelected: (episode: NowPlayingEpisode) -> Unit,
 ) {
-  val podcastState by rememberFlowWithLifecycle(viewModel.state).collectAsState(PodcastViewState.Empty)
+  val podcastState by rememberFlowWithLifecycle(viewModel.podcastState).collectAsState(PodcastViewState.Empty)
 
   PodcastScreen(
 	modifier,
