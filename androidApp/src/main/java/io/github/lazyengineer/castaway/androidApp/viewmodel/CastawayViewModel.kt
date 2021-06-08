@@ -182,7 +182,7 @@ class CastawayViewModel constructor(
   }
 
   private fun NowPlayingEpisode.playingState(playing: Boolean): NowPlayingState {
-	return nowPlayingState.value.copy(episode = this, playing = playing)
+	return nowPlayingState.value.copy(episode = this, loading = false, playing = playing)
   }
 
   private fun updateCurrentEpisodePlaybackPosition() {
