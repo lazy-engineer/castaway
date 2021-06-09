@@ -164,10 +164,6 @@ class CastawayViewModel constructor(
 	  viewModelScope.launch {
 		val playingState = nowPlayingEpisode.playingState(playbackState.isPlaying)
 		_nowPlayingState.emit(playingState)
-
-		episodes.value.mapPlayingEpisodeToEpisode(nowPlayingEpisode).let { episode ->
-		  storeEpisodeOnPausedOrStopped(episode, playbackState, episode.playbackPosition.duration)
-		}
 	  }
 	}
   }
@@ -187,16 +183,15 @@ class CastawayViewModel constructor(
 
   private fun updateCurrentEpisodePlaybackPosition() {
 	nowPlayingState.value.episode?.let { episode ->
-	  val updatedEpisodes = episodes.value.map {
-		if (it.id == episode.id) {
-		  it.copy(playbackPosition = PlaybackPosition(position = episode.playbackPosition, duration = episode.playbackDuration))
-		} else {
-		  it
-		}
-	  }
+	  val updatedEpisode = episodes.value
+		.firstOrNull { it.id == episode.id }
+		?.copy(playbackPosition = PlaybackPosition(position = episode.playbackPosition, duration = episode.playbackDuration))
 
-	  viewModelScope.launch {
-		episodes.emit(updatedEpisodes)
+	  updatedEpisode?.let {
+		viewModelScope.launch {
+		  episodes.emit(episodes.value.map { it })
+		  storeEpisode(it)
+		}
 	  }
 	}
   }
@@ -274,9 +269,7 @@ class CastawayViewModel constructor(
 	withContext(Dispatchers.IO) {
 	  saveEpisodeUseCase(episode).subscribe(
 		this,
-		onSuccess = {
-		  Log.d("CastawayViewModel", "Stored: 💾 ${it.title}")
-		},
+		onSuccess = {},
 		onError = {
 		  Log.d("CastawayViewModel", "Error storing: ❌ $it")
 		},
