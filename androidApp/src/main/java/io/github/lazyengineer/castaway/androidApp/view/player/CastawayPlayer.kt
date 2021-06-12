@@ -25,7 +25,7 @@ class CastawayPlayer constructor(
   private val mediaServiceClient: MediaServiceClient
 ) {
 
-  lateinit var coroutineScope: CoroutineScope
+  private lateinit var coroutineScope: CoroutineScope
   private val subscriptionCallback = object : SubscriptionCallback() {
 	override fun onChildrenLoaded(
 	  parentId: String,
