@@ -5,6 +5,7 @@ import io.github.lazyengineer.castawayplayer.source.MediaData
 
 data class PlayerState(
   val connected: Boolean = false,
+  val prepared: Boolean = false,
   val playbackPosition: Long = 0L,
   val mediaData: MediaData? = null,
   val playbackState: PlaybackStateCompat? = null,

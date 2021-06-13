@@ -12,6 +12,7 @@ import io.github.lazyengineer.castaway.androidApp.view.player.PlayerEvent.SkipTo
 import io.github.lazyengineer.castaway.androidApp.view.player.PlayerEvent.SkipToPrevious
 import io.github.lazyengineer.castawayplayer.MediaServiceClient
 import io.github.lazyengineer.castawayplayer.extention.isPlaying
+import io.github.lazyengineer.castawayplayer.extention.isPrepared
 import io.github.lazyengineer.castawayplayer.service.Constants
 import io.github.lazyengineer.castawayplayer.source.MediaData
 import kotlinx.coroutines.CoroutineScope
@@ -45,6 +46,7 @@ class CastawayPlayer constructor(
   ) { connected, position, nowPlaying, playbackState ->
 	PlayerState(
 	  connected = connected,
+	  prepared = playbackState.isPrepared && (nowPlaying.duration != null && nowPlaying.duration != -1L),
 	  playbackPosition = position,
 	  mediaData = nowPlaying,
 	  playbackState = playbackState,
@@ -52,10 +54,10 @@ class CastawayPlayer constructor(
 	)
   }
 
-  fun subscribe(coroutineScope: CoroutineScope) {
-	this.coroutineScope = coroutineScope
-	collectPlayerEvents()
+  fun subscribe(scope: CoroutineScope) {
+	coroutineScope = scope
 
+	collectPlayerEvents()
 	coroutineScope.launch {
 	  mediaServiceClient.subscribe(Constants.MEDIA_ROOT_ID, subscriptionCallback)
 	}
