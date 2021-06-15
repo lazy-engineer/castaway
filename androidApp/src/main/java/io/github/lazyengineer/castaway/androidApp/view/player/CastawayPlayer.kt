@@ -47,9 +47,7 @@ class CastawayPlayer constructor(
 	PlayerState(
 	  connected = connected,
 	  prepared = playbackState.isPrepared && (nowPlaying.duration != null && nowPlaying.duration != -1L),
-	  playbackPosition = position,
-	  mediaData = if (nowPlaying.mediaId.isNotEmpty()) nowPlaying else null,
-	  playbackState = playbackState,
+	  mediaData = if (nowPlaying.mediaId.isNotEmpty()) nowPlaying.copy(playbackPosition = position) else null,
 	  playing = playbackState.isPlaying,
 	)
   }
