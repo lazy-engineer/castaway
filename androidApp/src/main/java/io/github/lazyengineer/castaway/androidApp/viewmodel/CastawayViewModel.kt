@@ -98,13 +98,13 @@ class CastawayViewModel constructor(
 	  castawayPlayer.playerState.collect { state ->
 
 		if (state.connected && playerConnected.value.not()) playerConnected()
-		if (state.mediaData != null && state.prepared) handleMediaData(state.mediaData)
+		if (state.mediaData != null && state.prepared) handleMediaData(state.mediaData, state.playbackSpeed)
 		if (state.playing != playerPlaying.value) playerPlaying.emit(state.playing)
 	  }
 	}
   }
 
-  private fun handleMediaData(mediaData: MediaData) {
+  private fun handleMediaData(mediaData: MediaData, playbackSpeed: Float = 1f) {
 	val feedEpisode = episodes.value[mediaData.mediaId]
 
 	feedEpisode?.let {
@@ -117,10 +117,10 @@ class CastawayViewModel constructor(
 		author = it.author,
 		playbackPosition = mediaData.playbackPosition ?: it.playbackPosition.position,
 		playbackDuration = mediaData.duration ?: it.playbackPosition.duration,
-		playbackSpeed = 1f,
+		playbackSpeed = playbackSpeed,
 	  )
 
-	  val state = nowPlayingEpisode.playingState(playingState(nowPlayingEpisode.id))
+	  val state = nowPlayingEpisode.nowPlayingState(playingState(nowPlayingEpisode.id))
 
 	  updateNowPlayingState(state)
 	}
@@ -156,7 +156,7 @@ class CastawayViewModel constructor(
 	}
   }
 
-  private fun NowPlayingEpisode.playingState(playing: Boolean): NowPlayingState {
+  private fun NowPlayingEpisode.nowPlayingState(playing: Boolean): NowPlayingState {
 	return nowPlayingState.value.copy(episode = this, loading = false, playing = playing)
   }
 

@@ -7,6 +7,7 @@ data class PlayerState(
   val prepared: Boolean = false,
   val mediaData: MediaData? = null,
   val playing: Boolean = false,
+  val playbackSpeed: Float = 1f,
 ) {
 
   companion object {

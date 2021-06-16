@@ -18,6 +18,7 @@ import io.github.lazyengineer.castawayplayer.source.MediaData
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.launch
@@ -37,18 +38,21 @@ class CastawayPlayer constructor(
   }
 
   private val playerEvents = MutableSharedFlow<PlayerEvent>()
+  private val playbackSpeed = MutableStateFlow(1f)
 
   val playerState: Flow<PlayerState> = combine(
 	mediaServiceClient.isConnected,
 	mediaServiceClient.playbackPosition,
 	mediaServiceClient.nowPlaying,
 	mediaServiceClient.playbackState,
-  ) { connected, position, nowPlaying, playbackState ->
+	playbackSpeed,
+  ) { connected, position, nowPlaying, playbackState, playbackSpeed ->
 	PlayerState(
 	  connected = connected,
 	  prepared = playbackState.isPrepared && (nowPlaying.duration != null && nowPlaying.duration != -1L),
 	  mediaData = if (nowPlaying.mediaId.isNotEmpty()) nowPlaying.copy(playbackPosition = position) else null,
 	  playing = playbackState.isPlaying,
+	  playbackSpeed = playbackSpeed
 	)
   }
 
@@ -87,50 +91,38 @@ class CastawayPlayer constructor(
   }
 
   private fun prepareMediaData(data: List<MediaData>) {
-	if (mediaServiceClient.isConnected.value) {
-	  mediaServiceClient.prepare(data)
-	}
+	mediaServiceClient.prepare(data)
   }
 
   private fun playPause(clickedItemId: String) {
-	if (mediaServiceClient.isConnected.value) {
-	  mediaServiceClient.playMediaId(clickedItemId)
-	}
+	mediaServiceClient.playMediaId(clickedItemId)
   }
 
   private fun forwardCurrentItem() {
-	if (mediaServiceClient.isConnected.value) {
-	  mediaServiceClient.fastForward()
-	}
+	mediaServiceClient.fastForward()
   }
 
   private fun replayCurrentItem() {
-	if (mediaServiceClient.isConnected.value) {
-	  mediaServiceClient.rewind()
-	}
+	mediaServiceClient.rewind()
   }
 
   private fun skipToPrevious() {
-	if (mediaServiceClient.isConnected.value) {
-	  mediaServiceClient.skipToPrevious()
-	}
+	mediaServiceClient.skipToPrevious()
   }
 
   private fun skipToNext() {
-	if (mediaServiceClient.isConnected.value) {
-	  mediaServiceClient.skipToNext()
-	}
+	mediaServiceClient.skipToNext()
   }
 
   private fun seekTo(positionMillis: Long) {
-	if (mediaServiceClient.isConnected.value) {
-	  mediaServiceClient.seekTo(positionMillis)
-	}
+	mediaServiceClient.seekTo(positionMillis)
   }
 
   private fun playbackSpeed(speed: Float) {
-	if (mediaServiceClient.isConnected.value) {
-	  mediaServiceClient.speed(speed)
+	mediaServiceClient.speed(speed)
+
+	coroutineScope.launch {
+	  playbackSpeed.emit(speed)
 	}
   }
 }
