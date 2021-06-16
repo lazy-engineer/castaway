@@ -151,7 +151,7 @@ internal fun NowPlayingView(
 		),
 		onValueChange = {
 		  event(
-			NowPlayingEvent.EditingPlaybackPosition(
+			NowPlayingEvent.EditPlaybackPosition(
 			  it.progressToPosition(
 				episode.playbackDuration
 			  )

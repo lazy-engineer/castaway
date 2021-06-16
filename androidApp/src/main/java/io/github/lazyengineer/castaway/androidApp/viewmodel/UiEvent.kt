@@ -14,7 +14,7 @@ sealed class UiEvent {
 	object FastForward : NowPlayingEvent()
 	object ChangePlaybackSpeed : NowPlayingEvent()
 	data class SeekTo(val positionMillis: Long) : NowPlayingEvent()
-	data class EditingPlaybackPosition(val position: Long) : NowPlayingEvent()
+	data class EditPlaybackPosition(val position: Long) : NowPlayingEvent()
 	data class EditingPlayback(val editing: Boolean) : NowPlayingEvent()
 	data class PlayPause(val itemId: String) : NowPlayingEvent()
   }
