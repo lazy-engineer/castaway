@@ -40,6 +40,7 @@ object Version {
   const val feedparser = "0.1.0"
   const val stately = "1.1.4"
   const val isostate = "1.1.4-a1"
+  const val mokoResources = "0.15.1"
 
   const val junit = "4.13.1"
   const val androidJunit = "1.1.2"
@@ -89,6 +90,7 @@ object Library {
   const val stately = "co.touchlab:stately-common:${Version.stately}"
   const val isostate = "co.touchlab:stately-isolate:${Version.isostate}"
   const val isostateCollection = "co.touchlab:stately-iso-collections:${Version.isostate}"
+  const val mokoResources = "dev.icerock.moko:resources:${Version.mokoResources}"
 
   const val composeCompiler = "androidx.compose.compiler:compiler:${Version.compose}"
   const val composeRuntime = "androidx.compose.runtime:runtime:${Version.compose}"

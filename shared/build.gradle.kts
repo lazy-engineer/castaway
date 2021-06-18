@@ -7,6 +7,7 @@ plugins {
   kotlin("multiplatform")
   id("com.android.library")
   id("com.squareup.sqldelight")
+  id("dev.icerock.mobile.multiplatform-resources")
 }
 
 kotlin {
@@ -36,6 +37,7 @@ kotlin {
 		implementation(Library.stately)
 		implementation(Library.isostate)
 		implementation(Library.isostateCollection)
+		implementation(Library.mokoResources)
 	  }
 	}
 	val commonTest by getting {
@@ -81,6 +83,10 @@ sqldelight {
   database("CastawayDatabase") {
 	packageName = "io.github.lazyengineer.castaway.db"
   }
+}
+
+multiplatformResources {
+  multiplatformResourcesPackage = "io.github.lazyengineer.castaway.shared"
 }
 
 val packForXcode by tasks.creating(Sync::class) {
