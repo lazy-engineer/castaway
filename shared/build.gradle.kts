@@ -37,7 +37,7 @@ kotlin {
 		implementation(Library.stately)
 		implementation(Library.isostate)
 		implementation(Library.isostateCollection)
-		implementation(Library.mokoResources)
+		api(Library.mokoResources)
 	  }
 	}
 	val commonTest by getting {
