@@ -75,7 +75,7 @@ internal fun PodcastLoadingScreen(
 	verticalArrangement = Arrangement.Center,
 	horizontalAlignment = Alignment.CenterHorizontally
   ) {
-	Text("Loading...", fontSize = 34.sp, fontWeight = FontWeight.Bold, color = Color(0xFF667082))
+	Text("Loading...", fontSize = 34.sp, fontWeight = FontWeight.Bold, color = Color(MR.colors.textColor.color.argb))
   }
 }
 
