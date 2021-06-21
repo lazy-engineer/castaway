@@ -26,6 +26,7 @@ import io.github.lazyengineer.castaway.androidApp.viewmodel.UiEvent.EpisodeRowEv
 @Composable
 fun PodcastScreen(
   modifier: Modifier = Modifier,
+  textColor: Long,
   viewModel: CastawayViewModel,
   episodeSelected: (episode: NowPlayingEpisode) -> Unit,
 ) {
@@ -33,6 +34,7 @@ fun PodcastScreen(
 
   PodcastScreen(
 	modifier,
+	textColor,
 	podcastState,
 	event = {
 	  viewModel.submitEvent(it)
@@ -46,6 +48,7 @@ fun PodcastScreen(
 @Composable
 internal fun PodcastScreen(
   modifier: Modifier = Modifier,
+  textColor: Long,
   state: PodcastViewState,
   event: (EpisodeRowEvent) -> Unit,
   episodeSelected: (episode: NowPlayingEpisode) -> Unit,
@@ -53,7 +56,7 @@ internal fun PodcastScreen(
   Surface(modifier = modifier.fillMaxSize()) {
 
 	when (state.loading) {
-	  true -> PodcastLoadingScreen(modifier)
+	  true -> PodcastLoadingScreen(modifier, textColor)
 	  false -> PodcastScreen(
 		modifier,
 		state.title,
@@ -68,14 +71,15 @@ internal fun PodcastScreen(
 
 @Composable
 internal fun PodcastLoadingScreen(
-  modifier: Modifier = Modifier
+  modifier: Modifier = Modifier,
+  textColor: Long
 ) {
   Column(
 	modifier = modifier,
 	verticalArrangement = Arrangement.Center,
 	horizontalAlignment = Alignment.CenterHorizontally
   ) {
-	Text("Loading...", fontSize = 34.sp, fontWeight = FontWeight.Bold, color = Color(MR.colors.textColor.color.argb))
+	Text("Loading...", fontSize = 34.sp, fontWeight = FontWeight.Bold, color = Color(textColor))
   }
 }
 

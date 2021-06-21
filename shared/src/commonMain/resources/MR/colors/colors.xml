@@ -6,7 +6,7 @@
 
     <color name="lightThemeBackground">#E1EAFC</color>
     <color name="darkThemeBackground">#292D32</color>
-    <color name="textColor">#667082</color>
+    <color name="lightThemeTextColor">#667082</color>
     <color name="darkThemeTextColor">#BDBDBD</color>
 
     <color name="lightThemeDarkShadow">#33000000</color> <!-- Black with opacity of 20 -->
@@ -23,4 +23,9 @@
     <color name="blueGradientEnd">#0D47A1</color>
     <color name="blueGradientMiddle">#1976D2</color>
     <color name="darkGray">#616161</color>
+
+    <color name="textColor">
+        <light>@color/lightThemeTextColor</light>
+        <dark>@color/darkThemeTextColor</dark>
+    </color>
 </resources>
