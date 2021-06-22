@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#6200EE</color>
-    <color name="colorPrimaryDark">#3700B3</color>
-    <color name="colorAccent">#03DAC5</color>
+    <color name="lightColorPrimary">#6200EE</color>
+    <color name="lightColorPrimaryDark">#3700B3</color>
+    <color name="lightColorAccent">#03DAC5</color>
 
     <color name="lightThemeBackground">#E1EAFC</color>
     <color name="darkThemeBackground">#292D32</color>
@@ -27,5 +27,25 @@
     <color name="textColor">
         <light>@color/lightThemeTextColor</light>
         <dark>@color/darkThemeTextColor</dark>
+    </color>
+
+    <color name="background">
+        <light>@color/lightThemeBackground</light>
+        <dark>@color/darkThemeBackground</dark>
+    </color>
+
+    <color name="colorPrimary">
+        <light>@color/lightColorPrimary</light>
+        <dark>@color/lightColorPrimary</dark>
+    </color>
+
+    <color name="colorPrimaryDark">
+        <light>@color/lightColorPrimaryDark</light>
+        <dark>@color/lightColorPrimaryDark</dark>
+    </color>
+
+    <color name="colorAccent">
+        <light>@color/lightColorAccent</light>
+        <dark>@color/lightColorAccent</dark>
     </color>
 </resources>
