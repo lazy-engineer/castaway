@@ -50,9 +50,4 @@ fun ThemeNeumorphism(darkTheme: Boolean = isSystemInDarkTheme(), content: @Compo
   )
 }
 
-fun dev.icerock.moko.graphics.Color.toColor() = Color(
-  red = this.red,
-  blue = this.blue,
-  green = this.green,
-  alpha = this.alpha,
-)
+fun dev.icerock.moko.graphics.Color.toColor() = Color(rgba)
