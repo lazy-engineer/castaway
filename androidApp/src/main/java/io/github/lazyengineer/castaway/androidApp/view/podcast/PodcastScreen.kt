@@ -14,7 +14,6 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -26,7 +25,6 @@ import io.github.lazyengineer.castaway.androidApp.viewmodel.UiEvent.EpisodeRowEv
 @Composable
 fun PodcastScreen(
   modifier: Modifier = Modifier,
-  textColor: Long,
   viewModel: CastawayViewModel,
   episodeSelected: (episode: NowPlayingEpisode) -> Unit,
 ) {
@@ -34,7 +32,6 @@ fun PodcastScreen(
 
   PodcastScreen(
 	modifier,
-	textColor,
 	podcastState,
 	event = {
 	  viewModel.submitEvent(it)
@@ -48,7 +45,6 @@ fun PodcastScreen(
 @Composable
 internal fun PodcastScreen(
   modifier: Modifier = Modifier,
-  textColor: Long,
   state: PodcastViewState,
   event: (EpisodeRowEvent) -> Unit,
   episodeSelected: (episode: NowPlayingEpisode) -> Unit,
@@ -56,7 +52,7 @@ internal fun PodcastScreen(
   Surface(modifier = modifier.fillMaxSize()) {
 
 	when (state.loading) {
-	  true -> PodcastLoadingScreen(modifier, textColor)
+	  true -> PodcastLoadingScreen(modifier)
 	  false -> PodcastScreen(
 		modifier,
 		state.title,
@@ -72,14 +68,13 @@ internal fun PodcastScreen(
 @Composable
 internal fun PodcastLoadingScreen(
   modifier: Modifier = Modifier,
-  textColor: Long
 ) {
   Column(
 	modifier = modifier,
 	verticalArrangement = Arrangement.Center,
 	horizontalAlignment = Alignment.CenterHorizontally
   ) {
-	Text("Loading...", fontSize = 34.sp, fontWeight = FontWeight.Bold, color = Color(textColor))
+	Text("Loading...", fontSize = 34.sp, fontWeight = FontWeight.Bold)
   }
 }
 
