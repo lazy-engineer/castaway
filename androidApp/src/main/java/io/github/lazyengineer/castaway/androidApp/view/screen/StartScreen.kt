@@ -9,13 +9,13 @@ import io.github.lazyengineer.castaway.androidApp.view.podcast.PodcastScreen
 import io.github.lazyengineer.castaway.androidApp.viewmodel.CastawayViewModel
 
 @Composable
-fun StartScreen(viewModel: CastawayViewModel) {
+fun StartScreen(viewModel: CastawayViewModel, switchTheme: (Boolean) -> Unit) {
 
   val navController = rememberNavController()
 
   NavHost(navController, startDestination = Screen.OnBoarding.route) {
 	composable(Screen.OnBoarding.route) {
-	  OnBoardingScreen {
+	  OnBoardingScreen(switchTheme = switchTheme) {
 		navController.navigate(Screen.Podcast.route) {
 		  popUpTo(navController.graph.startDestinationId) { inclusive = true }
 		}

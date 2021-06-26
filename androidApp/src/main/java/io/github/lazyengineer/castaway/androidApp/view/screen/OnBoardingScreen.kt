@@ -14,16 +14,16 @@ import androidx.compose.material.Switch
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
 
 @Composable
-fun OnBoardingScreen(modifier: Modifier = Modifier, darkTheme: Boolean = isSystemInDarkTheme(), finished: (Boolean) -> Unit) {
+fun OnBoardingScreen(modifier: Modifier = Modifier, darkTheme: Boolean = isSystemInDarkTheme(), switchTheme: (Boolean) -> Unit, finished: (Boolean) -> Unit) {
 
-  val switchState = remember { mutableStateOf(darkTheme) }
+  val switchState = rememberSaveable { mutableStateOf(darkTheme) }
 
   Surface(modifier = modifier.fillMaxSize()) {
 	Column(
@@ -50,6 +50,7 @@ fun OnBoardingScreen(modifier: Modifier = Modifier, darkTheme: Boolean = isSyste
 		Text("☀️", modifier = Modifier.padding(end = 16.dp))
 
 		Switch(checked = switchState.value, onCheckedChange = { checked ->
+		  switchTheme(checked)
 		  switchState.value = checked
 		})
 
