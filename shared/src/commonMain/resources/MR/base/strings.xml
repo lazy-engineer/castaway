@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <resources>
+    <string name="onboarding_choose">Choose Your Destiny</string>
     <string name="onboarding_darkmode_desc">"The night is darkest just before the dawn. And I promise you, the dawn is coming."\n - Harvey Dent</string>
-    <string name="onboarding_lightmode_desc">"- Hamid: What's that?\n - Rambo: It's blue light.\n - Hamid: What does it do?\n - Rambo: It turns blue."</string>
+    <string name="onboarding_lightmode_desc">"- Hamid: What\'s that? \n - Rambo: It\'s blue light. \n - Hamid: What does it do? \n - Rambo: It turns blue."</string>
+    <string name="onboarding_emoji">👌</string>
 </resources>

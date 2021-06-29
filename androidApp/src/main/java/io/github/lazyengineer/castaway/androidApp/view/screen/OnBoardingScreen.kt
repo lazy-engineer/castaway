@@ -18,10 +18,17 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import io.github.lazyengineer.castaway.shared.MR
 
 @Composable
-fun OnBoardingScreen(modifier: Modifier = Modifier, darkTheme: Boolean = isSystemInDarkTheme(), switchTheme: (Boolean) -> Unit, finished: (Boolean) -> Unit) {
+fun OnBoardingScreen(
+  modifier: Modifier = Modifier,
+  darkTheme: Boolean = isSystemInDarkTheme(),
+  switchTheme: (Boolean) -> Unit,
+  finished: (Boolean) -> Unit
+) {
 
   val switchState = rememberSaveable { mutableStateOf(darkTheme) }
 
@@ -36,12 +43,12 @@ fun OnBoardingScreen(modifier: Modifier = Modifier, darkTheme: Boolean = isSyste
 		verticalArrangement = Arrangement.Center,
 		horizontalAlignment = Alignment.CenterHorizontally
 	  ) {
-		Text("Choose Your Destiny", style = MaterialTheme.typography.h5, modifier = Modifier.padding(16.dp))
+		Text(stringResource(id = MR.strings.onboarding_choose.resourceId), style = MaterialTheme.typography.h5, modifier = Modifier.padding(16.dp))
 
 		Text(
 		  text = when (switchState.value) {
-			true -> "\"The night is darkest just before the dawn. And I promise you, the dawn is coming.\"\n - Harvey Dent"
-			false -> "\"- Hamid: What's that?\n - Rambo: It's blue light.\n - Hamid: What does it do?\n - Rambo: It turns blue.\""
+			true ->  stringResource(id = MR.strings.onboarding_darkmode_desc.resourceId)
+			false -> stringResource(id = MR.strings.onboarding_lightmode_desc.resourceId)
 		  }, style = MaterialTheme.typography.h6, modifier = Modifier.padding(16.dp)
 		)
 	  }
@@ -64,7 +71,7 @@ fun OnBoardingScreen(modifier: Modifier = Modifier, darkTheme: Boolean = isSyste
 		onClick = {
 		  finished(true)
 		}) {
-		Text("👌")
+		Text(stringResource(id = MR.strings.onboarding_emoji.resourceId))
 	  }
 	}
   }
