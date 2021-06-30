@@ -2,8 +2,6 @@ package io.github.lazyengineer.castaway.shared.ext
 
 import io.github.lazyengineer.castaway.shared.entity.Episode
 import io.github.lazyengineer.castaway.shared.entity.PlaybackPosition
-import io.github.lazyengineer.castaway.shared.fromNativeImage
-import io.github.lazyengineer.castaway.shared.toNativeImage
 import iogithublazyengineercastawaydb.EpisodeEntity
 
 fun Episode.toEpisodeEntity(): EpisodeEntity {
