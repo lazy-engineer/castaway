@@ -31,10 +31,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.unit.dp
 import com.google.accompanist.coil.rememberCoilPainter
 import com.google.accompanist.imageloading.ImageLoadState
 import io.github.lazyengineer.castaway.androidApp.view.PlaybackSliderView
+import io.github.lazyengineer.castaway.androidApp.view.style.shadow
 import io.github.lazyengineer.castaway.androidApp.view.util.rememberFlowWithLifecycle
 import io.github.lazyengineer.castaway.androidApp.viewmodel.CastawayViewModel
 import io.github.lazyengineer.castaway.androidApp.viewmodel.UiEvent.NowPlayingEvent
@@ -87,7 +89,17 @@ internal fun NowPlayingView(
 ) {
   Column(horizontalAlignment = Alignment.CenterHorizontally) {
 	Box(modifier = Modifier.padding(top = 48.dp, bottom = 48.dp)) {
-	  Box(modifier = Modifier.size(300.dp).clip(RoundedCornerShape(25f)).background(MaterialTheme.colors.primary))
+	  Box(modifier = Modifier
+		.size(300.dp)
+		.clip(RoundedCornerShape(25f))
+		.background(MaterialTheme.colors.primary)
+		.shadow(
+		  shadowColor = Color.White.toArgb(),
+		  paintColor = Color.White.toArgb(),
+		  offsetX = 4.dp,
+		  offsetY = 4.dp
+		)
+	  )
 
 	  val painter = rememberCoilPainter(episode.imageUrl)
 
