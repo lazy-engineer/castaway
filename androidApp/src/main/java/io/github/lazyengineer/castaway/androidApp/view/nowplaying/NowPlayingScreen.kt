@@ -65,9 +65,7 @@ internal fun NowPlayingScreen(
   Surface(modifier = modifier.fillMaxSize()) {
 
 	when {
-	  state.loading -> {
-
-	  }
+	  state.loading -> NowPlayingLoadingScreen()
 	  state.episode != null -> {
 		NowPlayingView(modifier, state.episode, state.playing) {
 		  event(it)
@@ -77,6 +75,19 @@ internal fun NowPlayingScreen(
 
 	  }
 	}
+  }
+}
+
+@Composable
+internal fun NowPlayingLoadingScreen(
+  modifier: Modifier = Modifier,
+) {
+  Column(
+	modifier = modifier,
+	verticalArrangement = Arrangement.Center,
+	horizontalAlignment = Alignment.CenterHorizontally
+  ) {
+	Text("Loading...", fontSize = 34.sp, fontWeight = FontWeight.Bold)
   }
 }
 
