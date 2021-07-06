@@ -71,9 +71,6 @@ internal fun NowPlayingScreen(
 		  event(it)
 		}
 	  }
-	  else -> {
-
-	  }
 	}
   }
 }
