@@ -87,6 +87,7 @@ sqldelight {
 
 multiplatformResources {
   multiplatformResourcesPackage = "io.github.lazyengineer.castaway.shared"
+  disableStaticFrameworkWarning = true
 }
 
 val packForXcode by tasks.creating(Sync::class) {
