@@ -1,8 +1,8 @@
 buildscript {
-  val kotlinVersion by extra("1.4.32")
+  val kotlinVersion by extra("1.5.10")
   val gradleVersion by extra("4.2.2")
   val sqldelightVersion by extra("1.4.3")
-  val mokoVersion by extra("0.15.1")
+  val mokoVersion by extra("0.16.1")
 
   repositories {
 	gradlePluginPortal()

@@ -14,8 +14,8 @@ object App {
 
 object Version {
 
-  const val kotlin = "1.4.32"
-  const val gradle = "4.1.2"
+  const val kotlin = "1.5.10"
+  const val gradle = "4.2.2"
 
   const val appcompat = "1.3.0-rc01"
   const val constraintlayout = "2.0.4"
@@ -25,7 +25,7 @@ object Version {
   const val lifecycleExtensions = "2.2.0"
   const val ktxActivity = "1.1.0"
   const val ktxFragment = "1.2.5"
-  const val compose = "1.0.0-beta07"
+  const val compose = "1.0.0-rc01"
   const val composeNavigation = "2.4.0-alpha01"
 
   const val ktxCore = "1.3.2"
@@ -40,7 +40,7 @@ object Version {
   const val feedparser = "0.1.0"
   const val stately = "1.1.4"
   const val isostate = "1.1.4-a1"
-  const val mokoResources = "0.16.0"
+  const val mokoResources = "0.16.1"
 
   const val junit = "4.13.1"
   const val androidJunit = "1.1.2"

@@ -7,7 +7,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.StrokeCap.Round
+import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 
@@ -29,7 +29,7 @@ fun PlaybackProgressView(
 	  start,
 	  end,
 	  trackStrokeWidth.toPx(),
-	  Round
+	  StrokeCap.Round
 	)
 
 	if (playbackPosition > 0) {
@@ -40,7 +40,7 @@ fun PlaybackProgressView(
 		start,
 		progressOffset,
 		trackStrokeWidth.toPx(),
-		Round
+		StrokeCap.Round
 	  )
 	}
   }
