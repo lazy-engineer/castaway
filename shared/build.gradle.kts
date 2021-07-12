@@ -1,29 +1,22 @@
 import dependencies.App
 import dependencies.Library
 import dependencies.TestLibrary
-import org.jetbrains.kotlin.gradle.plugin.mpp.KotlinNativeTarget
 
 plugins {
   kotlin("multiplatform")
   id("com.android.library")
   id("com.squareup.sqldelight")
+  id("co.touchlab.native.cocoapods")
   id("dev.icerock.mobile.multiplatform-resources")
 }
 
 kotlin {
   android()
-  val iOSTarget: (String, KotlinNativeTarget.() -> Unit) -> KotlinNativeTarget =
-	if (System.getenv("SDK_NAME")?.startsWith("iphoneos") == true)
-	  ::iosArm64
-	else
-	  ::iosX64
-
-  iOSTarget("ios") {
-	binaries {
-	  framework {
-		baseName = "shared"
-	  }
-	}
+  val onPhone = System.getenv("SDK_NAME")?.startsWith("iphoneos") ?: false
+  if (onPhone) {
+	iosArm64("ios")
+  } else {
+	iosX64("ios")
   }
 
   sourceSets {
@@ -64,9 +57,19 @@ kotlin {
 	  dependencies {
 		implementation(Library.ktorIOS)
 		implementation(Library.sqldelightIOS)
+		implementation(Library.mokoResources)
 	  }
 	}
 	val iosTest by getting
+  }
+
+  cocoapodsext {
+	summary = "Multiplatform shared library"
+	homepage = "https://github.com/lazy-engineer/castaway"
+	framework {
+	  isStatic = false
+	  transitiveExport = true
+	}
   }
 }
 
@@ -89,16 +92,3 @@ multiplatformResources {
   multiplatformResourcesPackage = "io.github.lazyengineer.castaway.shared"
   disableStaticFrameworkWarning = true
 }
-
-val packForXcode by tasks.creating(Sync::class) {
-  group = "build"
-  val mode = System.getenv("CONFIGURATION") ?: "DEBUG"
-  val framework = kotlin.targets.getByName<KotlinNativeTarget>("ios").binaries.getFramework(mode)
-  inputs.property("mode", mode)
-  dependsOn(framework.linkTask)
-  val targetDir = File(buildDir, "xcode-frameworks")
-  from({ framework.outputDirectory })
-  into(targetDir)
-}
-
-tasks.getByName("build").dependsOn(packForXcode)
