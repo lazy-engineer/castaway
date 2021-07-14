@@ -2,8 +2,6 @@ buildscript {
   val kotlinVersion by extra("1.5.10")
   val gradleVersion by extra("4.2.2")
   val sqldelightVersion by extra("1.4.3")
-  val cocoapodsext by extra("0.12")
-  val mokoVersion by extra("0.16.1")
 
   repositories {
 	gradlePluginPortal()
@@ -15,8 +13,6 @@ buildscript {
 	classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlinVersion")
 	classpath("com.android.tools.build:gradle:$gradleVersion")
 	classpath("com.squareup.sqldelight:gradle-plugin:$sqldelightVersion")
-	classpath("co.touchlab:kotlinnativecocoapods:$cocoapodsext")
-	classpath("dev.icerock.moko:resources-generator:$mokoVersion")
   }
 }
 

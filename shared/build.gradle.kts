@@ -4,10 +4,9 @@ import dependencies.TestLibrary
 
 plugins {
   kotlin("multiplatform")
+  kotlin("native.cocoapods")
   id("com.android.library")
   id("com.squareup.sqldelight")
-  id("co.touchlab.native.cocoapods")
-  id("dev.icerock.mobile.multiplatform-resources")
 }
 
 kotlin {
@@ -18,6 +17,8 @@ kotlin {
   } else {
 	iosX64("ios")
   }
+
+  version = "1.0"
 
   sourceSets {
 	val commonMain by getting {
@@ -30,7 +31,6 @@ kotlin {
 		implementation(Library.stately)
 		implementation(Library.isostate)
 		implementation(Library.isostateCollection)
-		api(Library.mokoResources)
 	  }
 	}
 	val commonTest by getting {
@@ -57,19 +57,14 @@ kotlin {
 	  dependencies {
 		implementation(Library.ktorIOS)
 		implementation(Library.sqldelightIOS)
-		implementation(Library.mokoResources)
 	  }
 	}
 	val iosTest by getting
   }
 
-  cocoapodsext {
+  cocoapods {
 	summary = "Multiplatform shared library"
 	homepage = "https://github.com/lazy-engineer/castaway"
-	framework {
-	  isStatic = false
-	  transitiveExport = true
-	}
   }
 }
 
@@ -86,9 +81,4 @@ sqldelight {
   database("CastawayDatabase") {
 	packageName = "io.github.lazyengineer.castaway.db"
   }
-}
-
-multiplatformResources {
-  multiplatformResourcesPackage = "io.github.lazyengineer.castaway.shared"
-  disableStaticFrameworkWarning = true
 }

@@ -23,29 +23,4 @@
     <color name="blueGradientEnd">#FF0D47A1</color>
     <color name="blueGradientMiddle">#FF1976D2</color>
     <color name="darkGray">#FF616161</color>
-
-    <color name="textColor">
-        <light>@color/lightThemeTextColor</light>
-        <dark>@color/darkThemeTextColor</dark>
-    </color>
-
-    <color name="background">
-        <light>@color/lightThemeBackground</light>
-        <dark>@color/darkThemeBackground</dark>
-    </color>
-
-    <color name="colorPrimary">
-        <light>@color/blueGradientStart</light>
-        <dark>@color/orangeGradientStart</dark>
-    </color>
-
-    <color name="colorPrimaryDark">
-        <light>@color/blueGradientEnd</light>
-        <dark>@color/orangeGradientEnd</dark>
-    </color>
-
-    <color name="colorAccent">
-        <light>@color/blueGradientMiddle</light>
-        <dark>@color/orangeGradientMiddle</dark>
-    </color>
 </resources>
