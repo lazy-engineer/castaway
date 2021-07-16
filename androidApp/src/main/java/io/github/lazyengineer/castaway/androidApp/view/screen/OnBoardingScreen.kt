@@ -20,7 +20,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import io.github.lazyengineer.castaway.shared.MR
+import io.github.lazyengineer.castaway.androidApp.R
 
 @Composable
 fun OnBoardingScreen(
@@ -43,12 +43,12 @@ fun OnBoardingScreen(
 		verticalArrangement = Arrangement.Center,
 		horizontalAlignment = Alignment.CenterHorizontally
 	  ) {
-		Text(stringResource(id = MR.strings.onboarding_choose.resourceId), style = MaterialTheme.typography.h5, modifier = Modifier.padding(16.dp))
+		Text(stringResource(id = R.string.onboarding_choose), style = MaterialTheme.typography.h5, modifier = Modifier.padding(16.dp))
 
 		Text(
 		  text = when (switchState.value) {
-			true ->  stringResource(id = MR.strings.onboarding_darkmode_desc.resourceId)
-			false -> stringResource(id = MR.strings.onboarding_lightmode_desc.resourceId)
+			true -> stringResource(id = R.string.onboarding_darkmode_desc)
+			false -> stringResource(id = R.string.onboarding_lightmode_desc)
 		  }, style = MaterialTheme.typography.h6, modifier = Modifier.padding(16.dp)
 		)
 	  }
@@ -71,7 +71,7 @@ fun OnBoardingScreen(
 		onClick = {
 		  finished(true)
 		}) {
-		Text(stringResource(id = MR.strings.onboarding_emoji.resourceId))
+		Text(stringResource(id = R.string.onboarding_emoji))
 	  }
 	}
   }
