@@ -1,6 +1,7 @@
 import dependencies.App
 import dependencies.Library
 import dependencies.TestLibrary
+import dependencies.Version
 
 plugins {
   kotlin("multiplatform")
@@ -9,16 +10,12 @@ plugins {
   id("com.squareup.sqldelight")
 }
 
+// CocoaPods requires the podspec to have a version.
+version = "1.0"
+
 kotlin {
   android()
-  val onPhone = System.getenv("SDK_NAME")?.startsWith("iphoneos") ?: false
-  if (onPhone) {
-	iosArm64("ios")
-  } else {
-	iosX64("ios")
-  }
-
-  version = "1.0"
+  ios()
 
   sourceSets {
 	val commonMain by getting {
@@ -57,6 +54,11 @@ kotlin {
 	  dependencies {
 		implementation(Library.ktorIOS)
 		implementation(Library.sqldelightIOS)
+		implementation(Library.coroutines) {
+		  version {
+			strictly(Version.coroutines)
+		  }
+		}
 	  }
 	}
 	val iosTest by getting

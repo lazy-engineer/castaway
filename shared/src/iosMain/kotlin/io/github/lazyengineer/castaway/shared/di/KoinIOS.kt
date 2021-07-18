@@ -7,8 +7,8 @@ import io.github.lazyengineer.castaway.shared.usecase.NativeLoadImageUseCase
 import io.github.lazyengineer.castaway.shared.usecase.NativeSaveEpisodeUseCase
 import io.github.lazyengineer.castaway.shared.usecase.NativeSaveFeedUseCase
 import io.github.lazyengineer.castaway.shared.usecase.NativeStoredEpisodeFlowableUseCase
-import org.koin.core.KoinComponent
-import org.koin.core.get
+import org.koin.core.component.KoinComponent
+import org.koin.core.component.get
 import org.koin.dsl.module
 
 actual val platformModule = module {
