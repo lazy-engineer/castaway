@@ -67,6 +67,10 @@ kotlin {
   cocoapods {
 	summary = "Multiplatform shared library"
 	homepage = "https://github.com/lazy-engineer/castaway"
+
+	podfile = project.file("../iosApp/Podfile")
+
+	ios.deploymentTarget = "13.5"
   }
 }
 
