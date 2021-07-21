@@ -72,6 +72,13 @@ kotlin {
 
 	ios.deploymentTarget = "13.5"
   }
+
+  targets.withType<org.jetbrains.kotlin.gradle.plugin.mpp.KotlinNativeTarget> {
+	binaries.withType<org.jetbrains.kotlin.gradle.plugin.mpp.Framework> {
+	  isStatic = true
+	  transitiveExport = true
+	}
+  }
 }
 
 android {
