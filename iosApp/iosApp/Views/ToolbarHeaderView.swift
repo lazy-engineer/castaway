@@ -1,11 +1,12 @@
 import SwiftUI
+import Kingfisher
 
 struct ToolbarHeaderView: View {
     
     @EnvironmentObject var theme: ThemeNeumorphism
     
-    @State var feedImage: UIImage?
     @State var feedTitle: String
+    @State var feedImage: String?
     
     var body: some View {
         VStack(spacing: 0) {
@@ -18,7 +19,7 @@ struct ToolbarHeaderView: View {
                             .shadow(color: theme.colorPalette.dropShadow, radius: 5, x: 5, y: 5)
                             .shadow(color: theme.colorPalette.reflection, radius: 5, x: -5, y: -5)
 
-                        Image(uiImage: imageUrl)
+                        KFImage(URL(string: imageUrl))
                             .resizable()
                             .scaledToFill()
                             .frame(width: 45, height: 45)
@@ -67,7 +68,7 @@ struct ToolbarHeaderView: View {
 #if DEBUG
 struct ToolbarHeaderView_Previews: PreviewProvider {
     static var previews: some View {
-        ToolbarHeaderView(feedImage: nil, feedTitle: "Awesome Podcast")
+        ToolbarHeaderView(feedTitle: "Awesome Podcast", feedImage: nil)
             .environmentObject(ThemeNeumorphism(mode: .light))
     }
 }

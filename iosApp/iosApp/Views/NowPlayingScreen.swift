@@ -1,4 +1,5 @@
 import SwiftUI
+import Kingfisher
 
 struct NowPlayingScreen: View {
     
@@ -30,7 +31,7 @@ struct NowPlayingScreen: View {
                             .shadow(color: theme.colorPalette.dropShadow, radius: /*@START_MENU_TOKEN@*/10/*@END_MENU_TOKEN@*/, x: 10, y: 10)
                             .shadow(color: theme.colorPalette.reflection, radius: /*@START_MENU_TOKEN@*/10/*@END_MENU_TOKEN@*/, x: -5, y: -5)
 
-                        Image(uiImage: imageUrl)
+                        KFImage(URL(string: imageUrl))
                             .resizable()
                             .scaledToFill()
                             .frame(width: 292, height: 292)

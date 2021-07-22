@@ -1,4 +1,5 @@
 import SwiftUI
+import Kingfisher
 
 struct PodcastHeaderView: View {
     
@@ -7,7 +8,7 @@ struct PodcastHeaderView: View {
     @State var time = Timer.publish(every: 0.1, on: .current, in: .tracking).autoconnect()
     @State var size: CGFloat = 150
     
-    @State var feedImage: UIImage?
+    @State var feedImage: String?
     @State var feedTitle: String
     let outOfSight: (Bool) -> Void
     
@@ -28,7 +29,7 @@ struct PodcastHeaderView: View {
                         .shadow(color: theme.colorPalette.reflection, radius: /*@START_MENU_TOKEN@*/10/*@END_MENU_TOKEN@*/, x: -5, y: -5)
 
                     GeometryReader { geometry in
-                        Image(uiImage: imageUrl)
+                        KFImage(URL(string: imageUrl)!)
                             .resizable()
                             .scaledToFill()
                             .onReceive(self.time, perform: { _ in

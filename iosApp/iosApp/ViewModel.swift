@@ -14,7 +14,7 @@ class CastawayViewModel: ObservableObject {
     private var disposables = Set<AnyCancellable>()
     
     @Published var feedTitle = ""
-    @Published var feedImage: UIImage?
+    @Published var feedImage: String?
     @Published var episodes = [Episode]()
     @Published var currentEpisode: Episode?
     @Published var playing: Bool = false
@@ -122,6 +122,7 @@ class CastawayViewModel: ObservableObject {
     
     private func publishAndPrepareFeed(_ feed: FeedData) {
         feedTitle = feed.info.title
+        feedImage = feed.info.imageUrl
         episodes = feed.episodes
         prepareEpisodes(feed.episodes)
     }
@@ -129,8 +130,7 @@ class CastawayViewModel: ObservableObject {
     private func prepareEpisodes(_ episodes: [Episode]) {
         player.prepare {
             episodes.map { episode in
-                guard let image = feedImage else { return episode.toMediaData() }
-                return episode.copy(image: image).toMediaData()
+                return episode.toMediaData()
             }
         }
     }

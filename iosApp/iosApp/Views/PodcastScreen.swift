@@ -31,7 +31,7 @@ struct PodcastScreen: View {
                     }
                     
                     if showToolbarHeader {
-                        ToolbarHeaderView(feedImage: viewModel.feedImage, feedTitle: viewModel.feedTitle)
+                        ToolbarHeaderView(feedTitle: viewModel.feedTitle, feedImage: viewModel.feedImage)
                             .environmentObject(theme)
                             .transition(.move(edge: .top))
                             .animation(.easeInOut(duration: 0.5))
