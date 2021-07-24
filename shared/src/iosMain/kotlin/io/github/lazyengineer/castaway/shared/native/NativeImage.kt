@@ -1,4 +1,4 @@
-package io.github.lazyengineer.castaway.shared
+package io.github.lazyengineer.castaway.shared.native
 
 import kotlinx.cinterop.memScoped
 import kotlinx.cinterop.readBytes

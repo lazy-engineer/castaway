@@ -1,4 +1,4 @@
-package io.github.lazyengineer.castaway.shared
+package io.github.lazyengineer.castaway.shared.native
 
 expect class Image
 

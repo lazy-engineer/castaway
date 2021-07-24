@@ -1,6 +1,6 @@
 package io.github.lazyengineer.castaway.shared.usecase
 
-import io.github.lazyengineer.castaway.shared.Image
+import io.github.lazyengineer.castaway.shared.native.Image
 import io.github.lazyengineer.castaway.shared.common.MainScope
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers

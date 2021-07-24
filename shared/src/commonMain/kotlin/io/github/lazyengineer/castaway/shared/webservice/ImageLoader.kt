@@ -1,8 +1,8 @@
 package io.github.lazyengineer.castaway.shared.webservice
 
-import io.github.lazyengineer.castaway.shared.Image
+import io.github.lazyengineer.castaway.shared.native.Image
 import io.github.lazyengineer.castaway.shared.common.Result
-import io.github.lazyengineer.castaway.shared.toNativeImage
+import io.github.lazyengineer.castaway.shared.native.toNativeImage
 import io.ktor.client.HttpClient
 import io.ktor.client.request.get
 
