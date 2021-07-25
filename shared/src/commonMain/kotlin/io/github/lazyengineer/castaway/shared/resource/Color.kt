@@ -6,3 +6,8 @@ data class Color(
   val blue: Int,
   val alpha: Double = 1.0,
 )
+
+sealed interface ThemedColor {
+  data class Dark(val color: Color) : ThemedColor
+  data class Light(val color: Color) : ThemedColor
+}
