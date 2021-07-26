@@ -4,7 +4,7 @@ import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material.Colors
 import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.Composable
-import io.github.lazyengineer.castaway.androidApp.view.util.toColor
+import io.github.lazyengineer.castaway.androidApp.ext.toColor
 import io.github.lazyengineer.castaway.shared.resource.ColorPalette
 
 @Composable

@@ -1,4 +1,4 @@
-package io.github.lazyengineer.castaway.androidApp.view.util
+package io.github.lazyengineer.castaway.androidApp.ext
 
 import androidx.compose.ui.graphics.Color
 import io.github.lazyengineer.castaway.shared.resource.Color as SharedColor
