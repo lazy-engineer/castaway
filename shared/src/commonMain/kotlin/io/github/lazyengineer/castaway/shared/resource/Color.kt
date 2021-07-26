@@ -7,7 +7,7 @@ data class Color(
   val alpha: Double = 1.0,
 )
 
-sealed interface ThemedColor {
-  data class Dark(val color: Color) : ThemedColor
-  data class Light(val color: Color) : ThemedColor
+sealed class ThemedColor(open val color: Color) {
+  data class Dark(override val color: Color) : ThemedColor(color)
+  data class Light(override val color: Color) : ThemedColor(color)
 }
