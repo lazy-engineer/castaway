@@ -1,4 +1,5 @@
 import SwiftUI
+import shared
 
 struct OnBoardingScreen: View {
     
@@ -19,7 +20,7 @@ struct OnBoardingScreen: View {
                     .frame(width: 100, height: 100)
                     .selfSizeMask(
                         LinearGradient(
-                            gradient: Gradient(colors: [Color.blueGradientStart, Color.blueGradientEnd]),
+                            gradient: Gradient(colors: [Colors.init().blueGradientStart.toColor(), Colors.init().blueGradientEnd.toColor()]),
                             startPoint: .top,
                             endPoint: .bottom)
                     )

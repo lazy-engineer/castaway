@@ -1,4 +1,5 @@
 import SwiftUI
+import shared
 
 public class ThemeNeumorphism: ObservableObject {
     
@@ -24,28 +25,28 @@ public class ThemeNeumorphism: ObservableObject {
             
             switch themeMode {
             case .dark:
-                self.primary = .orangeGradientStart
-                self.secondary = .orangeGradientEnd
-                self.primaryVariant = .orangeGradientMiddle
-                self.textColor = .darkThemeTextColor
-                self.background = .darkThemeBackground
-                self.backgroundGradient = Color.black.opacity(0.4)
-                self.dropShadow = .darkThemeDarkShadow
-                self.reflection = .darkThemeLightShadow
-                self.intenseDropShadow = Color.black.opacity(0.7)
-                self.intenseReflection = .darkGray
+                self.primary = Colors.init().orangeGradientStart.toColor()
+                self.secondary = Colors.init().orangeGradientEnd.toColor()
+                self.primaryVariant = Colors.init().orangeGradientMiddle.toColor()
+                self.textColor = Colors.init().darkThemeTextColor.toColor()
+                self.background = Colors.init().darkThemeBackground.toColor()
+                self.backgroundGradient = Colors.init().darkThemeDarkShadow.toColor()
+                self.dropShadow = Colors.init().darkThemeDarkShadow.toColor()
+                self.reflection = Colors.init().darkThemeLightShadow.toColor()
+                self.intenseDropShadow = Colors.init().darkThemeIntenseDropShadow.toColor()
+                self.intenseReflection = Colors.init().darkGray.toColor()
                 
             case .light:
-                self.primary = .blueGradientStart
-                self.secondary = .blueGradientEnd
-                self.primaryVariant = .blueGradientMiddle
-                self.textColor = .textColor
-                self.background = .lightThemeBackground
-                self.backgroundGradient = Color.gray.opacity(0.2)
-                self.dropShadow = Color.black.opacity(0.2)
-                self.reflection = Color.white.opacity(0.7)
-                self.intenseDropShadow = Color.black.opacity(0.4)
-                self.intenseReflection = Color.white
+                self.primary = Colors.init().blueGradientStart.toColor()
+                self.secondary = Colors.init().blueGradientEnd.toColor()
+                self.primaryVariant = Colors.init().blueGradientMiddle.toColor()
+                self.textColor = Colors.init().lightThemeTextColor.toColor()
+                self.background = Colors.init().lightThemeBackground.toColor()
+                self.backgroundGradient = Colors.init().lightThemeBackgroundGradient.toColor()
+                self.dropShadow = Colors.init().lightThemeDarkShadow.toColor()
+                self.reflection = Colors.init().lightThemeLightShadow.toColor()
+                self.intenseDropShadow = Colors.init().darkThemeDarkShadow.toColor()
+                self.intenseReflection =  Colors.init().white.toColor()
             }
         }
     }
