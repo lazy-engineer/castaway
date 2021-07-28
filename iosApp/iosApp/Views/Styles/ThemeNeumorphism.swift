@@ -27,32 +27,32 @@ public class ThemeNeumorphism: ObservableObject {
         public private(set) var intenseDropShadow: Color
         public private(set) var intenseReflection: Color
         
-        public init(_ themeMode: ThemeMode = .dark) {
+        public init(_ themeMode: ThemeMode = .dark, _ colors: Colors = Colors.init()) {
             
             switch themeMode {
             case .dark:
-                self.primary = Colors.init().orangeGradientStart.toColor()
-                self.secondary = Colors.init().orangeGradientEnd.toColor()
-                self.primaryVariant = Colors.init().orangeGradientMiddle.toColor()
-                self.textColor = Colors.init().darkThemeTextColor.toColor()
-                self.background = Colors.init().darkThemeBackground.toColor()
-                self.backgroundGradient = Colors.init().darkThemeDarkShadow.toColor()
-                self.dropShadow = Colors.init().darkThemeDarkShadow.toColor()
-                self.reflection = Colors.init().darkThemeLightShadow.toColor()
-                self.intenseDropShadow = Colors.init().darkThemeIntenseDropShadow.toColor()
-                self.intenseReflection = Colors.init().darkGray.toColor()
+                self.primary = colors.orangeGradientStart.toColor()
+                self.secondary = colors.orangeGradientEnd.toColor()
+                self.primaryVariant = colors.orangeGradientMiddle.toColor()
+                self.textColor = colors.darkThemeTextColor.toColor()
+                self.background = colors.darkThemeBackground.toColor()
+                self.backgroundGradient = colors.darkThemeDarkShadow.toColor()
+                self.dropShadow = colors.darkThemeDarkShadow.toColor()
+                self.reflection = colors.darkThemeLightShadow.toColor()
+                self.intenseDropShadow = colors.darkThemeIntenseDropShadow.toColor()
+                self.intenseReflection = colors.darkGray.toColor()
                 
             case .light:
-                self.primary = Colors.init().blueGradientStart.toColor()
-                self.secondary = Colors.init().blueGradientEnd.toColor()
-                self.primaryVariant = Colors.init().blueGradientMiddle.toColor()
-                self.textColor = Colors.init().lightThemeTextColor.toColor()
-                self.background = Colors.init().lightThemeBackground.toColor()
-                self.backgroundGradient = Colors.init().lightThemeBackgroundGradient.toColor()
-                self.dropShadow = Colors.init().lightThemeDarkShadow.toColor()
-                self.reflection = Colors.init().lightThemeLightShadow.toColor()
-                self.intenseDropShadow = Colors.init().darkThemeDarkShadow.toColor()
-                self.intenseReflection =  Colors.init().white.toColor()
+                self.primary = colors.blueGradientStart.toColor()
+                self.secondary = colors.blueGradientEnd.toColor()
+                self.primaryVariant = colors.blueGradientMiddle.toColor()
+                self.textColor = colors.lightThemeTextColor.toColor()
+                self.background = colors.lightThemeBackground.toColor()
+                self.backgroundGradient = colors.lightThemeBackgroundGradient.toColor()
+                self.dropShadow = colors.lightThemeDarkShadow.toColor()
+                self.reflection = colors.lightThemeLightShadow.toColor()
+                self.intenseDropShadow = colors.darkThemeDarkShadow.toColor()
+                self.intenseReflection = colors.white.toColor()
             }
         }
     }
