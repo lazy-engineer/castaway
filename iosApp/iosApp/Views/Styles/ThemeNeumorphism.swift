@@ -7,6 +7,12 @@ public class ThemeNeumorphism: ObservableObject {
     @Published public var colorPalette: ColorPalette
     @Published public var style: Style
     
+    public init(mode: ThemeMode = .dark) {
+        self.mode = mode
+        self.colorPalette = ColorPalette(mode)
+        self.style = Style(mode)
+    }
+    
     public struct ColorPalette {
         public private(set) var primary: Color
         public private(set) var secondary: Color
@@ -65,12 +71,6 @@ public class ThemeNeumorphism: ObservableObject {
             self.roundToggleButtonStyle = NeumorphismCircleToggleStyle(themeMode: themeMode)
             self.textToggleStyle = NeumorphismTextToggleStyle(themeMode: themeMode)
         }
-    }
-    
-    public init(mode: ThemeMode = .dark) {
-        self.mode = mode
-        self.colorPalette = ColorPalette(mode)
-        self.style = Style(mode)
     }
     
     func changeThemeMode(mode: ThemeMode) {
