@@ -9,16 +9,14 @@ plugins {
 }
 
 android {
-  compileSdkVersion(App.compileSdk)
-  buildToolsVersion(App.buildTools)
+  compileSdk = App.compileSdk
+  buildToolsVersion = App.buildTools
 
   defaultConfig {
-	minSdkVersion(App.minSdk)
-	targetSdkVersion(App.targetSdk)
-	versionCode = App.versionCode
-	versionName = App.versionName
+	minSdk = App.minSdk
+	targetSdk = App.targetSdk
 
-	testInstrumentationRunner(App.testRunner)
+	testInstrumentationRunner = App.testRunner
 	consumerProguardFiles("consumer-rules.pro")
   }
 
@@ -32,12 +30,12 @@ android {
   }
 
   compileOptions {
-	sourceCompatibility(JavaVersion.VERSION_1_8)
-	targetCompatibility(JavaVersion.VERSION_1_8)
+	sourceCompatibility(JavaVersion.VERSION_11)
+	targetCompatibility(JavaVersion.VERSION_11)
   }
 
   kotlinOptions {
-	jvmTarget = "1.8"
+	jvmTarget = "11"
   }
 }
 

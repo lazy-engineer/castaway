@@ -43,11 +43,11 @@ dependencies {
 }
 
 android {
-  compileSdkVersion(App.compileSdk)
+  compileSdk = App.compileSdk
   defaultConfig {
 	applicationId = "io.github.lazyengineer.castaway.androidApp"
-	minSdkVersion(App.minSdk)
-	targetSdkVersion(App.targetSdk)
+	minSdk = App.minSdk
+	targetSdk = App.targetSdk
 	versionCode = App.versionCode
 	versionName = App.versionName
   }
@@ -59,13 +59,12 @@ android {
   }
 
   compileOptions {
-	sourceCompatibility(JavaVersion.VERSION_1_8)
-	targetCompatibility(JavaVersion.VERSION_1_8)
+	sourceCompatibility(JavaVersion.VERSION_11)
+	targetCompatibility(JavaVersion.VERSION_11)
   }
 
   kotlinOptions {
-	jvmTarget = "1.8"
-	useIR = true
+	jvmTarget = "11"
   }
 
   buildFeatures {
