@@ -15,9 +15,12 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import io.github.lazyengineer.castaway.androidApp.view.nowplaying.NowPlayingEpisode
+import io.github.lazyengineer.castaway.androidApp.view.style.CastawayTheme
+import io.github.lazyengineer.castaway.androidApp.view.style.ThemeType.NEUMORPHISM
 import io.github.lazyengineer.castaway.androidApp.view.util.rememberFlowWithLifecycle
 import io.github.lazyengineer.castaway.androidApp.viewmodel.CastawayViewModel
 import io.github.lazyengineer.castaway.androidApp.viewmodel.UiEvent.EpisodeRowEvent
@@ -113,5 +116,63 @@ internal fun PodcastScreen(
 		}
 	  }
 	}
+  }
+}
+
+@Preview
+@Composable
+fun PodcastScreen_Preview() {
+  CastawayTheme(NEUMORPHISM, true) {
+	PodcastScreen(
+	  state = PodcastViewState(
+		loading = false,
+		title = "Awesome Podcast",
+		imageUrl = "",
+		episodes = listOf(
+		  NowPlayingEpisode(
+			id = "uu1d",
+			title = "Awesome Episode 1",
+			subTitle = "How to be just awesome!",
+			audioUrl = "episode.url",
+			imageUrl = "image.url",
+			author = "Awesom-O",
+			playbackPosition = 1800000L,
+			playbackDuration = 2160000L,
+			playbackSpeed = 1.5f,
+			playing = true,
+		  ),
+		  NowPlayingEpisode(
+			id = "uu2d",
+			title = "Awesome Episode 2",
+			subTitle = "How to be just awesome!",
+			audioUrl = "episode.url",
+			imageUrl = "image.url",
+			author = "Awesom-O",
+			playbackPosition = 1000000L,
+			playbackDuration = 2160000L,
+			playbackSpeed = 1.5f,
+			playing = false,
+		  )
+		),
+	  ),
+	  event = {}
+	) {}
+  }
+}
+
+
+@Preview
+@Composable
+fun PodcastScreen_Loading_Preview() {
+  CastawayTheme(NEUMORPHISM, true) {
+	PodcastScreen(
+	  state = PodcastViewState(
+		loading = true,
+		title = "Awesome Podcast",
+		imageUrl = "podcast.url",
+		episodes = listOf(),
+	  ),
+	  event = {}
+	) {}
   }
 }
