@@ -1,4 +1,4 @@
-package io.github.lazyengineer.castaway.androidApp.view
+package io.github.lazyengineer.castaway.androidApp.view.activity
 
 import android.os.Bundle
 import androidx.activity.compose.setContent
