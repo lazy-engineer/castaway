@@ -17,8 +17,11 @@ import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import io.github.lazyengineer.castaway.androidApp.view.PlaybackProgressView
+import io.github.lazyengineer.castaway.androidApp.view.style.CastawayTheme
+import io.github.lazyengineer.castaway.androidApp.view.style.ThemeType.NEUMORPHISM
 
 @Composable
 fun EpisodeRowView(
@@ -28,7 +31,10 @@ fun EpisodeRowView(
 ) {
   Column(modifier = modifier) {
 	Row(
-	  modifier = Modifier.height(70.dp).fillMaxSize().padding(8.dp),
+	  modifier = Modifier
+		.height(70.dp)
+		.fillMaxSize()
+		.padding(8.dp),
 	  horizontalArrangement = Arrangement.SpaceBetween,
 	  verticalAlignment = Alignment.CenterVertically,
 	) {
@@ -39,11 +45,39 @@ fun EpisodeRowView(
 		else -> Filled.PlayArrow
 	  }
 
-	  Icon(playPauseImage, "play/pause", modifier = Modifier.padding(8.dp).weight(1f).clickable { onPlayPause(true) })
+	  Icon(playPauseImage, "play/pause", modifier = Modifier
+		.padding(8.dp)
+		.weight(1f)
+		.clickable { onPlayPause(true) })
 	}
 
 	PlaybackProgressView(modifier = Modifier.fillMaxWidth(), playbackPosition = state.progress, padding = 0.dp)
 
 	Divider()
+  }
+}
+
+@Preview
+@Composable
+fun EpisodeRowView_Empty_Preview() {
+  CastawayTheme(NEUMORPHISM, false) {
+	EpisodeRowView(state = EpisodeRowState.Empty) {}
+  }
+}
+
+@Preview
+@Composable
+fun EpisodeRowView_Preview() {
+  CastawayTheme(NEUMORPHISM, true) {
+	EpisodeRowView(
+	  state = EpisodeRowState(
+		playing = true,
+		title = "Awesome Episode 1",
+		progress = .3f,
+		buffering = false,
+		downloading = false,
+		played = false,
+	  )
+	) {}
   }
 }
