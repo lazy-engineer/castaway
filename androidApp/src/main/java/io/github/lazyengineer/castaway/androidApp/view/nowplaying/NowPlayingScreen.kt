@@ -31,12 +31,15 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.toArgb
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.google.accompanist.coil.rememberCoilPainter
 import com.google.accompanist.imageloading.ImageLoadState
 import io.github.lazyengineer.castaway.androidApp.view.PlaybackSliderView
-import io.github.lazyengineer.castaway.androidApp.view.style.shadow
+import io.github.lazyengineer.castaway.androidApp.view.style.CastawayTheme
+import io.github.lazyengineer.castaway.androidApp.view.style.ThemeType.NEUMORPHISM
 import io.github.lazyengineer.castaway.androidApp.view.util.rememberFlowWithLifecycle
 import io.github.lazyengineer.castaway.androidApp.viewmodel.CastawayViewModel
 import io.github.lazyengineer.castaway.androidApp.viewmodel.UiEvent.NowPlayingEvent
@@ -101,19 +104,16 @@ internal fun NowPlayingView(
 		.size(300.dp)
 		.clip(RoundedCornerShape(25f))
 		.background(MaterialTheme.colors.primary)
-		.shadow(
-		  shadowColor = Color.White.toArgb(),
-		  paintColor = Color.White.toArgb(),
-		  offsetX = 4.dp,
-		  offsetY = 4.dp
-		)
 	  )
 
 	  val painter = rememberCoilPainter(episode.imageUrl)
 
 	  Image(
 		painter = painter,
-		modifier = Modifier.size(300.dp).padding(5.dp).clip(RoundedCornerShape(25f)),
+		modifier = Modifier
+		  .size(300.dp)
+		  .padding(5.dp)
+		  .clip(RoundedCornerShape(25f)),
 		contentDescription = "Podcast header image",
 	  )
 
@@ -138,7 +138,9 @@ internal fun NowPlayingView(
 	  }
 
 	  IconButton(
-		modifier = Modifier.padding(start = 48.dp, end = 48.dp).size(64.dp),
+		modifier = Modifier
+		  .padding(start = 48.dp, end = 48.dp)
+		  .size(64.dp),
 		onClick = {
 		  event(NowPlayingEvent.PlayPause(episode.id))
 		}) {
@@ -157,14 +159,24 @@ internal fun NowPlayingView(
 	  }
 	}
 
-	Column(modifier = Modifier.fillMaxWidth().padding(top = 64.dp)) {
-	  Row(modifier = Modifier.fillMaxWidth().padding(start = 16.dp, end = 16.dp), horizontalArrangement = Arrangement.SpaceBetween) {
+	Column(
+	  modifier = Modifier
+		.fillMaxWidth()
+		.padding(top = 64.dp)
+	) {
+	  Row(
+		modifier = Modifier
+		  .fillMaxWidth()
+		  .padding(start = 16.dp, end = 16.dp), horizontalArrangement = Arrangement.SpaceBetween
+	  ) {
 		Text(episode.playbackPosition.millisToTxt())
 		Text(episode.playbackDuration.millisToTxt())
 	  }
 
 	  PlaybackSliderView(
-		modifier = Modifier.fillMaxWidth().padding(start = 16.dp, end = 16.dp),
+		modifier = Modifier
+		  .fillMaxWidth()
+		  .padding(start = 16.dp, end = 16.dp),
 		progress = playbackProgress(
 		  episode.playbackPosition,
 		  episode.playbackDuration
@@ -189,9 +201,12 @@ internal fun NowPlayingView(
 
 	Text(
 	  text = "${episode.playbackSpeed}x",
-	  modifier = Modifier.align(alignment = Alignment.Start).padding(start = 16.dp).clickable {
-		event(NowPlayingEvent.ChangePlaybackSpeed)
-	  })
+	  modifier = Modifier
+		.align(alignment = Alignment.Start)
+		.padding(start = 16.dp)
+		.clickable {
+		  event(NowPlayingEvent.ChangePlaybackSpeed)
+		})
   }
 }
 
@@ -213,3 +228,38 @@ fun Long.millisToTxt() = String.format(
   MILLISECONDS.toMinutes(this) - HOURS.toMinutes(MILLISECONDS.toHours(this)),
   MILLISECONDS.toSeconds(this) - MINUTES.toSeconds(MILLISECONDS.toMinutes(this))
 )
+
+@Preview
+@Composable
+fun NowPlayingScreen_Loading_Preview() {
+  CastawayTheme(NEUMORPHISM, true) {
+	NowPlayingScreen(state = NowPlayingState.Empty) {}
+  }
+}
+
+@Preview
+@Composable
+fun NowPlayingScreen_Preview() {
+  CastawayTheme(NEUMORPHISM, true) {
+	NowPlayingScreen(
+	  state = NowPlayingState(
+		loading = false,
+		playing = true,
+		buffering = false,
+		played = false,
+		episode = NowPlayingEpisode(
+		  id = "uu1d",
+		  title = "Awesome Episode 1",
+		  subTitle = "How to be just awesome!",
+		  audioUrl = "episode.url",
+		  imageUrl = "image.url",
+		  author = "Awesom-O",
+		  playbackPosition = 1800000L,
+		  playbackDuration = 2160000L,
+		  playbackSpeed = 1.5f,
+		  playing = true,
+		),
+	  )
+	) {}
+  }
+}
