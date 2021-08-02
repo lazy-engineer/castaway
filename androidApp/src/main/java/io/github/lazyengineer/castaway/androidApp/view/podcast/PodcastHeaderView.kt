@@ -18,13 +18,16 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.google.accompanist.coil.rememberCoilPainter
 import com.google.accompanist.imageloading.ImageLoadState
+import io.github.lazyengineer.castaway.androidApp.view.style.CastawayTheme
+import io.github.lazyengineer.castaway.androidApp.view.style.ThemeType.NEUMORPHISM
 
 @Composable
-fun PodcastHeaderView(modifier: Modifier, title: String, imageUrl: String) {
+fun PodcastHeaderView(modifier: Modifier = Modifier, title: String, imageUrl: String) {
   Column(
 	modifier = modifier,
 	horizontalAlignment = Alignment.CenterHorizontally,
@@ -51,5 +54,13 @@ fun PodcastHeaderView(modifier: Modifier, title: String, imageUrl: String) {
 		Icon(Filled.Mic, "Podcast header icon", modifier = Modifier.size(150.dp), tint = Color.Gray)
 	  }
 	}
+  }
+}
+
+@Preview
+@Composable
+fun PodcastHeaderView_Preview() {
+  CastawayTheme(NEUMORPHISM, false) {
+	PodcastHeaderView(title = "Awesome Podcast", imageUrl = "image.url")
   }
 }
