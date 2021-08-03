@@ -19,8 +19,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import io.github.lazyengineer.castaway.androidApp.R
+import io.github.lazyengineer.castaway.androidApp.view.style.CastawayTheme
+import io.github.lazyengineer.castaway.androidApp.view.style.ThemeType.NEUMORPHISM
 
 @Composable
 fun OnBoardingScreen(
@@ -74,5 +77,25 @@ fun OnBoardingScreen(
 		Text(stringResource(id = R.string.onboarding_emoji))
 	  }
 	}
+  }
+}
+
+@Preview
+@Composable
+fun OnBoardingScreen_Dark_Preview() {
+  val darkTheme = true
+
+  CastawayTheme(NEUMORPHISM, darkTheme) {
+	OnBoardingScreen(darkTheme = darkTheme,switchTheme = {}) {}
+  }
+}
+
+@Preview
+@Composable
+fun OnBoardingScreen_Light_Preview() {
+  val darkTheme = false
+
+  CastawayTheme(NEUMORPHISM, darkTheme) {
+	OnBoardingScreen(darkTheme = darkTheme, switchTheme = {}) {}
   }
 }
