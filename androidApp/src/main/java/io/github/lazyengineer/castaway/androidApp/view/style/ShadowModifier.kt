@@ -15,14 +15,13 @@ import androidx.compose.ui.unit.dp
  */
 fun Modifier.shadow(
   color: Color,
-  alpha: Float = 0.2f,
   borderRadius: Dp = 0.dp,
   shadowRadius: Dp = 20.dp,
   offsetY: Dp = 0.dp,
   offsetX: Dp = 0.dp
 ) = composed {
 
-  val shadowColor = color.copy(alpha = alpha).toArgb()
+  val shadowColor = color.toArgb()
   val transparent = color.copy(alpha = 0f).toArgb()
 
   this.drawBehind {
