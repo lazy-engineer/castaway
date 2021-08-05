@@ -1,7 +1,6 @@
 package io.github.lazyengineer.castaway.androidApp.view.nowplaying
 
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -15,7 +14,6 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
-import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons.Filled
@@ -37,12 +35,15 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.google.accompanist.coil.rememberCoilPainter
 import com.google.accompanist.imageloading.ImageLoadState
+import io.github.lazyengineer.castaway.androidApp.ext.toColor
 import io.github.lazyengineer.castaway.androidApp.view.PlaybackSliderView
 import io.github.lazyengineer.castaway.androidApp.view.style.CastawayTheme
 import io.github.lazyengineer.castaway.androidApp.view.style.ThemeType.NEUMORPHISM
+import io.github.lazyengineer.castaway.androidApp.view.style.shadow
 import io.github.lazyengineer.castaway.androidApp.view.util.rememberFlowWithLifecycle
 import io.github.lazyengineer.castaway.androidApp.viewmodel.CastawayViewModel
 import io.github.lazyengineer.castaway.androidApp.viewmodel.UiEvent.NowPlayingEvent
+import io.github.lazyengineer.castaway.shared.resource.Colors
 import java.util.concurrent.TimeUnit.HOURS
 import java.util.concurrent.TimeUnit.MILLISECONDS
 import java.util.concurrent.TimeUnit.MINUTES
@@ -99,22 +100,24 @@ internal fun NowPlayingView(
   event: (NowPlayingEvent) -> Unit
 ) {
   Column(horizontalAlignment = Alignment.CenterHorizontally) {
-	Box(modifier = Modifier.padding(top = 48.dp, bottom = 48.dp)) {
-	  Box(modifier = Modifier
-		.size(300.dp)
-		.clip(RoundedCornerShape(25f))
-		.background(MaterialTheme.colors.primary)
+	Box(modifier = Modifier.padding(top = 64.dp, bottom = 64.dp)) {
+	  Box(
+		modifier = Modifier
+		  .size(300.dp)
+		  .clip(RoundedCornerShape(25f))
 	  )
 
 	  val painter = rememberCoilPainter(episode.imageUrl)
 
 	  Image(
 		painter = painter,
+		contentDescription = "Podcast header image",
 		modifier = Modifier
 		  .size(300.dp)
-		  .padding(5.dp)
+		  .padding(20.dp)
+		  .shadow(Colors.darkThemeLightShadow.toColor(), shadowRadius = 12.dp, offsetX = (-8).dp, offsetY = (-8).dp)
+		  .shadow(Colors.darkThemeDarkShadow.toColor(), shadowRadius = 12.dp, offsetX = 8.dp, offsetY = 8.dp)
 		  .clip(RoundedCornerShape(25f)),
-		contentDescription = "Podcast header image",
 	  )
 
 	  when (painter.loadState) {
