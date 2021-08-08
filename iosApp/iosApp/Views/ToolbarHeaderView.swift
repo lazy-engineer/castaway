@@ -19,7 +19,8 @@ struct ToolbarHeaderView: View {
                             .shadow(color: theme.colorPalette.dropShadow, radius: 5, x: 5, y: 5)
                             .shadow(color: theme.colorPalette.reflection, radius: 5, x: -5, y: -5)
 
-                        KFImage(URL(string: imageUrl))
+                        KFImage.url(URL(string: imageUrl))
+                            .loadImmediately()
                             .resizable()
                             .scaledToFill()
                             .frame(width: 45, height: 45)

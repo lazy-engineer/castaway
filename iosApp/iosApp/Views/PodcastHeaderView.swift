@@ -29,7 +29,8 @@ struct PodcastHeaderView: View {
                         .shadow(color: theme.colorPalette.reflection, radius: /*@START_MENU_TOKEN@*/10/*@END_MENU_TOKEN@*/, x: -5, y: -5)
 
                     GeometryReader { geometry in
-                        KFImage(URL(string: imageUrl)!)
+                        KFImage.url(URL(string: imageUrl)!)
+                            .loadImmediately()
                             .resizable()
                             .scaledToFill()
                             .onReceive(self.time, perform: { _ in
