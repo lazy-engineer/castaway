@@ -13,20 +13,20 @@ The Goal of this Project is to bring as much common logic as possible into the s
 ## iOS
 
 <p align="center">
-<img src="https://github.com/lazy-engineer/castaway/blob/main/screenshot/ios/neumorphism/light/ios_podcast_list_light.PNG?raw=true" height=400>
+<img src="https://github.com/lazy-engineer/castaway/blob/main/screenshot/ios/neumorphism/image/light/ios_podcast_list_light.PNG?raw=true" height=400>
           
-<img src="https://github.com/lazy-engineer/castaway/blob/main/screenshot/ios/neumorphism/light/ios_now_playing_loading_light.PNG?raw=true" height=400>
+<img src="https://github.com/lazy-engineer/castaway/blob/main/screenshot/ios/neumorphism/image/light/ios_now_playing_loading_light.PNG?raw=true" height=400>
           
-<img src="https://github.com/lazy-engineer/castaway/blob/main/screenshot/ios/neumorphism/light/ios_now_playing_progress_light.PNG?raw=true" height=400>
+<img src="https://github.com/lazy-engineer/castaway/blob/main/screenshot/ios/neumorphism/image/light/ios_now_playing_progress_light.PNG?raw=true" height=400>
 
 </p>
 
 <p align="center">
-<img src="https://github.com/lazy-engineer/castaway/blob/main/screenshot/ios/neumorphism/dark/ios_podcast_list_dark.PNG?raw=true" height=400>
+<img src="https://github.com/lazy-engineer/castaway/blob/main/screenshot/ios/neumorphism/dark/image/ios_podcast_list_dark.PNG?raw=true" height=400>
           
-<img src="https://github.com/lazy-engineer/castaway/blob/main/screenshot/ios/neumorphism/dark/ios_now_playing_loading_dark.PNG?raw=true" height=400>
+<img src="https://github.com/lazy-engineer/castaway/blob/main/screenshot/ios/neumorphism/dark/image/ios_now_playing_loading_dark.PNG?raw=true" height=400>
           
-<img src="https://github.com/lazy-engineer/castaway/blob/main/screenshot/ios/neumorphism/dark/ios_now_playing_progress_dark.PNG?raw=true" height=400>
+<img src="https://github.com/lazy-engineer/castaway/blob/main/screenshot/ios/neumorphism/dark/image/ios_now_playing_progress_dark.PNG?raw=true" height=400>
 </p>
 
 <br/><br/>
