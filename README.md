@@ -13,11 +13,11 @@ The Goal of this Project is to bring as much common logic as possible into the s
 ## iOS
 
 <p align="center">
-<img src="https://github.com/lazy-engineer/castaway/blob/main/screenshot/ios/neumorphism/image/light/ios_podcast_list_light.PNG?raw=true" height=400>
+<img src="https://github.com/lazy-engineer/castaway/blob/main/screenshot/ios/neumorphism/light/image/ios_podcast_list_light.PNG?raw=true" height=400>
           
-<img src="https://github.com/lazy-engineer/castaway/blob/main/screenshot/ios/neumorphism/image/light/ios_now_playing_loading_light.PNG?raw=true" height=400>
+<img src="https://github.com/lazy-engineer/castaway/blob/main/screenshot/ios/neumorphism/light/image/ios_now_playing_loading_light.PNG?raw=true" height=400>
           
-<img src="https://github.com/lazy-engineer/castaway/blob/main/screenshot/ios/neumorphism/image/light/ios_now_playing_progress_light.PNG?raw=true" height=400>
+<img src="https://github.com/lazy-engineer/castaway/blob/main/screenshot/ios/neumorphism/light/image/ios_now_playing_progress_light.PNG?raw=true" height=400>
 
 </p>
 
