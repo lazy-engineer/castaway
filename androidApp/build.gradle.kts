@@ -1,3 +1,5 @@
+
+import dependencies.AndroidTestLibrary
 import dependencies.App
 import dependencies.Library
 
@@ -40,6 +42,10 @@ dependencies {
   implementation(Library.coilCompose)
   implementation(Library.gson)
   implementation(Library.feedparser)
+
+  androidTestImplementation(AndroidTestLibrary.composeUiTest)
+  androidTestImplementation(AndroidTestLibrary.composeUiTestJunit)
+  debugImplementation(AndroidTestLibrary.composeDebugTestManifest)
 }
 
 android {

@@ -116,4 +116,7 @@ object TestLibrary {
 object AndroidTestLibrary {
 
   const val androidJunit = "androidx.test.ext:junit:${Version.androidJunit}"
+  const val composeUiTest = "androidx.compose.ui:ui-test:${Version.compose}"
+  const val composeUiTestJunit = "androidx.compose.ui:ui-test-junit4:${Version.compose}"
+  const val composeDebugTestManifest = "androidx.compose.ui:ui-test-manifest:${Version.compose}"
 }
