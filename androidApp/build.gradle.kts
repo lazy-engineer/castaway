@@ -2,6 +2,7 @@
 import dependencies.AndroidTestLibrary
 import dependencies.App
 import dependencies.Library
+import dependencies.Version
 
 plugins {
   id("com.android.application")
@@ -78,6 +79,6 @@ android {
   }
 
   composeOptions {
-	kotlinCompilerExtensionVersion = "1.0.0"
+	kotlinCompilerExtensionVersion = Version.compose
   }
 }
