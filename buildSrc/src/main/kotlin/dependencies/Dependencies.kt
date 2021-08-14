@@ -50,6 +50,7 @@ object Plugin {
   const val kotlin = "org.jetbrains.kotlin:kotlin-gradle-plugin:${Version.kotlin}"
   const val gradle = "com.android.tools.build:gradle:${Version.gradle}"
   const val koin = "org.koin:koin-gradle-plugin:${Version.koin}"
+  const val sqldelight = "com.squareup.sqldelight:gradle-plugin:${Version.sqldelight}"
 }
 
 object Library {
