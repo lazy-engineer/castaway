@@ -57,6 +57,7 @@ android {
 	targetSdk = App.targetSdk
 	versionCode = App.versionCode
 	versionName = App.versionName
+	testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
   }
 
   buildTypes {
@@ -80,5 +81,11 @@ android {
 
   composeOptions {
 	kotlinCompilerExtensionVersion = Version.compose
+  }
+
+  packagingOptions {
+	resources.excludes.add("META-INF/licenses/**")
+	resources.excludes.add("META-INF/AL2.0")
+	resources.excludes.add("META-INF/LGPL2.1")
   }
 }
