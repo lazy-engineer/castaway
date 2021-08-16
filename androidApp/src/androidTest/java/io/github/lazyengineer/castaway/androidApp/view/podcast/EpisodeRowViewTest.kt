@@ -1,7 +1,9 @@
 package io.github.lazyengineer.castaway.androidApp.view.podcast
 
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.junit4.createComposeRule
+import androidx.compose.ui.test.onNodeWithText
 import org.junit.*
 
 class EpisodeRowViewTest {
@@ -10,14 +12,25 @@ class EpisodeRowViewTest {
   val composeTestRule = createComposeRule()
 
   @Test
-  fun episodeRowTest() {
+  fun episodeRowTextView_shouldDisplayEpisodeRowStateTitle() {
+	val episodeRowStateTitle = "Test Episode"
+
 	composeTestRule.setContent {
 	  EpisodeRowView(
 		modifier = Modifier,
-		state = EpisodeRowState.Empty,
+		state = EpisodeRowState(
+		  playing = false,
+		  title = episodeRowStateTitle,
+		  progress = .3f,
+		  buffering = false,
+		  downloading = false,
+		  played = false,
+		),
 		onPlayPause = { }
 	  )
 	}
-	Thread.sleep(5000)
+
+	composeTestRule.onNodeWithText(episodeRowStateTitle)
+	  .assertIsDisplayed()
   }
 }
