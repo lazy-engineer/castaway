@@ -17,6 +17,8 @@ import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.semantics.stateDescription
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import io.github.lazyengineer.castaway.androidApp.view.PlaybackProgressView
@@ -48,7 +50,10 @@ fun EpisodeRowView(
 	  Icon(playPauseImage, "play/pause", modifier = Modifier
 		.padding(8.dp)
 		.weight(1f)
-		.clickable { onPlayPause(true) })
+		.clickable { onPlayPause(true) }
+		.semantics {
+		  stateDescription = playPauseImage.name
+		})
 	}
 
 	PlaybackProgressView(modifier = Modifier.fillMaxWidth(), playbackPosition = state.progress, padding = 0.dp)

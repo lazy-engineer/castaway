@@ -1,8 +1,13 @@
 package io.github.lazyengineer.castaway.androidApp.view.podcast
 
+import androidx.compose.material.icons.Icons.Filled
+import androidx.compose.material.icons.filled.Pause
+import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.test.assert
 import androidx.compose.ui.test.assertHasClickAction
 import androidx.compose.ui.test.assertIsDisplayed
+import androidx.compose.ui.test.hasStateDescription
 import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.compose.ui.test.onNodeWithContentDescription
 import androidx.compose.ui.test.onNodeWithText
@@ -39,6 +44,34 @@ class EpisodeRowViewTest {
 
 	composeTestRule.onNodeWithContentDescription("play/pause")
 	  .assertHasClickAction()
+  }
+
+  @Test
+  fun episodeRowPlayIconView_shouldShowPauseImageIfPlaying() {
+	composeTestRule.setContent {
+	  EpisodeRowView(
+		modifier = Modifier,
+		state = SIMPLE_EPISODE_ROW_VIEW_STATE.copy(playing = true),
+		onPlayPause = { }
+	  )
+	}
+
+	composeTestRule.onNodeWithContentDescription("play/pause")
+	  .assert(hasStateDescription(Filled.Pause.name))
+  }
+
+  @Test
+  fun episodeRowPlayIconView_shouldShowPlayImageIfNotPlaying() {
+	composeTestRule.setContent {
+	  EpisodeRowView(
+		modifier = Modifier,
+		state = SIMPLE_EPISODE_ROW_VIEW_STATE.copy(playing = false),
+		onPlayPause = { }
+	  )
+	}
+
+	composeTestRule.onNodeWithContentDescription("play/pause")
+	  .assert(hasStateDescription(Filled.PlayArrow.name))
   }
 
   companion object {
