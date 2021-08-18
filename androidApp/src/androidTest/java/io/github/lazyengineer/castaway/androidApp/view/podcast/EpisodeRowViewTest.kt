@@ -11,6 +11,7 @@ import androidx.compose.ui.test.hasStateDescription
 import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.compose.ui.test.onNodeWithContentDescription
 import androidx.compose.ui.test.onNodeWithText
+import androidx.compose.ui.test.performClick
 import org.junit.*
 
 class EpisodeRowViewTest {
@@ -72,6 +73,24 @@ class EpisodeRowViewTest {
 
 	composeTestRule.onNodeWithContentDescription("play/pause")
 	  .assert(hasStateDescription(Filled.PlayArrow.name))
+  }
+
+  @Test
+  fun episodeRowClickIconView_shouldCallOnPlayPauseCallback() {
+	var playing = false
+
+	composeTestRule.setContent {
+	  EpisodeRowView(
+		modifier = Modifier,
+		state = SIMPLE_EPISODE_ROW_VIEW_STATE.copy(playing = playing),
+		onPlayPause = { playing = it }
+	  )
+	}
+
+	composeTestRule.onNodeWithContentDescription("play/pause")
+	  .performClick()
+
+	assert(playing)
   }
 
   companion object {
