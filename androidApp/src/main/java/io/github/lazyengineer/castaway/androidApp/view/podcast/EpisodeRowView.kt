@@ -17,6 +17,8 @@ import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
+import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.semantics.stateDescription
 import androidx.compose.ui.tooling.preview.Preview
@@ -56,7 +58,17 @@ fun EpisodeRowView(
 		})
 	}
 
-	PlaybackProgressView(modifier = Modifier.fillMaxWidth(), playbackPosition = state.progress, padding = 0.dp)
+	PlaybackProgressView(
+	  modifier = Modifier
+		.fillMaxWidth()
+		.padding(16.dp)
+		.testTag("playback_progress")
+		.semantics {
+		  contentDescription = "${state.progress.times( 100)}% playback progress"
+		},
+	  playbackPosition = state.progress,
+	  padding = 0.dp
+	)
 
 	Divider()
   }

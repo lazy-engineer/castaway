@@ -93,6 +93,20 @@ class EpisodeRowViewTest {
 	assert(playing)
   }
 
+  @Test
+  fun episodeRowView_shouldDisplayPlaybackProgressView() {
+	composeTestRule.setContent {
+	  EpisodeRowView(
+		modifier = Modifier,
+		state = SIMPLE_EPISODE_ROW_VIEW_STATE,
+		onPlayPause = { }
+	  )
+	}
+
+	composeTestRule.onNodeWithContentDescription("${SIMPLE_EPISODE_ROW_VIEW_STATE.progress.times( 100)}% playback progress")
+	  .assertExists() // .assertIsDisplayed() Fails maybe cause of -> TO DO: check semantics hidden property
+  }
+
   companion object {
 	private const val EPISODE_ROW_STATE_TITLE = "Test Episode"
     private val SIMPLE_EPISODE_ROW_VIEW_STATE = EpisodeRowState(
