@@ -22,8 +22,8 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import io.github.lazyengineer.castaway.androidApp.R
-import io.github.lazyengineer.castaway.androidApp.view.style.CastawayTheme
-import io.github.lazyengineer.castaway.androidApp.view.style.ThemeType.NEUMORPHISM
+import io.github.lazyengineer.castaway.androidApp.theme.CastawayTheme
+import io.github.lazyengineer.castaway.androidApp.theme.ThemeType.MATERIAL
 
 @Composable
 fun OnBoardingScreen(
@@ -85,7 +85,7 @@ fun OnBoardingScreen(
 fun OnBoardingScreen_Dark_Preview() {
   val darkTheme = true
 
-  CastawayTheme(NEUMORPHISM, darkTheme) {
+  CastawayTheme(MATERIAL, darkTheme) {
 	OnBoardingScreen(darkTheme = darkTheme,switchTheme = {}) {}
   }
 }
@@ -95,7 +95,7 @@ fun OnBoardingScreen_Dark_Preview() {
 fun OnBoardingScreen_Light_Preview() {
   val darkTheme = false
 
-  CastawayTheme(NEUMORPHISM, darkTheme) {
+  CastawayTheme(MATERIAL, darkTheme) {
 	OnBoardingScreen(darkTheme = darkTheme, switchTheme = {}) {}
   }
 }

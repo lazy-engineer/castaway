@@ -1,4 +1,4 @@
-package io.github.lazyengineer.castaway.androidApp.view.style
+package io.github.lazyengineer.castaway.androidApp.theme
 
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material.Colors
@@ -8,7 +8,7 @@ import io.github.lazyengineer.castaway.androidApp.ext.toColor
 import io.github.lazyengineer.castaway.shared.resource.ColorPalette
 
 @Composable
-fun ThemeNeumorphism(darkTheme: Boolean = isSystemInDarkTheme(), content: @Composable() () -> Unit) {
+fun ThemeMaterial(darkTheme: Boolean = isSystemInDarkTheme(), content: @Composable() () -> Unit) {
 
   val sharedColorPalette = ColorPalette(darkTheme)
 

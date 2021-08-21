@@ -19,8 +19,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import io.github.lazyengineer.castaway.androidApp.view.nowplaying.NowPlayingEpisode
-import io.github.lazyengineer.castaway.androidApp.view.style.CastawayTheme
-import io.github.lazyengineer.castaway.androidApp.view.style.ThemeType.NEUMORPHISM
+import io.github.lazyengineer.castaway.androidApp.theme.CastawayTheme
+import io.github.lazyengineer.castaway.androidApp.theme.ThemeType.MATERIAL
 import io.github.lazyengineer.castaway.androidApp.view.util.rememberFlowWithLifecycle
 import io.github.lazyengineer.castaway.androidApp.viewmodel.CastawayViewModel
 import io.github.lazyengineer.castaway.androidApp.viewmodel.UiEvent.EpisodeRowEvent
@@ -122,7 +122,7 @@ internal fun PodcastScreen(
 @Preview
 @Composable
 fun PodcastScreen_Preview() {
-  CastawayTheme(NEUMORPHISM, true) {
+  CastawayTheme(MATERIAL, true) {
 	PodcastScreen(
 	  state = PodcastViewState(
 		loading = false,
@@ -164,7 +164,7 @@ fun PodcastScreen_Preview() {
 @Preview
 @Composable
 fun PodcastScreen_Loading_Preview() {
-  CastawayTheme(NEUMORPHISM, true) {
+  CastawayTheme(MATERIAL, true) {
 	PodcastScreen(
 	  state = PodcastViewState(
 		loading = true,

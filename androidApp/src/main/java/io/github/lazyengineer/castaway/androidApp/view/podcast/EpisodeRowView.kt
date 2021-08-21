@@ -23,9 +23,9 @@ import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.semantics.stateDescription
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import io.github.lazyengineer.castaway.androidApp.theme.CastawayTheme
+import io.github.lazyengineer.castaway.androidApp.theme.ThemeType.MATERIAL
 import io.github.lazyengineer.castaway.androidApp.view.PlaybackProgressView
-import io.github.lazyengineer.castaway.androidApp.view.style.CastawayTheme
-import io.github.lazyengineer.castaway.androidApp.view.style.ThemeType.NEUMORPHISM
 
 @Composable
 fun EpisodeRowView(
@@ -77,7 +77,7 @@ fun EpisodeRowView(
 @Preview
 @Composable
 fun EpisodeRowView_Empty_Preview() {
-  CastawayTheme(NEUMORPHISM, false) {
+  CastawayTheme(MATERIAL, false) {
 	EpisodeRowView(state = EpisodeRowState.Empty) {}
   }
 }
@@ -85,7 +85,7 @@ fun EpisodeRowView_Empty_Preview() {
 @Preview
 @Composable
 fun EpisodeRowView_Preview() {
-  CastawayTheme(NEUMORPHISM, true) {
+  CastawayTheme(MATERIAL, true) {
 	EpisodeRowView(
 	  state = EpisodeRowState(
 		playing = true,

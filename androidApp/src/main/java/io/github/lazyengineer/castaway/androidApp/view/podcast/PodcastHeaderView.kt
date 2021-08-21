@@ -23,8 +23,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.google.accompanist.coil.rememberCoilPainter
 import com.google.accompanist.imageloading.ImageLoadState
-import io.github.lazyengineer.castaway.androidApp.view.style.CastawayTheme
-import io.github.lazyengineer.castaway.androidApp.view.style.ThemeType.NEUMORPHISM
+import io.github.lazyengineer.castaway.androidApp.theme.CastawayTheme
+import io.github.lazyengineer.castaway.androidApp.theme.ThemeType.MATERIAL
 
 @Composable
 fun PodcastHeaderView(modifier: Modifier = Modifier, title: String, imageUrl: String) {
@@ -60,7 +60,7 @@ fun PodcastHeaderView(modifier: Modifier = Modifier, title: String, imageUrl: St
 @Preview
 @Composable
 fun PodcastHeaderView_Preview() {
-  CastawayTheme(NEUMORPHISM, false) {
+  CastawayTheme(MATERIAL, false) {
 	PodcastHeaderView(title = "Awesome Podcast", imageUrl = "image.url")
   }
 }

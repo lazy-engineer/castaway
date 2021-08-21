@@ -36,9 +36,9 @@ import androidx.compose.ui.unit.sp
 import com.google.accompanist.coil.rememberCoilPainter
 import com.google.accompanist.imageloading.ImageLoadState
 import io.github.lazyengineer.castaway.androidApp.ext.toColor
+import io.github.lazyengineer.castaway.androidApp.theme.CastawayTheme
+import io.github.lazyengineer.castaway.androidApp.theme.ThemeType.MATERIAL
 import io.github.lazyengineer.castaway.androidApp.view.PlaybackSliderView
-import io.github.lazyengineer.castaway.androidApp.view.style.CastawayTheme
-import io.github.lazyengineer.castaway.androidApp.view.style.ThemeType.NEUMORPHISM
 import io.github.lazyengineer.castaway.androidApp.view.style.shadow
 import io.github.lazyengineer.castaway.androidApp.view.util.rememberFlowWithLifecycle
 import io.github.lazyengineer.castaway.androidApp.viewmodel.CastawayViewModel
@@ -235,7 +235,7 @@ fun Long.millisToTxt() = String.format(
 @Preview
 @Composable
 fun NowPlayingScreen_Loading_Preview() {
-  CastawayTheme(NEUMORPHISM, true) {
+  CastawayTheme(MATERIAL, true) {
 	NowPlayingScreen(state = NowPlayingState.Empty) {}
   }
 }
@@ -243,7 +243,7 @@ fun NowPlayingScreen_Loading_Preview() {
 @Preview
 @Composable
 fun NowPlayingScreen_Preview() {
-  CastawayTheme(NEUMORPHISM, true) {
+  CastawayTheme(MATERIAL, true) {
 	NowPlayingScreen(
 	  state = NowPlayingState(
 		loading = false,

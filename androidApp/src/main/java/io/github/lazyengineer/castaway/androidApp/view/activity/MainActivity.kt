@@ -5,9 +5,9 @@ import androidx.activity.compose.setContent
 import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
+import io.github.lazyengineer.castaway.androidApp.theme.CastawayTheme
+import io.github.lazyengineer.castaway.androidApp.theme.ThemeType.MATERIAL
 import io.github.lazyengineer.castaway.androidApp.view.screen.StartScreen
-import io.github.lazyengineer.castaway.androidApp.view.style.CastawayTheme
-import io.github.lazyengineer.castaway.androidApp.view.style.ThemeType.NEUMORPHISM
 import io.github.lazyengineer.castaway.androidApp.viewmodel.CastawayViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
@@ -19,7 +19,7 @@ class MainActivity : AppCompatActivity() {
 	super.onCreate(savedInstanceState)
 	setContent {
 	  val darkMode = rememberSaveable { mutableStateOf(true) }
-	  val theme = rememberSaveable { mutableStateOf(NEUMORPHISM) }
+	  val theme = rememberSaveable { mutableStateOf(MATERIAL) }
 
 	  CastawayTheme(theme.value, darkMode.value) {
 		StartScreen(viewModel) { isDarkMode ->
