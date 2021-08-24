@@ -24,4 +24,18 @@ class OnBoardingScreenTest {
 	composeTestRule.onNodeWithContentDescription("Choose theme title")
 	  .assertIsDisplayed()
   }
+
+  @Test
+  fun onBoardingScreen_shouldDisplayChooseThemeDescription() {
+	composeTestRule.setContent {
+	  OnBoardingScreen(
+		modifier = Modifier,
+		switchTheme = {},
+		finished = {}
+	  )
+	}
+
+	composeTestRule.onNodeWithContentDescription("Choose theme description")
+	  .assertIsDisplayed()
+  }
 }

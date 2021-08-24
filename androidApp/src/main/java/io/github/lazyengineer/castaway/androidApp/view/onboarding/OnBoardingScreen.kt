@@ -61,7 +61,12 @@ fun OnBoardingScreen(
 		  text = when (switchState.value) {
 			true -> stringResource(id = R.string.onboarding_darkmode_desc)
 			false -> stringResource(id = R.string.onboarding_lightmode_desc)
-		  }, style = MaterialTheme.typography.h6, modifier = Modifier.padding(16.dp)
+		  }, style = MaterialTheme.typography.h6,
+		  modifier = Modifier
+			.padding(16.dp)
+			.semantics {
+			  contentDescription = "Choose theme description"
+			}
 		)
 	  }
 
