@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.Button
 import androidx.compose.material.ButtonDefaults
+import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -19,7 +20,13 @@ import io.github.lazyengineer.castaway.androidApp.ext.toColor
 import io.github.lazyengineer.castaway.shared.resource.Colors
 
 @Composable
-fun TextButton(modifier: Modifier = Modifier, text: String, onClick: () -> Unit) {
+fun GradientTextButton(
+  modifier: Modifier = Modifier,
+  text: String,
+  textColor: Color = MaterialTheme.colors.onSurface,
+  gradient: Brush,
+  onClick: () -> Unit
+) {
   Button(
 	colors = ButtonDefaults.buttonColors(
 	  backgroundColor = Color.Transparent
@@ -30,19 +37,11 @@ fun TextButton(modifier: Modifier = Modifier, text: String, onClick: () -> Unit)
   ) {
 	Box(
 	  modifier = modifier
-		.background(
-		  Brush.linearGradient(
-			listOf(
-			  Colors.azurGradientStart.toColor(),
-			  Colors.azurGradientMiddle.toColor(),
-			  Colors.azurGradientEnd.toColor(),
-			)
-		  )
-		)
+		.background(gradient)
 		.padding(horizontal = 16.dp, vertical = 8.dp),
 	  contentAlignment = Alignment.Center
 	) {
-	  Text(text = text, color = Color.White)
+	  Text(text = text, color = textColor)
 	}
   }
 }
@@ -50,8 +49,15 @@ fun TextButton(modifier: Modifier = Modifier, text: String, onClick: () -> Unit)
 @Preview
 @Composable
 fun TextButton_Preview() {
-  TextButton(
+  GradientTextButton(
 	modifier = Modifier,
 	text = "Some Button Text",
+	gradient = Brush.linearGradient(
+	  listOf(
+		Colors.azurGradientStart.toColor(),
+		Colors.azurGradientMiddle.toColor(),
+		Colors.azurGradientEnd.toColor(),
+	  )
+	)
   ) {}
 }
