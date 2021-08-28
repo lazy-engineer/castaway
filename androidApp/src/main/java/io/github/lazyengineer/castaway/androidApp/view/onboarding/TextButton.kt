@@ -14,10 +14,29 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import io.github.lazyengineer.castaway.androidApp.ext.toColor
 import io.github.lazyengineer.castaway.shared.resource.Colors
+
+@Composable
+fun TextButton(
+  modifier: Modifier = Modifier,
+  text: String,
+  textColor: Color = MaterialTheme.colors.onSurface,
+  color: Color,
+  onClick: () -> Unit
+) {
+  TextButton(
+	modifier = modifier,
+	text = text,
+	textColor = textColor,
+	color = color,
+	shape = CircleShape,
+	onClick = onClick
+  )
+}
 
 @Composable
 fun GradientTextButton(
@@ -27,17 +46,41 @@ fun GradientTextButton(
   gradient: Brush,
   onClick: () -> Unit
 ) {
+  TextButton(
+	modifier = modifier,
+	text = text,
+	textColor = textColor,
+	gradient = gradient,
+	shape = CircleShape,
+	onClick = onClick
+  )
+}
+
+@Composable
+internal fun TextButton(
+  modifier: Modifier = Modifier,
+  text: String,
+  textColor: Color = MaterialTheme.colors.onSurface,
+  color: Color? = null,
+  gradient: Brush? = null,
+  shape: Shape,
+  onClick: () -> Unit,
+) {
   Button(
 	colors = ButtonDefaults.buttonColors(
 	  backgroundColor = Color.Transparent
 	),
 	contentPadding = PaddingValues(),
-	shape = CircleShape,
+	shape = shape,
 	onClick = onClick
   ) {
+	val backgroundModifier = if (gradient != null) {
+	  modifier.background(gradient)
+	} else {
+	  color?.let { modifier.background(color) } ?: modifier
+	}
 	Box(
-	  modifier = modifier
-		.background(gradient)
+	  modifier = backgroundModifier
 		.padding(horizontal = 16.dp, vertical = 8.dp),
 	  contentAlignment = Alignment.Center
 	) {
@@ -49,15 +92,26 @@ fun GradientTextButton(
 @Preview
 @Composable
 fun TextButton_Preview() {
+  TextButton(
+	modifier = Modifier,
+	text = "Some Button Text",
+	color = MaterialTheme.colors.surface,
+  ) {}
+}
+
+@Preview
+@Composable
+fun GradientTextButton_Preview() {
   GradientTextButton(
 	modifier = Modifier,
 	text = "Some Button Text",
+	textColor = Color.White,
 	gradient = Brush.linearGradient(
 	  listOf(
 		Colors.azurGradientStart.toColor(),
 		Colors.azurGradientMiddle.toColor(),
 		Colors.azurGradientEnd.toColor(),
 	  )
-	)
+	),
   ) {}
 }
