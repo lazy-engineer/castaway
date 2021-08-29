@@ -2,6 +2,7 @@ package io.github.lazyengineer.castaway.androidApp.view.onboarding
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.LayoutScopeMarker
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.CircleShape
@@ -30,12 +31,12 @@ fun TextButton(
 ) {
   TextButton(
 	modifier = modifier,
-	text = text,
-	textColor = textColor,
 	color = color,
 	shape = CircleShape,
 	onClick = onClick
-  )
+  ) {
+	this.ButtonText(text = text, color = textColor)
+  }
 }
 
 @Composable
@@ -48,23 +49,22 @@ fun GradientTextButton(
 ) {
   TextButton(
 	modifier = modifier,
-	text = text,
-	textColor = textColor,
 	gradient = gradient,
 	shape = CircleShape,
 	onClick = onClick
-  )
+  ) {
+	this.ButtonText(text = text, color = textColor)
+  }
 }
 
 @Composable
 internal fun TextButton(
   modifier: Modifier = Modifier,
-  text: String,
-  textColor: Color = MaterialTheme.colors.onSurface,
   color: Color? = null,
   gradient: Brush? = null,
   shape: Shape,
   onClick: () -> Unit,
+  text: @Composable TextButtonScope.() -> Unit
 ) {
   Button(
 	colors = ButtonDefaults.buttonColors(
@@ -84,9 +84,20 @@ internal fun TextButton(
 		.padding(horizontal = 16.dp, vertical = 8.dp),
 	  contentAlignment = Alignment.Center
 	) {
-	  Text(text = text, color = textColor)
+	  TextButtonScope.text()
 	}
   }
+}
+
+@LayoutScopeMarker
+interface TextButtonScope {
+
+  @Composable
+  fun ButtonText(text: String, color: Color) {
+	Text(text = text, color = color)
+  }
+
+  companion object : TextButtonScope
 }
 
 @Preview
