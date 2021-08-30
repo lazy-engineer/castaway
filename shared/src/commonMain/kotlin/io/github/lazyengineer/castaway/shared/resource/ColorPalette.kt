@@ -66,8 +66,8 @@ class ColorPalette(val darkMode: Boolean = true) {
   }
 
   val onSurface = when (darkMode) {
-	true -> ThemedColor.Dark(darkThemeTextColor)
-	false -> ThemedColor.Light(lightThemeTextColor)
+	true -> ThemedColor.Dark(white)
+	false -> ThemedColor.Light(white)
   }
 
   val onError = when (darkMode) {

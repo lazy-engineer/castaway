@@ -32,4 +32,8 @@ object Colors {
   val blueGradientStart = CommonColor(red = 66, green = 165, blue = 245)
   val blueGradientEnd = CommonColor(red = 13, green = 71, blue = 161)
   val blueGradientMiddle = CommonColor(red = 25, green = 118, blue = 210)
+
+  val azurGradientStart = CommonColor(red = 127, green = 127, blue = 213)
+  val azurGradientMiddle = CommonColor(red = 134, green = 168, blue = 231)
+  val azurGradientEnd = CommonColor(red = 145, green = 234, blue = 228)
 }
