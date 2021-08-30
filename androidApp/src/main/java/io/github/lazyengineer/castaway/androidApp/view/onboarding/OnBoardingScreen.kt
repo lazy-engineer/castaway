@@ -66,7 +66,8 @@ fun OnBoardingScreen(
 		  text = when (switchState.value) {
 			true -> stringResource(id = R.string.onboarding_darkmode_desc)
 			false -> stringResource(id = R.string.onboarding_lightmode_desc)
-		  }, style = MaterialTheme.typography.h6,
+		  },
+		  style = MaterialTheme.typography.h6,
 		  modifier = Modifier
 			.padding(16.dp)
 			.semantics {
@@ -104,7 +105,7 @@ fun OnBoardingScreen(
 		modifier
 		  .fillMaxWidth()
 		  .height(48.dp),
-		text = "Some Text",
+		text = stringResource(id = R.string.onboarding_continue),
 		gradient = Brush.linearGradient(gradientColors)
 	  ) {
 		finished(true)
