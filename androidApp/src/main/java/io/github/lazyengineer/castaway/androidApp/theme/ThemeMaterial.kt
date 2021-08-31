@@ -32,5 +32,5 @@ private fun colorPlatte(colors: ColorPalette) = Colors(
   onBackground = colors.onBackground.color.toColor(),
   onSurface = colors.onSurface.color.toColor(),
   onError = colors.onError.color.toColor(),
-  isLight = colors.darkMode,
+  isLight = colors.darkMode.not(),
 )

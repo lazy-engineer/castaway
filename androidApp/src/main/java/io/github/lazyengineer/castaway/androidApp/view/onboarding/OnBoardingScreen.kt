@@ -1,6 +1,5 @@
 package io.github.lazyengineer.castaway.androidApp.view.onboarding
 
-import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -32,7 +31,7 @@ import io.github.lazyengineer.castaway.shared.resource.Colors
 @Composable
 fun OnBoardingScreen(
   modifier: Modifier = Modifier,
-  darkTheme: Boolean = isSystemInDarkTheme(),
+  darkTheme: Boolean = MaterialTheme.colors.isLight.not(),
   switchTheme: (Boolean) -> Unit,
   finished: (Boolean) -> Unit
 ) {
