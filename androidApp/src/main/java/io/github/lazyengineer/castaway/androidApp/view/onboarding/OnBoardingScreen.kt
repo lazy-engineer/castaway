@@ -4,12 +4,14 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
 import androidx.compose.material.Switch
+import androidx.compose.material.SwitchDefaults
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
@@ -78,7 +80,13 @@ fun OnBoardingScreen(
 	  Row {
 		Text("☀️", modifier = Modifier.padding(end = 16.dp))
 
-		Switch(checked = switchState.value, onCheckedChange = { checked ->
+		Switch(
+		  checked = switchState.value,
+		  colors = SwitchDefaults.colors(
+			uncheckedThumbColor = Colors.azurGradientStart.toColor(),
+			uncheckedTrackColor = Colors.azurGradientMiddle.toColor()
+		  ),
+		  onCheckedChange = { checked ->
 		  switchTheme(checked)
 		  switchState.value = checked
 		})
@@ -102,10 +110,11 @@ fun OnBoardingScreen(
 
 	  GradientTextButton(
 		modifier
-		  .fillMaxWidth()
+		  .width(240.dp)
 		  .height(48.dp),
-		text = stringResource(id = R.string.onboarding_continue),
-		gradient = Brush.linearGradient(gradientColors)
+		text = stringResource(id = R.string.onboarding_continue).uppercase(),
+		gradient = Brush.linearGradient(gradientColors),
+		shape = RoundedCornerShape(16.dp),
 	  ) {
 		finished(true)
 	  }

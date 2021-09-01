@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.LayoutScopeMarker
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Button
 import androidx.compose.material.ButtonDefaults
 import androidx.compose.material.MaterialTheme
@@ -27,12 +28,13 @@ fun TextButton(
   text: String,
   textColor: Color = MaterialTheme.colors.onSurface,
   color: Color,
+  shape: Shape = CircleShape,
   onClick: () -> Unit
 ) {
   TextButton(
 	modifier = modifier,
 	color = color,
-	shape = CircleShape,
+	shape = shape,
 	onClick = onClick
   ) {
 	this.ButtonText(text = text, color = textColor)
@@ -45,12 +47,13 @@ fun GradientTextButton(
   text: String,
   textColor: Color = MaterialTheme.colors.onSurface,
   gradient: Brush,
+  shape: Shape = CircleShape,
   onClick: () -> Unit
 ) {
   TextButton(
 	modifier = modifier,
 	gradient = gradient,
-	shape = CircleShape,
+	shape = shape,
 	onClick = onClick
   ) {
 	this.ButtonText(text = text, color = textColor)
@@ -117,6 +120,7 @@ fun GradientTextButton_Preview() {
 	modifier = Modifier,
 	text = "Some Button Text",
 	textColor = Color.White,
+	shape = RoundedCornerShape(8.dp),
 	gradient = Brush.linearGradient(
 	  listOf(
 		Colors.azurGradientStart.toColor(),
