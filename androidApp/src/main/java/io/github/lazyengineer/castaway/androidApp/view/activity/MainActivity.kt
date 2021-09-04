@@ -7,9 +7,9 @@ import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import io.github.lazyengineer.castaway.androidApp.theme.CastawayTheme
-import io.github.lazyengineer.castaway.androidApp.theme.ThemeType.MATERIAL
 import io.github.lazyengineer.castaway.androidApp.view.screen.StartScreen
 import io.github.lazyengineer.castaway.androidApp.viewmodel.CastawayViewModel
+import io.github.lazyengineer.castaway.shared.resource.ThemeType.MATERIAL
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class MainActivity : AppCompatActivity() {

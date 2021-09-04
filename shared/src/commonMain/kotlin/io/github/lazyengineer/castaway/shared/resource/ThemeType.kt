@@ -1,4 +1,4 @@
-package io.github.lazyengineer.castaway.androidApp.theme
+package io.github.lazyengineer.castaway.shared.resource
 
 enum class ThemeType {
   MATERIAL, NEUMORPHISM

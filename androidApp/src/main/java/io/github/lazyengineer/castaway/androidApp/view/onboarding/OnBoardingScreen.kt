@@ -27,8 +27,8 @@ import androidx.compose.ui.unit.dp
 import io.github.lazyengineer.castaway.androidApp.R
 import io.github.lazyengineer.castaway.androidApp.ext.toColor
 import io.github.lazyengineer.castaway.androidApp.theme.CastawayTheme
-import io.github.lazyengineer.castaway.androidApp.theme.ThemeType.MATERIAL
 import io.github.lazyengineer.castaway.shared.resource.Colors
+import io.github.lazyengineer.castaway.shared.resource.ThemeType.MATERIAL
 
 @Composable
 fun OnBoardingScreen(

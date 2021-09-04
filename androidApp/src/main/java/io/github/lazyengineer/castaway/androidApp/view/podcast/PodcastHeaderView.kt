@@ -24,7 +24,7 @@ import androidx.compose.ui.unit.sp
 import com.google.accompanist.coil.rememberCoilPainter
 import com.google.accompanist.imageloading.ImageLoadState
 import io.github.lazyengineer.castaway.androidApp.theme.CastawayTheme
-import io.github.lazyengineer.castaway.androidApp.theme.ThemeType.MATERIAL
+import io.github.lazyengineer.castaway.shared.resource.ThemeType.MATERIAL
 
 @Composable
 fun PodcastHeaderView(modifier: Modifier = Modifier, title: String, imageUrl: String) {
