@@ -5,12 +5,13 @@ import androidx.compose.material.Colors
 import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.Composable
 import io.github.lazyengineer.castaway.androidApp.ext.toColor
-import io.github.lazyengineer.castaway.shared.resource.ColorPalette
+import io.github.lazyengineer.castaway.shared.resource.CastawayColorPalette
+import io.github.lazyengineer.castaway.shared.resource.MaterialColorPalette
 
 @Composable
 fun ThemeNeumorphism(darkTheme: Boolean = isSystemInDarkTheme(), content: @Composable() () -> Unit) {
 
-  val sharedColorPalette = ColorPalette(darkTheme)
+  val sharedColorPalette = MaterialColorPalette(darkTheme)
 
   MaterialTheme(
 	content = content,
@@ -19,7 +20,7 @@ fun ThemeNeumorphism(darkTheme: Boolean = isSystemInDarkTheme(), content: @Compo
 }
 
 @Composable
-private fun colorPlatte(colors: ColorPalette) = Colors(
+private fun colorPlatte(colors: CastawayColorPalette) = Colors(
   primary = colors.primary.color.toColor(),
   primaryVariant = colors.primaryVariant.color.toColor(),
   secondary = colors.secondary.color.toColor(),
@@ -32,5 +33,5 @@ private fun colorPlatte(colors: ColorPalette) = Colors(
   onBackground = colors.onBackground.color.toColor(),
   onSurface = colors.onSurface.color.toColor(),
   onError = colors.onError.color.toColor(),
-  isLight = colors.darkMode.not(),
+  isLight = colors.isDark.not(),
 )
