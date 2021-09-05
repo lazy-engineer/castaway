@@ -28,7 +28,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
 import androidx.compose.material.ripple.rememberRipple
 import androidx.compose.runtime.Composable
@@ -51,6 +50,7 @@ import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
+import io.github.lazyengineer.castaway.androidApp.theme.CastawayTheme
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.collect
@@ -188,7 +188,7 @@ private fun PlaybackThumb(
   modifier: Modifier,
   thumbOffset: Dp,
   thumbSize: Dp,
-  thumbColor: Color = MaterialTheme.colors.primary,
+  thumbColor: Color = CastawayTheme.colors.primary,
   interactionSource: MutableInteractionSource,
 ) {
   Box(modifier.padding(start = thumbOffset)) {

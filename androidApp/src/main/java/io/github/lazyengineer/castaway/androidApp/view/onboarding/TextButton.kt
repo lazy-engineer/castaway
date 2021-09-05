@@ -9,7 +9,6 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Button
 import androidx.compose.material.ButtonDefaults
-import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -20,13 +19,14 @@ import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import io.github.lazyengineer.castaway.androidApp.ext.toColor
+import io.github.lazyengineer.castaway.androidApp.theme.CastawayTheme
 import io.github.lazyengineer.castaway.shared.resource.Colors
 
 @Composable
 fun TextButton(
   modifier: Modifier = Modifier,
   text: String,
-  textColor: Color = MaterialTheme.colors.onSurface,
+  textColor: Color = CastawayTheme.colors.onSurface,
   color: Color,
   shape: Shape = CircleShape,
   onClick: () -> Unit
@@ -45,7 +45,7 @@ fun TextButton(
 fun GradientTextButton(
   modifier: Modifier = Modifier,
   text: String,
-  textColor: Color = MaterialTheme.colors.onSurface,
+  textColor: Color = CastawayTheme.colors.onSurface,
   gradient: Brush,
   shape: Shape = CircleShape,
   onClick: () -> Unit
@@ -109,7 +109,7 @@ fun TextButton_Preview() {
   TextButton(
 	modifier = Modifier,
 	text = "Some Button Text",
-	color = MaterialTheme.colors.surface,
+	color = CastawayTheme.colors.surface,
   ) {}
 }
 

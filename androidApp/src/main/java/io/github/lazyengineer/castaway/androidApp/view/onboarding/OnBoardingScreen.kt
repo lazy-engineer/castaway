@@ -33,7 +33,7 @@ import io.github.lazyengineer.castaway.shared.resource.ThemeType.MATERIAL
 @Composable
 fun OnBoardingScreen(
   modifier: Modifier = Modifier,
-  darkTheme: Boolean = MaterialTheme.colors.isLight.not(),
+  darkTheme: Boolean = CastawayTheme.colors.isDark,
   switchTheme: (Boolean) -> Unit,
   finished: (Boolean) -> Unit
 ) {
