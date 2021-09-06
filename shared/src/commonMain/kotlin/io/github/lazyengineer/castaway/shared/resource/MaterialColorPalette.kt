@@ -1,5 +1,8 @@
 package io.github.lazyengineer.castaway.shared.resource
 
+import io.github.lazyengineer.castaway.shared.resource.Colors.azurGradientEnd
+import io.github.lazyengineer.castaway.shared.resource.Colors.azurGradientMiddle
+import io.github.lazyengineer.castaway.shared.resource.Colors.azurGradientStart
 import io.github.lazyengineer.castaway.shared.resource.Colors.blueGradientEnd
 import io.github.lazyengineer.castaway.shared.resource.Colors.blueGradientMiddle
 import io.github.lazyengineer.castaway.shared.resource.Colors.blueGradientStart
@@ -14,7 +17,7 @@ import io.github.lazyengineer.castaway.shared.resource.Colors.red
 import io.github.lazyengineer.castaway.shared.resource.Colors.white
 import io.github.lazyengineer.castaway.shared.resource.ThemeType.MATERIAL
 
-class MaterialColorPalette(val darkMode: Boolean = true) : CastawayColorPalette {
+class MaterialColorPalette(private val darkMode: Boolean = true) : CastawayColorPalette {
 
   override val primary: ThemedColor
 	get() = when (darkMode) {
@@ -86,6 +89,12 @@ class MaterialColorPalette(val darkMode: Boolean = true) : CastawayColorPalette 
 	get() = when (darkMode) {
 	  true -> ThemedColor.Dark(white)
 	  false -> ThemedColor.Light(white)
+	}
+
+  override val gradient: List<ThemedColor>
+	get() = when (darkMode) {
+	  true -> listOf(ThemedColor.Dark(orangeGradientStart), ThemedColor.Dark(orangeGradientMiddle), ThemedColor.Dark(orangeGradientEnd))
+	  false -> listOf(ThemedColor.Light(azurGradientStart), ThemedColor.Light(azurGradientMiddle), ThemedColor.Light(azurGradientEnd))
 	}
 
   override val isDark: Boolean

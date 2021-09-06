@@ -14,6 +14,7 @@ interface CastawayColorPalette {
   val onBackground: ThemedColor
   val onSurface: ThemedColor
   val onError: ThemedColor
+  val gradient: List<ThemedColor>
   val isDark: Boolean
   val themeType: ThemeType
 }
