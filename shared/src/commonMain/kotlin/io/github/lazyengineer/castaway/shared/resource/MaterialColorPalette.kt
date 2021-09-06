@@ -7,6 +7,8 @@ import io.github.lazyengineer.castaway.shared.resource.Colors.blueGradientEnd
 import io.github.lazyengineer.castaway.shared.resource.Colors.blueGradientMiddle
 import io.github.lazyengineer.castaway.shared.resource.Colors.blueGradientStart
 import io.github.lazyengineer.castaway.shared.resource.Colors.darkThemeBackground
+import io.github.lazyengineer.castaway.shared.resource.Colors.darkThemeDarkShadow
+import io.github.lazyengineer.castaway.shared.resource.Colors.darkThemeLightShadow
 import io.github.lazyengineer.castaway.shared.resource.Colors.darkThemeTextColor
 import io.github.lazyengineer.castaway.shared.resource.Colors.lightThemeBackground
 import io.github.lazyengineer.castaway.shared.resource.Colors.lightThemeTextColor
@@ -89,6 +91,18 @@ class MaterialColorPalette(private val darkMode: Boolean = true) : CastawayColor
 	get() = when (darkMode) {
 	  true -> ThemedColor.Dark(white)
 	  false -> ThemedColor.Light(white)
+	}
+
+  override val shadow: ThemedColor
+	get() = when (darkMode) {
+	  true -> ThemedColor.Dark(darkThemeDarkShadow)
+	  false -> ThemedColor.Light(darkThemeDarkShadow)
+	}
+
+  override val reflection: ThemedColor
+	get() = when (darkMode) {
+	  true -> ThemedColor.Dark(darkThemeLightShadow)
+	  false -> ThemedColor.Light(darkThemeLightShadow)
 	}
 
   override val gradient: List<ThemedColor>

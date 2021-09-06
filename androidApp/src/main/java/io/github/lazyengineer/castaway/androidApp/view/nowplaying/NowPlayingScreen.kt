@@ -35,14 +35,12 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.google.accompanist.coil.rememberCoilPainter
 import com.google.accompanist.imageloading.ImageLoadState
-import io.github.lazyengineer.castaway.androidApp.ext.toColor
 import io.github.lazyengineer.castaway.androidApp.theme.CastawayTheme
 import io.github.lazyengineer.castaway.androidApp.view.PlaybackSliderView
 import io.github.lazyengineer.castaway.androidApp.view.style.shadow
 import io.github.lazyengineer.castaway.androidApp.view.util.rememberFlowWithLifecycle
 import io.github.lazyengineer.castaway.androidApp.viewmodel.CastawayViewModel
 import io.github.lazyengineer.castaway.androidApp.viewmodel.UiEvent.NowPlayingEvent
-import io.github.lazyengineer.castaway.shared.resource.Colors
 import io.github.lazyengineer.castaway.shared.resource.ThemeType.MATERIAL
 import java.util.concurrent.TimeUnit.HOURS
 import java.util.concurrent.TimeUnit.MILLISECONDS
@@ -115,8 +113,8 @@ internal fun NowPlayingView(
 		modifier = Modifier
 		  .size(300.dp)
 		  .padding(20.dp)
-		  .shadow(Colors.darkThemeLightShadow.toColor(), shadowRadius = 12.dp, offsetX = (-8).dp, offsetY = (-8).dp)
-		  .shadow(Colors.darkThemeDarkShadow.toColor(), shadowRadius = 12.dp, offsetX = 8.dp, offsetY = 8.dp)
+		  .shadow(CastawayTheme.colors.reflection, shadowRadius = 12.dp, offsetX = (-8).dp, offsetY = (-8).dp)
+		  .shadow(CastawayTheme.colors.shadow, shadowRadius = 12.dp, offsetX = 8.dp, offsetY = 8.dp)
 		  .clip(RoundedCornerShape(25f)),
 	  )
 

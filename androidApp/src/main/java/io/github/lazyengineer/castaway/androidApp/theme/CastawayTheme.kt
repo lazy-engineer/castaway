@@ -71,6 +71,8 @@ private fun CastawayColorPalette.toColors(): CastawayColors {
 	onBackground = onBackground.toColor(),
 	onSurface = onSurface.toColor(),
 	onError = onError.toColor(),
+	shadow = shadow.toColor(),
+	reflection = reflection.toColor(),
 	gradient = gradient.map { it.toColor() },
 	isDark = isDark,
 	themeType = themeType,
@@ -90,6 +92,8 @@ class CastawayColors(
   onBackground: Color,
   onSurface: Color,
   onError: Color,
+  shadow: Color,
+  reflection: Color,
   gradient: List<Color>,
   isDark: Boolean,
   themeType: ThemeType,
@@ -119,6 +123,10 @@ class CastawayColors(
 	private set
   var onError by mutableStateOf(onError)
 	private set
+  var shadow by mutableStateOf(shadow)
+	private set
+  var reflection by mutableStateOf(reflection)
+	private set
   var gradient by mutableStateOf(gradient)
 	private set
   var isDark by mutableStateOf(isDark)
@@ -139,6 +147,8 @@ class CastawayColors(
 	onBackground = other.onBackground
 	onSurface = other.onSurface
 	onError = other.onError
+	shadow = other.shadow
+	reflection = other.reflection
 	gradient = other.gradient
 	isDark = other.isDark
 	themeType = other.themeType
@@ -157,6 +167,8 @@ class CastawayColors(
 	onBackground = onBackground,
 	onSurface = onSurface,
 	onError = onError,
+	shadow = shadow,
+	reflection = reflection,
 	gradient = gradient,
 	isDark = isDark,
 	themeType = themeType,

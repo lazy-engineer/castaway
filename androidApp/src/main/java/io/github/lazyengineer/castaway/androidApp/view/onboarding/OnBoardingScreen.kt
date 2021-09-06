@@ -25,9 +25,7 @@ import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import io.github.lazyengineer.castaway.androidApp.R
-import io.github.lazyengineer.castaway.androidApp.ext.toColor
 import io.github.lazyengineer.castaway.androidApp.theme.CastawayTheme
-import io.github.lazyengineer.castaway.shared.resource.Colors
 import io.github.lazyengineer.castaway.shared.resource.ThemeType.MATERIAL
 
 @Composable
@@ -83,8 +81,8 @@ fun OnBoardingScreen(
 		Switch(
 		  checked = switchState.value,
 		  colors = SwitchDefaults.colors(
-			uncheckedThumbColor = Colors.azurGradientStart.toColor(),
-			uncheckedTrackColor = Colors.azurGradientMiddle.toColor()
+			uncheckedThumbColor = CastawayTheme.colors.primary,
+			uncheckedTrackColor = CastawayTheme.colors.primaryVariant
 		  ),
 		  onCheckedChange = { checked ->
 		  switchTheme(checked)
@@ -94,26 +92,12 @@ fun OnBoardingScreen(
 		Text("🌙", modifier = Modifier.padding(start = 16.dp))
 	  }
 
-	  val gradientColors = if (switchState.value) {
-		listOf(
-		  Colors.orangeGradientEnd.toColor(),
-		  Colors.orangeGradientStart.toColor(),
-		  Colors.orangeGradientMiddle.toColor(),
-		)
-	  } else {
-		listOf(
-		  Colors.azurGradientStart.toColor(),
-		  Colors.azurGradientMiddle.toColor(),
-		  Colors.azurGradientEnd.toColor(),
-		)
-	  }
-
 	  GradientTextButton(
 		modifier
 		  .width(240.dp)
 		  .height(48.dp),
 		text = stringResource(id = R.string.onboarding_continue).uppercase(),
-		gradient = Brush.linearGradient(gradientColors),
+		gradient = Brush.linearGradient(CastawayTheme.colors.gradient),
 		shape = RoundedCornerShape(16.dp),
 	  ) {
 		finished(true)
