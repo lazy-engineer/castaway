@@ -1,5 +1,6 @@
 package io.github.lazyengineer.castaway.androidApp.view.onboarding
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -42,6 +43,7 @@ fun OnBoardingScreen(
 	Column(
 	  modifier = Modifier
 		.fillMaxSize()
+		.background(CastawayTheme.colors.background)
 		.padding(16.dp),
 	  verticalArrangement = Arrangement.SpaceAround,
 	  horizontalAlignment = Alignment.CenterHorizontally
@@ -53,6 +55,7 @@ fun OnBoardingScreen(
 	  ) {
 		Text(
 		  text = stringResource(id = R.string.onboarding_choose),
+		  color = CastawayTheme.colors.onBackground,
 		  style = MaterialTheme.typography.h5,
 		  modifier = Modifier
 			.padding(16.dp)
@@ -66,6 +69,7 @@ fun OnBoardingScreen(
 			true -> stringResource(id = R.string.onboarding_darkmode_desc)
 			false -> stringResource(id = R.string.onboarding_lightmode_desc)
 		  },
+		  color = CastawayTheme.colors.onBackground,
 		  style = MaterialTheme.typography.h6,
 		  modifier = Modifier
 			.padding(16.dp)
@@ -81,13 +85,15 @@ fun OnBoardingScreen(
 		Switch(
 		  checked = switchState.value,
 		  colors = SwitchDefaults.colors(
+			checkedThumbColor = CastawayTheme.colors.primary,
+			checkedTrackColor = CastawayTheme.colors.primaryVariant,
 			uncheckedThumbColor = CastawayTheme.colors.primary,
 			uncheckedTrackColor = CastawayTheme.colors.primaryVariant
 		  ),
 		  onCheckedChange = { checked ->
-		  switchTheme(checked)
-		  switchState.value = checked
-		})
+			switchTheme(checked)
+			switchState.value = checked
+		  })
 
 		Text("🌙", modifier = Modifier.padding(start = 16.dp))
 	  }
