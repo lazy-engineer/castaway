@@ -1,6 +1,7 @@
 package io.github.lazyengineer.castaway.androidApp.view.nowplaying
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -82,11 +83,11 @@ internal fun NowPlayingLoadingScreen(
   modifier: Modifier = Modifier,
 ) {
   Column(
-	modifier = modifier,
+	modifier = modifier.background(CastawayTheme.colors.background),
 	verticalArrangement = Arrangement.Center,
 	horizontalAlignment = Alignment.CenterHorizontally
   ) {
-	Text("Loading...", fontSize = 34.sp, fontWeight = FontWeight.Bold)
+	Text(text = "Loading...", color = CastawayTheme.colors.onBackground, fontSize = 34.sp, fontWeight = FontWeight.Bold)
   }
 }
 
@@ -97,7 +98,7 @@ internal fun NowPlayingView(
   playing: Boolean,
   event: (NowPlayingEvent) -> Unit
 ) {
-  Column(horizontalAlignment = Alignment.CenterHorizontally) {
+  Column(modifier = modifier.background(CastawayTheme.colors.background), horizontalAlignment = Alignment.CenterHorizontally) {
 	Box(modifier = Modifier.padding(top = 64.dp, bottom = 64.dp)) {
 	  Box(
 		modifier = Modifier
@@ -128,14 +129,19 @@ internal fun NowPlayingView(
 	  }
 	}
 
-	Text(episode.title, modifier = Modifier.padding(bottom = 16.dp))
+	Text(text = episode.title, color = CastawayTheme.colors.onBackground, modifier = Modifier.padding(bottom = 16.dp))
 
 	Row(modifier = Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.Center) {
 	  IconButton(
 		onClick = {
 		  event(NowPlayingEvent.Rewind)
 		}) {
-		Icon(Filled.Replay30, "replay 30 second", modifier = Modifier.size(48.dp))
+		Icon(
+		  imageVector = Filled.Replay30,
+		  contentDescription = "replay 30 second",
+		  tint = CastawayTheme.colors.onBackground,
+		  modifier = Modifier.size(48.dp)
+		)
 	  }
 
 	  IconButton(
@@ -151,12 +157,22 @@ internal fun NowPlayingView(
 		  else -> Filled.PlayCircleFilled
 		}
 
-		Icon(playPauseImage, "play/pause", modifier = Modifier.size(64.dp))
+		Icon(
+		  imageVector = playPauseImage,
+		  contentDescription = "play/pause",
+		  tint = CastawayTheme.colors.onBackground,
+		  modifier = Modifier.size(64.dp)
+		)
 	  }
 	  IconButton(onClick = {
 		event(NowPlayingEvent.FastForward)
 	  }) {
-		Icon(Filled.Forward30, "fast forward 30 second", modifier = Modifier.size(48.dp))
+		Icon(
+		  imageVector = Filled.Forward30,
+		  contentDescription = "fast forward 30 second",
+		  tint = CastawayTheme.colors.onBackground,
+		  modifier = Modifier.size(48.dp)
+		)
 	  }
 	}
 
@@ -170,8 +186,8 @@ internal fun NowPlayingView(
 		  .fillMaxWidth()
 		  .padding(start = 16.dp, end = 16.dp), horizontalArrangement = Arrangement.SpaceBetween
 	  ) {
-		Text(episode.playbackPosition.millisToTxt())
-		Text(episode.playbackDuration.millisToTxt())
+		Text(episode.playbackPosition.millisToTxt(), color = CastawayTheme.colors.onBackground)
+		Text(episode.playbackDuration.millisToTxt(), color = CastawayTheme.colors.onBackground)
 	  }
 
 	  PlaybackSliderView(
@@ -202,6 +218,7 @@ internal fun NowPlayingView(
 
 	Text(
 	  text = "${episode.playbackSpeed}x",
+	  color = CastawayTheme.colors.onBackground,
 	  modifier = Modifier
 		.align(alignment = Alignment.Start)
 		.padding(start = 16.dp)
