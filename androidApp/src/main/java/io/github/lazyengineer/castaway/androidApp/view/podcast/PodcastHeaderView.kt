@@ -34,6 +34,7 @@ fun PodcastHeaderView(modifier: Modifier = Modifier, title: String, imageUrl: St
   ) {
 	Text(
 	  title,
+	  color = CastawayTheme.colors.onBackground,
 	  modifier = Modifier.padding(top = 16.dp),
 	  style = TextStyle(fontSize = 24.sp, fontWeight = FontWeight.Bold)
 	)
@@ -42,7 +43,10 @@ fun PodcastHeaderView(modifier: Modifier = Modifier, title: String, imageUrl: St
 
 	Image(
 	  painter = painter,
-	  modifier = Modifier.padding(top = 48.dp, bottom = 48.dp).width(150.dp).clip(RoundedCornerShape(25f)),
+	  modifier = Modifier
+		.padding(top = 48.dp, bottom = 48.dp)
+		.width(150.dp)
+		.clip(RoundedCornerShape(25f)),
 	  contentDescription = "Podcast header image",
 	)
 

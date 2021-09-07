@@ -42,20 +42,25 @@ fun EpisodeRowView(
 	  horizontalArrangement = Arrangement.SpaceBetween,
 	  verticalAlignment = Alignment.CenterVertically,
 	) {
-	  Text(state.title, modifier = Modifier.weight(5f))
+	  Text(state.title, color = CastawayTheme.colors.onBackground, modifier = Modifier.weight(5f))
 
 	  val playPauseImage = when (state.playing) {
 		true -> Filled.Pause
 		else -> Filled.PlayArrow
 	  }
 
-	  Icon(playPauseImage, "play/pause", modifier = Modifier
-		.padding(8.dp)
-		.weight(1f)
-		.clickable { onPlayPause(true) }
-		.semantics {
-		  stateDescription = playPauseImage.name
-		})
+	  Icon(
+		imageVector = playPauseImage,
+		contentDescription = "play/pause",
+		tint = CastawayTheme.colors.onBackground,
+		modifier = Modifier
+		  .padding(8.dp)
+		  .weight(1f)
+		  .clickable { onPlayPause(true) }
+		  .semantics {
+			stateDescription = playPauseImage.name
+		  }
+	  )
 	}
 
 	PlaybackProgressView(
@@ -64,13 +69,13 @@ fun EpisodeRowView(
 		.padding(16.dp)
 		.testTag("playback_progress")
 		.semantics {
-		  contentDescription = "${state.progress.times( 100)}% playback progress"
+		  contentDescription = "${state.progress.times(100)}% playback progress"
 		},
 	  playbackPosition = state.progress,
 	  padding = 0.dp
 	)
 
-	Divider()
+	Divider(color = CastawayTheme.colors.onBackground.copy(alpha = 0.12f))
   }
 }
 

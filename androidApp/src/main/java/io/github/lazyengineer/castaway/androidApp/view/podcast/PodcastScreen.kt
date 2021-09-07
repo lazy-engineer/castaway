@@ -1,5 +1,6 @@
 package io.github.lazyengineer.castaway.androidApp.view.podcast
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -73,11 +74,16 @@ internal fun PodcastLoadingScreen(
   modifier: Modifier = Modifier,
 ) {
   Column(
-	modifier = modifier,
+	modifier = modifier.background(CastawayTheme.colors.background),
 	verticalArrangement = Arrangement.Center,
 	horizontalAlignment = Alignment.CenterHorizontally
   ) {
-	Text("Loading...", fontSize = 34.sp, fontWeight = FontWeight.Bold)
+	Text(
+	  text = "Loading...",
+	  color = CastawayTheme.colors.onBackground,
+	  fontSize = 34.sp,
+	  fontWeight = FontWeight.Bold
+	)
   }
 }
 
@@ -92,7 +98,7 @@ internal fun PodcastScreen(
 ) {
   Surface(modifier = modifier.fillMaxSize()) {
 	LazyColumn(
-	  modifier = modifier,
+	  modifier = modifier.background(CastawayTheme.colors.background),
 	  contentPadding = PaddingValues(0.dp),
 	  horizontalAlignment = Alignment.Start
 	) {
@@ -159,7 +165,6 @@ fun PodcastScreen_Preview() {
 	) {}
   }
 }
-
 
 @Preview
 @Composable
