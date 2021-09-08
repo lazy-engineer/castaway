@@ -107,7 +107,7 @@ class MaterialColorPalette(private val darkMode: Boolean = true) : CastawayColor
 
   override val gradient: List<ThemedColor>
 	get() = when (darkMode) {
-	  true -> listOf(ThemedColor.Dark(orangeGradientStart), ThemedColor.Dark(orangeGradientMiddle), ThemedColor.Dark(orangeGradientEnd))
+	  true -> listOf(ThemedColor.Dark(orangeGradientEnd), ThemedColor.Dark(orangeGradientStart), ThemedColor.Dark(orangeGradientMiddle))
 	  false -> listOf(ThemedColor.Light(azurGradientStart), ThemedColor.Light(azurGradientMiddle), ThemedColor.Light(azurGradientEnd))
 	}
 
