@@ -6,13 +6,11 @@ import io.github.lazyengineer.castaway.shared.common.Result.Success
 import io.github.lazyengineer.castaway.shared.database.LocalFeedDataSource
 import io.github.lazyengineer.castaway.shared.entity.Episode
 import io.github.lazyengineer.castaway.shared.entity.FeedData
-import io.github.lazyengineer.castaway.shared.webservice.ImageLoader
 import io.github.lazyengineer.castaway.shared.webservice.RemoteFeedDataSource
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.map
 
 class FeedRepository constructor(
-  private val imageLoader: ImageLoader,
   private val remoteDataSource: RemoteFeedDataSource,
   private val localDataSource: LocalFeedDataSource,
 ) : FeedDataSource {
@@ -42,7 +40,7 @@ class FeedRepository constructor(
   }
 
   override fun episodeFlow(episodeIds: List<String>) = flow {
-	localDataSource.episodeFlow(episodeIds).collect {
+	localDataSource.episodeFlow(episodeIds).map {
 	  it.forEach { entity ->
 		emit(Success(entity))
 	  }
@@ -50,7 +48,7 @@ class FeedRepository constructor(
   }
 
   override fun episodeFlow(podcastUrl: String) = flow {
-	localDataSource.episodeFlow(podcastUrl).collect {
+	localDataSource.episodeFlow(podcastUrl).map {
 	  it.forEach { entity ->
 		emit(Success(entity))
 	  }
