@@ -1,18 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest package="io.github.lazyengineer.castawayplayer"
-    xmlns:android="http://schemas.android.com/apk/res/android">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
 
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
 
     <application>
-        <service android:name=".service.MediaPlayerService">
+        <service android:name=".service.MediaPlayerService"
+            android:exported="false">
             <intent-filter>
                 <action android:name="android.media.browse.MediaBrowserService" />
             </intent-filter>
         </service>
 
-        <receiver android:name="androidx.media.session.MediaButtonReceiver">
+        <receiver android:name="androidx.media.session.MediaButtonReceiver"
+            android:exported="false">
             <intent-filter>
                 <action android:name="android.intent.action.MEDIA_BUTTON" />
             </intent-filter>
@@ -21,7 +22,7 @@
         <provider
             android:name=".service.MediaArtContentProvider"
             android:authorities="io.github.lazyengineer.castawayplayer.provider"
-            android:exported="true" />
+            android:exported="false" />
     </application>
 
 </manifest>

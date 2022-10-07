@@ -20,7 +20,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import io.github.lazyengineer.castaway.androidApp.ext.toColor
 import io.github.lazyengineer.castaway.androidApp.theme.CastawayTheme
-import io.github.lazyengineer.castaway.shared.resource.Colors
+import io.github.lazyengineer.castaway.domain.resource.Colors
 
 @Composable
 fun TextButton(

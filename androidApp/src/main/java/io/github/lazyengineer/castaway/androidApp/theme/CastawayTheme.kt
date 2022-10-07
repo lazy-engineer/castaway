@@ -12,10 +12,10 @@ import androidx.compose.runtime.setValue
 import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.graphics.Color
 import io.github.lazyengineer.castaway.androidApp.ext.toColor
-import io.github.lazyengineer.castaway.shared.resource.CastawayColorPalette
-import io.github.lazyengineer.castaway.shared.resource.ThemeType
-import io.github.lazyengineer.castaway.shared.resource.ThemeType.MATERIAL
-import io.github.lazyengineer.castaway.shared.resource.ThemeType.NEUMORPHISM
+import io.github.lazyengineer.castaway.domain.resource.CastawayColorPalette
+import io.github.lazyengineer.castaway.domain.resource.ThemeType
+import io.github.lazyengineer.castaway.domain.resource.ThemeType.MATERIAL
+import io.github.lazyengineer.castaway.domain.resource.ThemeType.NEUMORPHISM
 
 @Composable
 fun CastawayTheme(

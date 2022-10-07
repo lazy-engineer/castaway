@@ -37,6 +37,7 @@ android {
   kotlinOptions {
 	jvmTarget = "11"
   }
+  namespace = "io.github.lazyengineer.castawayplayer"
 }
 
 dependencies {

@@ -1,0 +1,51 @@
+import io.github.lazyengineer.castaway.domain.entity.PlaybackPosition;
+
+CREATE TABLE episodeEntity(
+id TEXT NOT NULL PRIMARY KEY,
+title TEXT NOT NULL,
+subTitle TEXT,
+description TEXT,
+audioUrl TEXT NOT NULL,
+imageUrl TEXT,
+author TEXT,
+playbackPosition TEXT AS PlaybackPosition,
+episode INTEGER NOT NULL,
+podcastUrl TEXT NOT NULL,
+FOREIGN KEY(podcastUrl) REFERENCES podcast(url)
+);
+
+insertEpisode:
+INSERT OR REPLACE INTO episodeEntity VALUES ?;
+
+selectById:
+SELECT *
+FROM episodeEntity
+WHERE id = ?;
+
+selectByPodcast:
+SELECT *
+FROM episodeEntity
+WHERE podcastUrl = ?
+ORDER BY episode ASC;
+
+selectByIds:
+SELECT *
+FROM episodeEntity
+WHERE id IN ?
+ORDER BY episode ASC;
+
+selectAll:
+SELECT * FROM episodeEntity;
+
+deleteById:
+DELETE
+FROM episodeEntity
+WHERE id = ?;
+
+deleteByPodcast:
+DELETE
+FROM episodeEntity
+WHERE podcastUrl = ?;
+
+deleteAll:
+DELETE FROM episodeEntity;

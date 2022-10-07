@@ -25,7 +25,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import io.github.lazyengineer.castaway.androidApp.theme.CastawayTheme
 import io.github.lazyengineer.castaway.androidApp.view.PlaybackProgressView
-import io.github.lazyengineer.castaway.shared.resource.ThemeType.MATERIAL
+import io.github.lazyengineer.castaway.domain.resource.ThemeType.MATERIAL
 
 @Composable
 fun EpisodeRowView(

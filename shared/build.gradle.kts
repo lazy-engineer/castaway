@@ -1,33 +1,37 @@
 import dependencies.App
 import dependencies.Library
 import dependencies.TestLibrary
-import dependencies.Version
 
 plugins {
   kotlin("multiplatform")
   kotlin("native.cocoapods")
   id("com.android.library")
-  id("com.squareup.sqldelight")
 }
-
-// CocoaPods requires the podspec to have a version.
-version = "1.0"
 
 kotlin {
   android()
-  ios()
+  iosX64()
+  iosArm64()
+  iosSimulatorArm64()
+
+  cocoapods {
+	summary = "Multiplatform shared library"
+	homepage = "https://github.com/lazy-engineer/castaway"
+	version = "1.0"
+	ios.deploymentTarget = "14.1"
+	podfile = project.file("../iosApp/Podfile")
+	framework {
+	  baseName = "shared"
+	  export(project(":domain"))
+	}
+  }
 
   sourceSets {
 	val commonMain by getting {
 	  dependencies {
+		api(project(":domain"))
+		implementation(project(":data"))
 		implementation(Library.koin)
-		implementation(Library.coroutines)
-		implementation(Library.ktor)
-		implementation(Library.sqldelight)
-		implementation(Library.sqldelightExt)
-		implementation(Library.stately)
-		implementation(Library.isostate)
-		implementation(Library.isostateCollection)
 	  }
 	}
 	val commonTest by getting {
@@ -37,61 +41,42 @@ kotlin {
 		implementation(Library.koinTest)
 	  }
 	}
-	val androidMain by getting {
-	  dependencies {
-		implementation(Library.material)
-		implementation(Library.ktorAndroid)
-		implementation(Library.sqldelightAndroid)
-	  }
-	}
+	val androidMain by getting
 	val androidTest by getting {
 	  dependencies {
 		implementation(kotlin("test-junit"))
 		implementation(TestLibrary.junit)
 	  }
 	}
-	val iosMain by getting {
-	  dependencies {
-		implementation(Library.ktorIOS)
-		implementation(Library.sqldelightIOS)
-		implementation(Library.coroutines) {
-		  version {
-			strictly(Version.coroutines)
-		  }
-		}
-	  }
+
+	val iosX64Main by getting
+	val iosArm64Main by getting
+	val iosSimulatorArm64Main by getting
+	val iosMain by creating {
+	  dependsOn(commonMain)
+	  iosX64Main.dependsOn(this)
+	  iosArm64Main.dependsOn(this)
+	  iosSimulatorArm64Main.dependsOn(this)
 	}
-	val iosTest by getting
-  }
 
-  cocoapods {
-	summary = "Multiplatform shared library"
-	homepage = "https://github.com/lazy-engineer/castaway"
-
-	podfile = project.file("../iosApp/Podfile")
-
-	ios.deploymentTarget = "13.5"
-  }
-
-  targets.withType<org.jetbrains.kotlin.gradle.plugin.mpp.KotlinNativeTarget> {
-	binaries.withType<org.jetbrains.kotlin.gradle.plugin.mpp.Framework> {
-	  isStatic = true
-	  transitiveExport = true
+	val iosX64Test by getting
+	val iosArm64Test by getting
+	val iosSimulatorArm64Test by getting
+	val iosTest by creating {
+	  dependsOn(commonTest)
+	  iosX64Test.dependsOn(this)
+	  iosArm64Test.dependsOn(this)
+	  iosSimulatorArm64Test.dependsOn(this)
 	}
   }
 }
 
 android {
-  compileSdkVersion(App.compileSdk)
+  compileSdk = App.compileSdk
   sourceSets["main"].manifest.srcFile("src/androidMain/AndroidManifest.xml")
   defaultConfig {
-	minSdkVersion(App.minSdk)
-	targetSdkVersion(App.targetSdk)
+	minSdk = App.minSdk
+	targetSdk = App.targetSdk
   }
-}
-
-sqldelight {
-  database("CastawayDatabase") {
-	packageName = "io.github.lazyengineer.castaway.db"
-  }
+  namespace = "io.github.lazyengineer.castaway.shared"
 }

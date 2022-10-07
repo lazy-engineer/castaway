@@ -23,8 +23,12 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.google.accompanist.coil.rememberCoilPainter
 import com.google.accompanist.imageloading.ImageLoadState
+import com.google.accompanist.imageloading.ImageLoadState.Empty
+import com.google.accompanist.imageloading.ImageLoadState.Error
+import com.google.accompanist.imageloading.ImageLoadState.Loading
+import com.google.accompanist.imageloading.ImageLoadState.Success
 import io.github.lazyengineer.castaway.androidApp.theme.CastawayTheme
-import io.github.lazyengineer.castaway.shared.resource.ThemeType.MATERIAL
+import io.github.lazyengineer.castaway.domain.resource.ThemeType.MATERIAL
 
 @Composable
 fun PodcastHeaderView(modifier: Modifier = Modifier, title: String, imageUrl: String) {
@@ -51,12 +55,14 @@ fun PodcastHeaderView(modifier: Modifier = Modifier, title: String, imageUrl: St
 	)
 
 	when (painter.loadState) {
-	  is ImageLoadState.Loading -> {
+	  is Loading -> {
 		CircularProgressIndicator(Modifier.align(Alignment.CenterHorizontally))
 	  }
-	  is ImageLoadState.Error -> {
+	  is Error -> {
 		Icon(Filled.Mic, "Podcast header icon", modifier = Modifier.size(150.dp), tint = Color.Gray)
 	  }
+	  Empty -> {/*TODO()*/}
+	  is Success -> {/*TODO()*/}
 	}
   }
 }

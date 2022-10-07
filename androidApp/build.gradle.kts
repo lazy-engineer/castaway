@@ -1,8 +1,6 @@
-
 import dependencies.AndroidTestLibrary
 import dependencies.App
 import dependencies.Library
-import dependencies.Version
 
 plugins {
   id("com.android.application")
@@ -15,38 +13,42 @@ dependencies {
   implementation(project(":shared"))
   implementation(project(":castawayplayer"))
 
-  add(org.jetbrains.kotlin.gradle.plugin.PLUGIN_CLASSPATH_CONFIGURATION_NAME, Library.composeCompiler)
-  implementation(Library.composeRuntime)
-  implementation(Library.composeUi)
-  implementation(Library.composeUiTooling)
-  implementation(Library.composeFoundation)
-  implementation(Library.composeMaterial)
-  implementation(Library.composeMaterialIconsCore)
-  implementation(Library.composeMaterialIconsExtended)
-  implementation(Library.composeActivity)
-  implementation(Library.composeLifecycle)
-  implementation(Library.composeViewModel)
-  implementation(Library.composeNavigation)
+  with(Library.Compose) {
+	implementation(composeRuntime)
+	implementation(composeUi)
+	implementation(composeUiTooling)
+	implementation(composeFoundation)
+	implementation(composeMaterial)
+	implementation(composeMaterialIconsCore)
+	implementation(composeMaterialIconsExtended)
+	implementation(composeActivity)
+	implementation(composeLifecycle)
+	implementation(composeViewModel)
+	implementation(composeNavigation)
+  }
 
-  implementation(Library.viewmodelKtx)
-  implementation(Library.activityKtx)
-  implementation(Library.fragmentKtx)
-  implementation(Library.material)
-  implementation(Library.appcompat)
-  implementation(Library.constraintlayout)
-  implementation(Library.media)
+  with(Library) {
+	implementation(ktxWorkRuntime)
+	implementation(viewmodelKtx)
+	implementation(activityKtx)
+	implementation(fragmentKtx)
+	implementation(material)
+	implementation(appcompat)
+	implementation(media)
 
-  implementation(Library.koin)
-  implementation(Library.koinAndroid)
+	implementation(koin)
+	implementation(koinAndroid)
 
-  implementation(Library.coil)
-  implementation(Library.coilCompose)
-  implementation(Library.gson)
-  implementation(Library.feedparser)
+	implementation(coil)
+	implementation(coilCompose)
+	implementation(gson)
+  }
 
-  androidTestImplementation(AndroidTestLibrary.composeUiTest)
-  androidTestImplementation(AndroidTestLibrary.composeUiTestJunit)
-  debugImplementation(AndroidTestLibrary.composeDebugTestManifest)
+  with(AndroidTestLibrary) {
+	androidTestImplementation(composeUiTest)
+	androidTestImplementation(composeUiTestJunit)
+	debugImplementation(composeDebugTestManifest)
+  }
 }
 
 android {
@@ -80,7 +82,7 @@ android {
   }
 
   composeOptions {
-	kotlinCompilerExtensionVersion = Version.compose
+	kotlinCompilerExtensionVersion = "1.3.2"
   }
 
   packagingOptions {
@@ -88,4 +90,5 @@ android {
 	resources.excludes.add("META-INF/AL2.0")
 	resources.excludes.add("META-INF/LGPL2.1")
   }
+  namespace = "io.github.lazyengineer.castaway.androidApp"
 }

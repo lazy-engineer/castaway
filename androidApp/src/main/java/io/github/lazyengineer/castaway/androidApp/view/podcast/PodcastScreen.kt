@@ -24,7 +24,7 @@ import io.github.lazyengineer.castaway.androidApp.view.nowplaying.NowPlayingEpis
 import io.github.lazyengineer.castaway.androidApp.view.util.rememberFlowWithLifecycle
 import io.github.lazyengineer.castaway.androidApp.viewmodel.CastawayViewModel
 import io.github.lazyengineer.castaway.androidApp.viewmodel.UiEvent.EpisodeRowEvent
-import io.github.lazyengineer.castaway.shared.resource.ThemeType.MATERIAL
+import io.github.lazyengineer.castaway.domain.resource.ThemeType.MATERIAL
 
 @Composable
 fun PodcastScreen(

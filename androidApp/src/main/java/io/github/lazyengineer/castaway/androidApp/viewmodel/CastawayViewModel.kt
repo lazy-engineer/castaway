@@ -3,7 +3,7 @@ package io.github.lazyengineer.castaway.androidApp.viewmodel
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import io.github.lazyengineer.castaway.androidApp.usecase.StoreAndGetFeedUseCase
+import io.github.lazyengineer.castaway.domain.usecase.StoreAndGetFeedUseCase
 import io.github.lazyengineer.castaway.androidApp.view.nowplaying.NowPlayingEpisode
 import io.github.lazyengineer.castaway.androidApp.view.nowplaying.NowPlayingState
 import io.github.lazyengineer.castaway.androidApp.view.player.CastawayPlayer
@@ -17,18 +17,19 @@ import io.github.lazyengineer.castaway.androidApp.view.player.PlayerEvent.SeekTo
 import io.github.lazyengineer.castaway.androidApp.view.podcast.PodcastViewState
 import io.github.lazyengineer.castaway.androidApp.viewmodel.UiEvent.EpisodeRowEvent
 import io.github.lazyengineer.castaway.androidApp.viewmodel.UiEvent.NowPlayingEvent
-import io.github.lazyengineer.castaway.shared.entity.Episode
-import io.github.lazyengineer.castaway.shared.entity.FeedData
-import io.github.lazyengineer.castaway.shared.entity.PlaybackPosition
-import io.github.lazyengineer.castaway.shared.usecase.GetStoredFeedUseCase
-import io.github.lazyengineer.castaway.shared.usecase.SaveEpisodeUseCase
+import io.github.lazyengineer.castaway.domain.entity.Episode
+import io.github.lazyengineer.castaway.domain.entity.FeedData
+import io.github.lazyengineer.castaway.domain.entity.PlaybackPosition
+import io.github.lazyengineer.castaway.domain.entity.common.DataResult.Success
+import io.github.lazyengineer.castaway.domain.entity.common.DataResult.Error
+import io.github.lazyengineer.castaway.domain.usecase.GetStoredFeedUseCase
+import io.github.lazyengineer.castaway.domain.usecase.SaveEpisodeUseCase
 import io.github.lazyengineer.castawayplayer.source.MediaData
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -169,34 +170,30 @@ class CastawayViewModel constructor(
 
   private suspend fun loadFeed(url: String) {
 	withContext(Dispatchers.IO) {
-	  getStoredFeedUseCase(url).subscribe(
-		this,
-		onSuccess = { feed ->
-		  Log.d("🎙", "Local ✅")
-		  submitPlayerEvent(PrepareData(feed.episodes.mapToMediaData()))
-		  emitFeedData(feed)
-		},
-		onError = {
-		  Log.d("🎙", "There is no stored Feed: $url ❌ $it 👉 💾 Download...")
+	  when (val result = getStoredFeedUseCase(url)) {
+		is Error -> {
+		  Log.d("🎙", "There is no stored Feed: $url ❌ ${result.exception.message} 👉 💾 Download...")
 		  fetchFeed()
-		},
-	  )
+		}
+		is Success -> {
+		  Log.d("🎙", "Local ✅")
+		  submitPlayerEvent(PrepareData(result.data.episodes.mapToMediaData()))
+		  emitFeedData(result.data)
+		}
+	  }
 	}
   }
 
   private suspend fun fetchFeedFromUrl(url: String) {
 	withContext(Dispatchers.IO) {
-	  storeAndGetFeedUseCase(url).subscribe(
-		this,
-		onSuccess = {
+	  when (val result = storeAndGetFeedUseCase(url)) {
+		is Success -> {
 		  Log.d("🎙", "Fetched 💯")
-		  submitPlayerEvent(PrepareData(it.episodes.mapToMediaData()))
-		  emitFeedData(it)
-		},
-		onError = {
-		  Log.d("🎙", "Error fetching: ❌ $it")
-		},
-	  )
+		  submitPlayerEvent(PrepareData(result.data.episodes.mapToMediaData()))
+		  emitFeedData(result.data)
+		}
+		is Error -> Log.d("🎙", "Error fetching: ❌ ${result.exception.message}")
+	  }
 	}
   }
 
@@ -211,13 +208,11 @@ class CastawayViewModel constructor(
 
   private suspend fun storeEpisode(episode: Episode) {
 	withContext(Dispatchers.IO) {
-	  saveEpisodeUseCase(episode).subscribe(
-		this,
-		onSuccess = {},
-		onError = {
-		  Log.d("🎙", "Error storing: ❌ $it")
-		},
-	  )
+	  when (val result = saveEpisodeUseCase(episode)) {
+		is Error -> Log.d("🎙", "Error storing: ❌ ${result.exception.message}")
+		is Success -> { //no op
+		}
+	  }
 	}
   }
 

@@ -1,8 +1,8 @@
 package io.github.lazyengineer.castaway.androidApp.ext
 
 import androidx.compose.ui.graphics.Color
-import io.github.lazyengineer.castaway.shared.resource.CommonColor
-import io.github.lazyengineer.castaway.shared.resource.ThemedColor
+import io.github.lazyengineer.castaway.domain.resource.CommonColor
+import io.github.lazyengineer.castaway.domain.resource.ThemedColor
 
 fun CommonColor.toColor(): Color {
   return Color(red = red, green = green, blue = blue, alpha = (alpha * 255).toInt())

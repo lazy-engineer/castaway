@@ -35,14 +35,17 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.google.accompanist.coil.rememberCoilPainter
-import com.google.accompanist.imageloading.ImageLoadState
+import com.google.accompanist.imageloading.ImageLoadState.Empty
+import com.google.accompanist.imageloading.ImageLoadState.Error
+import com.google.accompanist.imageloading.ImageLoadState.Loading
+import com.google.accompanist.imageloading.ImageLoadState.Success
 import io.github.lazyengineer.castaway.androidApp.theme.CastawayTheme
 import io.github.lazyengineer.castaway.androidApp.view.PlaybackSliderView
 import io.github.lazyengineer.castaway.androidApp.view.style.shadow
 import io.github.lazyengineer.castaway.androidApp.view.util.rememberFlowWithLifecycle
 import io.github.lazyengineer.castaway.androidApp.viewmodel.CastawayViewModel
 import io.github.lazyengineer.castaway.androidApp.viewmodel.UiEvent.NowPlayingEvent
-import io.github.lazyengineer.castaway.shared.resource.ThemeType.MATERIAL
+import io.github.lazyengineer.castaway.domain.resource.ThemeType.MATERIAL
 import java.util.concurrent.TimeUnit.HOURS
 import java.util.concurrent.TimeUnit.MILLISECONDS
 import java.util.concurrent.TimeUnit.MINUTES
@@ -120,11 +123,15 @@ internal fun NowPlayingView(
 	  )
 
 	  when (painter.loadState) {
-		is ImageLoadState.Loading -> {
+		is Loading -> {
 		  CircularProgressIndicator(Modifier.align(Alignment.Center))
 		}
-		is ImageLoadState.Error -> {
+		is Error -> {
 		  Icon(Filled.Mic, "Podcast header icon", modifier = Modifier.size(150.dp), tint = Color.Gray)
+		}
+		Empty -> {/*TODO()*/
+		}
+		is Success -> {/*TODO()*/
 		}
 	  }
 	}

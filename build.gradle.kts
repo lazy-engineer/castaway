@@ -1,7 +1,7 @@
 buildscript {
-  val kotlinVersion by extra("1.5.21")
-  val gradleVersion by extra("7.0.0")
-  val sqldelightVersion by extra("1.4.3")
+  val kotlinVersion by extra("1.7.20")
+  val gradleVersion by extra("7.3.0")
+  val sqldelightVersion by extra("1.5.3")
 
   repositories {
 	gradlePluginPortal()
@@ -22,4 +22,8 @@ allprojects {
 	mavenCentral()
 	maven(url = "https://dl.bintray.com/ekito/koin")
   }
+}
+
+tasks.register("clean", Delete::class) {
+  delete(rootProject.buildDir)
 }

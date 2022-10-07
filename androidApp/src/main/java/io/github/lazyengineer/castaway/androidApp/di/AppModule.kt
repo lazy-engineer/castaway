@@ -2,10 +2,8 @@ package io.github.lazyengineer.castaway.androidApp.di
 
 import android.content.ComponentName
 import coil.ImageLoader
-import io.github.lazyengineer.castaway.androidApp.usecase.StoreAndGetFeedUseCase
 import io.github.lazyengineer.castaway.androidApp.view.player.CastawayPlayer
 import io.github.lazyengineer.castaway.androidApp.viewmodel.CastawayViewModel
-import io.github.lazyengineer.castaway.shared.repository.FeedRepository
 import io.github.lazyengineer.castawayplayer.MediaServiceClient
 import io.github.lazyengineer.castawayplayer.config.MediaServiceConfig
 import io.github.lazyengineer.castawayplayer.service.MediaPlayerService
@@ -32,10 +30,6 @@ val appModule = module {
 
   single {
 	CastawayPlayer(get())
-  }
-
-  single {
-	StoreAndGetFeedUseCase(get() as FeedRepository)
   }
 
   viewModel { CastawayViewModel(get(), get(), get(), get()) }
