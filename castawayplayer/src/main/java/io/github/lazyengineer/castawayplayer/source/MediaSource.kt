@@ -15,10 +15,10 @@ interface MediaSource : Iterable<MediaData> {
 }
 
 @IntDef(
-	STATE_CREATED,
-	STATE_INITIALIZING,
-	STATE_INITIALIZED,
-	STATE_ERROR
+  STATE_CREATED,
+  STATE_INITIALIZING,
+  STATE_INITIALIZED,
+  STATE_ERROR
 )
 @Retention(AnnotationRetention.SOURCE)
 annotation class State
@@ -64,10 +64,10 @@ abstract class AbstractMediaSource : MediaSource {
 
   override fun whenReady(performAction: (Boolean) -> Unit): Boolean =
 	when (state) {
-		STATE_CREATED, STATE_INITIALIZING -> {
-			onReadyListeners += performAction
-			false
-		}
+	  STATE_CREATED, STATE_INITIALIZING -> {
+		onReadyListeners += performAction
+		false
+	  }
 	  else -> {
 		performAction(state != STATE_ERROR)
 		true

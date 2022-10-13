@@ -3,7 +3,7 @@ package dependencies
 object App {
 
   const val compileSdk = 33
-  const val minSdk = 21
+  const val minSdk = 24
   const val targetSdk = 33
   const val versionCode = 1
   const val versionName = "1.0.0"
@@ -34,7 +34,7 @@ object Version {
   const val ktxCore = "1.9.0"
   const val ktxWorkRuntime = "2.7.1"
   const val coroutines = "1.6.4"
-  const val exoplayer = "2.14.0"
+  const val exoplayer = "2.18.1"
   const val coil = "1.1.0"
   const val coilCompose = "0.10.0"
   const val gson = "2.9.1"

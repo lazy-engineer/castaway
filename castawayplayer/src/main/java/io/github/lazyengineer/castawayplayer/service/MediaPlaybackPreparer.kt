@@ -4,7 +4,6 @@ import android.net.Uri
 import android.os.Bundle
 import android.os.ResultReceiver
 import android.support.v4.media.session.PlaybackStateCompat
-import com.google.android.exoplayer2.ControlDispatcher
 import com.google.android.exoplayer2.Player
 import com.google.android.exoplayer2.ext.mediasession.MediaSessionConnector
 import io.github.lazyengineer.castawayplayer.service.Constants.PLAYBACK_SPEED
@@ -13,9 +12,9 @@ import io.github.lazyengineer.castawayplayer.source.MediaData
 import io.github.lazyengineer.castawayplayer.source.MediaSource
 
 class MediaPlaybackPreparer(
-	private val mediaSource: MediaSource,
-	private val playbackSpeedChanged: (playbackSpeed: Float) -> Unit,
-	private val mediaItemPrepared: (itemToPlay: MediaData, playWhenReady: Boolean, extras: Bundle?) -> Unit,
+  private val mediaSource: MediaSource,
+  private val playbackSpeedChanged: (playbackSpeed: Float) -> Unit,
+  private val mediaItemPrepared: (itemToPlay: MediaData, playWhenReady: Boolean, extras: Bundle?) -> Unit,
 ) : MediaSessionConnector.PlaybackPreparer {
 
   override fun getSupportedPrepareActions(): Long =
@@ -25,9 +24,9 @@ class MediaPlaybackPreparer(
   override fun onPrepare(playWhenReady: Boolean) = Unit
 
   override fun onPrepareFromMediaId(
-	  mediaId: String,
-	  playWhenReady: Boolean,
-	  extras: Bundle?
+	mediaId: String,
+	playWhenReady: Boolean,
+	extras: Bundle?
   ) {
 	mediaSource.whenReady {
 	  val itemToPlay = mediaSource.find { item ->
@@ -42,29 +41,28 @@ class MediaPlaybackPreparer(
   }
 
   override fun onPrepareFromSearch(
-	  query: String,
-	  playWhenReady: Boolean,
-	  extras: Bundle?
+	query: String,
+	playWhenReady: Boolean,
+	extras: Bundle?
   ) = Unit
 
   override fun onPrepareFromUri(
-	  uri: Uri,
-	  playWhenReady: Boolean,
-	  extras: Bundle?
+	uri: Uri,
+	playWhenReady: Boolean,
+	extras: Bundle?
   ) = Unit
 
   override fun onCommand(
-	  player: Player,
-	  controlDispatcher: ControlDispatcher,
-	  command: String,
-	  extras: Bundle?,
-	  cb: ResultReceiver?
+	player: Player,
+	command: String,
+	extras: Bundle?,
+	cb: ResultReceiver?
   ): Boolean =
 	when (command) {
-		PLAYBACK_SPEED_CHANGED -> {
-			extras?.let { playbackSpeedChanged(it.getFloat(PLAYBACK_SPEED)) }
-			true
-		}
+	  PLAYBACK_SPEED_CHANGED -> {
+		extras?.let { playbackSpeedChanged(it.getFloat(PLAYBACK_SPEED)) }
+		true
+	  }
 	  else -> false
 	}
 }

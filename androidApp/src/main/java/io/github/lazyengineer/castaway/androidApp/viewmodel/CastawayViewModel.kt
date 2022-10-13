@@ -3,7 +3,6 @@ package io.github.lazyengineer.castaway.androidApp.viewmodel
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import io.github.lazyengineer.castaway.domain.usecase.StoreAndGetFeedUseCase
 import io.github.lazyengineer.castaway.androidApp.view.nowplaying.NowPlayingEpisode
 import io.github.lazyengineer.castaway.androidApp.view.nowplaying.NowPlayingState
 import io.github.lazyengineer.castaway.androidApp.view.player.CastawayPlayer
@@ -15,15 +14,15 @@ import io.github.lazyengineer.castaway.androidApp.view.player.PlayerEvent.Prepar
 import io.github.lazyengineer.castaway.androidApp.view.player.PlayerEvent.Rewind
 import io.github.lazyengineer.castaway.androidApp.view.player.PlayerEvent.SeekTo
 import io.github.lazyengineer.castaway.androidApp.view.podcast.PodcastViewState
-import io.github.lazyengineer.castaway.androidApp.viewmodel.UiEvent.EpisodeRowEvent
-import io.github.lazyengineer.castaway.androidApp.viewmodel.UiEvent.NowPlayingEvent
+import io.github.lazyengineer.castaway.domain.common.UiEvent
 import io.github.lazyengineer.castaway.domain.entity.Episode
 import io.github.lazyengineer.castaway.domain.entity.FeedData
 import io.github.lazyengineer.castaway.domain.entity.PlaybackPosition
-import io.github.lazyengineer.castaway.domain.entity.common.DataResult.Success
 import io.github.lazyengineer.castaway.domain.entity.common.DataResult.Error
+import io.github.lazyengineer.castaway.domain.entity.common.DataResult.Success
 import io.github.lazyengineer.castaway.domain.usecase.GetStoredFeedUseCase
 import io.github.lazyengineer.castaway.domain.usecase.SaveEpisodeUseCase
+import io.github.lazyengineer.castaway.domain.usecase.StoreAndGetFeedUseCase
 import io.github.lazyengineer.castawayplayer.source.MediaData
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
@@ -96,7 +95,7 @@ class CastawayViewModel constructor(
 
   private fun collectPlayerState() {
 	viewModelScope.launch {
-	  castawayPlayer.playerState.collect { state ->
+	  castawayPlayer.playerState().collect { state ->
 
 		if (state.connected && playerConnected.value.not()) playerConnected()
 		if (state.mediaData != null && state.prepared) handleMediaData(state.mediaData, state.playbackSpeed)
@@ -141,8 +140,11 @@ class CastawayViewModel constructor(
 
   private fun updateCurrentEpisodePlaybackPosition() {
 	nowPlayingState.value.episode?.let { episode ->
-	  val updatedEpisode = episodes.value[episode.id]
-		?.copy(playbackPosition = PlaybackPosition(position = episode.playbackPosition, duration = episode.playbackDuration))
+	  val updatedEpisode = episodes.value[episode.id]?.copy(
+		playbackPosition = PlaybackPosition(
+		  position = episode.playbackPosition, duration = episode.playbackDuration
+		)
+	  )
 
 	  updatedEpisode?.let {
 		viewModelScope.launch {

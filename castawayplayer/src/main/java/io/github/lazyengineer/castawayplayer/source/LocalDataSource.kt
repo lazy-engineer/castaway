@@ -8,8 +8,8 @@ import kotlinx.coroutines.withContext
 import java.lang.reflect.Type
 
 class LocalDataSource private constructor(
-	private val preferences: SharedPreferences,
-	private val gson: Gson,
+  private val preferences: SharedPreferences,
+  private val gson: Gson,
 ) {
 
   suspend fun saveRecentPlaylist(mediaDataList: List<MediaData>) {
@@ -35,8 +35,8 @@ class LocalDataSource private constructor(
 	private var INSTANCE: LocalDataSource? = null
 
 	fun getInstance(
-		preferences: SharedPreferences,
-		gson: Gson
+	  preferences: SharedPreferences,
+	  gson: Gson
 	): LocalDataSource {
 	  return INSTANCE ?: synchronized(this) {
 		INSTANCE ?: LocalDataSource(preferences, gson)

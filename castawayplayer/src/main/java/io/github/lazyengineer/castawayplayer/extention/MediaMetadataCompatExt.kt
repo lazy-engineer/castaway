@@ -5,18 +5,12 @@ import android.net.Uri
 import android.os.Bundle
 import android.support.v4.media.MediaDescriptionCompat
 import android.support.v4.media.MediaMetadataCompat
-import android.support.v4.media.MediaMetadataCompat.Builder
 import android.support.v4.media.RatingCompat
 import com.google.android.exoplayer2.C
 import com.google.android.exoplayer2.MediaItem
 import com.google.android.exoplayer2.source.ConcatenatingMediaSource
 import com.google.android.exoplayer2.source.ProgressiveMediaSource
 import com.google.android.exoplayer2.upstream.DataSource
-import com.google.android.exoplayer2.util.MimeTypes
-import com.google.android.gms.cast.MediaInfo
-import com.google.android.gms.cast.MediaMetadata
-import com.google.android.gms.cast.MediaQueueItem
-import com.google.android.gms.common.images.WebImage
 import io.github.lazyengineer.castawayplayer.service.Constants.MEDIA_DESCRIPTION_EXTRAS_START_PLAYBACK_POSITION_MS
 import io.github.lazyengineer.castawayplayer.source.MediaData
 import android.support.v4.media.MediaBrowserCompat.MediaItem as MediaItemCompat
@@ -264,7 +258,7 @@ fun MediaMetadataCompat.toMediaSource(dataSourceFactory: DataSource.Factory) =
  * of [MediaMetadataCompat] objects.
  */
 fun List<MediaMetadataCompat>.toMediaSource(
-	dataSourceFactory: DataSource.Factory
+  dataSourceFactory: DataSource.Factory
 ): ConcatenatingMediaSource {
 
   val concatenatingMediaSource = ConcatenatingMediaSource()
@@ -274,34 +268,8 @@ fun List<MediaMetadataCompat>.toMediaSource(
   return concatenatingMediaSource
 }
 
-fun MediaMetadataCompat.toMediaQueueItem(): MediaQueueItem {
-  val metadata: MediaMetadata = toCastMediaMetadata()
-  val mediaInfo = MediaInfo.Builder(this.mediaUri.toString())
-	.setStreamType(MediaInfo.STREAM_TYPE_BUFFERED)
-	.setContentType(MimeTypes.AUDIO_MPEG)
-	.setStreamDuration(this.duration)
-	.setMetadata(metadata)
-	.build()
-  return MediaQueueItem.Builder(mediaInfo).build()
-}
-
-private fun MediaMetadataCompat.toCastMediaMetadata(): MediaMetadata {
-  val mediaMetadata = MediaMetadata(MediaMetadata.MEDIA_TYPE_MUSIC_TRACK)
-  mediaMetadata.putString(MediaMetadata.KEY_TITLE, this.title)
-  mediaMetadata.putString(MediaMetadata.KEY_ARTIST, this.artist)
-  mediaMetadata.putString(MediaMetadata.KEY_ALBUM_TITLE, this.album)
-  mediaMetadata.addImage(WebImage(this.albumArtUri))
-  mediaMetadata.addImage(WebImage(this.displayIconUri))
-  mediaMetadata.putString(MediaMetadata.KEY_ALBUM_ARTIST, this.albumArtist)
-  mediaMetadata.putString(MediaMetadata.KEY_COMPOSER, this.composer)
-  this.date?.let { date -> mediaMetadata.putString(MediaMetadata.KEY_RELEASE_DATE, date) }
-  mediaMetadata.putInt(MediaMetadata.KEY_TRACK_NUMBER, this.trackNumber.toInt())
-  mediaMetadata.putInt(MediaMetadata.KEY_DISC_NUMBER, this.discNumber.toInt())
-  return mediaMetadata
-}
-
 fun MediaData.asMediaMetadata(): MediaMetadataCompat = let { media ->
-  val builder = Builder()
+  val builder = MediaMetadataCompat.Builder()
 
   builder.putString(MediaMetadataCompat.METADATA_KEY_MEDIA_ID, media.mediaId)
   builder.putString(MediaMetadataCompat.METADATA_KEY_MEDIA_URI, media.mediaUri)
@@ -359,37 +327,37 @@ fun MediaData.asMediaDescription(): MediaDescriptionCompat = let { mediaData ->
 
 fun MediaMetadataCompat.asMediaData() = with(this) {
   MediaData(
-	  mediaId = id!!,
-	  mediaUri = mediaUri.toString(),
-	  displayTitle = displayTitle!!,
-	  displaySubtitle = displaySubtitle!!,
-	  displayIconUri = displayIconUri.toString(),
-	  displayIcon = displayIcon,
-	  displayDescription = displayDescription,
-	  title = title,
-	  artist = artist,
-	  duration = duration,
-	  album = album,
-	  author = author,
-	  writer = writer,
-	  composer = composer,
-	  compilation = compilation,
-	  date = date,
-	  year = year?.toLong(),
-	  genre = genre,
-	  trackNumber = trackNumber,
-	  numTracks = trackCount,
-	  discNumber = discNumber,
-	  albumArtist = albumArtist,
-	  art = art,
-	  artUri = artUri.toString(),
-	  albumArt = albumArt,
-	  albumArtUri = albumArtUri.toString(),
-	  userRating = userRating,
-	  rating = rating,
-	  btFolderType = btFolderType,
-	  advertisement = advertisement,
-	  downloadStatus = downloadStatus,
+	mediaId = id.orEmpty(),
+	mediaUri = mediaUri.toString(),
+	displayTitle = displayTitle.orEmpty(),
+	displaySubtitle = displaySubtitle.orEmpty(),
+	displayIconUri = displayIconUri.toString(),
+	displayIcon = displayIcon,
+	displayDescription = displayDescription,
+	title = title,
+	artist = artist,
+	duration = duration,
+	album = album,
+	author = author,
+	writer = writer,
+	composer = composer,
+	compilation = compilation,
+	date = date,
+	year = year?.toLong(),
+	genre = genre,
+	trackNumber = trackNumber,
+	numTracks = trackCount,
+	discNumber = discNumber,
+	albumArtist = albumArtist,
+	art = art,
+	artUri = artUri.toString(),
+	albumArt = albumArt,
+	albumArtUri = albumArtUri.toString(),
+	userRating = userRating,
+	rating = rating,
+	btFolderType = btFolderType,
+	advertisement = advertisement,
+	downloadStatus = downloadStatus,
   )
 }
 

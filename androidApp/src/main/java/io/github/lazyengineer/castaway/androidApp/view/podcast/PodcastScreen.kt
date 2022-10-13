@@ -23,7 +23,7 @@ import io.github.lazyengineer.castaway.androidApp.theme.CastawayTheme
 import io.github.lazyengineer.castaway.androidApp.view.nowplaying.NowPlayingEpisode
 import io.github.lazyengineer.castaway.androidApp.view.util.rememberFlowWithLifecycle
 import io.github.lazyengineer.castaway.androidApp.viewmodel.CastawayViewModel
-import io.github.lazyengineer.castaway.androidApp.viewmodel.UiEvent.EpisodeRowEvent
+import io.github.lazyengineer.castaway.androidApp.viewmodel.EpisodeRowEvent
 import io.github.lazyengineer.castaway.domain.resource.ThemeType.MATERIAL
 
 @Composable

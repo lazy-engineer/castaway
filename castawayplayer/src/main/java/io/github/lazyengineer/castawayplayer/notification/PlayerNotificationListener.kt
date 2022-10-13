@@ -7,21 +7,21 @@ import com.google.android.exoplayer2.ui.PlayerNotificationManager
 import io.github.lazyengineer.castawayplayer.service.MediaPlayerService
 
 class PlayerNotificationListener(
-	private val mediaService: MediaPlayerService
+  private val mediaService: MediaPlayerService
 ) : PlayerNotificationManager.NotificationListener {
 
   private var isForegroundService = false
 
   override fun onNotificationPosted(
-	  notificationId: Int,
-	  notification: Notification,
-	  ongoing: Boolean
+	notificationId: Int,
+	notification: Notification,
+	ongoing: Boolean
   ) {
 	mediaService.apply {
 	  if (ongoing && !isForegroundService) {
 		ContextCompat.startForegroundService(
-			applicationContext,
-			Intent(applicationContext, this::class.java)
+		  applicationContext,
+		  Intent(applicationContext, this::class.java)
 		)
 
 		startForeground(notificationId, notification)

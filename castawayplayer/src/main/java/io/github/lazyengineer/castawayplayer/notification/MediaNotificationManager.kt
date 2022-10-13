@@ -9,11 +9,9 @@ import android.support.v4.media.session.MediaControllerCompat
 import android.support.v4.media.session.MediaSessionCompat
 import coil.ImageLoader
 import coil.request.ImageRequest
-import com.google.android.exoplayer2.DefaultControlDispatcher
 import com.google.android.exoplayer2.Player
 import com.google.android.exoplayer2.ui.PlayerNotificationManager
 import com.google.android.exoplayer2.ui.PlayerNotificationManager.NotificationListener
-import com.google.android.exoplayer2.ui.PlayerNotificationManager.createWithNotificationChannel
 import io.github.lazyengineer.castawayplayer.R
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -25,13 +23,11 @@ private const val NOTIFICATION_CHANNEL_ID = "castawayplayer"
 private const val NOTIFICATION_ID = 0xb111
 
 class MediaNotificationManager(
-	private val context: Context,
-	private val imageLoader: ImageLoader,
-	private val notificationIconResId: Int,
-	private val fastForwardIncrementMs: Long,
-	private val rewindIncrementMs: Long,
-	sessionToken: MediaSessionCompat.Token,
-	notificationListener: NotificationListener
+  private val context: Context,
+  private val imageLoader: ImageLoader,
+  private val notificationIconResId: Int,
+  sessionToken: MediaSessionCompat.Token,
+  notificationListener: NotificationListener
 ) {
 
   private val notificationManager: PlayerNotificationManager
@@ -41,19 +37,18 @@ class MediaNotificationManager(
   init {
 	val mediaController = MediaControllerCompat(context, sessionToken)
 
-	notificationManager = createWithNotificationChannel(
-		context,
-		NOTIFICATION_CHANNEL_ID,
-		R.string.notification_channel_name,
-		R.string.notification_channel_description,
-		NOTIFICATION_ID,
-		DescriptionAdapter(mediaController),
-		notificationListener
-	).apply {
-	  setMediaSessionToken(sessionToken)
-	  setSmallIcon(notificationIconResId)
-	  setControlDispatcher(DefaultControlDispatcher(fastForwardIncrementMs, rewindIncrementMs))
-	}
+	notificationManager = PlayerNotificationManager.Builder(
+	  context,
+	  NOTIFICATION_ID, NOTIFICATION_CHANNEL_ID
+	)
+	  .setChannelNameResourceId(R.string.notification_channel_name)
+	  .setChannelDescriptionResourceId(R.string.notification_channel_description)
+	  .setMediaDescriptionAdapter(DescriptionAdapter(mediaController))
+	  .setNotificationListener(notificationListener)
+	  .build().apply {
+		setMediaSessionToken(sessionToken)
+		setSmallIcon(notificationIconResId)
+	  }
   }
 
   fun hideNotification() {
@@ -80,8 +75,8 @@ class MediaNotificationManager(
 	  controller.metadata?.description?.title.toString()
 
 	override fun getCurrentLargeIcon(
-		player: Player,
-		callback: PlayerNotificationManager.BitmapCallback
+	  player: Player,
+	  callback: PlayerNotificationManager.BitmapCallback
 	): Bitmap? {
 	  val iconUri = controller.metadata?.description?.iconUri
 	  return if (currentIconUri != iconUri || currentBitmap == null) {

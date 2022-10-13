@@ -4,7 +4,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 
 class FeedMediaSource private constructor(
-	private val localDataSource: LocalDataSource,
+  private val localDataSource: LocalDataSource,
 ) : AbstractMediaSource() {
 
   private val currentPlaylistFlow = MutableStateFlow(emptyList<MediaData>())

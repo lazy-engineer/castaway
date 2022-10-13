@@ -11,16 +11,18 @@ import io.github.lazyengineer.castaway.androidApp.view.player.PlayerEvent.SeekTo
 import io.github.lazyengineer.castaway.androidApp.view.player.PlayerEvent.SkipToNext
 import io.github.lazyengineer.castaway.androidApp.view.player.PlayerEvent.SkipToPrevious
 import io.github.lazyengineer.castawayplayer.MediaServiceClient
+import io.github.lazyengineer.castawayplayer.MediaServiceEvent
 import io.github.lazyengineer.castawayplayer.extention.isPlaying
 import io.github.lazyengineer.castawayplayer.extention.isPrepared
 import io.github.lazyengineer.castawayplayer.service.Constants
-import io.github.lazyengineer.castawayplayer.source.MediaData
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.cancel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
 class CastawayPlayer constructor(
@@ -30,8 +32,7 @@ class CastawayPlayer constructor(
   private lateinit var coroutineScope: CoroutineScope
   private val subscriptionCallback = object : SubscriptionCallback() {
 	override fun onChildrenLoaded(
-	  parentId: String,
-	  children: MutableList<MediaItem>
+	  parentId: String, children: MutableList<MediaItem>
 	) {
 	  super.onChildrenLoaded(parentId, children)
 	}
@@ -40,21 +41,23 @@ class CastawayPlayer constructor(
   private val playerEvents = MutableSharedFlow<PlayerEvent>()
   private val playbackSpeed = MutableStateFlow(1f)
 
-  val playerState: Flow<PlayerState> = combine(
-	mediaServiceClient.isConnected,
-	mediaServiceClient.playbackPosition,
-	mediaServiceClient.nowPlaying,
-	mediaServiceClient.playbackState,
+  suspend fun playerState(): StateFlow<PlayerState> = combine(
+	mediaServiceClient.playerState(),
 	playbackSpeed,
-  ) { connected, position, nowPlaying, playbackState, playbackSpeed ->
+  ) { playerState, playbackSpeed ->
 	PlayerState(
-	  connected = connected,
-	  prepared = playbackState.isPrepared && (nowPlaying.duration != null && nowPlaying.duration != -1L),
-	  mediaData = if (nowPlaying.mediaId.isNotEmpty()) nowPlaying.copy(playbackPosition = position) else null,
-	  playing = playbackState.isPlaying,
+	  connected = playerState.connected,
+	  prepared = playerState.playbackState.isPrepared &&
+			  (playerState.nowPlaying.duration != null && playerState.nowPlaying.duration != -1L),
+	  mediaData = if (playerState.nowPlaying.mediaId.isNotEmpty()) {
+		playerState.nowPlaying.copy(playbackPosition = playerState.position)
+	  } else {
+		null
+	  },
+	  playing = playerState.playbackState.isPlaying,
 	  playbackSpeed = playbackSpeed
 	)
-  }
+  }.stateIn(coroutineScope, SharingStarted.Eagerly, PlayerState.Empty)
 
   fun subscribe(scope: CoroutineScope) {
 	coroutineScope = scope
@@ -67,6 +70,7 @@ class CastawayPlayer constructor(
 
   fun unsubscribe() {
 	mediaServiceClient.unsubscribe(Constants.MEDIA_ROOT_ID, subscriptionCallback)
+	coroutineScope.cancel(message = "CastawayPlayer unsubscribed!")
   }
 
   suspend fun dispatchPlayerEvent(playerEvent: PlayerEvent) {
@@ -76,53 +80,22 @@ class CastawayPlayer constructor(
   private fun collectPlayerEvents() {
 	coroutineScope.launch {
 	  playerEvents.collect { playerEvent ->
-		when (playerEvent) {
-		  is PrepareData -> prepareMediaData(playerEvent.data)
-		  SkipToNext -> skipToNext()
-		  SkipToPrevious -> skipToPrevious()
-		  FastForward -> forwardCurrentItem()
-		  Rewind -> replayCurrentItem()
-		  is PlayPause -> playPause(playerEvent.itemId)
-		  is SeekTo -> seekTo(playerEvent.positionMillis)
-		  is PlaybackSpeed -> playbackSpeed(playerEvent.speed)
+		with(mediaServiceClient) {
+		  when (playerEvent) {
+			is PrepareData -> prepare(playerEvent.data)
+			SkipToNext -> dispatchMediaServiceEvent(MediaServiceEvent.SkipToNext)
+			SkipToPrevious -> dispatchMediaServiceEvent(MediaServiceEvent.SkipToPrevious)
+			FastForward -> dispatchMediaServiceEvent(MediaServiceEvent.FastForward)
+			Rewind -> dispatchMediaServiceEvent(MediaServiceEvent.Rewind)
+			is PlayPause -> dispatchMediaServiceEvent(MediaServiceEvent.PlayMediaId(mediaId = playerEvent.itemId))
+			is SeekTo -> dispatchMediaServiceEvent(MediaServiceEvent.SeekTo(playerEvent.positionMillis))
+			is PlaybackSpeed -> {
+			  dispatchMediaServiceEvent(MediaServiceEvent.Speed(playerEvent.speed))
+			  playbackSpeed.emit(playerEvent.speed)
+			}
+		  }
 		}
 	  }
-	}
-  }
-
-  private fun prepareMediaData(data: List<MediaData>) {
-	mediaServiceClient.prepare(data)
-  }
-
-  private fun playPause(clickedItemId: String) {
-	mediaServiceClient.playMediaId(clickedItemId)
-  }
-
-  private fun forwardCurrentItem() {
-	mediaServiceClient.fastForward()
-  }
-
-  private fun replayCurrentItem() {
-	mediaServiceClient.rewind()
-  }
-
-  private fun skipToPrevious() {
-	mediaServiceClient.skipToPrevious()
-  }
-
-  private fun skipToNext() {
-	mediaServiceClient.skipToNext()
-  }
-
-  private fun seekTo(positionMillis: Long) {
-	mediaServiceClient.seekTo(positionMillis)
-  }
-
-  private fun playbackSpeed(speed: Float) {
-	mediaServiceClient.speed(speed)
-
-	coroutineScope.launch {
-	  playbackSpeed.emit(speed)
 	}
   }
 }

@@ -44,7 +44,7 @@ import io.github.lazyengineer.castaway.androidApp.view.PlaybackSliderView
 import io.github.lazyengineer.castaway.androidApp.view.style.shadow
 import io.github.lazyengineer.castaway.androidApp.view.util.rememberFlowWithLifecycle
 import io.github.lazyengineer.castaway.androidApp.viewmodel.CastawayViewModel
-import io.github.lazyengineer.castaway.androidApp.viewmodel.UiEvent.NowPlayingEvent
+import io.github.lazyengineer.castaway.androidApp.viewmodel.NowPlayingEvent
 import io.github.lazyengineer.castaway.domain.resource.ThemeType.MATERIAL
 import java.util.concurrent.TimeUnit.HOURS
 import java.util.concurrent.TimeUnit.MILLISECONDS

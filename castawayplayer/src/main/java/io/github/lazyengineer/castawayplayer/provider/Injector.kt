@@ -31,8 +31,8 @@ class Injector private constructor(private val context: Context) {
 	  sharedPreferences
 	} else {
 	  context.getSharedPreferences(
-		  PREFERENCES_NAME,
-		  Context.MODE_PRIVATE
+		PREFERENCES_NAME,
+		Context.MODE_PRIVATE
 	  )
 	}
   }
@@ -57,11 +57,11 @@ class Injector private constructor(private val context: Context) {
   }
 
   fun provideMediaSource(
-	  gson: Gson = provideGson(),
-	  sharedPreferences: SharedPreferences = provideSharedPrefs(),
+	gson: Gson = provideGson(),
+	sharedPreferences: SharedPreferences = provideSharedPrefs(),
   ): FeedMediaSource {
 	return FeedMediaSource.getInstance(
-		LocalDataSource.getInstance(sharedPreferences, gson),
+	  LocalDataSource.getInstance(sharedPreferences, gson),
 	)
   }
 
@@ -71,8 +71,8 @@ class Injector private constructor(private val context: Context) {
 	private var INSTANCE: Injector? = null
 
 	fun getInstance(
-		context: Context,
-		config: MediaServiceConfig? = null
+	  context: Context,
+	  config: MediaServiceConfig? = null
 	): Injector {
 	  return INSTANCE ?: synchronized(this) {
 		INSTANCE ?: Injector(context).also {

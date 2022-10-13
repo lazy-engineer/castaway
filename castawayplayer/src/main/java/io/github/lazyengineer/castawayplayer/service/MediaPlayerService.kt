@@ -2,7 +2,6 @@ package io.github.lazyengineer.castawayplayer.service
 
 import android.app.PendingIntent
 import android.app.PendingIntent.FLAG_IMMUTABLE
-import android.app.PendingIntent.FLAG_MUTABLE
 import android.content.Intent
 import android.os.Bundle
 import android.support.v4.media.MediaBrowserCompat.MediaItem
@@ -13,11 +12,11 @@ import com.google.android.exoplayer2.C
 import com.google.android.exoplayer2.ExoPlayer
 import com.google.android.exoplayer2.PlaybackParameters
 import com.google.android.exoplayer2.Player
-import com.google.android.exoplayer2.SimpleExoPlayer.Builder
 import com.google.android.exoplayer2.audio.AudioAttributes
 import com.google.android.exoplayer2.ext.mediasession.MediaSessionConnector
 import com.google.android.exoplayer2.ext.mediasession.TimelineQueueNavigator
-import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory
+import com.google.android.exoplayer2.upstream.DefaultDataSource
+import com.google.android.exoplayer2.upstream.DefaultHttpDataSource
 import com.google.android.exoplayer2.util.Util
 import io.github.lazyengineer.castawayplayer.config.MediaServiceConfig
 import io.github.lazyengineer.castawayplayer.extention.asMediaItem
@@ -34,7 +33,6 @@ import io.github.lazyengineer.castawayplayer.source.MediaSource
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 
 class MediaPlayerService : MediaBrowserServiceCompat() {
@@ -47,15 +45,18 @@ class MediaPlayerService : MediaBrowserServiceCompat() {
   private lateinit var mediaSessionConnector: MediaSessionConnector
   private lateinit var notificationManager: MediaNotificationManager
 
-  private val dataSourceFactory: DefaultDataSourceFactory by lazy {
-	DefaultDataSourceFactory(this, Util.getUserAgent(this, MEDIA_USER_AGENT), null)
+  private val dataSourceFactory: DefaultDataSource.Factory by lazy {
+	DefaultDataSource.Factory(
+	  this,
+	  DefaultHttpDataSource.Factory().setUserAgent(Util.getUserAgent(this, MEDIA_USER_AGENT))
+	)
   }
 
   private val config: MediaServiceConfig by lazy {
 	Injector.getInstance(applicationContext).provideConfig()
   }
 
-  private val playerListener = PlayerEventListener(onPlayerStateChanged())
+  private val playerListener = PlayerEventListener(onPlaybackStateChanged(), onPlayWhenReadyChanged())
   private val exoPlayer: ExoPlayer by lazy {
 	buildExoPlayer()
   }
@@ -71,15 +72,18 @@ class MediaPlayerService : MediaBrowserServiceCompat() {
 
   private fun buildExoPlayer(): ExoPlayer {
 	val mediaAudioAttributes = AudioAttributes.Builder()
-	  .setContentType(C.CONTENT_TYPE_SPEECH)
+	  .setContentType(C.AUDIO_CONTENT_TYPE_SPEECH)
 	  .setUsage(C.USAGE_MEDIA)
 	  .build()
 
-	return Builder(this).build().apply {
-	  setAudioAttributes(mediaAudioAttributes, true)
-	  setHandleAudioBecomingNoisy(true)
-	  addListener(playerListener)
-	}
+	return ExoPlayer.Builder(this)
+	  .setSeekForwardIncrementMs(config.fastForwardInterval)
+	  .setSeekBackIncrementMs(config.rewindInterval)
+	  .build().apply {
+		setAudioAttributes(mediaAudioAttributes, true)
+		setHandleAudioBecomingNoisy(true)
+		addListener(playerListener)
+	  }
   }
 
   private fun fetchMediaSource() {
@@ -112,14 +116,13 @@ class MediaPlayerService : MediaBrowserServiceCompat() {
 
   private fun initNotificationManager() {
 	notificationManager = MediaNotificationManager(
-		context = this,
-		imageLoader = Injector.getInstance(application)
-			.provideImageLoader(),
-		notificationIconResId = config.notificationIconResId,
-		fastForwardIncrementMs = config.fastForwardInterval,
-		rewindIncrementMs = config.rewindInterval,
-		sessionToken = mediaSession.sessionToken,
-		notificationListener = PlayerNotificationListener(this)
+	  context = this,
+	  imageLoader = Injector
+		.getInstance(application)
+		.provideImageLoader(),
+	  notificationIconResId = config.notificationIconResId,
+	  sessionToken = mediaSession.sessionToken,
+	  notificationListener = PlayerNotificationListener(this)
 	)
 	notificationManager.showNotificationForPlayer(exoPlayer)
   }
@@ -127,11 +130,11 @@ class MediaPlayerService : MediaBrowserServiceCompat() {
   private fun initMediaSessionConnector() {
 	mediaSessionConnector = MediaSessionConnector(mediaSession)
 	mediaSessionConnector.setPlaybackPreparer(
-		MediaPlaybackPreparer(
-			mediaSource,
-			onPlaybackSpeedChanged(),
-			onMediaItemPrepared()
-		)
+	  MediaPlaybackPreparer(
+		mediaSource,
+		onPlaybackSpeedChanged(),
+		onMediaItemPrepared()
+	  )
 	)
 	mediaSessionConnector.setQueueNavigator(MediaQueueNavigator(mediaSession))
 	mediaSessionConnector.setPlayer(exoPlayer)
@@ -143,30 +146,30 @@ class MediaPlayerService : MediaBrowserServiceCompat() {
 
   private fun onMediaItemPrepared() = { itemToPlay: MediaData, playWhenReady: Boolean, extras: Bundle? ->
 	val playbackStartPositionMs = extras?.getLong(
-		MEDIA_DESCRIPTION_EXTRAS_START_PLAYBACK_POSITION_MS,
-		itemToPlay.playbackPosition ?: C.TIME_UNSET
+	  MEDIA_DESCRIPTION_EXTRAS_START_PLAYBACK_POSITION_MS,
+	  itemToPlay.playbackPosition ?: C.TIME_UNSET
 	) ?: itemToPlay.playbackPosition ?: C.TIME_UNSET
 
 	preparePlaylist(itemToPlay, playWhenReady, playbackStartPositionMs)
   }
 
   override fun onGetRoot(
-	  clientPackageName: String,
-	  clientUid: Int,
-	  rootHints: Bundle?,
+	clientPackageName: String,
+	clientUid: Int,
+	rootHints: Bundle?,
   ) = BrowserRoot(MEDIA_ROOT_ID, null)
 
   override fun onLoadChildren(
-	  parentId: String,
-	  result: Result<MutableList<MediaItem>>
+	parentId: String,
+	result: Result<MutableList<MediaItem>>
   ) {
 	when (parentId) {
-		MEDIA_ROOT_ID -> {
-			val resultsSent = sendResultWhenReady(result)
-			if (!resultsSent) {
-				result.detach()
-			}
+	  MEDIA_ROOT_ID -> {
+		val resultsSent = sendResultWhenReady(result)
+		if (!resultsSent) {
+		  result.detach()
 		}
+	  }
 	  else -> result.sendResult(null)
 	}
   }
@@ -192,30 +195,33 @@ class MediaPlayerService : MediaBrowserServiceCompat() {
 	}
   }
 
-  private fun onPlayerStateChanged() = { playWhenReady: Boolean, playbackState: Int ->
+  private fun onPlaybackStateChanged() = { playbackState: Int ->
 	when (playbackState) {
-		Player.STATE_BUFFERING,
-		Player.STATE_READY -> {
-			notificationManager.showNotificationForPlayer(exoPlayer)
-			storeRecentPlayableMedia()
-			allowRemoveNotification(paused = !playWhenReady)
-		}
+	  Player.STATE_BUFFERING,
+	  Player.STATE_READY -> {
+		notificationManager.showNotificationForPlayer(exoPlayer)
+		storeRecentPlayableMedia()
+	  }
 	  else -> {
 		notificationManager.hideNotification()
 	  }
 	}
   }
 
+  private fun onPlayWhenReadyChanged() = { playWhenReady: Boolean ->
+	allowRemoveNotification(paused = !playWhenReady)
+  }
+
   private fun allowRemoveNotification(paused: Boolean) {
 	if (paused) {
-	  stopForeground(false)
+	  stopForeground(STOP_FOREGROUND_DETACH)
 	}
   }
 
   private fun preparePlaylist(
-	  itemToPlay: MediaData?,
-	  playWhenReady: Boolean,
-	  playbackStartPositionMs: Long,
+	itemToPlay: MediaData?,
+	playWhenReady: Boolean,
+	playbackStartPositionMs: Long,
   ) {
 	val initialWindowIndex = if (itemToPlay == null) 0 else mediaSource.indexOf(itemToPlay)
 
@@ -253,12 +259,12 @@ class MediaPlayerService : MediaBrowserServiceCompat() {
   }
 
   private inner class MediaQueueNavigator(
-	  mediaSession: MediaSessionCompat,
+	mediaSession: MediaSessionCompat,
   ) : TimelineQueueNavigator(mediaSession) {
 
 	override fun getMediaDescription(
-		player: Player,
-		windowIndex: Int
+	  player: Player,
+	  windowIndex: Int
 	): MediaDescriptionCompat =
 	  mediaSource.elementAt(windowIndex).asMediaMetadata().description
   }
