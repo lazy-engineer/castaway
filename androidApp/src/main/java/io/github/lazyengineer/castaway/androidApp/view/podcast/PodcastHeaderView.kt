@@ -21,12 +21,11 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.google.accompanist.coil.rememberCoilPainter
-import com.google.accompanist.imageloading.ImageLoadState
-import com.google.accompanist.imageloading.ImageLoadState.Empty
-import com.google.accompanist.imageloading.ImageLoadState.Error
-import com.google.accompanist.imageloading.ImageLoadState.Loading
-import com.google.accompanist.imageloading.ImageLoadState.Success
+import coil.compose.AsyncImagePainter.State.Empty
+import coil.compose.AsyncImagePainter.State.Error
+import coil.compose.AsyncImagePainter.State.Loading
+import coil.compose.AsyncImagePainter.State.Success
+import coil.compose.rememberAsyncImagePainter
 import io.github.lazyengineer.castaway.androidApp.theme.CastawayTheme
 import io.github.lazyengineer.castaway.domain.resource.ThemeType.MATERIAL
 
@@ -43,7 +42,7 @@ fun PodcastHeaderView(modifier: Modifier = Modifier, title: String, imageUrl: St
 	  style = TextStyle(fontSize = 24.sp, fontWeight = FontWeight.Bold)
 	)
 
-	val painter = rememberCoilPainter(imageUrl)
+	val painter = rememberAsyncImagePainter(imageUrl)
 
 	Image(
 	  painter = painter,
@@ -54,15 +53,17 @@ fun PodcastHeaderView(modifier: Modifier = Modifier, title: String, imageUrl: St
 	  contentDescription = "Podcast header image",
 	)
 
-	when (painter.loadState) {
+	when (painter.state) {
 	  is Loading -> {
 		CircularProgressIndicator(Modifier.align(Alignment.CenterHorizontally))
 	  }
 	  is Error -> {
 		Icon(Filled.Mic, "Podcast header icon", modifier = Modifier.size(150.dp), tint = Color.Gray)
 	  }
-	  Empty -> {/*TODO()*/}
-	  is Success -> {/*TODO()*/}
+	  Empty -> {/*TODO()*/
+	  }
+	  is Success -> {/*TODO()*/
+	  }
 	}
   }
 }

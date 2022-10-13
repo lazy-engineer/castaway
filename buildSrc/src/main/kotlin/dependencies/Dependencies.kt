@@ -35,8 +35,7 @@ object Version {
   const val ktxWorkRuntime = "2.7.1"
   const val coroutines = "1.6.4"
   const val exoplayer = "2.18.1"
-  const val coil = "1.1.0"
-  const val coilCompose = "0.10.0"
+  const val coil = "2.2.2"
   const val gson = "2.9.1"
   const val koin = "3.2.0"
   const val ktor = "2.1.2"
@@ -79,7 +78,7 @@ object Library {
   const val exoplayerUI = "com.google.android.exoplayer:exoplayer-ui:${Version.exoplayer}"
 
   const val coil = "io.coil-kt:coil:${Version.coil}"
-  const val coilCompose = "com.google.accompanist:accompanist-coil:${Version.coilCompose}"
+  const val coilCompose = "io.coil-kt:coil-compose:${Version.coil}"
   const val gson = "com.google.code.gson:gson:${Version.gson}"
 
   object Ktor {

@@ -2,6 +2,7 @@ package io.github.lazyengineer.castaway.androidApp.di
 
 import android.content.ComponentName
 import coil.ImageLoader
+import coil.memory.MemoryCache
 import io.github.lazyengineer.castaway.androidApp.view.player.CastawayPlayer
 import io.github.lazyengineer.castaway.androidApp.viewmodel.CastawayViewModel
 import io.github.lazyengineer.castawayplayer.MediaService
@@ -15,7 +16,11 @@ import org.koin.dsl.module
 val appModule = module {
   single {
 	ImageLoader.Builder(androidApplication())
-	  .availableMemoryPercentage(0.25)
+	  .memoryCache {
+		MemoryCache.Builder(androidApplication())
+		  .maxSizePercent(0.25)
+		  .build()
+	  }
 	  .crossfade(true)
 	  .build()
   }

@@ -34,11 +34,11 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.google.accompanist.coil.rememberCoilPainter
-import com.google.accompanist.imageloading.ImageLoadState.Empty
-import com.google.accompanist.imageloading.ImageLoadState.Error
-import com.google.accompanist.imageloading.ImageLoadState.Loading
-import com.google.accompanist.imageloading.ImageLoadState.Success
+import coil.compose.AsyncImagePainter.State.Empty
+import coil.compose.AsyncImagePainter.State.Error
+import coil.compose.AsyncImagePainter.State.Loading
+import coil.compose.AsyncImagePainter.State.Success
+import coil.compose.rememberAsyncImagePainter
 import io.github.lazyengineer.castaway.androidApp.theme.CastawayTheme
 import io.github.lazyengineer.castaway.androidApp.view.PlaybackSliderView
 import io.github.lazyengineer.castaway.androidApp.view.style.shadow
@@ -109,7 +109,7 @@ internal fun NowPlayingView(
 		  .clip(RoundedCornerShape(25f))
 	  )
 
-	  val painter = rememberCoilPainter(episode.imageUrl)
+	  val painter = rememberAsyncImagePainter(episode.imageUrl)
 
 	  Image(
 		painter = painter,
@@ -122,7 +122,7 @@ internal fun NowPlayingView(
 		  .clip(RoundedCornerShape(25f)),
 	  )
 
-	  when (painter.loadState) {
+	  when (painter.state) {
 		is Loading -> {
 		  CircularProgressIndicator(Modifier.align(Alignment.Center))
 		}
