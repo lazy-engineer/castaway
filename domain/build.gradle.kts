@@ -1,5 +1,5 @@
-import dependencies.Library
 import dependencies.App
+import dependencies.Library
 
 plugins {
   kotlin("multiplatform")
@@ -7,7 +7,7 @@ plugins {
 }
 
 kotlin {
-  android()
+  androidTarget()
   iosX64()
   iosArm64()
   iosSimulatorArm64()
@@ -23,8 +23,12 @@ kotlin {
 		implementation(kotlin("test"))
 	  }
 	}
-	val androidMain by getting
-	val androidTest by getting
+	val androidMain by getting {
+	  dependencies {
+		implementation(Library.viewmodelKtx)
+	  }
+	}
+	val androidUnitTest by getting
 
 	val iosX64Main by getting
 	val iosArm64Main by getting
@@ -53,5 +57,10 @@ android {
   defaultConfig {
 	minSdk = App.minSdk
 	targetSdk = App.targetSdk
+  }
+
+  compileOptions {
+	sourceCompatibility(JavaVersion.VERSION_17)
+	targetCompatibility(JavaVersion.VERSION_17)
   }
 }

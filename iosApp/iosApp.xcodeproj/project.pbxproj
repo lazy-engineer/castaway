@@ -7,7 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		5BB950DB98A2335A1E81BA18 /* Pods_iosApp.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CB9733731630AE8F387DD4B5 /* Pods_iosApp.framework */; };
+		09B8822341F0DE7120CE14EA /* Pods_iosApp.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 512F0EE8435B8E63EC8003E7 /* Pods_iosApp.framework */; };
 		7555FF96242A565B00829871 /* iosAppTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7555FF95242A565B00829871 /* iosAppTests.swift */; };
 		7555FFA1242A565B00829871 /* iosAppUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7555FFA0242A565B00829871 /* iosAppUITests.swift */; };
 		A29111E728EE24A6000CE365 /* Koin.swift in Sources */ = {isa = PBXBuildFile; fileRef = A29111BF28EE24A6000CE365 /* Koin.swift */; };
@@ -64,7 +64,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		16EEFB93F1D8C162CF079D22 /* Pods-iosApp.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-iosApp.release.xcconfig"; path = "Target Support Files/Pods-iosApp/Pods-iosApp.release.xcconfig"; sourceTree = "<group>"; };
+		24DF070BA224D600E10CA825 /* Pods-iosApp.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-iosApp.release.xcconfig"; path = "Target Support Files/Pods-iosApp/Pods-iosApp.release.xcconfig"; sourceTree = "<group>"; };
+		512F0EE8435B8E63EC8003E7 /* Pods_iosApp.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_iosApp.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		7555FF7B242A565900829871 /* iosApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = iosApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		7555FF91242A565B00829871 /* iosAppTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = iosAppTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		7555FF95242A565B00829871 /* iosAppTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = iosAppTests.swift; sourceTree = "<group>"; };
@@ -105,8 +106,7 @@
 		A29111E428EE24A6000CE365 /* CastawayPlayer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CastawayPlayer.swift; sourceTree = "<group>"; };
 		A29111E528EE24A6000CE365 /* PlayerTimeObserver.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlayerTimeObserver.swift; sourceTree = "<group>"; };
 		A29111E628EE24A6000CE365 /* PlaybackState.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlaybackState.swift; sourceTree = "<group>"; };
-		CB9733731630AE8F387DD4B5 /* Pods_iosApp.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_iosApp.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		F38014D4E08629FCD88F4A44 /* Pods-iosApp.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-iosApp.debug.xcconfig"; path = "Target Support Files/Pods-iosApp/Pods-iosApp.debug.xcconfig"; sourceTree = "<group>"; };
+		B6A83751056621B75756AB17 /* Pods-iosApp.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-iosApp.debug.xcconfig"; path = "Target Support Files/Pods-iosApp/Pods-iosApp.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -115,8 +115,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				A291121328EE3F32000CE365 /* Kingfisher in Frameworks */,
-				5BB950DB98A2335A1E81BA18 /* Pods_iosApp.framework in Frameworks */,
 				A291121028EE3EF4000CE365 /* FeedKit in Frameworks */,
+				09B8822341F0DE7120CE14EA /* Pods_iosApp.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -140,18 +140,10 @@
 		5B4B59F057FEDDA2F260A156 /* Pods */ = {
 			isa = PBXGroup;
 			children = (
-				F38014D4E08629FCD88F4A44 /* Pods-iosApp.debug.xcconfig */,
-				16EEFB93F1D8C162CF079D22 /* Pods-iosApp.release.xcconfig */,
+				B6A83751056621B75756AB17 /* Pods-iosApp.debug.xcconfig */,
+				24DF070BA224D600E10CA825 /* Pods-iosApp.release.xcconfig */,
 			);
 			path = Pods;
-			sourceTree = "<group>";
-		};
-		68866F45D3FFCD6AEC4E2F9A /* Frameworks */ = {
-			isa = PBXGroup;
-			children = (
-				CB9733731630AE8F387DD4B5 /* Pods_iosApp.framework */,
-			);
-			name = Frameworks;
 			sourceTree = "<group>";
 		};
 		7555FF72242A565900829871 = {
@@ -162,7 +154,7 @@
 				7555FF9F242A565B00829871 /* iosAppUITests */,
 				7555FF7C242A565900829871 /* Products */,
 				5B4B59F057FEDDA2F260A156 /* Pods */,
-				68866F45D3FFCD6AEC4E2F9A /* Frameworks */,
+				F669DB8ED0582940BD70B31D /* Frameworks */,
 			);
 			sourceTree = "<group>";
 			usesTabs = 1;
@@ -291,6 +283,14 @@
 			path = Player;
 			sourceTree = "<group>";
 		};
+		F669DB8ED0582940BD70B31D /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				512F0EE8435B8E63EC8003E7 /* Pods_iosApp.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -298,10 +298,11 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 7555FFA5242A565B00829871 /* Build configuration list for PBXNativeTarget "iosApp" */;
 			buildPhases = (
-				AA57293BAB5FAB7F7613F54D /* [CP] Check Pods Manifest.lock */,
+				391471E848B644E81E675B9C /* [CP] Check Pods Manifest.lock */,
 				7555FF77242A565900829871 /* Sources */,
 				7555FF78242A565900829871 /* Frameworks */,
 				7555FF79242A565900829871 /* Resources */,
+				2E8D6DC0CE8064D0060D577A /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -386,8 +387,8 @@
 			);
 			mainGroup = 7555FF72242A565900829871;
 			packageReferences = (
-				A291120E28EE3EF4000CE365 /* XCRemoteSwiftPackageReference "FeedKit" */,
-				A291121128EE3F32000CE365 /* XCRemoteSwiftPackageReference "Kingfisher" */,
+				A291120E28EE3EF4000CE365 /* XCRemoteSwiftPackageReference "FeedKit.git" */,
+				A291121128EE3F32000CE365 /* XCRemoteSwiftPackageReference "Kingfisher.git" */,
 			);
 			productRefGroup = 7555FF7C242A565900829871 /* Products */;
 			projectDirPath = "";
@@ -428,7 +429,24 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
-		AA57293BAB5FAB7F7613F54D /* [CP] Check Pods Manifest.lock */ = {
+		2E8D6DC0CE8064D0060D577A /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-iosApp/Pods-iosApp-frameworks-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-iosApp/Pods-iosApp-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-iosApp/Pods-iosApp-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		391471E848B644E81E675B9C /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -583,7 +601,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 14.1;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.2;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
@@ -638,7 +656,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 14.1;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.2;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				SDKROOT = iphoneos;
@@ -650,7 +668,7 @@
 		};
 		7555FFA6242A565B00829871 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = F38014D4E08629FCD88F4A44 /* Pods-iosApp.debug.xcconfig */;
+			baseConfigurationReference = B6A83751056621B75756AB17 /* Pods-iosApp.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
@@ -685,7 +703,7 @@
 		};
 		7555FFA7242A565B00829871 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 16EEFB93F1D8C162CF079D22 /* Pods-iosApp.release.xcconfig */;
+			baseConfigurationReference = 24DF070BA224D600E10CA825 /* Pods-iosApp.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
@@ -838,7 +856,7 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
-		A291120E28EE3EF4000CE365 /* XCRemoteSwiftPackageReference "FeedKit" */ = {
+		A291120E28EE3EF4000CE365 /* XCRemoteSwiftPackageReference "FeedKit.git" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/nmdias/FeedKit.git";
 			requirement = {
@@ -846,7 +864,7 @@
 				minimumVersion = 9.0.0;
 			};
 		};
-		A291121128EE3F32000CE365 /* XCRemoteSwiftPackageReference "Kingfisher" */ = {
+		A291121128EE3F32000CE365 /* XCRemoteSwiftPackageReference "Kingfisher.git" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/onevcat/Kingfisher.git";
 			requirement = {
@@ -859,12 +877,12 @@
 /* Begin XCSwiftPackageProductDependency section */
 		A291120F28EE3EF4000CE365 /* FeedKit */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = A291120E28EE3EF4000CE365 /* XCRemoteSwiftPackageReference "FeedKit" */;
+			package = A291120E28EE3EF4000CE365 /* XCRemoteSwiftPackageReference "FeedKit.git" */;
 			productName = FeedKit;
 		};
 		A291121228EE3F32000CE365 /* Kingfisher */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = A291121128EE3F32000CE365 /* XCRemoteSwiftPackageReference "Kingfisher" */;
+			package = A291121128EE3F32000CE365 /* XCRemoteSwiftPackageReference "Kingfisher.git" */;
 			productName = Kingfisher;
 		};
 /* End XCSwiftPackageProductDependency section */

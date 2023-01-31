@@ -2,7 +2,7 @@ package io.github.lazyengineer.castaway.androidApp.view.util.screen
 
 
 sealed class Screen(val route: String) {
-  object Podcast : Screen("podcast")
-  object NowPlaying : Screen("now_playing")
-  object OnBoarding : Screen("onboarding")
+  data object Podcast : Screen("podcast")
+  data object NowPlaying : Screen("now_playing")
+  data object OnBoarding : Screen("onboarding")
 }

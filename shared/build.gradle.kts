@@ -1,6 +1,8 @@
 import dependencies.App
 import dependencies.Library
 import dependencies.TestLibrary
+import org.jetbrains.kotlin.gradle.dsl.KotlinMultiplatformExtension
+import org.jetbrains.kotlin.gradle.plugin.mpp.KotlinNativeTarget
 
 plugins {
   kotlin("multiplatform")
@@ -9,7 +11,7 @@ plugins {
 }
 
 kotlin {
-  android()
+  androidTarget()
   iosX64()
   iosArm64()
   iosSimulatorArm64()
@@ -42,7 +44,7 @@ kotlin {
 	  }
 	}
 	val androidMain by getting
-	val androidTest by getting {
+	val androidUnitTest by getting {
 	  dependencies {
 		implementation(kotlin("test-junit"))
 		implementation(TestLibrary.junit)
@@ -79,4 +81,16 @@ android {
 	targetSdk = App.targetSdk
   }
   namespace = "io.github.lazyengineer.castaway.shared"
+
+  compileOptions {
+	sourceCompatibility(JavaVersion.VERSION_17)
+	targetCompatibility(JavaVersion.VERSION_17)
+  }
+}
+
+project.extensions.findByType(KotlinMultiplatformExtension::class.java)?.apply {
+  targets
+	.filterIsInstance<KotlinNativeTarget>()
+	.flatMap { it.binaries }
+	.forEach { compilationUnit -> compilationUnit.linkerOpts("-lsqlite3") }
 }

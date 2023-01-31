@@ -12,6 +12,7 @@ import android.support.v4.media.session.MediaControllerCompat
 import android.support.v4.media.session.MediaSessionCompat
 import android.support.v4.media.session.PlaybackStateCompat
 import android.support.v4.media.session.PlaybackStateCompat.RepeatMode
+import android.support.v4.media.session.PlaybackStateCompat.STATE_BUFFERING
 import android.util.Log
 import io.github.lazyengineer.castawayplayer.MediaServiceEvent.FastForward
 import io.github.lazyengineer.castawayplayer.MediaServiceEvent.PlayMediaId
@@ -22,6 +23,7 @@ import io.github.lazyengineer.castawayplayer.MediaServiceEvent.SkipToNext
 import io.github.lazyengineer.castawayplayer.MediaServiceEvent.SkipToPrevious
 import io.github.lazyengineer.castawayplayer.MediaServiceEvent.Speed
 import io.github.lazyengineer.castawayplayer.config.MediaServiceConfig
+import io.github.lazyengineer.castawayplayer.extention.EMPTY_PLAYBACK_STATE
 import io.github.lazyengineer.castawayplayer.extention.asMediaData
 import io.github.lazyengineer.castawayplayer.extention.currentPlaybackPosition
 import io.github.lazyengineer.castawayplayer.extention.id
@@ -40,6 +42,7 @@ import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.flow.update
 
 class MediaService private constructor(
   context: Context,
@@ -61,23 +64,23 @@ class MediaService private constructor(
 
   private val isConnected = MutableStateFlow(MediaServiceState.Initial.connected)
   private val nowPlaying = MutableStateFlow(MediaServiceState.Initial.nowPlaying)
-  private val playbackState = MutableStateFlow(MediaServiceState.Initial.playbackState)
+  private val playbackState = MutableStateFlow(EMPTY_PLAYBACK_STATE)
   private val networkFailure = MutableStateFlow(MediaServiceState.Initial.networkFailure)
-  private val playbackPosition = MutableStateFlow(MediaServiceState.Initial.position)
+  private val playbackSpeed = MutableStateFlow(MediaServiceState.Initial.playbackSpeed)
 
-  override suspend fun playerState(): StateFlow<MediaServiceState> = combine(
+  override fun playerState(): StateFlow<MediaServiceState> = combine(
 	isConnected,
 	nowPlaying,
 	playbackState,
 	networkFailure,
-	playbackPosition
-  ) { connected, nowPlaying, playbackState, networkFailure, position ->
+	playbackSpeed
+  ) { connected, nowPlaying, playbackState, networkFailure, playbackSpeed ->
 	MediaServiceState(
 	  connected,
 	  nowPlaying,
-	  playbackState,
+	  playbackState.toPlaybackState(),
 	  networkFailure,
-	  position
+	  playbackSpeed
 	)
   }.stateIn(CoroutineScope(Dispatchers.Main + SupervisorJob()), SharingStarted.Eagerly, MediaServiceState.Initial)
 
@@ -191,8 +194,11 @@ class MediaService private constructor(
   private suspend fun updatePlaybackPosition() {
 	while (true) {
 	  val currentPosition = playbackState.value.currentPlaybackPosition
-	  if (playbackPosition.value != currentPosition) {
-		playbackPosition.value = currentPosition
+
+	  if (nowPlaying.value.playbackPosition != currentPosition && playbackState.value.state != STATE_BUFFERING) {
+		nowPlaying.update {
+		  it.copy(playbackPosition = currentPosition)
+		}
 	  }
 	  delay(config.positionUpdateIntervalMillis)
 	}
@@ -206,22 +212,36 @@ class MediaService private constructor(
 		registerCallback(MediaControllerCallback())
 	  }
 
-	  isConnected.value = true
+	  isConnected.update {
+		true
+	  }
 	}
 
 	override fun onConnectionSuspended() {
-	  isConnected.value = false
+	  isConnected.update {
+		false
+	  }
 	}
 
 	override fun onConnectionFailed() {
-	  isConnected.value = false
+	  isConnected.update {
+		false
+	  }
 	}
   }
 
   private inner class MediaControllerCallback : MediaControllerCompat.Callback() {
 
 	override fun onPlaybackStateChanged(state: PlaybackStateCompat?) {
-	  playbackState.value = state ?: MediaServiceState.Initial.playbackState
+	  playbackState.update {
+		state ?: EMPTY_PLAYBACK_STATE
+	  }
+
+	  state?.playbackSpeed?.let { speed ->
+		if (speed > 0f) {
+		  playbackSpeed.update { speed }
+		}
+	  }
 	}
 
 	override fun onMetadataChanged(metadata: MediaMetadataCompat?) {
@@ -229,10 +249,12 @@ class MediaService private constructor(
 	  // metadata object which has been instantiated with default values. The default value
 	  // for media ID is null so we assume that if this value is null we are not playing
 	  // anything.
-	  nowPlaying.value = if (metadata?.id == null) {
-		MediaServiceState.Initial.nowPlaying
-	  } else {
-		metadata.asMediaData()
+	  nowPlaying.update {
+		if (metadata?.id == null) {
+		  MediaServiceState.Initial.nowPlaying
+		} else {
+		  metadata.asMediaData()
+		}
 	  }
 	}
 
@@ -254,6 +276,13 @@ class MediaService private constructor(
   }
 
   companion object {
+
+	private fun PlaybackStateCompat.toPlaybackState() = PlaybackState(
+	  isPrepared = this.isPrepared,
+	  isPlayEnabled = this.isPlayEnabled,
+	  isPlaying = this.isPlaying,
+	  currentPlaybackPosition = this.currentPlaybackPosition,
+	)
 
 	@Volatile
 	private var instance: MediaServiceClient? = null

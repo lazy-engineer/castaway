@@ -147,8 +147,8 @@ class MediaPlayerService : MediaBrowserServiceCompat() {
   private fun onMediaItemPrepared() = { itemToPlay: MediaData, playWhenReady: Boolean, extras: Bundle? ->
 	val playbackStartPositionMs = extras?.getLong(
 	  MEDIA_DESCRIPTION_EXTRAS_START_PLAYBACK_POSITION_MS,
-	  itemToPlay.playbackPosition ?: C.TIME_UNSET
-	) ?: itemToPlay.playbackPosition ?: C.TIME_UNSET
+	  itemToPlay.playbackPosition
+	) ?: itemToPlay.playbackPosition
 
 	preparePlaylist(itemToPlay, playWhenReady, playbackStartPositionMs)
   }

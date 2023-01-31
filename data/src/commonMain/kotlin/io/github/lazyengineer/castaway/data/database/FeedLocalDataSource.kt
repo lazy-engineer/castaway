@@ -101,9 +101,9 @@ class FeedLocalDataSource constructor(private val database: CastawayDatabase, pr
 	  .mapToList()
   }
 
-  override fun episodeFlow(podcastUrl: String): Flow<List<Episode>> {
+  override fun episodeFlow(url: String): Flow<List<Episode>> {
 	return database.episodeQueries.selectByPodcast(
-	  podcastUrl,
+	  url,
 	  mapper = { id, title, subTitle, description, audioUrl, imageUrl, author, playbackPosition, episode, podcastUrl ->
 		EpisodeEntity(
 		  id = id,

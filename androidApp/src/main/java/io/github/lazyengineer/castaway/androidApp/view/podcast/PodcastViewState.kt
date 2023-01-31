@@ -1,16 +1,21 @@
 package io.github.lazyengineer.castaway.androidApp.view.podcast
 
-import io.github.lazyengineer.castaway.androidApp.view.nowplaying.NowPlayingEpisode
+import androidx.compose.runtime.Immutable
 
 data class PodcastViewState(
   val loading: Boolean = true,
   val title: String = "",
   val imageUrl: String = "",
-  val episodes: List<NowPlayingEpisode> = emptyList(),
+  val error: String? = null,
+  val episodes: EpisodesList = EpisodesList(items = emptyList()),
+  val showDetails: PodcastEpisode? = null,
 ) {
 
   companion object {
 
-    val Empty = PodcastViewState()
+	val Initial = PodcastViewState()
   }
 }
+
+@Immutable
+data class EpisodesList(val items: List<PodcastEpisode>)

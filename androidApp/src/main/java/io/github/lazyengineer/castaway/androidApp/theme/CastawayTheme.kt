@@ -79,6 +79,7 @@ private fun CastawayColorPalette.toColors(): CastawayColors {
   )
 }
 
+@Suppress("complexity:LongParameterList")
 class CastawayColors(
   primary: Color,
   primaryVariant: Color,
@@ -98,7 +99,6 @@ class CastawayColors(
   isDark: Boolean,
   themeType: ThemeType,
 ) {
-
   var primary by mutableStateOf(primary)
 	private set
   var primaryVariant by mutableStateOf(primaryVariant)

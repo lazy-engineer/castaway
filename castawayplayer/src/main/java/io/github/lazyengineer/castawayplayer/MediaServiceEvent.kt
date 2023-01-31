@@ -6,8 +6,8 @@ sealed class MediaServiceEvent {
   data class Shuffle(val shuffle: Boolean) : MediaServiceEvent()
   data class RepeatMode(val repeat: Int) : MediaServiceEvent()
   data class SeekTo(val position: Long) : MediaServiceEvent()
-  object FastForward : MediaServiceEvent()
-  object Rewind : MediaServiceEvent()
-  object SkipToNext : MediaServiceEvent()
-  object SkipToPrevious : MediaServiceEvent()
+  data object FastForward : MediaServiceEvent()
+  data object Rewind : MediaServiceEvent()
+  data object SkipToNext : MediaServiceEvent()
+  data object SkipToPrevious : MediaServiceEvent()
 }

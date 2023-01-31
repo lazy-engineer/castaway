@@ -24,34 +24,37 @@ object FeedMapper {
 			Episode(
 			  id = UUID.randomUUID().toString(),
 			  title = episode.title,
-			  subTitle = episode.iTunes?.subtitle ?: "",
+			  subTitle = episode.iTunes?.subtitle.orEmpty(),
 			  description = episode.description,
-			  audioUrl = episode.media?.url ?: "",
-			  imageUrl = episode.mediaNamespace?.thumbnails?.firstOrNull()?.attributes?.url ?: this.iTunes?.image?.attributes?.href ?: "",
-			  author = episode.author ?: "",
-			  playbackPosition = PlaybackPosition(0, Long.MAX_VALUE),
+			  audioUrl = episode.media?.url.orEmpty(),
+			  imageUrl = episode.mediaNamespace?.thumbnails?.firstOrNull()?.attributes?.url
+				?: this.iTunes?.image?.attributes?.href.orEmpty(),
+			  author = episode.author.orEmpty(),
+			  playbackPosition = PlaybackPosition(),
 			  episode = index,
 			  podcastUrl = url,
 			)
 		  })
 	  }
+
 	  is AtomFeed -> {
 		FeedData(
 		  FeedInfo(
 			url = url,
-			title = this.title?.value ?: "",
+			title = this.title?.value.orEmpty(),
 			imageUrl = this.icon,
 		  ),
 		  episodes = this.entries.mapIndexed { index, episode ->
 			Episode(
 			  id = UUID.randomUUID().toString(),
-			  title = episode.title?.value ?: "",
+			  title = episode.title?.value.orEmpty(),
 			  subTitle = "",
-			  description = episode.summary?.value ?: "",
-			  audioUrl = episode.mediaNamespace?.contents?.firstOrNull()?.attributes?.url ?: "",
-			  imageUrl = episode.mediaNamespace?.thumbnails?.firstOrNull()?.attributes?.url ?: this.icon ?: "",
-			  author = episode.authors.firstOrNull()?.uri ?: "",
-			  playbackPosition = PlaybackPosition(0, Long.MAX_VALUE),
+			  description = episode.summary?.value.orEmpty(),
+			  audioUrl = episode.mediaNamespace?.contents?.firstOrNull()?.attributes?.url.orEmpty(),
+			  imageUrl = episode.mediaNamespace?.thumbnails?.firstOrNull()?.attributes?.url
+				?: this.icon.orEmpty(),
+			  author = episode.authors.firstOrNull()?.uri.orEmpty(),
+			  playbackPosition = PlaybackPosition(),
 			  episode = index,
 			  podcastUrl = url,
 			)

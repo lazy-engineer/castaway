@@ -31,9 +31,9 @@ import io.github.lazyengineer.castaway.domain.resource.ThemeType.MATERIAL
 
 @Composable
 fun OnBoardingScreen(
+  switchTheme: (Boolean) -> Unit,
   modifier: Modifier = Modifier,
   darkTheme: Boolean = CastawayTheme.colors.isDark,
-  switchTheme: (Boolean) -> Unit,
   finished: (Boolean) -> Unit
 ) {
 
@@ -99,7 +99,7 @@ fun OnBoardingScreen(
 	  }
 
 	  GradientTextButton(
-		modifier
+		modifier = Modifier
 		  .width(240.dp)
 		  .height(48.dp),
 		text = stringResource(id = R.string.onboarding_continue).uppercase(),
@@ -114,7 +114,7 @@ fun OnBoardingScreen(
 
 @Preview
 @Composable
-fun OnBoardingScreen_Dark_Preview() {
+fun OnBoardingScreenDarkPreview() {
   val darkTheme = true
 
   CastawayTheme(MATERIAL, darkTheme) {
@@ -124,7 +124,7 @@ fun OnBoardingScreen_Dark_Preview() {
 
 @Preview
 @Composable
-fun OnBoardingScreen_Light_Preview() {
+fun OnBoardingScreenLightPreview() {
   val darkTheme = false
 
   CastawayTheme(MATERIAL, darkTheme) {

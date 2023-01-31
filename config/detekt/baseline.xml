@@ -1,0 +1,10 @@
+<?xml version="1.0" ?>
+<SmellBaseline>
+  <ManuallySuppressedIssues></ManuallySuppressedIssues>
+  <CurrentIssues>
+    <ID>MatchingDeclarationName:androidTest.kt$AndroidGreetingTest</ID>
+    <ID>NewLineAtEndOfFile:androidTest.kt$io.github.lazyengineer.castaway.shared.androidTest.kt</ID>
+    <ID>WildcardImport:androidTest.kt$import org.junit.*</ID>
+    <ID>WildcardImport:androidTest.kt$import org.junit.Assert.*</ID>
+  </CurrentIssues>
+</SmellBaseline>

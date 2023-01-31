@@ -4,7 +4,9 @@
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
 
-    <application>
+    <application
+        android:label="Castaway"
+        >
         <service
             android:name=".service.MediaPlayerService"
             android:exported="false">

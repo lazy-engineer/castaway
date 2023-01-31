@@ -24,10 +24,10 @@ import io.github.lazyengineer.castaway.domain.resource.Colors
 
 @Composable
 fun TextButton(
-  modifier: Modifier = Modifier,
   text: String,
-  textColor: Color = CastawayTheme.colors.onSurface,
   color: Color,
+  modifier: Modifier = Modifier,
+  textColor: Color = CastawayTheme.colors.onSurface,
   shape: Shape = CircleShape,
   onClick: () -> Unit
 ) {
@@ -43,10 +43,10 @@ fun TextButton(
 
 @Composable
 fun GradientTextButton(
-  modifier: Modifier = Modifier,
   text: String,
-  textColor: Color = CastawayTheme.colors.onSurface,
   gradient: Brush,
+  modifier: Modifier = Modifier,
+  textColor: Color = CastawayTheme.colors.onSurface,
   shape: Shape = CircleShape,
   onClick: () -> Unit
 ) {
@@ -62,11 +62,11 @@ fun GradientTextButton(
 
 @Composable
 internal fun TextButton(
+  shape: Shape,
+  onClick: () -> Unit,
   modifier: Modifier = Modifier,
   color: Color? = null,
   gradient: Brush? = null,
-  shape: Shape,
-  onClick: () -> Unit,
   text: @Composable TextButtonScope.() -> Unit
 ) {
   Button(
@@ -105,7 +105,7 @@ interface TextButtonScope {
 
 @Preview
 @Composable
-fun TextButton_Preview() {
+fun TextButtonPreview() {
   TextButton(
 	modifier = Modifier,
 	text = "Some Button Text",
@@ -115,7 +115,7 @@ fun TextButton_Preview() {
 
 @Preview
 @Composable
-fun GradientTextButton_Preview() {
+fun GradientTextButtonPreview() {
   GradientTextButton(
 	modifier = Modifier,
 	text = "Some Button Text",

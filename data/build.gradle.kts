@@ -10,7 +10,7 @@ plugins {
 }
 
 kotlin {
-    android()
+    androidTarget()
     iosX64()
     iosArm64()
     iosSimulatorArm64()
@@ -43,7 +43,7 @@ kotlin {
                 implementation(Library.feedparser)
             }
         }
-        val androidTest by getting {
+        val androidUnitTest by getting {
             dependencies {
                 implementation(kotlin("test-junit"))
                 implementation(TestLibrary.junit)
@@ -87,6 +87,11 @@ android {
     defaultConfig {
         minSdk = App.minSdk
         targetSdk = App.targetSdk
+    }
+
+    compileOptions {
+        sourceCompatibility(JavaVersion.VERSION_17)
+        targetCompatibility(JavaVersion.VERSION_17)
     }
 }
 

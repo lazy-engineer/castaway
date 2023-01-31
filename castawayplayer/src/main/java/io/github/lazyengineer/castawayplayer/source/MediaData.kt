@@ -40,5 +40,5 @@ data class MediaData(
   val advertisement: Long? = null,
   val downloadStatus: Long? = null,
 
-  val playbackPosition: Long? = null,
+  val playbackPosition: Long = 0,
 )

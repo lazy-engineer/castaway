@@ -12,7 +12,8 @@ import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.compose.ui.test.onNodeWithContentDescription
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
-import org.junit.*
+import org.junit.Rule
+import org.junit.Test
 
 class EpisodeRowViewTest {
 
@@ -25,7 +26,8 @@ class EpisodeRowViewTest {
 	  EpisodeRowView(
 		modifier = Modifier,
 		state = SIMPLE_EPISODE_ROW_VIEW_STATE,
-		onPlayPause = { }
+		onPlayPause = { },
+		onClick = { },
 	  )
 	}
 
@@ -39,7 +41,8 @@ class EpisodeRowViewTest {
 	  EpisodeRowView(
 		modifier = Modifier,
 		state = SIMPLE_EPISODE_ROW_VIEW_STATE,
-		onPlayPause = { }
+		onPlayPause = { },
+		onClick = { },
 	  )
 	}
 
@@ -53,7 +56,8 @@ class EpisodeRowViewTest {
 	  EpisodeRowView(
 		modifier = Modifier,
 		state = SIMPLE_EPISODE_ROW_VIEW_STATE.copy(playing = true),
-		onPlayPause = { }
+		onPlayPause = { },
+		onClick = { },
 	  )
 	}
 
@@ -67,7 +71,8 @@ class EpisodeRowViewTest {
 	  EpisodeRowView(
 		modifier = Modifier,
 		state = SIMPLE_EPISODE_ROW_VIEW_STATE.copy(playing = false),
-		onPlayPause = { }
+		onPlayPause = { },
+		onClick = { },
 	  )
 	}
 
@@ -83,7 +88,8 @@ class EpisodeRowViewTest {
 	  EpisodeRowView(
 		modifier = Modifier,
 		state = SIMPLE_EPISODE_ROW_VIEW_STATE.copy(playing = playing),
-		onPlayPause = { playing = it }
+		onPlayPause = { playing },
+		onClick = { },
 	  )
 	}
 
@@ -99,7 +105,8 @@ class EpisodeRowViewTest {
 	  EpisodeRowView(
 		modifier = Modifier,
 		state = SIMPLE_EPISODE_ROW_VIEW_STATE,
-		onPlayPause = { }
+		onPlayPause = { },
+		onClick = { },
 	  )
 	}
 

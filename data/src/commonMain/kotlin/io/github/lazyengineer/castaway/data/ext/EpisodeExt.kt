@@ -28,7 +28,7 @@ fun EpisodeEntity.toEpisode(): Episode {
 	audioUrl = this.audioUrl,
 	imageUrl = this.imageUrl,
 	author = this.author,
-	playbackPosition = this.playbackPosition ?: PlaybackPosition(0),
+	playbackPosition = this.playbackPosition ?: PlaybackPosition(),
 	episode = this.episode.toInt(),
 	podcastUrl = this.podcastUrl,
   )

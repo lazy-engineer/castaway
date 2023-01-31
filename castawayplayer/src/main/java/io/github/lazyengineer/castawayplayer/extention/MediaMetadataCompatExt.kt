@@ -1,19 +1,18 @@
 package io.github.lazyengineer.castawayplayer.extention
 
+import android.support.v4.media.MediaBrowserCompat.MediaItem as MediaItemCompat
 import android.graphics.Bitmap
 import android.net.Uri
 import android.os.Bundle
 import android.support.v4.media.MediaDescriptionCompat
 import android.support.v4.media.MediaMetadataCompat
 import android.support.v4.media.RatingCompat
-import com.google.android.exoplayer2.C
 import com.google.android.exoplayer2.MediaItem
 import com.google.android.exoplayer2.source.ConcatenatingMediaSource
 import com.google.android.exoplayer2.source.ProgressiveMediaSource
 import com.google.android.exoplayer2.upstream.DataSource
 import io.github.lazyengineer.castawayplayer.service.Constants.MEDIA_DESCRIPTION_EXTRAS_START_PLAYBACK_POSITION_MS
 import io.github.lazyengineer.castawayplayer.source.MediaData
-import android.support.v4.media.MediaBrowserCompat.MediaItem as MediaItemCompat
 
 inline val MediaMetadataCompat.id: String?
   get() = getString(MediaMetadataCompat.METADATA_KEY_MEDIA_ID)
@@ -311,7 +310,7 @@ fun MediaData.asMediaItem(): MediaItemCompat = MediaItemCompat(this.asMediaDescr
 
 fun MediaData.asMediaDescription(): MediaDescriptionCompat = let { mediaData ->
   val extras = Bundle().also {
-	it.putLong(MEDIA_DESCRIPTION_EXTRAS_START_PLAYBACK_POSITION_MS, mediaData.playbackPosition ?: C.TIME_UNSET)
+	it.putLong(MEDIA_DESCRIPTION_EXTRAS_START_PLAYBACK_POSITION_MS, mediaData.playbackPosition)
   }
 
   MediaDescriptionCompat.Builder()

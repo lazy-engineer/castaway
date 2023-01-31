@@ -9,7 +9,7 @@ data class MediaServiceConfig(
   val playbackSpeed: Float = 1f,
   val fastForwardInterval: Long = 30_000,
   val rewindInterval: Long = 10_000,
-  val positionUpdateIntervalMillis: Long = 100L,
+  val positionUpdateIntervalMillis: Long = 1000L,
 
   val gson: Gson? = null,
   val imageLoader: ImageLoader? = null,

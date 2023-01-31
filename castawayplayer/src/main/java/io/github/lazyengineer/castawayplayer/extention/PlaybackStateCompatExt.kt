@@ -27,3 +27,7 @@ inline val PlaybackStateCompat.currentPlaybackPosition: Long
 	val timeDelta = SystemClock.elapsedRealtime() - lastPositionUpdateTime
 	(position + (timeDelta * playbackSpeed)).toLong()
   } else position
+
+val EMPTY_PLAYBACK_STATE: PlaybackStateCompat = PlaybackStateCompat.Builder()
+  .setState(PlaybackStateCompat.STATE_NONE, 0, 0f)
+  .build()

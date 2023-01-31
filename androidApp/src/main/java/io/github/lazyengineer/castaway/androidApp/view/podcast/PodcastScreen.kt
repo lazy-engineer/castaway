@@ -1,69 +1,79 @@
 package io.github.lazyengineer.castaway.androidApp.view.podcast
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import io.github.lazyengineer.castaway.androidApp.theme.CastawayTheme
-import io.github.lazyengineer.castaway.androidApp.view.nowplaying.NowPlayingEpisode
-import io.github.lazyengineer.castaway.androidApp.view.util.rememberFlowWithLifecycle
-import io.github.lazyengineer.castaway.androidApp.viewmodel.CastawayViewModel
-import io.github.lazyengineer.castaway.androidApp.viewmodel.EpisodeRowEvent
+import io.github.lazyengineer.castaway.androidApp.view.podcast.PodcastViewModel.Companion.TEST_URL
+import io.github.lazyengineer.castaway.androidApp.view.podcast.PodcastViewState.Companion
 import io.github.lazyengineer.castaway.domain.resource.ThemeType.MATERIAL
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.onEach
+import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun PodcastScreen(
   modifier: Modifier = Modifier,
-  viewModel: CastawayViewModel,
-  episodeSelected: (episode: NowPlayingEpisode) -> Unit,
+  viewModel: PodcastViewModel = koinViewModel(),
+  episodeSelected: (episode: PodcastEpisode) -> Unit,
 ) {
-  val podcastState by rememberFlowWithLifecycle(viewModel.podcastState).collectAsState(PodcastViewState.Empty)
+  val podcastState by viewModel.podcastState.collectAsStateWithLifecycle(PodcastViewState.Initial)
 
   PodcastScreen(
-	modifier,
-	podcastState,
-	event = {
-	  viewModel.submitEvent(it)
+	modifier = modifier,
+	state = { podcastState },
+	episodeSelected = episodeSelected,
+	event = remember {
+	  { viewModel.podcastState.handleEvent(it) }
 	},
-	episodeSelected = { episode ->
-	  episodeSelected(episode)
-	}
   )
 }
 
 @Composable
 internal fun PodcastScreen(
+  state: () -> PodcastViewState,
+  event: (PodcastEvent) -> Unit,
   modifier: Modifier = Modifier,
-  state: PodcastViewState,
-  event: (EpisodeRowEvent) -> Unit,
-  episodeSelected: (episode: NowPlayingEpisode) -> Unit,
+  episodeSelected: (episode: PodcastEpisode) -> Unit,
 ) {
   Surface(modifier = modifier.fillMaxSize()) {
 
-	when (state.loading) {
-	  true -> PodcastLoadingScreen(modifier)
+	LaunchedEffect(Unit) {
+	  event(PodcastEvent.FeedEvent.Load(TEST_URL))
+	}
+
+	state().showDetails?.let { details ->
+	  LaunchedEffect(details) {
+		episodeSelected(details)
+		event(PodcastEvent.FeedEvent.DetailsShowed)
+	  }
+	}
+
+	when (state().loading) {
+	  true -> PodcastLoadingScreen()
 	  false -> PodcastScreen(
-		modifier,
-		state.title,
-		state.imageUrl,
-		state.episodes,
-		event,
-		episodeSelected
+		feedTitle = { state().title },
+		feedImageUrl = { state().imageUrl },
+		episodes = { state().episodes },
+		event = event
 	  )
 	}
   }
@@ -89,37 +99,41 @@ internal fun PodcastLoadingScreen(
 
 @Composable
 internal fun PodcastScreen(
+  feedTitle: () -> String,
+  feedImageUrl: () -> String,
+  episodes: () -> EpisodesList,
   modifier: Modifier = Modifier,
-  feedTitle: String,
-  feedImageUrl: String,
-  episodes: List<NowPlayingEpisode>,
-  event: (EpisodeRowEvent) -> Unit,
-  episodeSelected: (episode: NowPlayingEpisode) -> Unit,
+  event: (PodcastEvent) -> Unit,
 ) {
   Surface(modifier = modifier.fillMaxSize()) {
 	LazyColumn(
-	  modifier = modifier.background(CastawayTheme.colors.background),
+	  modifier = Modifier.background(CastawayTheme.colors.background),
+	  state = rememberLazyListState(),
 	  contentPadding = PaddingValues(0.dp),
 	  horizontalAlignment = Alignment.Start
 	) {
 	  item {
 		PodcastHeaderView(
 		  modifier = Modifier.fillMaxSize(),
-		  title = feedTitle,
-		  imageUrl = feedImageUrl,
+		  title = feedTitle(),
+		  imageUrl = feedImageUrl(),
 		)
 	  }
 
-	  items(episodes, key = { it.id }) { item ->
+	  items(episodes().items, key = { it.id }) { item ->
 		EpisodeRowView(
-		  modifier = modifier.clickable {
-			event(EpisodeRowEvent.Click(item))
-			episodeSelected(item)
+		  state = EpisodeRowState(
+			playing = item.playing,
+			title = item.title,
+			progress = item.playbackProgress,
+		  ),
+		  onPlayPause = remember {
+			{ event(PodcastEvent.EpisodeRowEvent.PlayPause(itemId = item.id)) }
 		  },
-		  state = EpisodeRowState(playing = item.playing, title = item.title, progress = item.playbackPosition.toFloat() / item.playbackDuration),
-		) {
-		  event(EpisodeRowEvent.PlayPause(item.id))
-		}
+		  onClick = remember {
+			{ event(PodcastEvent.EpisodeRowEvent.ShowDetails(item)) }
+		  }
+		)
 	  }
 	}
   }
@@ -127,40 +141,50 @@ internal fun PodcastScreen(
 
 @Preview
 @Composable
-fun PodcastScreen_Preview() {
+fun PodcastScreenPreview() {
   CastawayTheme(MATERIAL, true) {
 	PodcastScreen(
-	  state = PodcastViewState(
-		loading = false,
-		title = "Awesome Podcast",
-		imageUrl = "",
-		episodes = listOf(
-		  NowPlayingEpisode(
-			id = "uu1d",
-			title = "Awesome Episode 1",
-			subTitle = "How to be just awesome!",
-			audioUrl = "episode.url",
-			imageUrl = "image.url",
-			author = "Awesom-O",
-			playbackPosition = 1800000L,
-			playbackDuration = 2160000L,
-			playbackSpeed = 1.5f,
-			playing = true,
-		  ),
-		  NowPlayingEpisode(
-			id = "uu2d",
-			title = "Awesome Episode 2",
-			subTitle = "How to be just awesome!",
-			audioUrl = "episode.url",
-			imageUrl = "image.url",
-			author = "Awesom-O",
-			playbackPosition = 1000000L,
-			playbackDuration = 2160000L,
-			playbackSpeed = 1.5f,
-			playing = false,
+	  state = {
+		PodcastViewState(
+		  loading = false,
+		  title = "Awesome Podcast",
+		  imageUrl = "",
+		  episodes = EpisodesList(
+			listOf(
+			  PodcastEpisode(
+				id = "uu1d",
+				title = "Awesome Episode 1",
+				subTitle = "How to be just awesome!",
+				audioUrl = "episode.url",
+				imageUrl = "image.url",
+				author = "Awesom-O",
+				description = null,
+				episode = 0,
+				podcastUrl = "podcast.url",
+				playbackPosition = 1800000L,
+				playbackDuration = 2160000L,
+				playbackSpeed = 1.5f,
+				playing = true,
+			  ),
+			  PodcastEpisode(
+				id = "uu2d",
+				title = "Awesome Episode 2",
+				subTitle = "How to be just awesome!",
+				audioUrl = "episode.url",
+				imageUrl = "image.url",
+				author = "Awesom-O",
+				description = null,
+				episode = 0,
+				podcastUrl = "podcast.url",
+				playbackPosition = 1000000L,
+				playbackDuration = 2160000L,
+				playbackSpeed = 1.5f,
+				playing = false,
+			  )
+			),
 		  )
-		),
-	  ),
+		)
+	  },
 	  event = {}
 	) {}
   }
@@ -168,15 +192,17 @@ fun PodcastScreen_Preview() {
 
 @Preview
 @Composable
-fun PodcastScreen_Loading_Preview() {
+fun PodcastScreenLoadingPreview() {
   CastawayTheme(MATERIAL, true) {
 	PodcastScreen(
-	  state = PodcastViewState(
-		loading = true,
-		title = "Awesome Podcast",
-		imageUrl = "podcast.url",
-		episodes = listOf(),
-	  ),
+	  state = {
+		PodcastViewState(
+		  loading = true,
+		  title = "Awesome Podcast",
+		  imageUrl = "podcast.url",
+		  episodes = EpisodesList(emptyList()),
+		)
+	  },
 	  event = {}
 	) {}
   }

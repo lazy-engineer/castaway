@@ -2,20 +2,20 @@ package dependencies
 
 object App {
 
-  const val compileSdk = 33
+  const val compileSdk = 34
   const val minSdk = 24
-  const val targetSdk = 33
+  const val targetSdk = 34
   const val versionCode = 1
   const val versionName = "1.0.0"
 
-  const val buildTools = "30.0.3"
+  const val buildTools = "33.0.1"
   const val testRunner = "androidx.test.runner.AndroidJUnitRunner"
 }
 
 object Version {
 
-  const val kotlin = "1.7.20"
-  const val gradle = "7.2.2"
+  const val kotlin = "1.9.10"
+  const val gradle = "8.1.1"
 
   const val appcompat = "1.5.1"
   const val material = "1.2.1"
@@ -30,6 +30,7 @@ object Version {
   const val composeActivity = "1.5.1"
   const val composeViewModel = "2.5.1"
   const val composeNavigation = "2.5.2"
+  const val composeConstraintlayout = "1.1.0-alpha12"
 
   const val ktxCore = "1.9.0"
   const val ktxWorkRuntime = "2.7.1"
@@ -43,6 +44,12 @@ object Version {
   const val feedparser = "0.1.0"
 
   const val junit = "4.13.1"
+  const val coroutinesTest = "1.6.4"
+  const val turbine = "0.12.1"
+  const val mockito = "4.0.0"
+  const val mockk = "1.13.7"
+  const val kluent = "1.72"
+  const val kotest = "5.6.2"
   const val androidJunit = "1.1.2"
 }
 
@@ -66,6 +73,7 @@ object Library {
   const val koin = "io.insert-koin:koin-core:${Version.koin}"
   const val koinTest = "io.insert-koin:koin-test:${Version.koin}"
   const val koinAndroid = "io.insert-koin:koin-android:${Version.koin}"
+  const val koinCompose = "io.insert-koin:koin-androidx-compose:${Version.koin}"
 
   const val viewmodelKtx = "androidx.lifecycle:lifecycle-viewmodel-ktx:${Version.lifecycleExtensions}"
   const val activityKtx = "androidx.activity:activity-ktx:${Version.ktxActivity}"
@@ -104,6 +112,7 @@ object Library {
     const val composeMaterial = "androidx.compose.material:material:${Version.compose}"
     const val composeMaterialIconsCore = "androidx.compose.material:material-icons-core:${Version.compose}"
     const val composeMaterialIconsExtended = "androidx.compose.material:material-icons-extended:${Version.compose}"
+    const val composeConstraintlayout = "androidx.constraintlayout:constraintlayout-compose:${Version.composeConstraintlayout}"
     const val composeActivity = "androidx.activity:activity-compose:${Version.composeActivity}"
     const val composeLifecycle = "androidx.lifecycle:lifecycle-runtime-ktx:${Version.ktxLifecycleRuntime}"
     const val composeViewModel = "androidx.lifecycle:lifecycle-viewmodel-compose:${Version.composeViewModel}"
@@ -118,6 +127,12 @@ object Library {
 object TestLibrary {
 
   const val junit = "junit:junit:${Version.junit}"
+  const val coroutines = "org.jetbrains.kotlinx:kotlinx-coroutines-test:${Version.coroutinesTest}"
+  const val turbine = "app.cash.turbine:turbine:${Version.turbine}"
+  const val mockito = "org.mockito.kotlin:mockito-kotlin:${Version.mockito}"
+  const val mockk = "io.mockk:mockk:${Version.mockk}"
+  const val kluent = "org.amshove.kluent:kluent:${Version.kluent}"
+  const val kotest = "io.kotest:kotest-runner-junit5:${Version.kotest}"
 }
 
 object AndroidTestLibrary {
