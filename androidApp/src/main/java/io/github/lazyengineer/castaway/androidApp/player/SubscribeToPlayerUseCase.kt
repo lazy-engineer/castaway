@@ -5,7 +5,7 @@ import android.support.v4.media.MediaBrowserCompat.SubscriptionCallback
 import io.github.lazyengineer.castawayplayer.MediaServiceClient
 import io.github.lazyengineer.castawayplayer.service.Constants
 
-class SubscribeToPlayerUseCase constructor(
+class SubscribeToPlayerUseCase(
   private val castawayPlayer: MediaServiceClient
 ) {
 

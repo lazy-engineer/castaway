@@ -9,7 +9,7 @@ import io.github.lazyengineer.castaway.domain.usecase.NativeStoredEpisodeFlowabl
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.get
 
-class NativeComponent : KoinComponent {
+class KoinIOS : KoinComponent {
 
   fun provideGetFeedUseCase(): NativeGetFeedUseCase = get()
   fun provideGetStoredEpisodesUseCase(): NativeGetStoredEpisodesUseCase = get()

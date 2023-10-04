@@ -4,7 +4,7 @@ import io.github.lazyengineer.castaway.domain.entity.FeedData
 import io.github.lazyengineer.castaway.domain.entity.common.DataResult
 import io.github.lazyengineer.castaway.domain.repository.FeedDataSource
 
-class GetStoredFeedUseCase constructor(
+class GetStoredFeedUseCase(
   private val feedRepository: FeedDataSource
 ) {
 

@@ -3,7 +3,7 @@ package io.github.lazyengineer.castaway.androidApp.player
 import io.github.lazyengineer.castawayplayer.MediaServiceClient
 import io.github.lazyengineer.castawayplayer.MediaServiceEvent
 
-class RewindPlaybackUseCase constructor(
+class RewindPlaybackUseCase(
   private val castawayPlayer: MediaServiceClient
 ) {
 

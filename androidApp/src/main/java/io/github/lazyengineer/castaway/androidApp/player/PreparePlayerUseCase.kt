@@ -4,7 +4,7 @@ import io.github.lazyengineer.castaway.domain.entity.Episode
 import io.github.lazyengineer.castawayplayer.MediaServiceClient
 import io.github.lazyengineer.castawayplayer.source.MediaData
 
-class PreparePlayerUseCase constructor(
+class PreparePlayerUseCase(
   private val castawayPlayer: MediaServiceClient
 ) {
 

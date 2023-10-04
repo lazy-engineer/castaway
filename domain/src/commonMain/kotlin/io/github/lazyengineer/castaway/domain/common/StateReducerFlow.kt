@@ -10,12 +10,16 @@ import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.runningFold
 import kotlinx.coroutines.flow.stateIn
 
+/**
+ * Credit to Maciej Sady
+ * https://github.com/linean/StateReducerFlow/
+ */
 interface StateReducerFlow<STATE, EVENT> : StateFlow<STATE> {
 
   fun handleEvent(event: EVENT)
 }
 
-fun <STATE, EVENT> StateReducerFlow(
+fun <STATE, EVENT> stateReducerFlow(
   initialState: STATE,
   reduceState: (STATE, EVENT) -> STATE,
   scope: CoroutineScope

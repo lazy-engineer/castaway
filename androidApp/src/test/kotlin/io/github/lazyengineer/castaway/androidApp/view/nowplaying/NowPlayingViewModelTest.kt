@@ -9,6 +9,7 @@ import io.github.lazyengineer.castaway.androidApp.player.PlayerStateUseCase
 import io.github.lazyengineer.castaway.androidApp.player.PreparePlayerUseCase
 import io.github.lazyengineer.castaway.androidApp.player.RewindPlaybackUseCase
 import io.github.lazyengineer.castaway.androidApp.player.SeekToUseCase
+import io.github.lazyengineer.castaway.androidApp.util.testState
 import io.github.lazyengineer.castaway.androidApp.view.mock.FakeMediaServiceClient
 import io.github.lazyengineer.castaway.androidApp.view.mock.MockData
 import io.github.lazyengineer.castaway.androidApp.view.nowplaying.NowPlayingEpisode.Companion.toEpisode
@@ -364,11 +365,3 @@ private fun createViewModel(feedDataSource: FeedDataSource, fakeMediaServiceClie
   rewindPlaybackUseCase = RewindPlaybackUseCase(fakeMediaServiceClient),
   playbackSpeedUseCase = PlaybackSpeedUseCase(fakeMediaServiceClient),
 )
-
-private fun StateReducerFlow<NowPlayingState, NowPlayingEvent>.testState(test: suspend (ReceiveTurbine<NowPlayingState>) -> Unit) {
-  runTest {
-	this@testState.test {
-	  test(this)
-	}
-  }
-}

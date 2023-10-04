@@ -11,7 +11,7 @@ import io.github.lazyengineer.castaway.domain.repository.FeedDataSource
  * we fetch remotely the xml string from shared module and parse it on each platform,
  * store the feed object locally and return it from there as a single source of truth
  */
-class StoreAndGetFeedUseCase constructor(
+class StoreAndGetFeedUseCase(
   private val feedRepository: FeedDataSource,
   private val feedParser: FeedParser
 ) {

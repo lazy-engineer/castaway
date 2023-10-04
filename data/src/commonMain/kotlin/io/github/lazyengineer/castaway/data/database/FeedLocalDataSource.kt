@@ -20,7 +20,10 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.withContext
 import kotlin.coroutines.CoroutineContext
 
-class FeedLocalDataSource constructor(private val database: CastawayDatabase, private val backgroundDispatcher: CoroutineDispatcher) :
+class FeedLocalDataSource(
+  private val database: CastawayDatabase,
+  private val backgroundDispatcher: CoroutineDispatcher
+) :
   LocalFeedDataSource {
 
   override suspend fun loadFeedInfo(feedUrl: String): DataResult<FeedInfo> {
@@ -134,6 +137,7 @@ class FeedLocalDataSource constructor(private val database: CastawayDatabase, pr
 		  Error(Exception("Failed to save episodes"))
 		}
 	  }
+
 	  is Error -> Error(Exception("Failed to save feed info"))
 	}
   }

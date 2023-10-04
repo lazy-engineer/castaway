@@ -10,7 +10,7 @@ import io.github.lazyengineer.castaway.domain.repository.FeedDataSource
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.map
 
-class FeedRepository constructor(
+class FeedRepository(
   private val remoteDataSource: RemoteFeedDataSource,
   private val localDataSource: LocalFeedDataSource,
 ) : FeedDataSource {

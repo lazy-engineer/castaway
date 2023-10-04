@@ -23,6 +23,7 @@ import io.github.lazyengineer.castaway.androidApp.view.nowplaying.NowPlayingEven
 import io.github.lazyengineer.castaway.androidApp.view.nowplaying.NowPlayingEvent.Rewind
 import io.github.lazyengineer.castaway.androidApp.view.nowplaying.NowPlayingEvent.SeekTo
 import io.github.lazyengineer.castaway.domain.common.StateReducerFlow
+import io.github.lazyengineer.castaway.domain.common.stateReducerFlow
 import io.github.lazyengineer.castaway.domain.entity.Episode
 import io.github.lazyengineer.castaway.domain.entity.common.DataResult.Error
 import io.github.lazyengineer.castaway.domain.entity.common.DataResult.Success
@@ -47,7 +48,7 @@ class NowPlayingViewModel(
   private val playbackSpeedUseCase: PlaybackSpeedUseCase,
 ) : ViewModel() {
 
-  val nowPlayingState = StateReducerFlow(
+  val nowPlayingState = stateReducerFlow(
 	initialState = NowPlayingState.Initial,
 	reduceState = ::reduceState,
   )

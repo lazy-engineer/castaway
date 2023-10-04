@@ -2,9 +2,9 @@ package io.github.lazyengineer.castawayplayer
 
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry
-import org.junit.*
-import org.junit.Assert.*
-import org.junit.runner.*
+import junit.framework.TestCase.assertEquals
+import org.junit.Test
+import org.junit.runner.RunWith
 
 /**
  * Instrumented test, which will execute on an Android device.

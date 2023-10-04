@@ -5,7 +5,7 @@ import io.github.lazyengineer.castaway.domain.entity.common.DataResult
 import io.github.lazyengineer.castaway.domain.repository.FeedDataSource
 import kotlinx.coroutines.flow.Flow
 
-class StoredEpisodeFlowableUseCase constructor(
+class StoredEpisodeFlowableUseCase(
   private val feedRepository: FeedDataSource
 ) {
 

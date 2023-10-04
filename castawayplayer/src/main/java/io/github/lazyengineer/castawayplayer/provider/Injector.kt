@@ -3,15 +3,12 @@ package io.github.lazyengineer.castawayplayer.provider
 import android.content.Context
 import android.content.SharedPreferences
 import coil.ImageLoader
-import coil.disk.DiskCache
 import coil.memory.MemoryCache
-import coil.util.CoilUtils
 import com.google.gson.Gson
 import io.github.lazyengineer.castawayplayer.config.MediaServiceConfig
 import io.github.lazyengineer.castawayplayer.source.FeedMediaSource
 import io.github.lazyengineer.castawayplayer.source.LocalDataSource
 import io.github.lazyengineer.castawayplayer.source.PREFERENCES_NAME
-import okhttp3.OkHttpClient
 
 class Injector private constructor(private val context: Context) {
 

@@ -4,7 +4,7 @@ import io.github.lazyengineer.castawayplayer.MediaServiceClient
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 
-class PlayerStateUseCase constructor(
+class PlayerStateUseCase(
   private val castawayPlayer: MediaServiceClient
 ) {
 

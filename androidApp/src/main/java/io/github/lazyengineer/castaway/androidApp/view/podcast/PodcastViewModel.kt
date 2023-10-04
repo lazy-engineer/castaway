@@ -17,18 +17,18 @@ import io.github.lazyengineer.castaway.androidApp.view.podcast.PodcastEvent.Feed
 import io.github.lazyengineer.castaway.androidApp.view.podcast.PodcastEvent.FeedEvent.FetchError
 import io.github.lazyengineer.castaway.androidApp.view.podcast.PodcastEvent.FeedEvent.Load
 import io.github.lazyengineer.castaway.androidApp.view.podcast.PodcastEvent.FeedEvent.Loaded
-import io.github.lazyengineer.castaway.domain.common.StateReducerFlow
+import io.github.lazyengineer.castaway.domain.common.stateReducerFlow
 import io.github.lazyengineer.castaway.domain.entity.common.DataResult.Error
 import io.github.lazyengineer.castaway.domain.entity.common.DataResult.Success
 import io.github.lazyengineer.castaway.domain.usecase.GetStoredFeedUseCase
 import io.github.lazyengineer.castaway.domain.usecase.StoreAndGetFeedUseCase
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
 class PodcastViewModel(
+  initialState: PodcastViewState = PodcastViewState.Initial,
   playerStateUseCase: PlayerStateUseCase,
   private val getStoredFeedUseCase: GetStoredFeedUseCase,
   private val storeAndGetFeedUseCase: StoreAndGetFeedUseCase,
@@ -37,8 +37,8 @@ class PodcastViewModel(
   private val playPauseUseCase: PlayPauseUseCase,
 ) : ViewModel() {
 
-  val podcastState = StateReducerFlow(
-	initialState = PodcastViewState.Initial,
+  val podcastState = stateReducerFlow(
+	initialState = initialState,
 	reduceState = ::reduceState,
   )
 
@@ -138,7 +138,7 @@ class PodcastViewModel(
 
   private fun collectPlayerState() {
 	viewModelScope.launch {
-	  playerState.collectLatest { state ->
+	  playerState.collect { state ->
 		if (state.prepared) {
 		  state.mediaData?.mediaId?.let { mediaId ->
 			val episode = podcastState.value.episodes.items.firstOrNull { it.id == mediaId }
@@ -171,9 +171,7 @@ class PodcastViewModel(
   }
 
   private fun preparePlayer(episodes: List<PodcastEpisode>) {
-	viewModelScope.launch {
 	  preparePlayerUseCase(episodes.map { it.toEpisode() })
-	}
   }
 
   private suspend fun loadFeed(url: String) {

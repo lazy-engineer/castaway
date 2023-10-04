@@ -6,7 +6,7 @@ import io.ktor.client.HttpClient
 import io.ktor.client.call.body
 import io.ktor.client.request.get
 
-class FeedRemoteDataSource constructor(private val client: HttpClient) : RemoteFeedDataSource {
+class FeedRemoteDataSource(private val client: HttpClient) : RemoteFeedDataSource {
 
   override suspend fun fetchFeed(url: String): DataResult<String> {
 	return try {

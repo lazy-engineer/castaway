@@ -3,7 +3,7 @@ package io.github.lazyengineer.castaway.domain.usecase
 import io.github.lazyengineer.castaway.domain.entity.common.DataResult
 import io.github.lazyengineer.castaway.domain.repository.FeedDataSource
 
-class GetFeedUseCase constructor(
+class GetFeedUseCase(
   private val feedRepository: FeedDataSource
 ) {
 

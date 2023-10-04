@@ -7,9 +7,9 @@ import kotlinx.coroutines.test.TestCoroutineScheduler
 import kotlin.coroutines.EmptyCoroutineContext
 
 class StateFlowTurbineViewRobot<T>(
-  private val scope: CoroutineScope = CoroutineScope(EmptyCoroutineContext),
+  scope: CoroutineScope = CoroutineScope(EmptyCoroutineContext),
+  stateFlow: StateFlow<T>,
   private val scheduler: TestCoroutineScheduler,
-  private val stateFlow: StateFlow<T>,
 ) {
 
   val listOfStates = mutableListOf<T>()
