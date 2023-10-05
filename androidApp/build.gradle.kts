@@ -26,6 +26,7 @@ dependencies {
 	implementation(composeLifecycle)
 	implementation(composeViewModel)
 	implementation(composeNavigation)
+	implementation(composeLifecycleRuntime)
   }
 
   with(Library) {
@@ -45,8 +46,7 @@ dependencies {
 	implementation(coilCompose)
 	implementation(gson)
 
-	implementation("org.jetbrains.kotlinx:kotlinx-collections-immutable:0.3.5")
-	implementation("androidx.lifecycle:lifecycle-runtime-compose:2.6.2")
+	implementation(immutableCollections)
   }
 
   with(AndroidTestLibrary) {

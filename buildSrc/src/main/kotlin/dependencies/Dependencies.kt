@@ -31,6 +31,7 @@ object Version {
   const val composeViewModel = "2.5.1"
   const val composeNavigation = "2.5.2"
   const val composeConstraintlayout = "1.1.0-alpha12"
+  const val composeLifecycleRuntime = "2.6.2"
 
   const val ktxCore = "1.9.0"
   const val ktxWorkRuntime = "2.7.1"
@@ -42,6 +43,7 @@ object Version {
   const val ktor = "2.1.2"
   const val sqldelight = "1.5.3"
   const val feedparser = "0.1.0"
+  const val immutableCollections = "0.3.5"
 
   const val junit = "4.13.1"
   const val coroutinesTest = "1.6.4"
@@ -106,6 +108,7 @@ object Library {
 
   object Compose {
     const val composeRuntime = "androidx.compose.runtime:runtime:${Version.compose}"
+    const val composeLifecycleRuntime = "androidx.lifecycle:lifecycle-runtime-compose:${Version.composeLifecycleRuntime}"
     const val composeUi = "androidx.compose.ui:ui:${Version.compose}"
     const val composeUiTooling = "androidx.compose.ui:ui-tooling:${Version.compose}"
     const val composeFoundation = "androidx.compose.foundation:foundation:${Version.compose}"
@@ -122,6 +125,7 @@ object Library {
 
   const val coroutines = "org.jetbrains.kotlinx:kotlinx-coroutines-core:${Version.coroutines}"
   const val coroutinesAndroid = "org.jetbrains.kotlinx:kotlinx-coroutines-android:${Version.coroutines}"
+  const val immutableCollections = "org.jetbrains.kotlinx:kotlinx-collections-immutable:${Version.immutableCollections}"
 }
 
 object TestLibrary {
