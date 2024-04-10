@@ -10,8 +10,8 @@ internal fun playbackProgress(
   playbackDuration: Long
 ): Float {
   return when {
-	playbackDuration <= 0 -> 0f
-	else -> playbackPosition / playbackDuration.toFloat()
+    playbackDuration <= 0 -> 0f
+    else -> playbackPosition / playbackDuration.toFloat()
   }
 }
 

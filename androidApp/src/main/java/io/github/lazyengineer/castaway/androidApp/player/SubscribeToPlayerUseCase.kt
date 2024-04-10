@@ -10,14 +10,14 @@ class SubscribeToPlayerUseCase(
 ) {
 
   suspend operator fun invoke() {
-	castawayPlayer.subscribe(Constants.MEDIA_ROOT_ID, subscriptionCallback)
+    castawayPlayer.subscribe(Constants.MEDIA_ROOT_ID, subscriptionCallback)
   }
 
   private val subscriptionCallback = object : SubscriptionCallback() {
-	override fun onChildrenLoaded(
-	  parentId: String, children: MutableList<MediaItem>
-	) {
-	  super.onChildrenLoaded(parentId, children)
-	}
+    override fun onChildrenLoaded(
+      parentId: String, children: MutableList<MediaItem>
+    ) {
+      super.onChildrenLoaded(parentId, children)
+    }
   }
 }

@@ -34,39 +34,39 @@ fun PodcastHeaderView(
   modifier: Modifier = Modifier,
 ) {
   Column(
-	modifier = modifier,
-	horizontalAlignment = Alignment.CenterHorizontally,
+    modifier = modifier,
+    horizontalAlignment = Alignment.CenterHorizontally,
   ) {
-	Text(
-	  title,
-	  color = CastawayTheme.colors.onBackground,
-	  modifier = Modifier.padding(top = 16.dp),
-	  style = TextStyle(fontSize = 24.sp, fontWeight = FontWeight.Bold)
-	)
+    Text(
+      title,
+      color = CastawayTheme.colors.onBackground,
+      modifier = Modifier.padding(top = 16.dp),
+      style = TextStyle(fontSize = 24.sp, fontWeight = FontWeight.Bold)
+    )
 
-	SubcomposeAsyncImage(
-	  model = ImageRequest.Builder(LocalContext.current)
-		.data(imageUrl)
-		.crossfade(true)
-		.build(),
-	  loading = {
-		CircularProgressIndicator(color = CastawayTheme.colors.primary)
-	  },
-	  error = {
-		Icon(
-		  imageVector = Filled.Mic,
-		  contentDescription = "Podcast header icon",
-		  modifier = Modifier.size(150.dp),
-		  tint = Color.Gray
-		)
-	  },
-	  contentDescription = "Podcast header image",
-	  contentScale = ContentScale.Crop,
-	  modifier = Modifier
-		.padding(top = 48.dp, bottom = 48.dp)
-		.width(150.dp)
-		.clip(RoundedCornerShape(25f))
-	)
+    SubcomposeAsyncImage(
+      model = ImageRequest.Builder(LocalContext.current)
+        .data(imageUrl)
+        .crossfade(true)
+        .build(),
+      loading = {
+        CircularProgressIndicator(color = CastawayTheme.colors.primary)
+      },
+      error = {
+        Icon(
+          imageVector = Filled.Mic,
+          contentDescription = "Podcast header icon",
+          modifier = Modifier.size(150.dp),
+          tint = Color.Gray
+        )
+      },
+      contentDescription = "Podcast header image",
+      contentScale = ContentScale.Crop,
+      modifier = Modifier
+        .padding(top = 48.dp, bottom = 48.dp)
+        .width(150.dp)
+        .clip(RoundedCornerShape(25f))
+    )
   }
 }
 
@@ -74,6 +74,6 @@ fun PodcastHeaderView(
 @Composable
 fun PodcastHeaderViewPreview() {
   CastawayTheme(MATERIAL, false) {
-	PodcastHeaderView(title = "Awesome Podcast", imageUrl = "image.url")
+    PodcastHeaderView(title = "Awesome Podcast", imageUrl = "image.url")
   }
 }

@@ -28,33 +28,33 @@ fun PlaybackSliderView(
   val interactionSource: MutableInteractionSource = remember { MutableInteractionSource() }
 
   LaunchedEffect(interactionSource) {
-	interactionSource.interactions.collect { interaction ->
-	  when (interaction) {
+    interactionSource.interactions.collect { interaction ->
+      when (interaction) {
 
-		is DragInteraction.Stop,
-		is PressInteraction.Release,
-		is PressInteraction.Cancel -> {
-		  onValueChangeFinished?.invoke()
-		}
+        is DragInteraction.Stop,
+        is PressInteraction.Release,
+        is PressInteraction.Cancel -> {
+          onValueChangeFinished?.invoke()
+        }
 
-		is PressInteraction.Press,
-		is DragInteraction.Start -> {
-		  onValueChangeStarted?.invoke()
-		}
-	  }
-	}
+        is PressInteraction.Press,
+        is DragInteraction.Start -> {
+          onValueChangeStarted?.invoke()
+        }
+      }
+    }
   }
 
   //TODO: Implement own version of Slider based on PlaybackProgressView
   Slider(
-	value = progress,
-	onValueChange = {
-	  onValueChange(it)
-	},
-	interactionSource = interactionSource,
-	valueRange = 0f..1f,
-	modifier = modifier,
-	colors = sliderColor()
+    value = progress,
+    onValueChange = {
+      onValueChange(it)
+    },
+    interactionSource = interactionSource,
+    valueRange = 0f..1f,
+    modifier = modifier,
+    colors = sliderColor()
   )
 }
 
@@ -66,17 +66,17 @@ private fun sliderColor(): SliderColors {
   val disabledInactiveTrackColor = disabledActiveTrackColor.copy(alpha = SliderDefaults.DisabledInactiveTrackAlpha)
 
   return SliderDefaults.colors(
-	thumbColor = CastawayTheme.colors.primary,
-	disabledThumbColor = CastawayTheme.colors.onSurface
-	  .copy(alpha = ContentAlpha.disabled)
-	  .compositeOver(CastawayTheme.colors.surface),
-	activeTrackColor = activeTrackColor,
-	inactiveTrackColor = activeTrackColor.copy(alpha = SliderDefaults.InactiveTrackAlpha),
-	disabledActiveTrackColor = disabledActiveTrackColor,
-	disabledInactiveTrackColor = disabledInactiveTrackColor,
-	activeTickColor = activeTickColor,
-	inactiveTickColor = activeTrackColor.copy(alpha = SliderDefaults.TickAlpha),
-	disabledActiveTickColor = activeTickColor.copy(alpha = SliderDefaults.DisabledTickAlpha),
-	disabledInactiveTickColor = disabledInactiveTrackColor.copy(alpha = SliderDefaults.DisabledTickAlpha)
+    thumbColor = CastawayTheme.colors.primary,
+    disabledThumbColor = CastawayTheme.colors.onSurface
+      .copy(alpha = ContentAlpha.disabled)
+      .compositeOver(CastawayTheme.colors.surface),
+    activeTrackColor = activeTrackColor,
+    inactiveTrackColor = activeTrackColor.copy(alpha = SliderDefaults.InactiveTrackAlpha),
+    disabledActiveTrackColor = disabledActiveTrackColor,
+    disabledInactiveTrackColor = disabledInactiveTrackColor,
+    activeTickColor = activeTickColor,
+    inactiveTickColor = activeTrackColor.copy(alpha = SliderDefaults.TickAlpha),
+    disabledActiveTickColor = activeTickColor.copy(alpha = SliderDefaults.DisabledTickAlpha),
+    disabledInactiveTickColor = disabledInactiveTrackColor.copy(alpha = SliderDefaults.DisabledTickAlpha)
   )
 }

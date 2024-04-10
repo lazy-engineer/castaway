@@ -14,55 +14,54 @@ dependencies {
   implementation(project(":castawayplayer"))
 
   with(Library.Compose) {
-	implementation(composeRuntime)
-	implementation(composeUi)
-	implementation(composeUiTooling)
-	implementation(composeFoundation)
-	implementation(composeMaterial)
-	implementation(composeMaterialIconsCore)
-	implementation(composeMaterialIconsExtended)
-	implementation(composeConstraintlayout)
-	implementation(composeActivity)
-	implementation(composeLifecycle)
-	implementation(composeViewModel)
-	implementation(composeNavigation)
-	implementation(composeLifecycleRuntime)
+    implementation(composeUi)
+    implementation(composeUiTooling)
+    implementation(composeFoundation)
+    implementation(composeMaterial)
+    implementation(composeMaterialIconsCore)
+    implementation(composeMaterialIconsExtended)
+    implementation(composeConstraintlayout)
+    implementation(composeActivity)
+    implementation(composeLifecycle)
+    implementation(composeViewModel)
+    implementation(composeNavigation)
+    implementation(composeLifecycleRuntime)
   }
 
   with(Library) {
-	implementation(ktxWorkRuntime)
-	implementation(viewmodelKtx)
-	implementation(activityKtx)
-	implementation(fragmentKtx)
-	implementation(material)
-	implementation(appcompat)
-	implementation(media)
+    implementation(ktxWorkRuntime)
+    implementation(viewmodelKtx)
+    implementation(activityKtx)
+    implementation(fragmentKtx)
+    implementation(material)
+    implementation(appcompat)
+    implementation(media)
 
-	implementation(koin)
-	implementation(koinAndroid)
-	implementation(koinCompose)
+    implementation(koin)
+    implementation(koinAndroid)
+    implementation(koinCompose)
 
-	implementation(coil)
-	implementation(coilCompose)
-	implementation(gson)
+    implementation(coil)
+    implementation(coilCompose)
+    implementation(gson)
 
-	implementation(immutableCollections)
+    implementation(immutableCollections)
   }
 
   with(AndroidTestLibrary) {
-	androidTestImplementation(composeUiTest)
-	androidTestImplementation(composeUiTestJunit)
-	debugImplementation(composeDebugTestManifest)
+    androidTestImplementation(composeUiTest)
+    androidTestImplementation(composeUiTestJunit)
+    debugImplementation(composeDebugTestManifest)
   }
 
   with(TestLibrary) {
-	testImplementation(junit)
-	testImplementation(coroutines)
-	testImplementation(turbine)
-	testImplementation(mockito)
-	testImplementation(mockk)
-	testImplementation(kluent)
-	testImplementation(kotest)
+    testImplementation(junit)
+    testImplementation(coroutines)
+    testImplementation(turbine)
+    testImplementation(mockito)
+    testImplementation(mockk)
+    testImplementation(kluent)
+    testImplementation(kotest)
   }
 
   testImplementation(project(mapOf("path" to ":data")))
@@ -71,47 +70,47 @@ dependencies {
 android {
   compileSdk = App.compileSdk
   defaultConfig {
-	applicationId = "io.github.lazyengineer.castaway.androidApp"
-	minSdk = App.minSdk
-	targetSdk = App.targetSdk
-	versionCode = App.versionCode
-	versionName = App.versionName
-	testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+    applicationId = "io.github.lazyengineer.castaway.androidApp"
+    minSdk = App.minSdk
+    targetSdk = App.targetSdk
+    versionCode = App.versionCode
+    versionName = App.versionName
+    testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
   }
 
   buildTypes {
-	getByName("release") {
-	  isMinifyEnabled = false
-	}
+    getByName("release") {
+      isMinifyEnabled = false
+    }
   }
 
   compileOptions {
-	sourceCompatibility(JavaVersion.VERSION_17)
-	targetCompatibility(JavaVersion.VERSION_17)
+    sourceCompatibility(JavaVersion.VERSION_17)
+    targetCompatibility(JavaVersion.VERSION_17)
   }
 
   kotlinOptions {
-	jvmTarget = "17"
+    jvmTarget = "17"
   }
 
   buildFeatures {
-	compose = true
+    compose = true
   }
 
   composeOptions {
-	kotlinCompilerExtensionVersion = "1.5.3"
+    kotlinCompilerExtensionVersion = "1.5.3"
   }
 
   packaging {
-	resources.excludes.add("META-INF/licenses/**")
-	resources.excludes.add("META-INF/AL2.0")
-	resources.excludes.add("META-INF/LGPL2.1")
+    resources.excludes.add("META-INF/licenses/**")
+    resources.excludes.add("META-INF/AL2.0")
+    resources.excludes.add("META-INF/LGPL2.1")
   }
 
   testOptions {
-	unitTests.all {
-	  it.useJUnitPlatform()
-	}
+    unitTests.all {
+      it.useJUnitPlatform()
+    }
   }
 
   namespace = "io.github.lazyengineer.castaway.androidApp"

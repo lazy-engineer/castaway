@@ -1,26 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="lightColorPrimary">#FF6200EE</color>
-    <color name="lightColorPrimaryDark">#FF3700B3</color>
-    <color name="lightColorAccent">#FF03DAC5</color>
+  <color name="lightColorPrimary">#FF6200EE</color>
+  <color name="lightColorPrimaryDark">#FF3700B3</color>
+  <color name="lightColorAccent">#FF03DAC5</color>
 
-    <color name="lightThemeBackground">#FFE1EAFC</color>
-    <color name="darkThemeBackground">#FF292D32</color>
-    <color name="lightThemeTextColor">#FF667082</color>
-    <color name="darkThemeTextColor">#FFBDBDBD</color>
+  <color name="lightThemeBackground">#FFE1EAFC</color>
+  <color name="darkThemeBackground">#FF292D32</color>
+  <color name="lightThemeTextColor">#FF667082</color>
+  <color name="darkThemeTextColor">#FFBDBDBD</color>
 
-    <color name="lightThemeDarkShadow">#33000000</color> <!-- Black with opacity of 20 -->
-    <color name="lightThemeLightShadow">#B3FFFFFF</color> <!-- White with opacity of 70 -->
-    <color name="darkThemeDarkShadow">#66000000</color> <!-- Black with opacity of 30 -->
+  <color name="lightThemeDarkShadow">#33000000</color> <!-- Black with opacity of 20 -->
+  <color name="lightThemeLightShadow">#B3FFFFFF</color> <!-- White with opacity of 70 -->
+  <color name="darkThemeDarkShadow">#66000000</color> <!-- Black with opacity of 30 -->
 
-    <color name="darkThemeLightShadow">#FF30343A</color>
-    <color name="darkGradientStart">#FF323C41</color>
-    <color name="darkGradientEnd">#FF19191E</color>
-    <color name="orangeGradientStart">#FFFF6200</color>
-    <color name="orangeGradientEnd">#FFB43100</color>
-    <color name="orangeGradientMiddle">#FFFFB400</color>
-    <color name="blueGradientStart">#FF42A5F5</color>
-    <color name="blueGradientEnd">#FF0D47A1</color>
-    <color name="blueGradientMiddle">#FF1976D2</color>
-    <color name="darkGray">#FF616161</color>
+  <color name="darkThemeLightShadow">#FF30343A</color>
+  <color name="darkGradientStart">#FF323C41</color>
+  <color name="darkGradientEnd">#FF19191E</color>
+  <color name="orangeGradientStart">#FFFF6200</color>
+  <color name="orangeGradientEnd">#FFB43100</color>
+  <color name="orangeGradientMiddle">#FFFFB400</color>
+  <color name="blueGradientStart">#FF42A5F5</color>
+  <color name="blueGradientEnd">#FF0D47A1</color>
+  <color name="blueGradientMiddle">#FF1976D2</color>
+  <color name="darkGray">#FF616161</color>
 </resources>

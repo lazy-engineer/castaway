@@ -15,12 +15,12 @@ class MainDispatcherRule(
 ) : TestWatcher() {
 
   override fun starting(description: Description) {
-	super.starting(description)
-	Dispatchers.setMain(dispatcher)
+    super.starting(description)
+    Dispatchers.setMain(dispatcher)
   }
 
   override fun finished(description: Description) {
-	super.finished(description)
-	Dispatchers.resetMain()
+    super.finished(description)
+    Dispatchers.resetMain()
   }
 }

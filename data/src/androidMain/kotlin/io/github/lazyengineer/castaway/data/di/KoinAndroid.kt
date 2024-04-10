@@ -17,18 +17,18 @@ actual fun platformModule(): Module = module {
   single { Android.create() }
 
   single {
-	val driver = AndroidSqliteDriver(CastawayDatabase.Schema, get(), "castaway.db")
+    val driver = AndroidSqliteDriver(CastawayDatabase.Schema, get(), "castaway.db")
 
-	CastawayDatabase(
-	  driver, episodeEntityAdapter = Adapter(
-		playbackPositionAdapter = PlaybackPositionAdapter
-	  )
-	)
+    CastawayDatabase(
+      driver, episodeEntityAdapter = Adapter(
+        playbackPositionAdapter = PlaybackPositionAdapter
+      )
+    )
   }
 
   single {
-	val factory = XmlPullParserFactory.newInstance()
-	val xmlPullParser = factory.newPullParser()
-	StoreAndGetFeedUseCase(get() as FeedRepository, FeedParserImpl(xmlPullParser))
+    val factory = XmlPullParserFactory.newInstance()
+    val xmlPullParser = factory.newPullParser()
+    StoreAndGetFeedUseCase(get() as FeedRepository, FeedParserImpl(xmlPullParser))
   }
 }

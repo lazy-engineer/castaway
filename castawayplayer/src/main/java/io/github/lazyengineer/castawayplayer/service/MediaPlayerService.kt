@@ -46,232 +46,235 @@ class MediaPlayerService : MediaBrowserServiceCompat() {
   private lateinit var notificationManager: MediaNotificationManager
 
   private val dataSourceFactory: DefaultDataSource.Factory by lazy {
-	DefaultDataSource.Factory(
-	  this,
-	  DefaultHttpDataSource.Factory().setUserAgent(Util.getUserAgent(this, MEDIA_USER_AGENT))
-	)
+    DefaultDataSource.Factory(
+      this,
+      DefaultHttpDataSource.Factory().setUserAgent(Util.getUserAgent(this, MEDIA_USER_AGENT))
+    )
   }
 
   private val config: MediaServiceConfig by lazy {
-	Injector.getInstance(applicationContext).provideConfig()
+    Injector.getInstance(applicationContext).provideConfig()
   }
 
   private val playerListener = PlayerEventListener(onPlaybackStateChanged(), onPlayWhenReadyChanged())
   private val exoPlayer: ExoPlayer by lazy {
-	buildExoPlayer()
+    buildExoPlayer()
   }
 
   override fun onCreate() {
-	super.onCreate()
-	fetchMediaSource()
-	flowMediaSource()
-	initMediaSession()
-	initMediaSessionConnector()
-	initNotificationManager()
+    super.onCreate()
+    fetchMediaSource()
+    flowMediaSource()
+    initMediaSession()
+    initMediaSessionConnector()
+    initNotificationManager()
   }
 
   private fun buildExoPlayer(): ExoPlayer {
-	val mediaAudioAttributes = AudioAttributes.Builder()
-	  .setContentType(C.AUDIO_CONTENT_TYPE_SPEECH)
-	  .setUsage(C.USAGE_MEDIA)
-	  .build()
+    val mediaAudioAttributes = AudioAttributes.Builder()
+      .setContentType(C.AUDIO_CONTENT_TYPE_SPEECH)
+      .setUsage(C.USAGE_MEDIA)
+      .build()
 
-	return ExoPlayer.Builder(this)
-	  .setSeekForwardIncrementMs(config.fastForwardInterval)
-	  .setSeekBackIncrementMs(config.rewindInterval)
-	  .build().apply {
-		setAudioAttributes(mediaAudioAttributes, true)
-		setHandleAudioBecomingNoisy(true)
-		addListener(playerListener)
-	  }
+    return ExoPlayer.Builder(this)
+      .setSeekForwardIncrementMs(config.fastForwardInterval)
+      .setSeekBackIncrementMs(config.rewindInterval)
+      .build().apply {
+        setAudioAttributes(mediaAudioAttributes, true)
+        setHandleAudioBecomingNoisy(true)
+        addListener(playerListener)
+      }
   }
 
   private fun fetchMediaSource() {
-	mediaSource = Injector.getInstance(applicationContext).provideMediaSource()
-	serviceScope.launch {
-	  mediaSource.fetch()
-	}
+    mediaSource = Injector.getInstance(applicationContext).provideMediaSource()
+    serviceScope.launch {
+      mediaSource.fetch()
+    }
   }
 
   private fun flowMediaSource() {
-	serviceScope.launch {
-	  mediaSource.flow().collect {
-		notifyChildrenChanged(MEDIA_ROOT_ID)
-	  }
-	}
+    serviceScope.launch {
+      mediaSource.flow().collect {
+        notifyChildrenChanged(MEDIA_ROOT_ID)
+      }
+    }
   }
 
   private fun initMediaSession() {
-	val sessionActivityPendingIntent = packageManager?.getLaunchIntentForPackage(packageName)?.let { sessionIntent ->
-	  PendingIntent.getActivity(this, 0, sessionIntent, FLAG_IMMUTABLE)
-	}
+    val sessionActivityPendingIntent = packageManager?.getLaunchIntentForPackage(packageName)?.let { sessionIntent ->
+      PendingIntent.getActivity(this, 0, sessionIntent, FLAG_IMMUTABLE)
+    }
 
-	mediaSession = MediaSessionCompat(this, SERVICE_TAG).apply {
-	  setSessionActivity(sessionActivityPendingIntent)
-	  isActive = true
-	}
+    mediaSession = MediaSessionCompat(this, SERVICE_TAG).apply {
+      setSessionActivity(sessionActivityPendingIntent)
+      isActive = true
+    }
 
-	sessionToken = mediaSession.sessionToken
+    sessionToken = mediaSession.sessionToken
   }
 
   private fun initNotificationManager() {
-	notificationManager = MediaNotificationManager(
-	  context = this,
-	  imageLoader = Injector
-		.getInstance(application)
-		.provideImageLoader(),
-	  notificationIconResId = config.notificationIconResId,
-	  sessionToken = mediaSession.sessionToken,
-	  notificationListener = PlayerNotificationListener(this)
-	)
-	notificationManager.showNotificationForPlayer(exoPlayer)
+    notificationManager = MediaNotificationManager(
+      context = this,
+      imageLoader = Injector
+        .getInstance(application)
+        .provideImageLoader(),
+      notificationIconResId = config.notificationIconResId,
+      sessionToken = mediaSession.sessionToken,
+      notificationListener = PlayerNotificationListener(this)
+    )
+    notificationManager.showNotificationForPlayer(exoPlayer)
   }
 
   private fun initMediaSessionConnector() {
-	mediaSessionConnector = MediaSessionConnector(mediaSession)
-	mediaSessionConnector.setPlaybackPreparer(
-	  MediaPlaybackPreparer(
-		mediaSource,
-		onPlaybackSpeedChanged(),
-		onMediaItemPrepared()
-	  )
-	)
-	mediaSessionConnector.setQueueNavigator(MediaQueueNavigator(mediaSession))
-	mediaSessionConnector.setPlayer(exoPlayer)
+    mediaSessionConnector = MediaSessionConnector(mediaSession)
+    mediaSessionConnector.setPlaybackPreparer(
+      MediaPlaybackPreparer(
+        mediaSource,
+        onPlaybackSpeedChanged(),
+        onMediaItemPrepared()
+      )
+    )
+    mediaSessionConnector.setQueueNavigator(MediaQueueNavigator(mediaSession))
+    mediaSessionConnector.setPlayer(exoPlayer)
   }
 
   private fun onPlaybackSpeedChanged() = { playbackSpeed: Float ->
-	exoPlayer.playbackParameters = PlaybackParameters(playbackSpeed)
+    exoPlayer.playbackParameters = PlaybackParameters(playbackSpeed)
   }
 
   private fun onMediaItemPrepared() = { itemToPlay: MediaData, playWhenReady: Boolean, extras: Bundle? ->
-	val playbackStartPositionMs = extras?.getLong(
-	  MEDIA_DESCRIPTION_EXTRAS_START_PLAYBACK_POSITION_MS,
-	  itemToPlay.playbackPosition
-	) ?: itemToPlay.playbackPosition
+    val playbackStartPositionMs = extras?.getLong(
+      MEDIA_DESCRIPTION_EXTRAS_START_PLAYBACK_POSITION_MS,
+      itemToPlay.playbackPosition
+    ) ?: itemToPlay.playbackPosition
 
-	preparePlaylist(itemToPlay, playWhenReady, playbackStartPositionMs)
+    preparePlaylist(itemToPlay, playWhenReady, playbackStartPositionMs)
   }
 
   override fun onGetRoot(
-	clientPackageName: String,
-	clientUid: Int,
-	rootHints: Bundle?,
+    clientPackageName: String,
+    clientUid: Int,
+    rootHints: Bundle?,
   ) = BrowserRoot(MEDIA_ROOT_ID, null)
 
   override fun onLoadChildren(
-	parentId: String,
-	result: Result<MutableList<MediaItem>>
+    parentId: String,
+    result: Result<MutableList<MediaItem>>
   ) {
-	when (parentId) {
-	  MEDIA_ROOT_ID -> {
-		val resultsSent = sendResultWhenReady(result)
-		if (!resultsSent) {
-		  result.detach()
-		}
-	  }
-	  else -> result.sendResult(null)
-	}
+    when (parentId) {
+      MEDIA_ROOT_ID -> {
+        val resultsSent = sendResultWhenReady(result)
+        if (!resultsSent) {
+          result.detach()
+        }
+      }
+
+      else -> result.sendResult(null)
+    }
   }
 
   private fun sendResultWhenReady(result: Result<MutableList<MediaItem>>): Boolean {
-	return mediaSource.whenReady { successfullyInitialized ->
-	  when {
-		successfullyInitialized -> {
-		  val children = loadChildren()
-		  result.sendResult(children.toMutableList())
-		}
-		else -> {
-		  mediaSession.sendSessionEvent(NETWORK_FAILURE, null)
-		  result.sendResult(null)
-		}
-	  }
-	}
+    return mediaSource.whenReady { successfullyInitialized ->
+      when {
+        successfullyInitialized -> {
+          val children = loadChildren()
+          result.sendResult(children.toMutableList())
+        }
+
+        else -> {
+          mediaSession.sendSessionEvent(NETWORK_FAILURE, null)
+          result.sendResult(null)
+        }
+      }
+    }
   }
 
   private fun loadChildren(): List<MediaItem> {
-	return mediaSource.map { mediaData ->
-	  mediaData.asMediaItem()
-	}
+    return mediaSource.map { mediaData ->
+      mediaData.asMediaItem()
+    }
   }
 
   private fun onPlaybackStateChanged() = { playbackState: Int ->
-	when (playbackState) {
-	  Player.STATE_BUFFERING,
-	  Player.STATE_READY -> {
-		notificationManager.showNotificationForPlayer(exoPlayer)
-		storeRecentPlayableMedia()
-	  }
-	  else -> {
-		notificationManager.hideNotification()
-	  }
-	}
+    when (playbackState) {
+      Player.STATE_BUFFERING,
+      Player.STATE_READY -> {
+        notificationManager.showNotificationForPlayer(exoPlayer)
+        storeRecentPlayableMedia()
+      }
+
+      else -> {
+        notificationManager.hideNotification()
+      }
+    }
   }
 
   private fun onPlayWhenReadyChanged() = { playWhenReady: Boolean ->
-	allowRemoveNotification(paused = !playWhenReady)
+    allowRemoveNotification(paused = !playWhenReady)
   }
 
   private fun allowRemoveNotification(paused: Boolean) {
-	if (paused) {
-	  stopForeground(STOP_FOREGROUND_DETACH)
-	}
+    if (paused) {
+      stopForeground(STOP_FOREGROUND_DETACH)
+    }
   }
 
   private fun preparePlaylist(
-	itemToPlay: MediaData?,
-	playWhenReady: Boolean,
-	playbackStartPositionMs: Long,
+    itemToPlay: MediaData?,
+    playWhenReady: Boolean,
+    playbackStartPositionMs: Long,
   ) {
-	val initialWindowIndex = if (itemToPlay == null) 0 else mediaSource.indexOf(itemToPlay)
+    val initialWindowIndex = if (itemToPlay == null) 0 else mediaSource.indexOf(itemToPlay)
 
-	exoPlayer.playWhenReady = playWhenReady
-	exoPlayer.stop()
-	exoPlayer.playbackParameters = PlaybackParameters(config.playbackSpeed)
+    exoPlayer.playWhenReady = playWhenReady
+    exoPlayer.stop()
+    exoPlayer.playbackParameters = PlaybackParameters(config.playbackSpeed)
 
-	val playerMediaSource = mediaSource.map { it.asMediaMetadata() }.toMediaSource(dataSourceFactory)
-	exoPlayer.setMediaSource(playerMediaSource)
-	exoPlayer.prepare()
-	exoPlayer.seekTo(initialWindowIndex, playbackStartPositionMs)
+    val playerMediaSource = mediaSource.map { it.asMediaMetadata() }.toMediaSource(dataSourceFactory)
+    exoPlayer.setMediaSource(playerMediaSource)
+    exoPlayer.prepare()
+    exoPlayer.seekTo(initialWindowIndex, playbackStartPositionMs)
   }
 
   private fun storeRecentPlayableMedia() {
-	serviceScope.launch {
-	  mediaSource.saveRecent()
-	}
+    serviceScope.launch {
+      mediaSource.saveRecent()
+    }
   }
 
   override fun onTaskRemoved(rootIntent: Intent) {
-	storeRecentPlayableMedia()
-	super.onTaskRemoved(rootIntent)
-	exoPlayer.stop()
+    storeRecentPlayableMedia()
+    super.onTaskRemoved(rootIntent)
+    exoPlayer.stop()
   }
 
   override fun onDestroy() {
-	mediaSession.run {
-	  isActive = false
-	  release()
-	}
+    mediaSession.run {
+      isActive = false
+      release()
+    }
 
-	serviceJob.cancel()
-	exoPlayer.removeListener(playerListener)
-	exoPlayer.release()
+    serviceJob.cancel()
+    exoPlayer.removeListener(playerListener)
+    exoPlayer.release()
   }
 
   private inner class MediaQueueNavigator(
-	mediaSession: MediaSessionCompat,
+    mediaSession: MediaSessionCompat,
   ) : TimelineQueueNavigator(mediaSession) {
 
-	override fun getMediaDescription(
-	  player: Player,
-	  windowIndex: Int
-	): MediaDescriptionCompat =
-	  mediaSource.elementAt(windowIndex).asMediaMetadata().description
+    override fun getMediaDescription(
+      player: Player,
+      windowIndex: Int
+    ): MediaDescriptionCompat =
+      mediaSource.elementAt(windowIndex).asMediaMetadata().description
   }
 
   companion object {
 
-	private const val SERVICE_TAG = "MediaPlayerService"
-	private const val MEDIA_USER_AGENT = "media_user_agent"
+    private const val SERVICE_TAG = "MediaPlayerService"
+    private const val MEDIA_USER_AGENT = "media_user_agent"
   }
 }

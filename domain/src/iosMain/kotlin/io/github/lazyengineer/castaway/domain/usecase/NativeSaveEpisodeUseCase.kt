@@ -13,15 +13,15 @@ class NativeSaveEpisodeUseCase(
   val coroutineScope = MainScope(Dispatchers.Main)
 
   fun subscribe(
-	episode: Episode,
-	scope: CoroutineScope,
-	onSuccess: (Episode) -> Unit,
-	onError: (String) -> Unit,
+    episode: Episode,
+    scope: CoroutineScope,
+    onSuccess: (Episode) -> Unit,
+    onError: (String) -> Unit,
   ) = UseCaseWrapper<Episode, Episode> {
-	saveEpisodeUseCase(episode)
+    saveEpisodeUseCase(episode)
   }.subscribe(scope, onSuccess, onError)
 
   fun onDestroy() {
-	coroutineScope.onDestroy()
+    coroutineScope.onDestroy()
   }
 }

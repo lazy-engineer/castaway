@@ -8,6 +8,6 @@ class PlaybackSpeedUseCase(
 ) {
 
   operator fun invoke(speed: Float) {
-	castawayPlayer.dispatchMediaServiceEvent(MediaServiceEvent.Speed(speed))
+    castawayPlayer.dispatchMediaServiceEvent(MediaServiceEvent.Speed(speed))
   }
 }

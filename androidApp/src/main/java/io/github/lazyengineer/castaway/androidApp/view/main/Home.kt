@@ -33,10 +33,10 @@ fun Home(
   val nowPlayingState by nowPlayingViewModel.nowPlayingState.collectAsStateWithLifecycle(NowPlayingState.Initial)
 
   Home(
-	nowPlayingState = { nowPlayingState },
-	modifier = modifier,
+    nowPlayingState = { nowPlayingState },
+    modifier = modifier,
   ) {
-	nowPlayingViewModel.nowPlayingState.handleEvent(it)
+    nowPlayingViewModel.nowPlayingState.handleEvent(it)
   }
 }
 
@@ -49,40 +49,40 @@ internal fun Home(
 ) {
   val showMiniPlayer by rememberShowMiniPlayerState(nowPlayingState)
   val animatedHeight by animateDpAsState(
-	targetValue = if (showMiniPlayer) 60.dp else 0.dp,
-	label = "bottomSheetHeight"
+    targetValue = if (showMiniPlayer) 60.dp else 0.dp,
+    label = "bottomSheetHeight"
   )
 
   val scaffoldState = rememberBottomSheetScaffoldState()
   var expandedPercentage by rememberSaveable { mutableFloatStateOf(0f) }
 
   BottomSheetScaffold(
-	sheetContent = {
-	  NowPlayingScreen(
-		state = nowPlayingState,
-		expandedPercentage = { expandedPercentage },
-		event = event
-	  )
-	},
-	scaffoldState = scaffoldState,
-	sheetPeekHeight = animatedHeight,
+    sheetContent = {
+      NowPlayingScreen(
+        state = nowPlayingState,
+        expandedPercentage = { expandedPercentage },
+        event = event
+      )
+    },
+    scaffoldState = scaffoldState,
+    sheetPeekHeight = animatedHeight,
   ) {
-	with(LocalDensity.current) {
-	  expandedPercentage = calculateBottomSheetExpandedPercentage(scaffoldState.bottomSheetState.offset.value.toDp())
-	}
+    with(LocalDensity.current) {
+      expandedPercentage = calculateBottomSheetExpandedPercentage(scaffoldState.bottomSheetState.offset.value.toDp())
+    }
 
-	PodcastScreen(modifier = modifier) {
+    PodcastScreen(modifier = modifier) {
 
-	}
+    }
   }
 }
 
 @Composable
 private fun rememberShowMiniPlayerState(state: () -> NowPlayingState): State<Boolean> {
   return remember {
-	derivedStateOf {
-	  state().episode?.id != null
-	}
+    derivedStateOf {
+      state().episode?.id != null
+    }
   }
 }
 
@@ -92,8 +92,8 @@ private fun calculateBottomSheetExpandedPercentage(
   bottomSheetStateOffset: Dp,
 ): Float {
   return ((-0.154 * bottomSheetStateOffset.value + 100) / 100).toFloat().coerceIn(
-	minimumValue = 0f,
-	maximumValue = 1f
+    minimumValue = 0f,
+    maximumValue = 1f
   )
 }
 

@@ -19,30 +19,30 @@ data class NowPlayingEpisode(
 
   companion object {
 
-	fun Episode.toNowPlayingEpisode() = NowPlayingEpisode(
-	  id = id,
-	  title = title,
-	  subTitle = subTitle,
-	  audioUrl = audioUrl,
-	  imageUrl = imageUrl,
-	  author = author,
-	  description = description,
-	  episode = episode,
-	  podcastUrl = podcastUrl,
-	  playbackPosition = playbackPosition.toNowPlayingPosition(),
-	)
+    fun Episode.toNowPlayingEpisode() = NowPlayingEpisode(
+      id = id,
+      title = title,
+      subTitle = subTitle,
+      audioUrl = audioUrl,
+      imageUrl = imageUrl,
+      author = author,
+      description = description,
+      episode = episode,
+      podcastUrl = podcastUrl,
+      playbackPosition = playbackPosition.toNowPlayingPosition(),
+    )
 
-	fun NowPlayingEpisode.toEpisode() = Episode(
-	  id = id,
-	  title = title,
-	  subTitle = subTitle,
-	  audioUrl = audioUrl,
-	  imageUrl = imageUrl,
-	  author = author,
-	  description = description,
-	  episode = episode,
-	  podcastUrl = podcastUrl,
-	  playbackPosition = playbackPosition.toPlaybackPosition(),
-	)
+    fun NowPlayingEpisode.toEpisode() = Episode(
+      id = id,
+      title = title,
+      subTitle = subTitle,
+      audioUrl = audioUrl,
+      imageUrl = imageUrl,
+      author = author,
+      description = description,
+      episode = episode,
+      podcastUrl = podcastUrl,
+      playbackPosition = playbackPosition.toPlaybackPosition(),
+    )
   }
 }

@@ -20,11 +20,11 @@ suspend fun ContainerScope.Scenario(
   test: suspend BehaviorSpecGivenContainerScope.() -> Unit
 ) =
   registerContainer(
-	TestName("Scenario: ", name, true),
-	disabled = false,
-	null,
+    TestName("Scenario: ", name, true),
+    disabled = false,
+    null,
   ) {
-	Dispatchers.setMain(dispatcher)
-	BehaviorSpecGivenContainerScope(this).test()
-	Dispatchers.resetMain()
+    Dispatchers.setMain(dispatcher)
+    BehaviorSpecGivenContainerScope(this).test()
+    Dispatchers.resetMain()
   }

@@ -11,6 +11,7 @@ data class PlayerState(
 ) {
 
   companion object {
-	val Initial = PlayerState()
+
+    val Initial = PlayerState()
   }
 }

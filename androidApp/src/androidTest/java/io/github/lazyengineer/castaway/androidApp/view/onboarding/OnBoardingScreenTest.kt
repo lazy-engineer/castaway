@@ -15,65 +15,65 @@ class OnBoardingScreenTest {
 
   @Test
   fun onBoardingScreen_shouldDisplayChooseThemeTitle() {
-	composeTestRule.setContent {
-	  OnBoardingScreen(
-		modifier = Modifier,
-		switchTheme = {},
-		finished = {}
-	  )
-	}
+    composeTestRule.setContent {
+      OnBoardingScreen(
+        modifier = Modifier,
+        switchTheme = {},
+        finished = {}
+      )
+    }
 
-	composeTestRule.onNodeWithContentDescription("Choose theme title")
-	  .assertIsDisplayed()
+    composeTestRule.onNodeWithContentDescription("Choose theme title")
+      .assertIsDisplayed()
   }
 
   @Test
   fun onBoardingScreen_shouldDisplayChooseThemeDescription() {
-	composeTestRule.setContent {
-	  OnBoardingScreen(
-		modifier = Modifier,
-		switchTheme = {},
-		finished = {}
-	  )
-	}
+    composeTestRule.setContent {
+      OnBoardingScreen(
+        modifier = Modifier,
+        switchTheme = {},
+        finished = {}
+      )
+    }
 
-	composeTestRule.onNodeWithContentDescription("Choose theme description")
-	  .assertIsDisplayed()
+    composeTestRule.onNodeWithContentDescription("Choose theme description")
+      .assertIsDisplayed()
   }
 
   @Test
   fun onBoardingScreen_shouldEqualTextIfDarkMode() {
-	composeTestRule.setContent {
-	  OnBoardingScreen(
-		modifier = Modifier,
-		darkTheme = true,
-		switchTheme = {},
-		finished = {}
-	  )
-	}
+    composeTestRule.setContent {
+      OnBoardingScreen(
+        modifier = Modifier,
+        darkTheme = true,
+        switchTheme = {},
+        finished = {}
+      )
+    }
 
-	composeTestRule.onNodeWithContentDescription("Choose theme description")
-	  .assertIsDisplayed()
-	  .assertTextEquals("The night is darkest just before the dawn. And I promise you, the dawn is coming.\n - Harvey Dent")
+    composeTestRule.onNodeWithContentDescription("Choose theme description")
+      .assertIsDisplayed()
+      .assertTextEquals("The night is darkest just before the dawn. And I promise you, the dawn is coming.\n - Harvey Dent")
   }
 
   @Test
   fun onBoardingScreen_shouldEqualTextIfLightMode() {
-	composeTestRule.setContent {
-	  OnBoardingScreen(
-		modifier = Modifier,
-		darkTheme = false,
-		switchTheme = {},
-		finished = {}
-	  )
-	}
+    composeTestRule.setContent {
+      OnBoardingScreen(
+        modifier = Modifier,
+        darkTheme = false,
+        switchTheme = {},
+        finished = {}
+      )
+    }
 
-	composeTestRule.onNodeWithContentDescription("Choose theme description")
-	  .assertTextEquals(
-		"- Hamid: What's that? \n" +
-				" - Rambo: It's blue light. \n" +
-				" - Hamid: What does it do? \n" +
-				" - Rambo: It turns blue."
-	  )
+    composeTestRule.onNodeWithContentDescription("Choose theme description")
+      .assertTextEquals(
+        "- Hamid: What's that? \n" +
+          " - Rambo: It's blue light. \n" +
+          " - Hamid: What does it do? \n" +
+          " - Rambo: It turns blue."
+      )
   }
 }

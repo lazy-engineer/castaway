@@ -11,8 +11,8 @@ internal fun EpisodeTitle(
   modifier: Modifier = Modifier
 ) {
   Text(
-	text = episodeTitle,
-	color = CastawayTheme.colors.onBackground,
-	modifier = modifier
+    text = episodeTitle,
+    color = CastawayTheme.colors.onBackground,
+    modifier = modifier
   )
 }

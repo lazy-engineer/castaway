@@ -24,16 +24,16 @@ fun CastawayTheme(
   content: @Composable() () -> Unit
 ) {
   when (themeType) {
-	MATERIAL -> ThemeMaterial(darkTheme, content)
-	NEUMORPHISM -> ThemeNeumorphism(darkTheme, content)
+    MATERIAL -> ThemeMaterial(darkTheme, content)
+    NEUMORPHISM -> ThemeNeumorphism(darkTheme, content)
   }
 }
 
 object CastawayTheme {
 
   val colors: CastawayColors
-	@Composable
-	get() = LocalCastawayColors.current
+    @Composable
+    get() = LocalCastawayColors.current
 }
 
 private val LocalCastawayColors = staticCompositionLocalOf<CastawayColors> {
@@ -48,9 +48,9 @@ fun ProvideCastawayColors(
   val colors = colorsPalette.toColors()
 
   val colorPalette = remember {
-	// Explicitly creating a new object here so we don't mutate the initial [colors]
-	// provided, and overwrite the values set in it.
-	colors.copy()
+    // Explicitly creating a new object here so we don't mutate the initial [colors]
+    // provided, and overwrite the values set in it.
+    colors.copy()
   }
 
   colorPalette.update(colors)
@@ -59,23 +59,23 @@ fun ProvideCastawayColors(
 
 private fun CastawayColorPalette.toColors(): CastawayColors {
   return CastawayColors(
-	primary = primary.toColor(),
-	primaryVariant = primaryVariant.toColor(),
-	secondary = secondary.toColor(),
-	secondaryVariant = secondaryVariant.toColor(),
-	background = background.toColor(),
-	surface = surface.toColor(),
-	error = error.toColor(),
-	onPrimary = onPrimary.toColor(),
-	onSecondary = onSecondary.toColor(),
-	onBackground = onBackground.toColor(),
-	onSurface = onSurface.toColor(),
-	onError = onError.toColor(),
-	shadow = shadow.toColor(),
-	reflection = reflection.toColor(),
-	gradient = gradient.map { it.toColor() },
-	isDark = isDark,
-	themeType = themeType,
+    primary = primary.toColor(),
+    primaryVariant = primaryVariant.toColor(),
+    secondary = secondary.toColor(),
+    secondaryVariant = secondaryVariant.toColor(),
+    background = background.toColor(),
+    surface = surface.toColor(),
+    error = error.toColor(),
+    onPrimary = onPrimary.toColor(),
+    onSecondary = onSecondary.toColor(),
+    onBackground = onBackground.toColor(),
+    onSurface = onSurface.toColor(),
+    onError = onError.toColor(),
+    shadow = shadow.toColor(),
+    reflection = reflection.toColor(),
+    gradient = gradient.map { it.toColor() },
+    isDark = isDark,
+    themeType = themeType,
   )
 }
 
@@ -99,79 +99,80 @@ class CastawayColors(
   isDark: Boolean,
   themeType: ThemeType,
 ) {
+
   var primary by mutableStateOf(primary)
-	private set
+    private set
   var primaryVariant by mutableStateOf(primaryVariant)
-	private set
+    private set
   var secondary by mutableStateOf(secondary)
-	private set
+    private set
   var secondaryVariant by mutableStateOf(secondaryVariant)
-	private set
+    private set
   var background by mutableStateOf(background)
-	private set
+    private set
   var surface by mutableStateOf(surface)
-	private set
+    private set
   var error by mutableStateOf(error)
-	private set
+    private set
   var onPrimary by mutableStateOf(onPrimary)
-	private set
+    private set
   var onSecondary by mutableStateOf(onSecondary)
-	private set
+    private set
   var onBackground by mutableStateOf(onBackground)
-	private set
+    private set
   var onSurface by mutableStateOf(onSurface)
-	private set
+    private set
   var onError by mutableStateOf(onError)
-	private set
+    private set
   var shadow by mutableStateOf(shadow)
-	private set
+    private set
   var reflection by mutableStateOf(reflection)
-	private set
+    private set
   var gradient by mutableStateOf(gradient)
-	private set
+    private set
   var isDark by mutableStateOf(isDark)
-	private set
+    private set
   var themeType by mutableStateOf(themeType)
-	private set
+    private set
 
   fun update(other: CastawayColors) {
-	primary = other.primary
-	primaryVariant = other.primaryVariant
-	secondary = other.secondary
-	secondaryVariant = other.secondaryVariant
-	background = other.background
-	surface = other.surface
-	error = other.error
-	onPrimary = other.onPrimary
-	onSecondary = other.onSecondary
-	onBackground = other.onBackground
-	onSurface = other.onSurface
-	onError = other.onError
-	shadow = other.shadow
-	reflection = other.reflection
-	gradient = other.gradient
-	isDark = other.isDark
-	themeType = other.themeType
+    primary = other.primary
+    primaryVariant = other.primaryVariant
+    secondary = other.secondary
+    secondaryVariant = other.secondaryVariant
+    background = other.background
+    surface = other.surface
+    error = other.error
+    onPrimary = other.onPrimary
+    onSecondary = other.onSecondary
+    onBackground = other.onBackground
+    onSurface = other.onSurface
+    onError = other.onError
+    shadow = other.shadow
+    reflection = other.reflection
+    gradient = other.gradient
+    isDark = other.isDark
+    themeType = other.themeType
   }
 
   fun copy(): CastawayColors = CastawayColors(
-	primary = primary,
-	primaryVariant = primaryVariant,
-	secondary = secondary,
-	secondaryVariant = secondaryVariant,
-	background = background,
-	surface = surface,
-	error = error,
-	onPrimary = onPrimary,
-	onSecondary = onSecondary,
-	onBackground = onBackground,
-	onSurface = onSurface,
-	onError = onError,
-	shadow = shadow,
-	reflection = reflection,
-	gradient = gradient,
-	isDark = isDark,
-	themeType = themeType,
+    primary = primary,
+    primaryVariant = primaryVariant,
+    secondary = secondary,
+    secondaryVariant = secondaryVariant,
+    background = background,
+    surface = surface,
+    error = error,
+    onPrimary = onPrimary,
+    onSecondary = onSecondary,
+    onBackground = onBackground,
+    onSurface = onSurface,
+    onError = onError,
+    shadow = shadow,
+    reflection = reflection,
+    gradient = gradient,
+    isDark = isDark,
+    themeType = themeType,
   )
 }
 

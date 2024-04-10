@@ -1,10 +1,10 @@
 package io.github.lazyengineer.castaway.androidApp.util
 
 import app.cash.turbine.testIn
+import kotlin.coroutines.EmptyCoroutineContext
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.test.TestCoroutineScheduler
-import kotlin.coroutines.EmptyCoroutineContext
 
 class StateFlowTurbineViewRobot<T>(
   scope: CoroutineScope = CoroutineScope(EmptyCoroutineContext),

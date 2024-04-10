@@ -54,12 +54,12 @@ class MediaService private constructor(
   private val mediaBrowserConnectionCallback = MediaBrowserConnectionCallback(context)
   private lateinit var mediaController: MediaControllerCompat
   private val transportControls: MediaControllerCompat.TransportControls
-	get() = mediaController.transportControls
+    get() = mediaController.transportControls
 
   private val mediaBrowser = MediaBrowserCompat(
-	context,
-	serviceComponent,
-	mediaBrowserConnectionCallback, null,
+    context,
+    serviceComponent,
+    mediaBrowserConnectionCallback, null,
   ).apply { connect() }
 
   private val isConnected = MutableStateFlow(MediaServiceState.Initial.connected)
@@ -69,230 +69,230 @@ class MediaService private constructor(
   private val playbackSpeed = MutableStateFlow(MediaServiceState.Initial.playbackSpeed)
 
   override fun playerState(): StateFlow<MediaServiceState> = combine(
-	isConnected,
-	nowPlaying,
-	playbackState,
-	networkFailure,
-	playbackSpeed
+    isConnected,
+    nowPlaying,
+    playbackState,
+    networkFailure,
+    playbackSpeed
   ) { connected, nowPlaying, playbackState, networkFailure, playbackSpeed ->
-	MediaServiceState(
-	  connected,
-	  nowPlaying,
-	  playbackState.toPlaybackState(),
-	  networkFailure,
-	  playbackSpeed
-	)
+    MediaServiceState(
+      connected,
+      nowPlaying,
+      playbackState.toPlaybackState(),
+      networkFailure,
+      playbackSpeed
+    )
   }.stateIn(CoroutineScope(Dispatchers.Main + SupervisorJob()), SharingStarted.Eagerly, MediaServiceState.Initial)
 
   override suspend fun subscribe(
-	parentId: String,
-	callback: MediaBrowserCompat.SubscriptionCallback
+    parentId: String,
+    callback: MediaBrowserCompat.SubscriptionCallback
   ) {
-	mediaBrowser.subscribe(parentId, callback)
-	updatePlaybackPosition()
+    mediaBrowser.subscribe(parentId, callback)
+    updatePlaybackPosition()
   }
 
   override fun unsubscribe(
-	parentId: String,
-	callback: MediaBrowserCompat.SubscriptionCallback
+    parentId: String,
+    callback: MediaBrowserCompat.SubscriptionCallback
   ) {
-	mediaBrowser.unsubscribe(parentId, callback)
+    mediaBrowser.unsubscribe(parentId, callback)
   }
 
   override fun prepare(playlist: List<MediaData>) {
-	mediaDataSource.prepare(playlist)
+    mediaDataSource.prepare(playlist)
   }
 
   override fun dispatchMediaServiceEvent(event: MediaServiceEvent) {
-	when (event) {
-	  is PlayMediaId -> playMediaId(event.mediaId, event.pauseAllowed)
-	  is Speed -> speed(event.speed)
-	  is Shuffle -> shuffle(event.shuffle)
-	  is MediaServiceEvent.RepeatMode -> repeatMode(event.repeat)
-	  is SeekTo -> seekTo(event.position)
-	  Rewind -> rewind()
-	  FastForward -> fastForward()
-	  SkipToNext -> skipToNext()
-	  SkipToPrevious -> skipToPrevious()
-	}
+    when (event) {
+      is PlayMediaId -> playMediaId(event.mediaId, event.pauseAllowed)
+      is Speed -> speed(event.speed)
+      is Shuffle -> shuffle(event.shuffle)
+      is MediaServiceEvent.RepeatMode -> repeatMode(event.repeat)
+      is SeekTo -> seekTo(event.position)
+      Rewind -> rewind()
+      FastForward -> fastForward()
+      SkipToNext -> skipToNext()
+      SkipToPrevious -> skipToPrevious()
+    }
   }
 
   private fun playMediaId(mediaId: String, pauseAllowed: Boolean) {
-	val isPrepared = playbackState.value.isPrepared
-	if (isPrepared && mediaId == nowPlaying.value.mediaId) {
-	  playbackState.value.let { playbackState ->
-		when {
-		  playbackState.isPlaying -> if (pauseAllowed) transportControls.pause() else Unit
-		  playbackState.isPlayEnabled -> transportControls.play()
-		  else -> Log.w(
-			MediaServiceClient::class.java.simpleName,
-			"Playable item clicked but neither play nor pause are enabled! (mediaId=$mediaId)"
-		  )
-		}
-	  }
-	} else {
-	  transportControls.playFromMediaId(mediaId, null)
-	}
+    val isPrepared = playbackState.value.isPrepared
+    if (isPrepared && mediaId == nowPlaying.value.mediaId) {
+      playbackState.value.let { playbackState ->
+        when {
+          playbackState.isPlaying -> if (pauseAllowed) transportControls.pause() else Unit
+          playbackState.isPlayEnabled -> transportControls.play()
+          else -> Log.w(
+            MediaServiceClient::class.java.simpleName,
+            "Playable item clicked but neither play nor pause are enabled! (mediaId=$mediaId)"
+          )
+        }
+      }
+    } else {
+      transportControls.playFromMediaId(mediaId, null)
+    }
   }
 
   private fun seekTo(position: Long) {
-	transportControls.seekTo(position)
+    transportControls.seekTo(position)
   }
 
   private fun fastForward() {
-	val currentPosition = playbackState.value.currentPlaybackPosition
-	transportControls.seekTo(currentPosition + config.fastForwardInterval)
+    val currentPosition = playbackState.value.currentPlaybackPosition
+    transportControls.seekTo(currentPosition + config.fastForwardInterval)
   }
 
   private fun rewind() {
-	val currentPosition = playbackState.value.currentPlaybackPosition
-	transportControls.seekTo(currentPosition - config.rewindInterval)
+    val currentPosition = playbackState.value.currentPlaybackPosition
+    transportControls.seekTo(currentPosition - config.rewindInterval)
   }
 
   private fun skipToNext() {
-	transportControls.skipToNext()
+    transportControls.skipToNext()
   }
 
   private fun skipToPrevious() {
-	transportControls.skipToPrevious()
+    transportControls.skipToPrevious()
   }
 
   private fun speed(speed: Float) {
-	val playbackSpeedParams = Bundle().apply {
-	  putFloat(Constants.PLAYBACK_SPEED, speed)
-	}
-	sendCommand(Constants.PLAYBACK_SPEED_CHANGED, playbackSpeedParams) { _, _ -> }
+    val playbackSpeedParams = Bundle().apply {
+      putFloat(Constants.PLAYBACK_SPEED, speed)
+    }
+    sendCommand(Constants.PLAYBACK_SPEED_CHANGED, playbackSpeedParams) { _, _ -> }
   }
 
   private fun shuffle(shuffle: Boolean) {
-	val shuffleMode = if (shuffle) PlaybackStateCompat.SHUFFLE_MODE_NONE else PlaybackStateCompat.SHUFFLE_MODE_ALL
-	transportControls.setShuffleMode(shuffleMode)
+    val shuffleMode = if (shuffle) PlaybackStateCompat.SHUFFLE_MODE_NONE else PlaybackStateCompat.SHUFFLE_MODE_ALL
+    transportControls.setShuffleMode(shuffleMode)
   }
 
   private fun repeatMode(@RepeatMode repeat: Int) {
-	transportControls.setRepeatMode(repeat)
+    transportControls.setRepeatMode(repeat)
   }
 
   private fun sendCommand(
-	command: String,
-	parameters: Bundle?,
-	resultCallback: ((Int, Bundle?) -> Unit)
+    command: String,
+    parameters: Bundle?,
+    resultCallback: ((Int, Bundle?) -> Unit)
   ) = if (mediaBrowser.isConnected) {
-	mediaController.sendCommand(command, parameters, object : ResultReceiver(Handler(Looper.getMainLooper())) {
-	  override fun onReceiveResult(
-		resultCode: Int,
-		resultData: Bundle?
-	  ) {
-		resultCallback(resultCode, resultData)
-	  }
-	})
-	true
+    mediaController.sendCommand(command, parameters, object : ResultReceiver(Handler(Looper.getMainLooper())) {
+      override fun onReceiveResult(
+        resultCode: Int,
+        resultData: Bundle?
+      ) {
+        resultCallback(resultCode, resultData)
+      }
+    })
+    true
   } else {
-	false
+    false
   }
 
   private suspend fun updatePlaybackPosition() {
-	while (true) {
-	  val currentPosition = playbackState.value.currentPlaybackPosition
+    while (true) {
+      val currentPosition = playbackState.value.currentPlaybackPosition
 
-	  if (nowPlaying.value.playbackPosition != currentPosition && playbackState.value.state != STATE_BUFFERING) {
-		nowPlaying.update {
-		  it.copy(playbackPosition = currentPosition)
-		}
-	  }
-	  delay(config.positionUpdateIntervalMillis)
-	}
+      if (nowPlaying.value.playbackPosition != currentPosition && playbackState.value.state != STATE_BUFFERING) {
+        nowPlaying.update {
+          it.copy(playbackPosition = currentPosition)
+        }
+      }
+      delay(config.positionUpdateIntervalMillis)
+    }
   }
 
   private inner class MediaBrowserConnectionCallback(private val context: Context) :
-	MediaBrowserCompat.ConnectionCallback() {
+    MediaBrowserCompat.ConnectionCallback() {
 
-	override fun onConnected() {
-	  mediaController = MediaControllerCompat(context, mediaBrowser.sessionToken).apply {
-		registerCallback(MediaControllerCallback())
-	  }
+    override fun onConnected() {
+      mediaController = MediaControllerCompat(context, mediaBrowser.sessionToken).apply {
+        registerCallback(MediaControllerCallback())
+      }
 
-	  isConnected.update {
-		true
-	  }
-	}
+      isConnected.update {
+        true
+      }
+    }
 
-	override fun onConnectionSuspended() {
-	  isConnected.update {
-		false
-	  }
-	}
+    override fun onConnectionSuspended() {
+      isConnected.update {
+        false
+      }
+    }
 
-	override fun onConnectionFailed() {
-	  isConnected.update {
-		false
-	  }
-	}
+    override fun onConnectionFailed() {
+      isConnected.update {
+        false
+      }
+    }
   }
 
   private inner class MediaControllerCallback : MediaControllerCompat.Callback() {
 
-	override fun onPlaybackStateChanged(state: PlaybackStateCompat?) {
-	  playbackState.update {
-		state ?: EMPTY_PLAYBACK_STATE
-	  }
+    override fun onPlaybackStateChanged(state: PlaybackStateCompat?) {
+      playbackState.update {
+        state ?: EMPTY_PLAYBACK_STATE
+      }
 
-	  state?.playbackSpeed?.let { speed ->
-		if (speed > 0f) {
-		  playbackSpeed.update { speed }
-		}
-	  }
-	}
+      state?.playbackSpeed?.let { speed ->
+        if (speed > 0f) {
+          playbackSpeed.update { speed }
+        }
+      }
+    }
 
-	override fun onMetadataChanged(metadata: MediaMetadataCompat?) {
-	  // When ExoPlayer stops we will receive a callback with "empty" metadata. This is a
-	  // metadata object which has been instantiated with default values. The default value
-	  // for media ID is null so we assume that if this value is null we are not playing
-	  // anything.
-	  nowPlaying.update {
-		if (metadata?.id == null) {
-		  MediaServiceState.Initial.nowPlaying
-		} else {
-		  metadata.asMediaData()
-		}
-	  }
-	}
+    override fun onMetadataChanged(metadata: MediaMetadataCompat?) {
+      // When ExoPlayer stops we will receive a callback with "empty" metadata. This is a
+      // metadata object which has been instantiated with default values. The default value
+      // for media ID is null so we assume that if this value is null we are not playing
+      // anything.
+      nowPlaying.update {
+        if (metadata?.id == null) {
+          MediaServiceState.Initial.nowPlaying
+        } else {
+          metadata.asMediaData()
+        }
+      }
+    }
 
-	override fun onQueueChanged(queue: MutableList<MediaSessionCompat.QueueItem>?) = Unit
+    override fun onQueueChanged(queue: MutableList<MediaSessionCompat.QueueItem>?) = Unit
 
-	override fun onSessionEvent(
-	  event: String?,
-	  extras: Bundle?
-	) {
-	  super.onSessionEvent(event, extras)
-	  when (event) {
-		Constants.NETWORK_FAILURE -> networkFailure.value = true
-	  }
-	}
+    override fun onSessionEvent(
+      event: String?,
+      extras: Bundle?
+    ) {
+      super.onSessionEvent(event, extras)
+      when (event) {
+        Constants.NETWORK_FAILURE -> networkFailure.value = true
+      }
+    }
 
-	override fun onSessionDestroyed() {
-	  mediaBrowserConnectionCallback.onConnectionSuspended()
-	}
+    override fun onSessionDestroyed() {
+      mediaBrowserConnectionCallback.onConnectionSuspended()
+    }
   }
 
   companion object {
 
-	private fun PlaybackStateCompat.toPlaybackState() = PlaybackState(
-	  isPrepared = this.isPrepared,
-	  isPlayEnabled = this.isPlayEnabled,
-	  isPlaying = this.isPlaying,
-	  currentPlaybackPosition = this.currentPlaybackPosition,
-	)
+    private fun PlaybackStateCompat.toPlaybackState() = PlaybackState(
+      isPrepared = this.isPrepared,
+      isPlayEnabled = this.isPlayEnabled,
+      isPlaying = this.isPlaying,
+      currentPlaybackPosition = this.currentPlaybackPosition,
+    )
 
-	@Volatile
-	private var instance: MediaServiceClient? = null
+    @Volatile
+    private var instance: MediaServiceClient? = null
 
-	fun getInstance(
-	  context: Context,
-	  serviceComponent: ComponentName,
-	  config: MediaServiceConfig = MediaServiceConfig()
-	) = instance ?: synchronized(this) {
-	  instance ?: MediaService(context, serviceComponent, config).also { instance = it }
-	}
+    fun getInstance(
+      context: Context,
+      serviceComponent: ComponentName,
+      config: MediaServiceConfig = MediaServiceConfig()
+    ) = instance ?: synchronized(this) {
+      instance ?: MediaService(context, serviceComponent, config).also { instance = it }
+    }
   }
 }

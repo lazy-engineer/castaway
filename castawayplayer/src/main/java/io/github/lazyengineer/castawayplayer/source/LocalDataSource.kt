@@ -3,9 +3,9 @@ package io.github.lazyengineer.castawayplayer.source
 import android.content.SharedPreferences
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
+import java.lang.reflect.Type
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
-import java.lang.reflect.Type
 
 class LocalDataSource private constructor(
   private val preferences: SharedPreferences,
@@ -13,36 +13,36 @@ class LocalDataSource private constructor(
 ) {
 
   suspend fun saveRecentPlaylist(mediaDataList: List<MediaData>) {
-	withContext(Dispatchers.IO) {
-	  val mediaDataJson = gson.toJson(mediaDataList)
+    withContext(Dispatchers.IO) {
+      val mediaDataJson = gson.toJson(mediaDataList)
 
-	  preferences.edit()
-		.putString(RECENT_MEDIA_PLAYLIST, mediaDataJson)
-		.apply()
-	}
+      preferences.edit()
+        .putString(RECENT_MEDIA_PLAYLIST, mediaDataJson)
+        .apply()
+    }
   }
 
   fun loadRecentPlaylist(): List<MediaData> {
-	val mediaDataJson = preferences.getString(RECENT_MEDIA_PLAYLIST, null)
+    val mediaDataJson = preferences.getString(RECENT_MEDIA_PLAYLIST, null)
 
-	val type: Type = object : TypeToken<List<MediaData>>() {}.type
-	return gson.fromJson(mediaDataJson, type) ?: emptyList()
+    val type: Type = object : TypeToken<List<MediaData>>() {}.type
+    return gson.fromJson(mediaDataJson, type) ?: emptyList()
   }
 
   companion object {
 
-	@Volatile
-	private var INSTANCE: LocalDataSource? = null
+    @Volatile
+    private var INSTANCE: LocalDataSource? = null
 
-	fun getInstance(
-	  preferences: SharedPreferences,
-	  gson: Gson
-	): LocalDataSource {
-	  return INSTANCE ?: synchronized(this) {
-		INSTANCE ?: LocalDataSource(preferences, gson)
-		  .also { INSTANCE = it }
-	  }
-	}
+    fun getInstance(
+      preferences: SharedPreferences,
+      gson: Gson
+    ): LocalDataSource {
+      return INSTANCE ?: synchronized(this) {
+        INSTANCE ?: LocalDataSource(preferences, gson)
+          .also { INSTANCE = it }
+      }
+    }
   }
 }
 

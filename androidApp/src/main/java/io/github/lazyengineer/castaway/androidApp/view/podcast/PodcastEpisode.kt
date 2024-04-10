@@ -23,36 +23,36 @@ data class PodcastEpisode(
 
   companion object {
 
-	fun Episode.toPodcastEpisode() = PodcastEpisode(
-	  id = id,
-	  title = title,
-	  subTitle = subTitle,
-	  audioUrl = audioUrl,
-	  imageUrl = imageUrl,
-	  author = author,
-	  description = description,
-	  episode = episode,
-	  podcastUrl = podcastUrl,
-	  playbackPosition = playbackPosition.position,
-	  playbackDuration = playbackPosition.duration,
-	  playbackProgress = playbackPosition.position.toFloat() / playbackPosition.duration,
-	  playing = false,
-	)
+    fun Episode.toPodcastEpisode() = PodcastEpisode(
+      id = id,
+      title = title,
+      subTitle = subTitle,
+      audioUrl = audioUrl,
+      imageUrl = imageUrl,
+      author = author,
+      description = description,
+      episode = episode,
+      podcastUrl = podcastUrl,
+      playbackPosition = playbackPosition.position,
+      playbackDuration = playbackPosition.duration,
+      playbackProgress = playbackPosition.position.toFloat() / playbackPosition.duration,
+      playing = false,
+    )
 
-	fun PodcastEpisode.toEpisode() = Episode(
-	  id = id,
-	  title = title,
-	  subTitle = subTitle,
-	  audioUrl = audioUrl,
-	  imageUrl = imageUrl,
-	  author = author,
-	  description = description,
-	  episode = episode,
-	  podcastUrl = podcastUrl,
-	  playbackPosition = PlaybackPosition(
-		position = playbackPosition,
-		duration = playbackDuration,
-	  )
-	)
+    fun PodcastEpisode.toEpisode() = Episode(
+      id = id,
+      title = title,
+      subTitle = subTitle,
+      audioUrl = audioUrl,
+      imageUrl = imageUrl,
+      author = author,
+      description = description,
+      episode = episode,
+      podcastUrl = podcastUrl,
+      playbackPosition = PlaybackPosition(
+        position = playbackPosition,
+        duration = playbackDuration,
+      )
+    )
   }
 }

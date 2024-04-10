@@ -12,15 +12,15 @@ class NativeGetFeedUseCase(
   val coroutineScope = MainScope(Dispatchers.Main)
 
   fun subscribe(
-	url: String,
-	scope: CoroutineScope,
-	onSuccess: (String) -> Unit,
-	onError: (String) -> Unit,
+    url: String,
+    scope: CoroutineScope,
+    onSuccess: (String) -> Unit,
+    onError: (String) -> Unit,
   ) = UseCaseWrapper<String, String> {
-	getFeedUseCase(url)
+    getFeedUseCase(url)
   }.subscribe(scope, onSuccess, onError)
 
   fun onDestroy() {
-	coroutineScope.onDestroy()
+    coroutineScope.onDestroy()
   }
 }

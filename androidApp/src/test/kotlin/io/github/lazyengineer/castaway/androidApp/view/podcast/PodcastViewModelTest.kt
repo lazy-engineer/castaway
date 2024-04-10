@@ -29,56 +29,56 @@ class PodcastViewModelTest : BehaviorSpec({
   lateinit var state: StateReducerFlow<PodcastViewState, PodcastEvent>
 
   val playerStateUseCase: PlayerStateUseCase = mockk {
-	every { this@mockk.invoke() } returns flow{
-	  emit(PlayerState.Initial)
-	  emit(PlayerState.Initial)
-	}
+    every { this@mockk.invoke() } returns flow {
+      emit(PlayerState.Initial)
+      emit(PlayerState.Initial)
+    }
   }
 
   val getStoredFeedUseCase: GetStoredFeedUseCase = mockk()
   val storeAndGetFeedUseCase: StoreAndGetFeedUseCase = mockk()
   val subscribeToPlayerUseCase: SubscribeToPlayerUseCase = mockk {
-	coEvery { this@mockk.invoke() } returns Unit
+    coEvery { this@mockk.invoke() } returns Unit
   }
   val preparePlayerUseCase: PreparePlayerUseCase = mockk {
-	every { this@mockk.invoke(any()) } returns Unit
+    every { this@mockk.invoke(any()) } returns Unit
   }
 
   val playPauseUseCase: PlayPauseUseCase = mockk()
 
   Given("PodcastViewModel is initialized") {
-	Dispatchers.setMain(StandardTestDispatcher())
+    Dispatchers.setMain(StandardTestDispatcher())
 
-	viewModel = PodcastViewModel(
-	  getStoredFeedUseCase = getStoredFeedUseCase,
-	  playerStateUseCase = playerStateUseCase,
-	  storeAndGetFeedUseCase = storeAndGetFeedUseCase,
-	  subscribeToPlayerUseCase = subscribeToPlayerUseCase,
-	  preparePlayerUseCase = preparePlayerUseCase,
-	  playPauseUseCase = playPauseUseCase
-	)
-	state = viewModel.podcastState
+    viewModel = PodcastViewModel(
+      getStoredFeedUseCase = getStoredFeedUseCase,
+      playerStateUseCase = playerStateUseCase,
+      storeAndGetFeedUseCase = storeAndGetFeedUseCase,
+      subscribeToPlayerUseCase = subscribeToPlayerUseCase,
+      preparePlayerUseCase = preparePlayerUseCase,
+      playPauseUseCase = playPauseUseCase
+    )
+    state = viewModel.podcastState
 
-	state.testState {
-	  When("view model is created") {
-		Then("initial podcast state should be Initial") {
-		  state.value `should be equal to` PodcastViewState.Initial
-		}
+    state.testState {
+      When("view model is created") {
+        Then("initial podcast state should be Initial") {
+          state.value `should be equal to` PodcastViewState.Initial
+        }
 
-		Then("subscribe to player use case should be invoked") {
-		  coVerify(exactly = 1) { subscribeToPlayerUseCase() }
-		}
+        Then("subscribe to player use case should be invoked") {
+          coVerify(exactly = 1) { subscribeToPlayerUseCase() }
+        }
 
-		Then("prepare player use case should be invoked with empty list") {
-		  verify { preparePlayerUseCase(emptyList()) }
-		}
+        Then("prepare player use case should be invoked with empty list") {
+          verify { preparePlayerUseCase(emptyList()) }
+        }
 
-		Then("podcast state should be loading") {
-		  it.awaitItem().loading `should be equal to` true
-		}
-	  }
-	}
+        Then("podcast state should be loading") {
+          it.awaitItem().loading `should be equal to` true
+        }
+      }
+    }
 
-	Dispatchers.resetMain()
+    Dispatchers.resetMain()
   }
 })

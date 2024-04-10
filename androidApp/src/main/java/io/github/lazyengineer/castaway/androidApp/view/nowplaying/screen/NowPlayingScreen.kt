@@ -25,22 +25,22 @@ fun NowPlayingScreen(
   event: (NowPlayingEvent) -> Unit
 ) {
   LaunchedEffect(Unit) {
-	event(ObservePlayer)
+    event(ObservePlayer)
   }
 
   Surface(modifier = modifier.fillMaxSize()) {
-	when {
-	  state().loading -> NowPlayingLoadingScreen()
-	  state().episode != null -> {
-		NowPlayingMotionView(
-		  expandedPercentage = { expandedPercentage() },
-		  episode = { state().episode!! },
-		  playing = { state().playing },
-		  playbackSpeed = { state().playbackSpeed },
-		  event = remember { event }
-		)
-	  }
-	}
+    when {
+      state().loading -> NowPlayingLoadingScreen()
+      state().episode != null -> {
+        NowPlayingMotionView(
+          expandedPercentage = { expandedPercentage() },
+          episode = { state().episode!! },
+          playing = { state().playing },
+          playbackSpeed = { state().playbackSpeed },
+          event = remember { event }
+        )
+      }
+    }
   }
 }
 
@@ -49,29 +49,29 @@ fun NowPlayingScreen(
 @Composable
 fun NowPlayingScreenPreview() {
   CastawayTheme(MATERIAL, true) {
-	NowPlayingScreen(
-	  expandedPercentage = { 1f },
-	  state = {
-		NowPlayingState(
-		  loading = false,
-		  playing = true,
-		  buffering = false,
-		  played = false,
-		  playbackSpeed = 1.5f,
-		  episode = NowPlayingEpisode(
-			id = "uu1d",
-			title = "Awesome Episode 1",
-			subTitle = "How to be just awesome!",
-			description = "In this episode...",
-			audioUrl = "episode.url",
-			imageUrl = "image.url",
-			author = "Awesom-O",
-			playbackPosition = NowPlayingPosition(position = 1800000L, duration = 2160000L),
-			episode = 1,
-			podcastUrl = "pod.url"
-		  ),
-		)
-	  }
-	) {}
+    NowPlayingScreen(
+      expandedPercentage = { 1f },
+      state = {
+        NowPlayingState(
+          loading = false,
+          playing = true,
+          buffering = false,
+          played = false,
+          playbackSpeed = 1.5f,
+          episode = NowPlayingEpisode(
+            id = "uu1d",
+            title = "Awesome Episode 1",
+            subTitle = "How to be just awesome!",
+            description = "In this episode...",
+            audioUrl = "episode.url",
+            imageUrl = "image.url",
+            author = "Awesom-O",
+            playbackPosition = NowPlayingPosition(position = 1800000L, duration = 2160000L),
+            episode = 1,
+            podcastUrl = "pod.url"
+          ),
+        )
+      }
+    ) {}
   }
 }

@@ -35,80 +35,80 @@ class MediaNotificationManager(
   private val serviceScope = CoroutineScope(Dispatchers.Main + serviceJob)
 
   init {
-	val mediaController = MediaControllerCompat(context, sessionToken)
+    val mediaController = MediaControllerCompat(context, sessionToken)
 
-	notificationManager = PlayerNotificationManager.Builder(
-	  context,
-	  NOTIFICATION_ID, NOTIFICATION_CHANNEL_ID
-	)
-	  .setChannelNameResourceId(R.string.notification_channel_name)
-	  .setChannelDescriptionResourceId(R.string.notification_channel_description)
-	  .setMediaDescriptionAdapter(DescriptionAdapter(mediaController))
-	  .setNotificationListener(notificationListener)
-	  .build().apply {
-		setMediaSessionToken(sessionToken)
-		setSmallIcon(notificationIconResId)
-	  }
+    notificationManager = PlayerNotificationManager.Builder(
+      context,
+      NOTIFICATION_ID, NOTIFICATION_CHANNEL_ID
+    )
+      .setChannelNameResourceId(R.string.notification_channel_name)
+      .setChannelDescriptionResourceId(R.string.notification_channel_description)
+      .setMediaDescriptionAdapter(DescriptionAdapter(mediaController))
+      .setNotificationListener(notificationListener)
+      .build().apply {
+        setMediaSessionToken(sessionToken)
+        setSmallIcon(notificationIconResId)
+      }
   }
 
   fun hideNotification() {
-	notificationManager.setPlayer(null)
+    notificationManager.setPlayer(null)
   }
 
   fun showNotificationForPlayer(player: Player) {
-	notificationManager.setPlayer(player)
+    notificationManager.setPlayer(player)
   }
 
   private inner class DescriptionAdapter(private val controller: MediaControllerCompat) :
-	PlayerNotificationManager.MediaDescriptionAdapter {
+    PlayerNotificationManager.MediaDescriptionAdapter {
 
-	var currentIconUri: Uri? = null
-	var currentBitmap: Bitmap? = null
+    var currentIconUri: Uri? = null
+    var currentBitmap: Bitmap? = null
 
-	override fun createCurrentContentIntent(player: Player): PendingIntent? =
-	  controller.sessionActivity
+    override fun createCurrentContentIntent(player: Player): PendingIntent? =
+      controller.sessionActivity
 
-	override fun getCurrentContentText(player: Player) =
-	  controller.metadata?.description?.subtitle.toString()
+    override fun getCurrentContentText(player: Player) =
+      controller.metadata?.description?.subtitle.toString()
 
-	override fun getCurrentContentTitle(player: Player) =
-	  controller.metadata?.description?.title.toString()
+    override fun getCurrentContentTitle(player: Player) =
+      controller.metadata?.description?.title.toString()
 
-	override fun getCurrentLargeIcon(
-	  player: Player,
-	  callback: PlayerNotificationManager.BitmapCallback
-	): Bitmap? {
-	  val iconUri = controller.metadata?.description?.iconUri
-	  return if (currentIconUri != iconUri || currentBitmap == null) {
+    override fun getCurrentLargeIcon(
+      player: Player,
+      callback: PlayerNotificationManager.BitmapCallback
+    ): Bitmap? {
+      val iconUri = controller.metadata?.description?.iconUri
+      return if (currentIconUri != iconUri || currentBitmap == null) {
 
-		// Cache the bitmap for the current song so that successive calls to
-		// `getCurrentLargeIcon` don't cause the bitmap to be recreated.
-		currentIconUri = iconUri
-		serviceScope.launch {
-		  currentBitmap = iconUri?.let {
-			resolveUriAsBitmap(it)
-		  }
-		  currentBitmap?.let { callback.onBitmap(it) }
-		}
-		null
-	  } else {
-		currentBitmap
-	  }
-	}
+        // Cache the bitmap for the current song so that successive calls to
+        // `getCurrentLargeIcon` don't cause the bitmap to be recreated.
+        currentIconUri = iconUri
+        serviceScope.launch {
+          currentBitmap = iconUri?.let {
+            resolveUriAsBitmap(it)
+          }
+          currentBitmap?.let { callback.onBitmap(it) }
+        }
+        null
+      } else {
+        currentBitmap
+      }
+    }
 
-	private suspend fun resolveUriAsBitmap(uri: Uri): Bitmap? {
-	  return withContext(Dispatchers.IO) {
-		val request = ImageRequest.Builder(context)
-		  .data(uri)
-		  .placeholder(R.drawable.default_art)
-		  .size(NOTIFICATION_LARGE_ICON_SIZE)
-		  .build()
+    private suspend fun resolveUriAsBitmap(uri: Uri): Bitmap? {
+      return withContext(Dispatchers.IO) {
+        val request = ImageRequest.Builder(context)
+          .data(uri)
+          .placeholder(R.drawable.default_art)
+          .size(NOTIFICATION_LARGE_ICON_SIZE)
+          .build()
 
-		val result = imageLoader.execute(request)
+        val result = imageLoader.execute(request)
 
-		result.drawable?.let { (it as BitmapDrawable).bitmap }
-	  }
-	}
+        result.drawable?.let { (it as BitmapDrawable).bitmap }
+      }
+    }
   }
 }
 

@@ -14,15 +14,15 @@ import io.github.lazyengineer.castaway.androidApp.theme.CastawayTheme
 @Composable
 internal fun PlayButton(playing: Boolean, modifier: Modifier = Modifier, onClick: () -> Unit) {
   val playPauseImage = when (playing) {
-	true -> Filled.PauseCircleFilled
-	else -> Filled.PlayCircleFilled
+    true -> Filled.PauseCircleFilled
+    else -> Filled.PlayCircleFilled
   }
 
   Image(
-	imageVector = playPauseImage,
-	contentDescription = "play/pause",
-	contentScale = ContentScale.Fit,
-	colorFilter = ColorFilter.tint(CastawayTheme.colors.onBackground),
-	modifier = modifier.clickable { onClick() }
+    imageVector = playPauseImage,
+    contentDescription = "play/pause",
+    contentScale = ContentScale.Fit,
+    colorFilter = ColorFilter.tint(CastawayTheme.colors.onBackground),
+    modifier = modifier.clickable { onClick() }
   )
 }

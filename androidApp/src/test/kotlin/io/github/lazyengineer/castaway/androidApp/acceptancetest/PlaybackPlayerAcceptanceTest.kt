@@ -57,289 +57,289 @@ class PlaybackPlayerAcceptanceTest : BehaviorSpec({
   lateinit var state: StateReducerFlow<NowPlayingState, NowPlayingEvent>
 
   afterTest {
-	clearInvocations(
-	  mockRemoteDataSource,
-	  mockLocalDataSource,
-	)
-	fakeMediaServiceClient = FakeMediaServiceClient(mediaServiceConfig)
+    clearInvocations(
+      mockRemoteDataSource,
+      mockLocalDataSource,
+    )
+    fakeMediaServiceClient = FakeMediaServiceClient(mediaServiceConfig)
   }
 
   Given("the app starts") {
-	Scenario("Observing player status for the first time") {
-	  createViewModel(feedDataSource, fakeMediaServiceClient).also {
-		viewModel = it
-		state = it.nowPlayingState
-	  }
+    Scenario("Observing player status for the first time") {
+      createViewModel(feedDataSource, fakeMediaServiceClient).also {
+        viewModel = it
+        state = it.nowPlayingState
+      }
 
-	  val robot = StateFlowTurbineViewRobot(
-		scheduler = StandardTestDispatcher().scheduler,
-		stateFlow = state,
-	  )
-	  Given("the mini playback player is opened by the user") {
-		state.handleEvent(ObservePlayer)
+      val robot = StateFlowTurbineViewRobot(
+        scheduler = StandardTestDispatcher().scheduler,
+        stateFlow = state,
+      )
+      Given("the mini playback player is opened by the user") {
+        state.handleEvent(ObservePlayer)
 
-		When("the player is in its initial state") {
-		  robot.collect()
+        When("the player is in its initial state") {
+          robot.collect()
 
-		  Then("the user should see a loading indication") {
-			robot.listOfStates.last() `should be equal to` NowPlayingState.Initial.copy(loading = true)
-		  }
-		}
-	  }
-	}
+          Then("the user should see a loading indication") {
+            robot.listOfStates.last() `should be equal to` NowPlayingState.Initial.copy(loading = true)
+          }
+        }
+      }
+    }
 
-	Scenario("Playing a new episode") {
-	  createViewModel(feedDataSource, fakeMediaServiceClient).also {
-		viewModel = it
-		state = it.nowPlayingState
-	  }
+    Scenario("Playing a new episode") {
+      createViewModel(feedDataSource, fakeMediaServiceClient).also {
+        viewModel = it
+        state = it.nowPlayingState
+      }
 
-	  val robot = StateFlowTurbineViewRobot(
-		scheduler = StandardTestDispatcher().scheduler,
-		stateFlow = state,
-	  )
+      val robot = StateFlowTurbineViewRobot(
+        scheduler = StandardTestDispatcher().scheduler,
+        stateFlow = state,
+      )
 
-	  Given("the mini playback player is open") {
-		val episode = episode().toNowPlayingEpisode()
-		PreparePlayerUseCase(fakeMediaServiceClient).invoke(listOf(episode.toEpisode()))
-		state.handleEvent(ObservePlayer)
-		state.handleEvent(EpisodeLoaded(episode.toEpisode()))
+      Given("the mini playback player is open") {
+        val episode = episode().toNowPlayingEpisode()
+        PreparePlayerUseCase(fakeMediaServiceClient).invoke(listOf(episode.toEpisode()))
+        state.handleEvent(ObservePlayer)
+        state.handleEvent(EpisodeLoaded(episode.toEpisode()))
 
-		When("a new episode is chosen to play") {
-		  state.handleEvent(PlayPause(episode.id))
-		  robot.collectMostRecentItem()
+        When("a new episode is chosen to play") {
+          state.handleEvent(PlayPause(episode.id))
+          robot.collectMostRecentItem()
 
-		  Then("the mini playback player should display details of the new episode") {
-			robot.listOfStates.last().episode `should be equal to` episode.copy(
-			  playbackPosition = episode.playbackPosition.copy(
-				position = episode.playbackPosition.duration
-			  )
-			)
-		  }
-		  Then("the episode should start playing") {
-			robot.listOfStates.last().playing `should be equal to` true
-		  }
-		}
-	  }
-	}
+          Then("the mini playback player should display details of the new episode") {
+            robot.listOfStates.last().episode `should be equal to` episode.copy(
+              playbackPosition = episode.playbackPosition.copy(
+                position = episode.playbackPosition.duration
+              )
+            )
+          }
+          Then("the episode should start playing") {
+            robot.listOfStates.last().playing `should be equal to` true
+          }
+        }
+      }
+    }
 
-	Scenario("Toggling playback between play and pause") {
-	  createViewModel(feedDataSource, fakeMediaServiceClient).also {
-		viewModel = it
-		state = it.nowPlayingState
-	  }
+    Scenario("Toggling playback between play and pause") {
+      createViewModel(feedDataSource, fakeMediaServiceClient).also {
+        viewModel = it
+        state = it.nowPlayingState
+      }
 
-	  val robot = StateFlowTurbineViewRobot(
-		scheduler = StandardTestDispatcher().scheduler,
-		stateFlow = state,
-	  )
+      val robot = StateFlowTurbineViewRobot(
+        scheduler = StandardTestDispatcher().scheduler,
+        stateFlow = state,
+      )
 
-	  Given("an episode is playing on the mini playback player") {
-		val episode = episode()
-		PreparePlayerUseCase(fakeMediaServiceClient).invoke(listOf(episode))
-		state.handleEvent(ObservePlayer)
-		state.handleEvent(EpisodeLoaded(episode))
-		state.handleEvent(PlayPause(episode.id))
+      Given("an episode is playing on the mini playback player") {
+        val episode = episode()
+        PreparePlayerUseCase(fakeMediaServiceClient).invoke(listOf(episode))
+        state.handleEvent(ObservePlayer)
+        state.handleEvent(EpisodeLoaded(episode))
+        state.handleEvent(PlayPause(episode.id))
 
-		When("the user hits the play/pause button") {
-		  state.handleEvent(PlayPause(episode.id))
-		  robot.collectMostRecentItem()
+        When("the user hits the play/pause button") {
+          state.handleEvent(PlayPause(episode.id))
+          robot.collectMostRecentItem()
 
-		  Then("the episode playback should toggle between play and pause states") {
-			robot.listOfStates.last().playing `should be equal to` false
-		  }
-		}
-	  }
-	}
+          Then("the episode playback should toggle between play and pause states") {
+            robot.listOfStates.last().playing `should be equal to` false
+          }
+        }
+      }
+    }
 
-	Scenario("Changing the playback speed") {
-	  createViewModel(feedDataSource, fakeMediaServiceClient).also {
-		viewModel = it
-		state = it.nowPlayingState
-	  }
+    Scenario("Changing the playback speed") {
+      createViewModel(feedDataSource, fakeMediaServiceClient).also {
+        viewModel = it
+        state = it.nowPlayingState
+      }
 
-	  val robot = StateFlowTurbineViewRobot(
-		scheduler = StandardTestDispatcher().scheduler,
-		stateFlow = state,
-	  )
-	  Given("the mini playback player is actively playing an episode") {
-		val episode = episode()
-		PreparePlayerUseCase(fakeMediaServiceClient).invoke(listOf(episode))
-		state.handleEvent(ObservePlayer)
-		state.handleEvent(EpisodeLoaded(episode))
-		state.handleEvent(PlayPause(episode.id))
+      val robot = StateFlowTurbineViewRobot(
+        scheduler = StandardTestDispatcher().scheduler,
+        stateFlow = state,
+      )
+      Given("the mini playback player is actively playing an episode") {
+        val episode = episode()
+        PreparePlayerUseCase(fakeMediaServiceClient).invoke(listOf(episode))
+        state.handleEvent(ObservePlayer)
+        state.handleEvent(EpisodeLoaded(episode))
+        state.handleEvent(PlayPause(episode.id))
 
-		When("the user changes the playback speed to ‘<speed>‘") {
-		  state.handleEvent(EditPlaybackSpeed(2f))
-		  robot.collectMostRecentItem()
+        When("the user changes the playback speed to ‘<speed>‘") {
+          state.handleEvent(EditPlaybackSpeed(2f))
+          robot.collectMostRecentItem()
 
-		  Then("the playback speed of the episode should match '<speed>'") {
-			robot.listOfStates.last().playbackSpeed `should be equal to` 2f
-		  }
-		}
-	  }
-	}
+          Then("the playback speed of the episode should match '<speed>'") {
+            robot.listOfStates.last().playbackSpeed `should be equal to` 2f
+          }
+        }
+      }
+    }
 
-	Scenario("Modifying playback position") {
-	  createViewModel(feedDataSource, fakeMediaServiceClient).also {
-		viewModel = it
-		state = it.nowPlayingState
-	  }
+    Scenario("Modifying playback position") {
+      createViewModel(feedDataSource, fakeMediaServiceClient).also {
+        viewModel = it
+        state = it.nowPlayingState
+      }
 
-	  val robot = StateFlowTurbineViewRobot(
-		scheduler = StandardTestDispatcher().scheduler,
-		stateFlow = state,
-	  )
+      val robot = StateFlowTurbineViewRobot(
+        scheduler = StandardTestDispatcher().scheduler,
+        stateFlow = state,
+      )
 
-	  Given("an episode is paused on the mini playback player") {
-		val episode = episode()
-		val expectedPosition = episode.playbackPosition.duration - 1
-		whenever(mockLocalDataSource.saveEpisode(any())).thenReturn(DataResult.Success(episode))
-		PreparePlayerUseCase(fakeMediaServiceClient).invoke(listOf(episode))
-		state.handleEvent(ObservePlayer)
-		robot.collect()
-		state.handleEvent(EpisodeLoaded(episode))
-		robot.collect()
+      Given("an episode is paused on the mini playback player") {
+        val episode = episode()
+        val expectedPosition = episode.playbackPosition.duration - 1
+        whenever(mockLocalDataSource.saveEpisode(any())).thenReturn(DataResult.Success(episode))
+        PreparePlayerUseCase(fakeMediaServiceClient).invoke(listOf(episode))
+        state.handleEvent(ObservePlayer)
+        robot.collect()
+        state.handleEvent(EpisodeLoaded(episode))
+        robot.collect()
 
-		When("the user adjusts the playback position") {
-		  state.handleEvent(EditPlaybackPosition(expectedPosition))
-		  robot.collect()
+        When("the user adjusts the playback position") {
+          state.handleEvent(EditPlaybackPosition(expectedPosition))
+          robot.collect()
 
-		  Then("the episode should be able continue playing from the new position") {
-			robot.listOfStates.last().episode?.playbackPosition?.position `should be equal to` expectedPosition
-		  }
-		}
-	  }
-	}
+          Then("the episode should be able continue playing from the new position") {
+            robot.listOfStates.last().episode?.playbackPosition?.position `should be equal to` expectedPosition
+          }
+        }
+      }
+    }
 
-	Scenario("Seeking to a specific position") {
-	  createViewModel(feedDataSource, fakeMediaServiceClient).also {
-		viewModel = it
-		state = it.nowPlayingState
-	  }
+    Scenario("Seeking to a specific position") {
+      createViewModel(feedDataSource, fakeMediaServiceClient).also {
+        viewModel = it
+        state = it.nowPlayingState
+      }
 
-	  val robot = StateFlowTurbineViewRobot(
-		scheduler = StandardTestDispatcher().scheduler,
-		stateFlow = state,
-	  )
+      val robot = StateFlowTurbineViewRobot(
+        scheduler = StandardTestDispatcher().scheduler,
+        stateFlow = state,
+      )
 
-	  Given("an episode is playing on the mini playback player") {
-		val episode = episode()
-		val expectedPosition = episode.playbackPosition.duration - 1
-		PreparePlayerUseCase(fakeMediaServiceClient).invoke(listOf(episode))
-		state.handleEvent(ObservePlayer)
-		state.handleEvent(EpisodeLoaded(episode))
+      Given("an episode is playing on the mini playback player") {
+        val episode = episode()
+        val expectedPosition = episode.playbackPosition.duration - 1
+        PreparePlayerUseCase(fakeMediaServiceClient).invoke(listOf(episode))
+        state.handleEvent(ObservePlayer)
+        state.handleEvent(EpisodeLoaded(episode))
 
-		When("the user seeks to a specific position") {
-		  state.handleEvent(SeekTo(expectedPosition))
-		  robot.collectMostRecentItem()
+        When("the user seeks to a specific position") {
+          state.handleEvent(SeekTo(expectedPosition))
+          robot.collectMostRecentItem()
 
-		  Then("the playback should jump to the chosen position") {
-			robot.listOfStates.last().episode?.playbackPosition?.position `should be equal to` expectedPosition
-		  }
-		}
-	  }
-	}
+          Then("the playback should jump to the chosen position") {
+            robot.listOfStates.last().episode?.playbackPosition?.position `should be equal to` expectedPosition
+          }
+        }
+      }
+    }
 
-	Scenario("Using fast-forward functionality") {
-	  createViewModel(feedDataSource, fakeMediaServiceClient).also {
-		viewModel = it
-		state = it.nowPlayingState
-	  }
+    Scenario("Using fast-forward functionality") {
+      createViewModel(feedDataSource, fakeMediaServiceClient).also {
+        viewModel = it
+        state = it.nowPlayingState
+      }
 
-	  val robot = StateFlowTurbineViewRobot(
-		scheduler = StandardTestDispatcher().scheduler,
-		stateFlow = state,
-	  )
+      val robot = StateFlowTurbineViewRobot(
+        scheduler = StandardTestDispatcher().scheduler,
+        stateFlow = state,
+      )
 
-	  Given("an episode is paused on the mini playback player") {
-		val episode = episode()
-		PreparePlayerUseCase(fakeMediaServiceClient).invoke(listOf(episode))
-		state.handleEvent(ObservePlayer)
-		state.handleEvent(EpisodeLoaded(episode))
+      Given("an episode is paused on the mini playback player") {
+        val episode = episode()
+        PreparePlayerUseCase(fakeMediaServiceClient).invoke(listOf(episode))
+        state.handleEvent(ObservePlayer)
+        state.handleEvent(EpisodeLoaded(episode))
 
-		When("the user hits the fast-forward button") {
-		  state.handleEvent(FastForward)
-		  robot.collectMostRecentItem()
+        When("the user hits the fast-forward button") {
+          state.handleEvent(FastForward)
+          robot.collectMostRecentItem()
 
-		  Then("the playback should advance by the predefined interval") {
-			robot.listOfStates.last().episode?.playbackPosition?.position `should be equal to` mediaServiceConfig.fastForwardInterval
-		  }
-		}
-	  }
-	}
+          Then("the playback should advance by the predefined interval") {
+            robot.listOfStates.last().episode?.playbackPosition?.position `should be equal to` mediaServiceConfig.fastForwardInterval
+          }
+        }
+      }
+    }
 
-	Scenario("Using rewind functionality") {
-	  createViewModel(feedDataSource, fakeMediaServiceClient).also {
-		viewModel = it
-		state = it.nowPlayingState
-	  }
+    Scenario("Using rewind functionality") {
+      createViewModel(feedDataSource, fakeMediaServiceClient).also {
+        viewModel = it
+        state = it.nowPlayingState
+      }
 
-	  val robot = StateFlowTurbineViewRobot(
-		scheduler = StandardTestDispatcher().scheduler,
-		stateFlow = state,
-	  )
+      val robot = StateFlowTurbineViewRobot(
+        scheduler = StandardTestDispatcher().scheduler,
+        stateFlow = state,
+      )
 
-	  Given("an episode is paused on the mini playback player") {
-		val episode = episode()
-		PreparePlayerUseCase(fakeMediaServiceClient).invoke(listOf(episode))
-		state.handleEvent(ObservePlayer)
-		state.handleEvent(EpisodeLoaded(episode))
+      Given("an episode is paused on the mini playback player") {
+        val episode = episode()
+        PreparePlayerUseCase(fakeMediaServiceClient).invoke(listOf(episode))
+        state.handleEvent(ObservePlayer)
+        state.handleEvent(EpisodeLoaded(episode))
 
-		When("the playback position is greater than the rewind interval") {
-		  state.handleEvent(SeekTo(mediaServiceConfig.rewindInterval + 1))
+        When("the playback position is greater than the rewind interval") {
+          state.handleEvent(SeekTo(mediaServiceConfig.rewindInterval + 1))
 
-		  And("the user hits the rewind button") {
-			state.handleEvent(Rewind)
-			robot.collectMostRecentItem()
+          And("the user hits the rewind button") {
+            state.handleEvent(Rewind)
+            robot.collectMostRecentItem()
 
-			Then("the playback should go back by the predefined interval") {
-			  robot.listOfStates.last().episode?.playbackPosition?.position `should be equal to` 1
-			}
-		  }
-		}
-	  }
-	}
+            Then("the playback should go back by the predefined interval") {
+              robot.listOfStates.last().episode?.playbackPosition?.position `should be equal to` 1
+            }
+          }
+        }
+      }
+    }
 
-	Scenario("Handling errors during episode storage") {
-	  createViewModel(feedDataSource, fakeMediaServiceClient).also {
-		viewModel = it
-		state = it.nowPlayingState
-	  }
+    Scenario("Handling errors during episode storage") {
+      createViewModel(feedDataSource, fakeMediaServiceClient).also {
+        viewModel = it
+        state = it.nowPlayingState
+      }
 
-	  val robot = StateFlowTurbineViewRobot(
-		scheduler = StandardTestDispatcher().scheduler,
-		stateFlow = state,
-	  )
+      val robot = StateFlowTurbineViewRobot(
+        scheduler = StandardTestDispatcher().scheduler,
+        stateFlow = state,
+      )
 
-	  Given("the mini playback player has an episode loaded") {
-		When("there's an error storing the episode's playback details") {
-		  xThen("the user should be notified of the storage error") {
+      Given("the mini playback player has an episode loaded") {
+        When("there's an error storing the episode's playback details") {
+          xThen("the user should be notified of the storage error") {
 
-		  }
-		}
-	  }
-	}
+          }
+        }
+      }
+    }
 
-	Scenario("Successful storage of episode details") {
-	  createViewModel(feedDataSource, fakeMediaServiceClient).also {
-		viewModel = it
-		state = it.nowPlayingState
-	  }
+    Scenario("Successful storage of episode details") {
+      createViewModel(feedDataSource, fakeMediaServiceClient).also {
+        viewModel = it
+        state = it.nowPlayingState
+      }
 
-	  val robot = StateFlowTurbineViewRobot(
-		scheduler = StandardTestDispatcher().scheduler,
-		stateFlow = state,
-	  )
+      val robot = StateFlowTurbineViewRobot(
+        scheduler = StandardTestDispatcher().scheduler,
+        stateFlow = state,
+      )
 
-	  Given("the mini playback player has an episode loaded") {
-		When("the episode's playback details are stored successfully") {
-		  xThen("the user's episode playback progress should be saved") {
+      Given("the mini playback player has an episode loaded") {
+        When("the episode's playback details are stored successfully") {
+          xThen("the user's episode playback progress should be saved") {
 
-		  }
-		}
-	  }
-	}
+          }
+        }
+      }
+    }
   }
 })
 

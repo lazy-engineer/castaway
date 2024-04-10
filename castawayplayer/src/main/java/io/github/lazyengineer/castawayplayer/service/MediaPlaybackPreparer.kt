@@ -18,51 +18,52 @@ class MediaPlaybackPreparer(
 ) : MediaSessionConnector.PlaybackPreparer {
 
   override fun getSupportedPrepareActions(): Long =
-	PlaybackStateCompat.ACTION_PREPARE_FROM_MEDIA_ID or
-			PlaybackStateCompat.ACTION_PLAY_FROM_MEDIA_ID
+    PlaybackStateCompat.ACTION_PREPARE_FROM_MEDIA_ID or
+      PlaybackStateCompat.ACTION_PLAY_FROM_MEDIA_ID
 
   override fun onPrepare(playWhenReady: Boolean) = Unit
 
   override fun onPrepareFromMediaId(
-	mediaId: String,
-	playWhenReady: Boolean,
-	extras: Bundle?
+    mediaId: String,
+    playWhenReady: Boolean,
+    extras: Bundle?
   ) {
-	mediaSource.whenReady {
-	  val itemToPlay = mediaSource.find { item ->
-		item.mediaId == mediaId
-	  }
-	  if (itemToPlay == null) {
-		// TODO: Notify caller of the error.
-	  } else {
-		mediaItemPrepared(itemToPlay, playWhenReady, extras)
-	  }
-	}
+    mediaSource.whenReady {
+      val itemToPlay = mediaSource.find { item ->
+        item.mediaId == mediaId
+      }
+      if (itemToPlay == null) {
+        // TODO: Notify caller of the error.
+      } else {
+        mediaItemPrepared(itemToPlay, playWhenReady, extras)
+      }
+    }
   }
 
   override fun onPrepareFromSearch(
-	query: String,
-	playWhenReady: Boolean,
-	extras: Bundle?
+    query: String,
+    playWhenReady: Boolean,
+    extras: Bundle?
   ) = Unit
 
   override fun onPrepareFromUri(
-	uri: Uri,
-	playWhenReady: Boolean,
-	extras: Bundle?
+    uri: Uri,
+    playWhenReady: Boolean,
+    extras: Bundle?
   ) = Unit
 
   override fun onCommand(
-	player: Player,
-	command: String,
-	extras: Bundle?,
-	cb: ResultReceiver?
+    player: Player,
+    command: String,
+    extras: Bundle?,
+    cb: ResultReceiver?
   ): Boolean =
-	when (command) {
-	  PLAYBACK_SPEED_CHANGED -> {
-		extras?.let { playbackSpeedChanged(it.getFloat(PLAYBACK_SPEED)) }
-		true
-	  }
-	  else -> false
-	}
+    when (command) {
+      PLAYBACK_SPEED_CHANGED -> {
+        extras?.let { playbackSpeedChanged(it.getFloat(PLAYBACK_SPEED)) }
+        true
+      }
+
+      else -> false
+    }
 }

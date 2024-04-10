@@ -17,14 +17,15 @@ class StoreAndGetFeedUseCase(
 ) {
 
   suspend operator fun invoke(url: String): DataResult<FeedData> {
-	return when (val feedXmlResult = feedRepository.fetchXml(url)) {
-	  is DataResult.Success -> {
-		val feedData = feedParser.parseFeed(url, feedXmlResult.data)
-		feedRepository.saveFeed(feedData)
-	  }
-	  is DataResult.Error -> {
-		feedXmlResult
-	  }
-	}
+    return when (val feedXmlResult = feedRepository.fetchXml(url)) {
+      is DataResult.Success -> {
+        val feedData = feedParser.parseFeed(url, feedXmlResult.data)
+        feedRepository.saveFeed(feedData)
+      }
+
+      is DataResult.Error -> {
+        feedXmlResult
+      }
+    }
   }
 }

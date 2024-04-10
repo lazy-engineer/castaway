@@ -13,29 +13,29 @@ android {
   buildToolsVersion = App.buildTools
 
   defaultConfig {
-	minSdk = App.minSdk
-	targetSdk = App.targetSdk
+    minSdk = App.minSdk
+    targetSdk = App.targetSdk
 
-	testInstrumentationRunner = App.testRunner
-	consumerProguardFiles("consumer-rules.pro")
+    testInstrumentationRunner = App.testRunner
+    consumerProguardFiles("consumer-rules.pro")
   }
 
   buildTypes {
-	buildTypes {
-	  getByName("release") {
-		isMinifyEnabled = false
-		proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
-	  }
-	}
+    buildTypes {
+      getByName("release") {
+        isMinifyEnabled = false
+        proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
+      }
+    }
   }
 
   compileOptions {
-	sourceCompatibility(JavaVersion.VERSION_17)
-	targetCompatibility(JavaVersion.VERSION_17)
+    sourceCompatibility(JavaVersion.VERSION_17)
+    targetCompatibility(JavaVersion.VERSION_17)
   }
 
   kotlinOptions {
-	jvmTarget = "17"
+    jvmTarget = "17"
   }
   namespace = "io.github.lazyengineer.castawayplayer"
 }

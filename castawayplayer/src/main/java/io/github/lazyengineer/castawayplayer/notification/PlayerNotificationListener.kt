@@ -13,28 +13,28 @@ class PlayerNotificationListener(
   private var isForegroundService = false
 
   override fun onNotificationPosted(
-	notificationId: Int,
-	notification: Notification,
-	ongoing: Boolean
+    notificationId: Int,
+    notification: Notification,
+    ongoing: Boolean
   ) {
-	mediaService.apply {
-	  if (ongoing && !isForegroundService) {
-		ContextCompat.startForegroundService(
-		  applicationContext,
-		  Intent(applicationContext, this::class.java)
-		)
+    mediaService.apply {
+      if (ongoing && !isForegroundService) {
+        ContextCompat.startForegroundService(
+          applicationContext,
+          Intent(applicationContext, this::class.java)
+        )
 
-		startForeground(notificationId, notification)
-		isForegroundService = true
-	  }
-	}
+        startForeground(notificationId, notification)
+        isForegroundService = true
+      }
+    }
   }
 
   override fun onNotificationCancelled(notificationId: Int, dismissedByUser: Boolean) {
-	mediaService.apply {
-	  stopForeground(true)
-	  isForegroundService = false
-	  stopSelf()
-	}
+    mediaService.apply {
+      stopForeground(true)
+      isForegroundService = false
+      stopSelf()
+    }
   }
 }

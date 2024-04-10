@@ -92,12 +92,14 @@ object Library {
   const val gson = "com.google.code.gson:gson:${Version.gson}"
 
   object Ktor {
+
     const val ktor = "io.ktor:ktor-client-core:${Version.ktor}"
     const val ktorAndroid = "io.ktor:ktor-client-android:${Version.ktor}"
     const val ktorIOS = "io.ktor:ktor-client-darwin:${Version.ktor}"
   }
 
   object SqlDelight {
+
     const val sqldelight = "com.squareup.sqldelight:runtime:${Version.sqldelight}"
     const val sqldelightExt = "com.squareup.sqldelight:coroutines-extensions:${Version.sqldelight}"
     const val sqldelightAndroid = "com.squareup.sqldelight:android-driver:${Version.sqldelight}"
@@ -107,6 +109,7 @@ object Library {
   const val feedparser = "io.github.lazy-engineer:feedparser:${Version.feedparser}"
 
   object Compose {
+
     const val composeRuntime = "androidx.compose.runtime:runtime:${Version.compose}"
     const val composeLifecycleRuntime = "androidx.lifecycle:lifecycle-runtime-compose:${Version.composeLifecycleRuntime}"
     const val composeUi = "androidx.compose.ui:ui:${Version.compose}"

@@ -22,107 +22,108 @@ class EpisodeRowViewTest {
 
   @Test
   fun episodeRowTextView_shouldDisplayEpisodeRowStateTitle() {
-	composeTestRule.setContent {
-	  EpisodeRowView(
-		modifier = Modifier,
-		state = SIMPLE_EPISODE_ROW_VIEW_STATE,
-		onPlayPause = { },
-		onClick = { },
-	  )
-	}
+    composeTestRule.setContent {
+      EpisodeRowView(
+        modifier = Modifier,
+        state = SIMPLE_EPISODE_ROW_VIEW_STATE,
+        onPlayPause = { },
+        onClick = { },
+      )
+    }
 
-	composeTestRule.onNodeWithText(EPISODE_ROW_STATE_TITLE)
-	  .assertIsDisplayed()
+    composeTestRule.onNodeWithText(EPISODE_ROW_STATE_TITLE)
+      .assertIsDisplayed()
   }
 
   @Test
   fun episodeRowPlayIconView_shouldHasClickAction() {
-	composeTestRule.setContent {
-	  EpisodeRowView(
-		modifier = Modifier,
-		state = SIMPLE_EPISODE_ROW_VIEW_STATE,
-		onPlayPause = { },
-		onClick = { },
-	  )
-	}
+    composeTestRule.setContent {
+      EpisodeRowView(
+        modifier = Modifier,
+        state = SIMPLE_EPISODE_ROW_VIEW_STATE,
+        onPlayPause = { },
+        onClick = { },
+      )
+    }
 
-	composeTestRule.onNodeWithContentDescription("play/pause")
-	  .assertHasClickAction()
+    composeTestRule.onNodeWithContentDescription("play/pause")
+      .assertHasClickAction()
   }
 
   @Test
   fun episodeRowPlayIconView_shouldShowPauseImageIfPlaying() {
-	composeTestRule.setContent {
-	  EpisodeRowView(
-		modifier = Modifier,
-		state = SIMPLE_EPISODE_ROW_VIEW_STATE.copy(playing = true),
-		onPlayPause = { },
-		onClick = { },
-	  )
-	}
+    composeTestRule.setContent {
+      EpisodeRowView(
+        modifier = Modifier,
+        state = SIMPLE_EPISODE_ROW_VIEW_STATE.copy(playing = true),
+        onPlayPause = { },
+        onClick = { },
+      )
+    }
 
-	composeTestRule.onNodeWithContentDescription("play/pause")
-	  .assert(hasStateDescription(Filled.Pause.name))
+    composeTestRule.onNodeWithContentDescription("play/pause")
+      .assert(hasStateDescription(Filled.Pause.name))
   }
 
   @Test
   fun episodeRowPlayIconView_shouldShowPlayImageIfNotPlaying() {
-	composeTestRule.setContent {
-	  EpisodeRowView(
-		modifier = Modifier,
-		state = SIMPLE_EPISODE_ROW_VIEW_STATE.copy(playing = false),
-		onPlayPause = { },
-		onClick = { },
-	  )
-	}
+    composeTestRule.setContent {
+      EpisodeRowView(
+        modifier = Modifier,
+        state = SIMPLE_EPISODE_ROW_VIEW_STATE.copy(playing = false),
+        onPlayPause = { },
+        onClick = { },
+      )
+    }
 
-	composeTestRule.onNodeWithContentDescription("play/pause")
-	  .assert(hasStateDescription(Filled.PlayArrow.name))
+    composeTestRule.onNodeWithContentDescription("play/pause")
+      .assert(hasStateDescription(Filled.PlayArrow.name))
   }
 
   @Test
   fun episodeRowClickIconView_shouldCallOnPlayPauseCallback() {
-	var playing = false
+    var playing = false
 
-	composeTestRule.setContent {
-	  EpisodeRowView(
-		modifier = Modifier,
-		state = SIMPLE_EPISODE_ROW_VIEW_STATE.copy(playing = playing),
-		onPlayPause = { playing },
-		onClick = { },
-	  )
-	}
+    composeTestRule.setContent {
+      EpisodeRowView(
+        modifier = Modifier,
+        state = SIMPLE_EPISODE_ROW_VIEW_STATE.copy(playing = playing),
+        onPlayPause = { playing },
+        onClick = { },
+      )
+    }
 
-	composeTestRule.onNodeWithContentDescription("play/pause")
-	  .performClick()
+    composeTestRule.onNodeWithContentDescription("play/pause")
+      .performClick()
 
-	assert(playing)
+    assert(playing)
   }
 
   @Test
   fun episodeRowView_shouldDisplayPlaybackProgressView() {
-	composeTestRule.setContent {
-	  EpisodeRowView(
-		modifier = Modifier,
-		state = SIMPLE_EPISODE_ROW_VIEW_STATE,
-		onPlayPause = { },
-		onClick = { },
-	  )
-	}
+    composeTestRule.setContent {
+      EpisodeRowView(
+        modifier = Modifier,
+        state = SIMPLE_EPISODE_ROW_VIEW_STATE,
+        onPlayPause = { },
+        onClick = { },
+      )
+    }
 
-	composeTestRule.onNodeWithContentDescription("${SIMPLE_EPISODE_ROW_VIEW_STATE.progress.times( 100)}% playback progress")
-	  .assertExists() // .assertIsDisplayed() Fails maybe cause of -> TO DO: check semantics hidden property
+    composeTestRule.onNodeWithContentDescription("${SIMPLE_EPISODE_ROW_VIEW_STATE.progress.times(100)}% playback progress")
+      .assertExists() // .assertIsDisplayed() Fails maybe cause of -> TO DO: check semantics hidden property
   }
 
   companion object {
-	private const val EPISODE_ROW_STATE_TITLE = "Test Episode"
+
+    private const val EPISODE_ROW_STATE_TITLE = "Test Episode"
     private val SIMPLE_EPISODE_ROW_VIEW_STATE = EpisodeRowState(
-	  playing = false,
-	  title = EPISODE_ROW_STATE_TITLE,
-	  progress = .3f,
-	  buffering = false,
-	  downloading = false,
-	  played = false,
-	)
+      playing = false,
+      title = EPISODE_ROW_STATE_TITLE,
+      progress = .3f,
+      buffering = false,
+      downloading = false,
+      played = false,
+    )
   }
 }

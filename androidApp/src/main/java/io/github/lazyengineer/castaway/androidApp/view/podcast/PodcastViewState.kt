@@ -13,7 +13,7 @@ data class PodcastViewState(
 
   companion object {
 
-	val Initial = PodcastViewState()
+    val Initial = PodcastViewState()
   }
 }
 

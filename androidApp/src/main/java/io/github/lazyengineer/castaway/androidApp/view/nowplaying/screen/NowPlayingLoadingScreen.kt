@@ -19,11 +19,11 @@ internal fun NowPlayingLoadingScreen(
   modifier: Modifier = Modifier,
 ) {
   Column(
-	modifier = modifier.background(CastawayTheme.colors.background),
-	verticalArrangement = Arrangement.Center,
-	horizontalAlignment = Alignment.CenterHorizontally
+    modifier = modifier.background(CastawayTheme.colors.background),
+    verticalArrangement = Arrangement.Center,
+    horizontalAlignment = Alignment.CenterHorizontally
   ) {
-	Text(text = "Loading...", color = CastawayTheme.colors.onBackground, fontSize = 34.sp, fontWeight = FontWeight.Bold)
+    Text(text = "Loading...", color = CastawayTheme.colors.onBackground, fontSize = 34.sp, fontWeight = FontWeight.Bold)
   }
 }
 
@@ -31,6 +31,6 @@ internal fun NowPlayingLoadingScreen(
 @Composable
 fun NowPlayingScreenLoadingPreview() {
   CastawayTheme(MATERIAL, true) {
-	NowPlayingScreen(state = { NowPlayingState.Initial }) {}
+    NowPlayingScreen(state = { NowPlayingState.Initial }) {}
   }
 }

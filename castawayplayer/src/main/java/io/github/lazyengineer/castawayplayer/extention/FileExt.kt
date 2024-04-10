@@ -6,10 +6,10 @@ import java.io.File
 
 fun File.asAlbumArtContentUri(): Uri {
   return Uri.Builder()
-	.scheme(ContentResolver.SCHEME_CONTENT)
-	.authority(AUTHORITY)
-	.appendPath(this.path)
-	.build()
+    .scheme(ContentResolver.SCHEME_CONTENT)
+    .authority(AUTHORITY)
+    .appendPath(this.path)
+    .build()
 }
 
 private const val AUTHORITY = "io.github.lazyengineer.castawayplayer.provider"

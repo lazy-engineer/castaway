@@ -8,6 +8,6 @@ class RewindPlaybackUseCase(
 ) {
 
   operator fun invoke() {
-	castawayPlayer.dispatchMediaServiceEvent(MediaServiceEvent.Rewind)
+    castawayPlayer.dispatchMediaServiceEvent(MediaServiceEvent.Rewind)
   }
 }

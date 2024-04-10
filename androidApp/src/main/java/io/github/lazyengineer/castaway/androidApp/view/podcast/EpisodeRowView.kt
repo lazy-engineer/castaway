@@ -36,12 +36,12 @@ fun EpisodeRowView(
   onClick: () -> Unit
 ) {
   EpisodeRowView(
-	modifier = modifier,
-	playing = state.playing,
-	title = state.title,
-	progress = state.progress,
-	onPlayPause = onPlayPause,
-	onClick = onClick
+    modifier = modifier,
+    playing = state.playing,
+    title = state.title,
+    progress = state.progress,
+    onPlayPause = onPlayPause,
+    onClick = onClick
   )
 }
 
@@ -55,57 +55,57 @@ fun EpisodeRowView(
   onClick: () -> Unit,
 ) {
   Column(modifier = modifier) {
-	Row(
-	  modifier = Modifier
-		.padding(16.dp)
-		.clickable(onClick = onClick),
-	  horizontalArrangement = Arrangement.SpaceBetween,
-	  verticalAlignment = Alignment.CenterVertically,
-	) {
-	  Text(
-		text = title,
-		color = CastawayTheme.colors.onBackground,
-		modifier = Modifier.weight(5f)
-	  )
+    Row(
+      modifier = Modifier
+        .padding(16.dp)
+        .clickable(onClick = onClick),
+      horizontalArrangement = Arrangement.SpaceBetween,
+      verticalAlignment = Alignment.CenterVertically,
+    ) {
+      Text(
+        text = title,
+        color = CastawayTheme.colors.onBackground,
+        modifier = Modifier.weight(5f)
+      )
 
-	  val playPauseImage = when (playing) {
-		true -> Filled.Pause
-		else -> Filled.PlayArrow
-	  }
+      val playPauseImage = when (playing) {
+        true -> Filled.Pause
+        else -> Filled.PlayArrow
+      }
 
-	  Surface(
-		color = CastawayTheme.colors.background,
-		modifier = Modifier
-		  .weight(1f)
-		  .padding(8.dp)
-	  ) {
-		Icon(
-		  imageVector = playPauseImage,
-		  contentDescription = "play/pause",
-		  tint = CastawayTheme.colors.onBackground,
-		  modifier = Modifier
-			.clip(CircleShape)
-			.clickable(onClick = onPlayPause)
-			.semantics {
-			  stateDescription = playPauseImage.name
-			}
-		)
-	  }
-	}
+      Surface(
+        color = CastawayTheme.colors.background,
+        modifier = Modifier
+          .weight(1f)
+          .padding(8.dp)
+      ) {
+        Icon(
+          imageVector = playPauseImage,
+          contentDescription = "play/pause",
+          tint = CastawayTheme.colors.onBackground,
+          modifier = Modifier
+            .clip(CircleShape)
+            .clickable(onClick = onPlayPause)
+            .semantics {
+              stateDescription = playPauseImage.name
+            }
+        )
+      }
+    }
 
-	PlaybackProgressView(
-	  modifier = Modifier
-		.fillMaxWidth()
-		.padding(horizontal = 16.dp)
-		.padding(bottom = 16.dp)
-		.testTag("playback_progress")
-		.semantics {
-		  contentDescription = "${progress.times(100)}% playback progress"
-		},
-	  playbackPosition = progress,
-	)
+    PlaybackProgressView(
+      modifier = Modifier
+        .fillMaxWidth()
+        .padding(horizontal = 16.dp)
+        .padding(bottom = 16.dp)
+        .testTag("playback_progress")
+        .semantics {
+          contentDescription = "${progress.times(100)}% playback progress"
+        },
+      playbackPosition = progress,
+    )
 
-	Divider(color = CastawayTheme.colors.onBackground.copy(alpha = 0.12f))
+    Divider(color = CastawayTheme.colors.onBackground.copy(alpha = 0.12f))
   }
 }
 
@@ -113,7 +113,7 @@ fun EpisodeRowView(
 @Composable
 fun EpisodeRowViewEmptyPreview() {
   CastawayTheme(MATERIAL, false) {
-	EpisodeRowView(state = EpisodeRowState.Empty, onPlayPause = {}) {}
+    EpisodeRowView(state = EpisodeRowState.Empty, onPlayPause = {}) {}
   }
 }
 
@@ -121,16 +121,16 @@ fun EpisodeRowViewEmptyPreview() {
 @Composable
 fun EpisodeRowViewPreview() {
   CastawayTheme(MATERIAL, true) {
-	EpisodeRowView(
-	  state = EpisodeRowState(
-		playing = true,
-		title = "Awesome Episode 1",
-		progress = .3f,
-		buffering = false,
-		downloading = false,
-		played = false,
-	  ),
-	  onPlayPause = {}
-	) {}
+    EpisodeRowView(
+      state = EpisodeRowState(
+        playing = true,
+        title = "Awesome Episode 1",
+        progress = .3f,
+        buffering = false,
+        downloading = false,
+        played = false,
+      ),
+      onPlayPause = {}
+    ) {}
   }
 }

@@ -15,10 +15,10 @@ internal fun PlaybackSpeed(
   event: (NowPlayingEvent) -> Unit
 ) {
   Text(
-	text = "${playbackSpeed}x",
-	color = CastawayTheme.colors.onBackground,
-	modifier = modifier
-	  .clickable {
-		event(EditPlaybackSpeed(2f))
-	  })
+    text = "${playbackSpeed}x",
+    color = CastawayTheme.colors.onBackground,
+    modifier = modifier
+      .clickable {
+        event(EditPlaybackSpeed(2f))
+      })
 }

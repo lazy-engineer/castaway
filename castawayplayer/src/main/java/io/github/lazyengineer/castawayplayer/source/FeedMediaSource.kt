@@ -15,34 +15,34 @@ class FeedMediaSource private constructor(
   override suspend fun saveRecent() = localDataSource.saveRecentPlaylist(currentPlaylistFlow.value)
 
   private fun playlistState() {
-	val playlist = currentPlaylistFlow.value
+    val playlist = currentPlaylistFlow.value
 
-	state = if (playlist.isNotEmpty()) {
-	  STATE_INITIALIZED
-	} else {
-	  STATE_ERROR
-	}
+    state = if (playlist.isNotEmpty()) {
+      STATE_INITIALIZED
+    } else {
+      STATE_ERROR
+    }
   }
 
   fun prepare(playlist: () -> List<MediaData>) {
-	prepare(playlist())
+    prepare(playlist())
   }
 
   fun prepare(playlist: List<MediaData>) {
-	currentPlaylistFlow.value = playlist
-	playlistState()
+    currentPlaylistFlow.value = playlist
+    playlistState()
   }
 
   companion object {
 
-	@Volatile
-	private var INSTANCE: FeedMediaSource? = null
+    @Volatile
+    private var INSTANCE: FeedMediaSource? = null
 
-	fun getInstance(localDataSource: LocalDataSource): FeedMediaSource {
-	  return INSTANCE ?: synchronized(this) {
-		INSTANCE ?: FeedMediaSource(localDataSource = localDataSource)
-		  .also { INSTANCE = it }
-	  }
-	}
+    fun getInstance(localDataSource: LocalDataSource): FeedMediaSource {
+      return INSTANCE ?: synchronized(this) {
+        INSTANCE ?: FeedMediaSource(localDataSource = localDataSource)
+          .also { INSTANCE = it }
+      }
+    }
   }
 }

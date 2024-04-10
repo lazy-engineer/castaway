@@ -32,12 +32,12 @@ fun TextButton(
   onClick: () -> Unit
 ) {
   TextButton(
-	modifier = modifier,
-	color = color,
-	shape = shape,
-	onClick = onClick
+    modifier = modifier,
+    color = color,
+    shape = shape,
+    onClick = onClick
   ) {
-	this.ButtonText(text = text, color = textColor)
+    this.ButtonText(text = text, color = textColor)
   }
 }
 
@@ -51,12 +51,12 @@ fun GradientTextButton(
   onClick: () -> Unit
 ) {
   TextButton(
-	modifier = modifier,
-	gradient = gradient,
-	shape = shape,
-	onClick = onClick
+    modifier = modifier,
+    gradient = gradient,
+    shape = shape,
+    onClick = onClick
   ) {
-	this.ButtonText(text = text, color = textColor)
+    this.ButtonText(text = text, color = textColor)
   }
 }
 
@@ -70,25 +70,25 @@ internal fun TextButton(
   text: @Composable TextButtonScope.() -> Unit
 ) {
   Button(
-	colors = ButtonDefaults.buttonColors(
-	  backgroundColor = Color.Transparent
-	),
-	contentPadding = PaddingValues(),
-	shape = shape,
-	onClick = onClick
+    colors = ButtonDefaults.buttonColors(
+      backgroundColor = Color.Transparent
+    ),
+    contentPadding = PaddingValues(),
+    shape = shape,
+    onClick = onClick
   ) {
-	val backgroundModifier = if (gradient != null) {
-	  modifier.background(gradient)
-	} else {
-	  color?.let { modifier.background(color) } ?: modifier
-	}
-	Box(
-	  modifier = backgroundModifier
-		.padding(horizontal = 16.dp, vertical = 8.dp),
-	  contentAlignment = Alignment.Center
-	) {
-	  TextButtonScope.text()
-	}
+    val backgroundModifier = if (gradient != null) {
+      modifier.background(gradient)
+    } else {
+      color?.let { modifier.background(color) } ?: modifier
+    }
+    Box(
+      modifier = backgroundModifier
+        .padding(horizontal = 16.dp, vertical = 8.dp),
+      contentAlignment = Alignment.Center
+    ) {
+      TextButtonScope.text()
+    }
   }
 }
 
@@ -97,7 +97,7 @@ interface TextButtonScope {
 
   @Composable
   fun ButtonText(text: String, color: Color) {
-	Text(text = text, color = color)
+    Text(text = text, color = color)
   }
 
   companion object : TextButtonScope
@@ -107,9 +107,9 @@ interface TextButtonScope {
 @Composable
 fun TextButtonPreview() {
   TextButton(
-	modifier = Modifier,
-	text = "Some Button Text",
-	color = CastawayTheme.colors.surface,
+    modifier = Modifier,
+    text = "Some Button Text",
+    color = CastawayTheme.colors.surface,
   ) {}
 }
 
@@ -117,16 +117,16 @@ fun TextButtonPreview() {
 @Composable
 fun GradientTextButtonPreview() {
   GradientTextButton(
-	modifier = Modifier,
-	text = "Some Button Text",
-	textColor = Color.White,
-	shape = RoundedCornerShape(8.dp),
-	gradient = Brush.linearGradient(
-	  listOf(
-		Colors.azurGradientStart.toColor(),
-		Colors.azurGradientMiddle.toColor(),
-		Colors.azurGradientEnd.toColor(),
-	  )
-	),
+    modifier = Modifier,
+    text = "Some Button Text",
+    textColor = Color.White,
+    shape = RoundedCornerShape(8.dp),
+    gradient = Brush.linearGradient(
+      listOf(
+        Colors.azurGradientStart.toColor(),
+        Colors.azurGradientMiddle.toColor(),
+        Colors.azurGradientEnd.toColor(),
+      )
+    ),
   ) {}
 }

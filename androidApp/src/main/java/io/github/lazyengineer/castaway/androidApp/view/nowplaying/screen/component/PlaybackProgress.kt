@@ -31,49 +31,49 @@ internal fun PlaybackProgress(
 ) {
 
   val sliderExpandedPercentage by animateFloatAsState(
-	targetValue = expandedPercentage(),
-	label = "playbackProgress"
+    targetValue = expandedPercentage(),
+    label = "playbackProgress"
   )
 
   val playbackProgress = playbackProgress(
-	playbackPosition().safePosition,
-	playbackPosition().duration
+    playbackPosition().safePosition,
+    playbackPosition().duration
   )
 
   if (sliderExpandedPercentage >= 0.75f) {
-	Column(modifier = modifier.fillMaxWidth()) {
-	  Row(
-		modifier = Modifier.fillMaxWidth(),
-		horizontalArrangement = Arrangement.SpaceBetween
-	  ) {
-		Text(playbackPosition().safePosition.millisToTxt(), color = CastawayTheme.colors.onBackground)
-		Text(playbackPosition().duration.millisToTxt(), color = CastawayTheme.colors.onBackground)
-	  }
+    Column(modifier = modifier.fillMaxWidth()) {
+      Row(
+        modifier = Modifier.fillMaxWidth(),
+        horizontalArrangement = Arrangement.SpaceBetween
+      ) {
+        Text(playbackPosition().safePosition.millisToTxt(), color = CastawayTheme.colors.onBackground)
+        Text(playbackPosition().duration.millisToTxt(), color = CastawayTheme.colors.onBackground)
+      }
 
-	  PlaybackSliderView(
-		modifier = Modifier.fillMaxWidth(),
-		progress = playbackProgress,
-		onValueChange = {
-		  event(
-			EditPlaybackPosition(
-			  it.progressToPosition(
-				playbackPosition().duration
-			  )
-			)
-		  )
-		},
-		onValueChangeStarted = {
-		  event(EditingPlayback(true))
-		},
-		onValueChangeFinished = {
-		  event(SeekTo(playbackPosition().safePosition))
-		  event(EditingPlayback(false))
-		})
-	}
+      PlaybackSliderView(
+        modifier = Modifier.fillMaxWidth(),
+        progress = playbackProgress,
+        onValueChange = {
+          event(
+            EditPlaybackPosition(
+              it.progressToPosition(
+                playbackPosition().duration
+              )
+            )
+          )
+        },
+        onValueChangeStarted = {
+          event(EditingPlayback(true))
+        },
+        onValueChangeFinished = {
+          event(SeekTo(playbackPosition().safePosition))
+          event(EditingPlayback(false))
+        })
+    }
   } else {
-	PlaybackProgressView(
-	  modifier = modifier.fillMaxWidth(),
-	  playbackPosition = playbackProgress,
-	)
+    PlaybackProgressView(
+      modifier = modifier.fillMaxWidth(),
+      playbackPosition = playbackProgress,
+    )
   }
 }

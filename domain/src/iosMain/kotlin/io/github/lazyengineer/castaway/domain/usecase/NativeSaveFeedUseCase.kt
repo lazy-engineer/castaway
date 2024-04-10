@@ -13,15 +13,15 @@ class NativeSaveFeedUseCase(
   val coroutineScope = MainScope(Dispatchers.Main)
 
   fun subscribe(
-	feedData: FeedData,
-	scope: CoroutineScope,
-	onSuccess: (FeedData) -> Unit,
-	onError: (String) -> Unit,
+    feedData: FeedData,
+    scope: CoroutineScope,
+    onSuccess: (FeedData) -> Unit,
+    onError: (String) -> Unit,
   ) = UseCaseWrapper<FeedData, FeedData> {
-	saveFeedUseCase(feedData)
+    saveFeedUseCase(feedData)
   }.subscribe(scope, onSuccess, onError)
 
   fun onDestroy() {
-	coroutineScope.onDestroy()
+    coroutineScope.onDestroy()
   }
 }

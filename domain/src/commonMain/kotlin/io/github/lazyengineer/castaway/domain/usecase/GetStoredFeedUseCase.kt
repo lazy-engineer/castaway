@@ -9,6 +9,6 @@ class GetStoredFeedUseCase(
 ) {
 
   suspend operator fun invoke(feedUrl: String): DataResult<FeedData> {
-	return feedRepository.loadLocally(feedUrl)
+    return feedRepository.loadLocally(feedUrl)
   }
 }

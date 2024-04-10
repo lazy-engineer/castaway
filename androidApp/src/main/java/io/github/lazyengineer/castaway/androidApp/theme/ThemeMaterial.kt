@@ -16,13 +16,13 @@ fun ThemeMaterial(darkTheme: Boolean = isSystemInDarkTheme(), content: @Composab
   val sharedColorPalette = MaterialColorPalette(darkTheme)
 
   ProvideCastawayColors(colorsPalette = sharedColorPalette) {
-	MaterialTheme(
-	  colors = debugColors(darkTheme)
-	) {
-	  CompositionLocalProvider(LocalRippleTheme provides CastawayRippleTheme) {
-		content()
-	  }
-	}
+    MaterialTheme(
+      colors = debugColors(darkTheme)
+    ) {
+      CompositionLocalProvider(LocalRippleTheme provides CastawayRippleTheme) {
+        content()
+      }
+    }
   }
 }
 
@@ -37,7 +37,7 @@ object CastawayRippleTheme : RippleTheme {
 
   @Composable
   override fun rippleAlpha(): RippleAlpha = RippleTheme.defaultRippleAlpha(
-	Color.Black,
-	lightTheme = !isSystemInDarkTheme()
+    Color.Black,
+    lightTheme = !isSystemInDarkTheme()
   )
 }

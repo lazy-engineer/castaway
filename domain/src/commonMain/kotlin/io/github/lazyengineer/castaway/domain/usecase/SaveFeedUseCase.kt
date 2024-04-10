@@ -9,6 +9,6 @@ class SaveFeedUseCase(
 ) {
 
   suspend operator fun invoke(feed: FeedData): DataResult<FeedData> {
-	return feedRepository.saveFeed(feed)
+    return feedRepository.saveFeed(feed)
   }
 }

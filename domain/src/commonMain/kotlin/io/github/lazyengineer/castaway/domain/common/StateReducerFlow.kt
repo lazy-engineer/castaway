@@ -34,22 +34,22 @@ private class StateReducerFlowImpl<STATE, EVENT>(
   private val events = Channel<EVENT>(BUFFERED)
 
   private val stateFlow = events
-	.receiveAsFlow()
-	.runningFold(initialState, reduceState)
-	.stateIn(scope, Eagerly, initialState)
+    .receiveAsFlow()
+    .runningFold(initialState, reduceState)
+    .stateIn(scope, Eagerly, initialState)
 
   override val replayCache get() = stateFlow.replayCache
 
   override val value get() = stateFlow.value
 
   override suspend fun collect(collector: FlowCollector<STATE>): Nothing {
-	stateFlow.collect(collector)
+    stateFlow.collect(collector)
   }
 
   override fun handleEvent(event: EVENT) {
-	val delivered = events.trySend(event).isSuccess
-	if (!delivered) {
-	  error("Missed event $event! You are doing something wrong during state transformation.")
-	}
+    val delivered = events.trySend(event).isSuccess
+    if (!delivered) {
+      error("Missed event $event! You are doing something wrong during state transformation.")
+    }
   }
 }

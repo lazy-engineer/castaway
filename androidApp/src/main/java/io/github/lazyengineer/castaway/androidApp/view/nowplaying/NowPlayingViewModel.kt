@@ -22,7 +22,6 @@ import io.github.lazyengineer.castaway.androidApp.view.nowplaying.NowPlayingEven
 import io.github.lazyengineer.castaway.androidApp.view.nowplaying.NowPlayingEvent.Playing
 import io.github.lazyengineer.castaway.androidApp.view.nowplaying.NowPlayingEvent.Rewind
 import io.github.lazyengineer.castaway.androidApp.view.nowplaying.NowPlayingEvent.SeekTo
-import io.github.lazyengineer.castaway.domain.common.StateReducerFlow
 import io.github.lazyengineer.castaway.domain.common.stateReducerFlow
 import io.github.lazyengineer.castaway.domain.entity.Episode
 import io.github.lazyengineer.castaway.domain.entity.common.DataResult.Error
@@ -49,127 +48,128 @@ class NowPlayingViewModel(
 ) : ViewModel() {
 
   val nowPlayingState = stateReducerFlow(
-	initialState = NowPlayingState.Initial,
-	reduceState = ::reduceState,
+    initialState = NowPlayingState.Initial,
+    reduceState = ::reduceState,
   )
 
+  @Suppress("CyclomaticComplexMethod")
   private fun reduceState(currentState: NowPlayingState, event: NowPlayingEvent): NowPlayingState {
-	return when (event) {
-	  is ObservePlayer -> {
-		collectPlayerState()
-		currentState.copy(loading = true)
-	  }
+    return when (event) {
+      is ObservePlayer -> {
+        collectPlayerState()
+        currentState.copy(loading = true)
+      }
 
-	  is EditPlaybackSpeed -> {
-		playbackSpeedUseCase(event.speed)
-		currentState.copy(playbackSpeed = event.speed)
-	  }
+      is EditPlaybackSpeed -> {
+        playbackSpeedUseCase(event.speed)
+        currentState.copy(playbackSpeed = event.speed)
+      }
 
-	  is EditPlaybackPosition -> {
-		currentState.episode?.let { episode ->
-		  val updatedEpisode = episode.copy(
-			playbackPosition = episode.playbackPosition.copy(position = event.positionMillis)
-		  )
+      is EditPlaybackPosition -> {
+        currentState.episode?.let { episode ->
+          val updatedEpisode = episode.copy(
+            playbackPosition = episode.playbackPosition.copy(position = event.positionMillis)
+          )
 
-		  currentState.copy(episode = updatedEpisode)
-		} ?: currentState
-	  }
+          currentState.copy(episode = updatedEpisode)
+        } ?: currentState
+      }
 
-	  is EditingPlayback -> {
-		currentState.copy(editing = event.editing)
-	  }
+      is EditingPlayback -> {
+        currentState.copy(editing = event.editing)
+      }
 
-	  is PlayPause -> {
-		playOrPause(event.itemId)
-		currentState.copy(buffering = true)
-	  }
+      is PlayPause -> {
+        playOrPause(event.itemId)
+        currentState.copy(buffering = true)
+      }
 
-	  is Playing -> {
-		currentState.copy(playing = event.playing)
-	  }
+      is Playing -> {
+        currentState.copy(playing = event.playing)
+      }
 
-	  is SeekTo -> {
-		seekToUseCase(event.positionMillis)
-		currentState.copy(buffering = true)
-	  }
+      is SeekTo -> {
+        seekToUseCase(event.positionMillis)
+        currentState.copy(buffering = true)
+      }
 
-	  FastForward -> {
-		fastForwardPlaybackUseCase()
-		currentState.copy(buffering = true)
-	  }
+      FastForward -> {
+        fastForwardPlaybackUseCase()
+        currentState.copy(buffering = true)
+      }
 
-	  Rewind -> {
-		rewindPlaybackUseCase()
-		currentState.copy(buffering = true)
-	  }
+      Rewind -> {
+        rewindPlaybackUseCase()
+        currentState.copy(buffering = true)
+      }
 
-	  is EpisodeLoaded -> {
-		currentState.copy(loading = false, episode = event.episode.toNowPlayingEpisode())
-	  }
+      is EpisodeLoaded -> {
+        currentState.copy(loading = false, episode = event.episode.toNowPlayingEpisode())
+      }
 
-	  is EpisodeUpdated -> {
-		if (event.episode != nowPlayingState.value.episode?.toEpisode()) {
-		  storeEpisode(event.episode)
-		}
+      is EpisodeUpdated -> {
+        if (event.episode != nowPlayingState.value.episode?.toEpisode()) {
+          storeEpisode(event.episode)
+        }
 
-		currentState.copy(buffering = false, episode = event.episode.toNowPlayingEpisode())
-	  }
-	}
+        currentState.copy(buffering = false, episode = event.episode.toNowPlayingEpisode())
+      }
+    }
   }
 
   private val playerState: StateFlow<PlayerState> = playerStateUseCase()
-	.stateIn(viewModelScope, SharingStarted.Lazily, PlayerState.Initial)
+    .stateIn(viewModelScope, SharingStarted.Lazily, PlayerState.Initial)
 
   private fun collectPlayerState() {
-	viewModelScope.launch {
-	  playerState.collectLatest { state ->
-		if (state.prepared) {
-		  if (state.mediaData != null && !nowPlayingState.value.editing) handleMediaData(nowPlayingState.value, state.mediaData, state.playbackSpeed)
-		  if (state.playing != nowPlayingState.value.playing) nowPlayingState.handleEvent(Playing(state.playing))
-		}
-	  }
-	}
+    viewModelScope.launch {
+      playerState.collectLatest { state ->
+        if (state.prepared) {
+          if (state.mediaData != null && !nowPlayingState.value.editing) handleMediaData(nowPlayingState.value, state.mediaData, state.playbackSpeed)
+          if (state.playing != nowPlayingState.value.playing) nowPlayingState.handleEvent(Playing(state.playing))
+        }
+      }
+    }
   }
 
   private fun handleMediaData(playingState: NowPlayingState, mediaData: MediaData, playbackSpeed: Float = 1f) {
-	if (playingState.episode != null && playingState.episode.id == mediaData.mediaId) {
-	  val updatedEpisode = playingState.episode.copy(
-		playbackPosition = NowPlayingPosition(
-		  position = mediaData.playbackPosition,
-		  duration = mediaData.duration ?: playingState.episode.playbackPosition.duration,
-		)
-	  )
+    if (playingState.episode != null && playingState.episode.id == mediaData.mediaId) {
+      val updatedEpisode = playingState.episode.copy(
+        playbackPosition = NowPlayingPosition(
+          position = mediaData.playbackPosition,
+          duration = mediaData.duration ?: playingState.episode.playbackPosition.duration,
+        )
+      )
 
-	  nowPlayingState.handleEvent(EpisodeUpdated(updatedEpisode.toEpisode()))
-	  nowPlayingState.handleEvent(EditPlaybackSpeed(playbackSpeed))
-	} else {
-	  loadEpisode(mediaData.mediaId)
-	}
+      nowPlayingState.handleEvent(EpisodeUpdated(updatedEpisode.toEpisode()))
+      nowPlayingState.handleEvent(EditPlaybackSpeed(playbackSpeed))
+    } else {
+      loadEpisode(mediaData.mediaId)
+    }
   }
 
   private fun playOrPause(itemId: String) {
-	viewModelScope.launch {
-	  playPauseUseCase(itemId)
-	}
+    viewModelScope.launch {
+      playPauseUseCase(itemId)
+    }
   }
 
   private fun loadEpisode(episodeId: String) {
-	viewModelScope.launch {
-	  when (val result = getStoredEpisodesUseCase(listOf(episodeId))) {
-		is Error -> Unit
+    viewModelScope.launch {
+      when (val result = getStoredEpisodesUseCase(listOf(episodeId))) {
+        is Error -> Unit
 
-		is Success -> {
-		  result.data.firstOrNull()?.let { episode ->
-			nowPlayingState.handleEvent(EpisodeLoaded(episode))
-		  }
-		}
-	  }
-	}
+        is Success -> {
+          result.data.firstOrNull()?.let { episode ->
+            nowPlayingState.handleEvent(EpisodeLoaded(episode))
+          }
+        }
+      }
+    }
   }
 
   private fun storeEpisode(episode: Episode) {
-	viewModelScope.launch {
-	  saveEpisodeUseCase(episode)
-	}
+    viewModelScope.launch {
+      saveEpisodeUseCase(episode)
+    }
   }
 }

@@ -8,6 +8,6 @@ class GetFeedUseCase(
 ) {
 
   suspend operator fun invoke(url: String): DataResult<String> {
-	return feedRepository.fetchXml(url)
+    return feedRepository.fetchXml(url)
   }
 }

@@ -16,38 +16,38 @@ class FeedRepository(
 ) : FeedDataSource {
 
   override suspend fun saveFeed(feed: FeedData): DataResult<FeedData> {
-	return localDataSource.saveFeedData(feed.info, feed.episodes)
+    return localDataSource.saveFeedData(feed.info, feed.episodes)
   }
 
   override suspend fun saveEpisode(episode: Episode): DataResult<Episode> {
-	return localDataSource.saveEpisode(episode)
+    return localDataSource.saveEpisode(episode)
   }
 
   override suspend fun fetchXml(url: String): DataResult<String> {
-	return remoteDataSource.fetchFeed(url)
+    return remoteDataSource.fetchFeed(url)
   }
 
   override suspend fun loadLocally(url: String): DataResult<FeedData> {
-	return localDataSource.loadFeed(url)
+    return localDataSource.loadFeed(url)
   }
 
   override suspend fun loadEpisodes(episodeIds: List<String>): DataResult<List<Episode>> {
-	return localDataSource.loadEpisodes(episodeIds)
+    return localDataSource.loadEpisodes(episodeIds)
   }
 
   override fun episodeFlow(episodeIds: List<String>) = flow {
-	localDataSource.episodeFlow(episodeIds).map {
-	  it.forEach { entity ->
-		emit(Success(entity))
-	  }
-	}
+    localDataSource.episodeFlow(episodeIds).map {
+      it.forEach { entity ->
+        emit(Success(entity))
+      }
+    }
   }
 
   override fun episodeFlow(podcastUrl: String) = flow {
-	localDataSource.episodeFlow(podcastUrl).map {
-	  it.forEach { entity ->
-		emit(Success(entity))
-	  }
-	}
+    localDataSource.episodeFlow(podcastUrl).map {
+      it.forEach { entity ->
+        emit(Success(entity))
+      }
+    }
   }
 }

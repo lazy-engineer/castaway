@@ -8,7 +8,7 @@ import org.xmlpull.v1.XmlPullParser
 class FeedParserImpl(private val parser: XmlPullParser) : FeedParser {
 
   override fun parseFeed(url: String, feedXml: String): FeedData {
-	val feed = io.github.lazyengineer.feedparser.FeedParser.parseFeed(feedXml, parser)
-	return feed.toFeedData(url)
+    val feed = io.github.lazyengineer.feedparser.FeedParser.parseFeed(feedXml, parser)
+    return feed.toFeedData(url)
   }
 }

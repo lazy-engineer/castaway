@@ -8,6 +8,6 @@ class FastForwardPlaybackUseCase(
 ) {
 
   operator fun invoke() {
-	castawayPlayer.dispatchMediaServiceEvent(MediaServiceEvent.FastForward)
+    castawayPlayer.dispatchMediaServiceEvent(MediaServiceEvent.FastForward)
   }
 }

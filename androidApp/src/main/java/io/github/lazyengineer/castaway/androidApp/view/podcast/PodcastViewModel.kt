@@ -27,6 +27,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
+@Suppress("complexity:LongParameterList")
 class PodcastViewModel(
   initialState: PodcastViewState = PodcastViewState.Initial,
   playerStateUseCase: PlayerStateUseCase,
@@ -38,174 +39,175 @@ class PodcastViewModel(
 ) : ViewModel() {
 
   val podcastState = stateReducerFlow(
-	initialState = initialState,
-	reduceState = ::reduceState,
+    initialState = initialState,
+    reduceState = ::reduceState,
   )
 
+  @Suppress("CyclomaticComplexMethod", "LongMethod")
   private fun reduceState(
-	currentState: PodcastViewState,
-	event: PodcastEvent
+    currentState: PodcastViewState,
+    event: PodcastEvent
   ): PodcastViewState {
-	return when (event) {
-	  is Loaded -> {
-		val episodes = event.feed.episodes.map { it.toPodcastEpisode() }
-		preparePlayer(episodes)
+    return when (event) {
+      is Loaded -> {
+        val episodes = event.feed.episodes.map { it.toPodcastEpisode() }
+        preparePlayer(episodes)
 
-		currentState.copy(
-		  loading = false,
-		  imageUrl = event.feed.info.imageUrl.orEmpty(),
-		  episodes = EpisodesList(items = episodes)
-		)
-	  }
+        currentState.copy(
+          loading = false,
+          imageUrl = event.feed.info.imageUrl.orEmpty(),
+          episodes = EpisodesList(items = episodes)
+        )
+      }
 
-	  is Load -> {
-		if (currentState.episodes.items.isEmpty() || event.forceUpdate) {
-		  if (event.forceUpdate) {
-			viewModelScope.launch {
-			  fetchFeed(event.id)
-			}
-		  } else {
-			viewModelScope.launch {
-			  loadFeed(event.id)
-			}
-		  }
+      is Load -> {
+        if (currentState.episodes.items.isEmpty() || event.forceUpdate) {
+          if (event.forceUpdate) {
+            viewModelScope.launch {
+              fetchFeed(event.id)
+            }
+          } else {
+            viewModelScope.launch {
+              loadFeed(event.id)
+            }
+          }
 
-		  currentState.copy(loading = true)
-		} else {
-		  currentState
-		}
-	  }
+          currentState.copy(loading = true)
+        } else {
+          currentState
+        }
+      }
 
-	  is ShowDetails -> currentState.copy(showDetails = event.item)
-	  is Playing -> {
-		currentState.copy(episodes = EpisodesList(currentState.episodes.items.map { episode ->
-		  if (event.itemId == episode.id) {
-			episode.copy(buffering = false, playing = !episode.playing)
-		  } else {
-			episode.copy(playing = false)
-		  }
-		}))
-	  }
+      is ShowDetails -> currentState.copy(showDetails = event.item)
+      is Playing -> {
+        currentState.copy(episodes = EpisodesList(currentState.episodes.items.map { episode ->
+          if (event.itemId == episode.id) {
+            episode.copy(buffering = false, playing = !episode.playing)
+          } else {
+            episode.copy(playing = false)
+          }
+        }))
+      }
 
-	  is PlayPause -> {
-		playOrPause(event.itemId)
-		currentState.copy(episodes = EpisodesList(currentState.episodes.items.map {
-		  if (event.itemId == it.id) {
-			it.copy(buffering = true)
-		  } else {
-			it.copy(buffering = false)
-		  }
-		}))
-	  }
+      is PlayPause -> {
+        playOrPause(event.itemId)
+        currentState.copy(episodes = EpisodesList(currentState.episodes.items.map {
+          if (event.itemId == it.id) {
+            it.copy(buffering = true)
+          } else {
+            it.copy(buffering = false)
+          }
+        }))
+      }
 
-	  is PlaybackPosition -> {
-		currentState.copy(episodes = currentState.episodes.copy(
-		  items = currentState.episodes.items.map { episode ->
-			if (event.itemId == episode.id) {
-			  episode.copy(
-				playbackPosition = event.positionMillis,
-				playbackDuration = event.durationMillis,
-				playbackProgress = event.positionMillis.toFloat() / event.durationMillis
-			  )
-			} else {
-			  episode
-			}
-		  }
-		))
-	  }
+      is PlaybackPosition -> {
+        currentState.copy(episodes = currentState.episodes.copy(
+          items = currentState.episodes.items.map { episode ->
+            if (event.itemId == episode.id) {
+              episode.copy(
+                playbackPosition = event.positionMillis,
+                playbackDuration = event.durationMillis,
+                playbackProgress = event.positionMillis.toFloat() / event.durationMillis
+              )
+            } else {
+              episode
+            }
+          }
+        ))
+      }
 
-	  DetailsShowed -> {
-		currentState.copy(showDetails = null)
-	  }
+      DetailsShowed -> {
+        currentState.copy(showDetails = null)
+      }
 
-	  is FetchError -> currentState.copy(error = event.error.message, loading = false)
-	}
+      is FetchError -> currentState.copy(error = event.error.message, loading = false)
+    }
   }
 
   private val playerState: StateFlow<PlayerState> = playerStateUseCase()
-	.stateIn(viewModelScope, SharingStarted.Lazily, PlayerState.Initial)
+    .stateIn(viewModelScope, SharingStarted.Lazily, PlayerState.Initial)
 
   init {
-	subscribeToPlayer()
-	collectPlayerState()
+    subscribeToPlayer()
+    collectPlayerState()
   }
 
   private fun subscribeToPlayer() {
-	viewModelScope.launch {
-	  subscribeToPlayerUseCase()
-	}
+    viewModelScope.launch {
+      subscribeToPlayerUseCase()
+    }
   }
 
   private fun collectPlayerState() {
-	viewModelScope.launch {
-	  playerState.collect { state ->
-		if (state.prepared) {
-		  state.mediaData?.mediaId?.let { mediaId ->
-			val episode = podcastState.value.episodes.items.firstOrNull { it.id == mediaId }
+    viewModelScope.launch {
+      playerState.collect { state ->
+        if (state.prepared) {
+          state.mediaData?.mediaId?.let { mediaId ->
+            val episode = podcastState.value.episodes.items.firstOrNull { it.id == mediaId }
 
-			if (state.playing != episode?.playing) {
-			  podcastState.handleEvent(Playing(mediaId))
-			}
+            if (state.playing != episode?.playing) {
+              podcastState.handleEvent(Playing(mediaId))
+            }
 
-			if (state.mediaData.playbackPosition != episode?.playbackPosition) {
-			  podcastState.handleEvent(
-				PlaybackPosition(
-				  itemId = mediaId,
-				  positionMillis = state.mediaData.playbackPosition,
-				  durationMillis = state.mediaData.duration ?: 0
-				)
-			  )
-			}
-		  }
-		} else {
-		  preparePlayer(podcastState.value.episodes.items)
-		}
-	  }
-	}
+            if (state.mediaData.playbackPosition != episode?.playbackPosition) {
+              podcastState.handleEvent(
+                PlaybackPosition(
+                  itemId = mediaId,
+                  positionMillis = state.mediaData.playbackPosition,
+                  durationMillis = state.mediaData.duration ?: 0
+                )
+              )
+            }
+          }
+        } else {
+          preparePlayer(podcastState.value.episodes.items)
+        }
+      }
+    }
   }
 
   private fun playOrPause(itemId: String) {
-	viewModelScope.launch {
-	  playPauseUseCase(itemId)
-	}
+    viewModelScope.launch {
+      playPauseUseCase(itemId)
+    }
   }
 
   private fun preparePlayer(episodes: List<PodcastEpisode>) {
-	  preparePlayerUseCase(episodes.map { it.toEpisode() })
+    preparePlayerUseCase(episodes.map { it.toEpisode() })
   }
 
   private suspend fun loadFeed(url: String) {
-	when (val result = getStoredFeedUseCase(url)) {
-	  is Error -> {
-		fetchFeed(url)
-	  }
+    when (val result = getStoredFeedUseCase(url)) {
+      is Error -> {
+        fetchFeed(url)
+      }
 
-	  is Success -> {
-		podcastState.handleEvent(Loaded(result.data))
-	  }
-	}
+      is Success -> {
+        podcastState.handleEvent(Loaded(result.data))
+      }
+    }
   }
 
   private fun fetchFeed(url: String) {
-	viewModelScope.launch {
-	  fetchFeedFromUrl(url)
-	}
+    viewModelScope.launch {
+      fetchFeedFromUrl(url)
+    }
   }
 
   private suspend fun fetchFeedFromUrl(url: String) {
-	when (val result = storeAndGetFeedUseCase(url)) {
-	  is Success -> {
-		podcastState.handleEvent(Loaded(result.data))
-	  }
+    when (val result = storeAndGetFeedUseCase(url)) {
+      is Success -> {
+        podcastState.handleEvent(Loaded(result.data))
+      }
 
-	  is Error -> {
-		podcastState.handleEvent(FetchError(result.exception))
-	  }
-	}
+      is Error -> {
+        podcastState.handleEvent(FetchError(result.exception))
+      }
+    }
   }
 
   companion object {
 
-	const val TEST_URL = "https://atp.fm/rss"
+    const val TEST_URL = "https://atp.fm/rss"
   }
 }

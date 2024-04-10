@@ -13,16 +13,16 @@ class NativeStoredEpisodeFlowableUseCase(
   val coroutineScope = MainScope(Dispatchers.Main)
 
   fun subscribe(
-	feedUrl: String,
-	scope: CoroutineScope,
-	onEach: (Episode) -> Unit,
-	onError: (String) -> Unit,
-	onComplete: () -> Unit
+    feedUrl: String,
+    scope: CoroutineScope,
+    onEach: (Episode) -> Unit,
+    onError: (String) -> Unit,
+    onComplete: () -> Unit
   ) = FlowableUseCaseWrapper<Episode, String> {
-	storedEpisodeFlowable(feedUrl)
+    storedEpisodeFlowable(feedUrl)
   }.subscribe(scope, onEach, onError, onComplete)
 
   fun onDestroy() {
-	coroutineScope.onDestroy()
+    coroutineScope.onDestroy()
   }
 }

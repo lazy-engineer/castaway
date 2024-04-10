@@ -13,6 +13,6 @@ data class NowPlayingState(
 
   companion object {
 
-	val Initial = NowPlayingState()
+    val Initial = NowPlayingState()
   }
 }

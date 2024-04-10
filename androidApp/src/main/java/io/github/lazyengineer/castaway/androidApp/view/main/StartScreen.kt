@@ -16,20 +16,20 @@ fun StartScreen(switchTheme: (Boolean) -> Unit) {
   val navController = rememberNavController()
 
   NavHost(navController, startDestination = OnBoarding.route) {
-	composable(OnBoarding.route) {
-	  OnBoardingScreen(switchTheme = switchTheme) {
-		navController.navigate(Podcast.route) {
-		  popUpTo(navController.graph.startDestinationId) { inclusive = true }
-		}
-	  }
-	}
-	composable(Podcast.route) {
-	  Home()
-	}
-	composable(NowPlaying.route + "/{episodeId}") { backStackEntry ->
-	  backStackEntry.arguments?.getString("episodeId")?.let { episodeId ->
-		Log.d("NavHost", backStackEntry.arguments.toString())
-	  }
-	}
+    composable(OnBoarding.route) {
+      OnBoardingScreen(switchTheme = switchTheme) {
+        navController.navigate(Podcast.route) {
+          popUpTo(navController.graph.startDestinationId) { inclusive = true }
+        }
+      }
+    }
+    composable(Podcast.route) {
+      Home()
+    }
+    composable(NowPlaying.route + "/{episodeId}") { backStackEntry ->
+      backStackEntry.arguments?.getString("episodeId")?.let { episodeId ->
+        Log.d("NavHost", backStackEntry.arguments.toString())
+      }
+    }
   }
 }

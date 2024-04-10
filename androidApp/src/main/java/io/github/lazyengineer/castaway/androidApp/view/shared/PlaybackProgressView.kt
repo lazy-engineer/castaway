@@ -20,26 +20,26 @@ fun PlaybackProgressView(
   trackStrokeWidth: Dp = 4.dp,
 ) {
   Canvas(modifier) {
-	val start = Offset(0f, center.y)
-	val end = Offset(size.width, center.y)
+    val start = Offset(0f, center.y)
+    val end = Offset(size.width, center.y)
 
-	drawLine(
-	  trackColor,
-	  start,
-	  end,
-	  trackStrokeWidth.toPx(),
-	  StrokeCap.Round
-	)
+    drawLine(
+      trackColor,
+      start,
+      end,
+      trackStrokeWidth.toPx(),
+      StrokeCap.Round
+    )
 
-	if (playbackPosition > 0) {
-	  val progressOffset = Offset(start.x + (end.x - start.x) * playbackPosition, center.y)
-	  drawLine(
-		progressColor,
-		start,
-		progressOffset,
-		trackStrokeWidth.toPx(),
-		StrokeCap.Round
-	  )
-	}
+    if (playbackPosition > 0) {
+      val progressOffset = Offset(start.x + (end.x - start.x) * playbackPosition, center.y)
+      drawLine(
+        progressColor,
+        start,
+        progressOffset,
+        trackStrokeWidth.toPx(),
+        StrokeCap.Round
+      )
+    }
   }
 }

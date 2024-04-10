@@ -31,41 +31,41 @@ object MockData {
   private val EPISODE_PLAYBACK = PlaybackPosition(EPISODE_PLAYBACK_POSITION, EPISODE_PLAYBACK_DURATION)
 
   fun podcastEpisode() = PodcastEpisode(
-	id = EPISODE_ID,
-	title = EPISODE_TITLE,
-	subTitle = EPISODE_SUB_TITLE,
-	audioUrl = EPISODE_AUDIO_URL,
-	imageUrl = EPISODE_IMAGE_URL,
-	author = EPISODE_AUTHOR,
-	description = EPISODE_DESCRIPTION,
-	episode = EPISODE_NUMBER,
-	podcastUrl = EPISODE_PODCAST_URL,
-	playbackPosition = EPISODE_PLAYBACK_POSITION,
-	playbackDuration = EPISODE_PLAYBACK_DURATION,
-	playbackSpeed = EPISODE_PLAYBACK_SPEED,
-	playing = EPISODE_PLAYING,
-	buffering = EPISODE_BUFFERING,
+    id = EPISODE_ID,
+    title = EPISODE_TITLE,
+    subTitle = EPISODE_SUB_TITLE,
+    audioUrl = EPISODE_AUDIO_URL,
+    imageUrl = EPISODE_IMAGE_URL,
+    author = EPISODE_AUTHOR,
+    description = EPISODE_DESCRIPTION,
+    episode = EPISODE_NUMBER,
+    podcastUrl = EPISODE_PODCAST_URL,
+    playbackPosition = EPISODE_PLAYBACK_POSITION,
+    playbackDuration = EPISODE_PLAYBACK_DURATION,
+    playbackSpeed = EPISODE_PLAYBACK_SPEED,
+    playing = EPISODE_PLAYING,
+    buffering = EPISODE_BUFFERING,
   )
 
   fun episode() = Episode(
-	id = EPISODE_ID,
-	title = EPISODE_TITLE,
-	subTitle = EPISODE_SUB_TITLE,
-	description = EPISODE_DESCRIPTION,
-	audioUrl = EPISODE_AUDIO_URL,
-	imageUrl = EPISODE_IMAGE_URL,
-	author = EPISODE_AUTHOR,
-	playbackPosition = EPISODE_PLAYBACK,
-	episode = EPISODE_NUMBER,
-	podcastUrl = EPISODE_PODCAST_URL,
+    id = EPISODE_ID,
+    title = EPISODE_TITLE,
+    subTitle = EPISODE_SUB_TITLE,
+    description = EPISODE_DESCRIPTION,
+    audioUrl = EPISODE_AUDIO_URL,
+    imageUrl = EPISODE_IMAGE_URL,
+    author = EPISODE_AUTHOR,
+    playbackPosition = EPISODE_PLAYBACK,
+    episode = EPISODE_NUMBER,
+    podcastUrl = EPISODE_PODCAST_URL,
   )
 
   fun feedData() = FeedData(
-	info = FeedInfo(
-	  url = FEED_URL,
-	  title = FEED_TITLE,
-	  imageUrl = FEED_IMAGE_URL
-	),
-	episodes = listOf(episode())
+    info = FeedInfo(
+      url = FEED_URL,
+      title = FEED_TITLE,
+      imageUrl = FEED_IMAGE_URL
+    ),
+    episodes = listOf(episode())
   )
 }

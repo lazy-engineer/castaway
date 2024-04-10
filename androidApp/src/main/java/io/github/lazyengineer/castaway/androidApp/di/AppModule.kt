@@ -23,22 +23,22 @@ import org.koin.dsl.module
 
 val appModule = module {
   single {
-	ImageLoader.Builder(androidApplication())
-	  .memoryCache {
-		MemoryCache.Builder(androidApplication())
-		  .maxSizePercent(0.25)
-		  .build()
-	  }
-	  .crossfade(true)
-	  .build()
+    ImageLoader.Builder(androidApplication())
+      .memoryCache {
+        MemoryCache.Builder(androidApplication())
+          .maxSizePercent(0.25)
+          .build()
+      }
+      .crossfade(true)
+      .build()
   }
 
   single {
-	MediaService.getInstance(
-	  androidContext(),
-	  ComponentName(androidContext(), MediaPlayerService::class.java),
-	  MediaServiceConfig(rewindInterval = 30_000)
-	)
+    MediaService.getInstance(
+      androidContext(),
+      ComponentName(androidContext(), MediaPlayerService::class.java),
+      MediaServiceConfig(rewindInterval = 30_000)
+    )
   }
 
   single { SubscribeToPlayerUseCase(get()) }
@@ -51,25 +51,25 @@ val appModule = module {
   single { PlaybackSpeedUseCase(get()) }
 
   viewModel {
-	PodcastViewModel(
-	  getStoredFeedUseCase = get(),
-	  storeAndGetFeedUseCase = get(),
-	  subscribeToPlayerUseCase = get(),
-	  preparePlayerUseCase = get(),
-	  playerStateUseCase = get(),
-	  playPauseUseCase = get()
-	)
+    PodcastViewModel(
+      getStoredFeedUseCase = get(),
+      storeAndGetFeedUseCase = get(),
+      subscribeToPlayerUseCase = get(),
+      preparePlayerUseCase = get(),
+      playerStateUseCase = get(),
+      playPauseUseCase = get()
+    )
   }
   viewModel {
-	NowPlayingViewModel(
-	  playerStateUseCase = get(),
-	  saveEpisodeUseCase = get(),
-	  getStoredEpisodesUseCase = get(),
-	  playPauseUseCase = get(),
-	  seekToUseCase = get(),
-	  fastForwardPlaybackUseCase = get(),
-	  rewindPlaybackUseCase = get(),
-	  playbackSpeedUseCase = get()
-	)
+    NowPlayingViewModel(
+      playerStateUseCase = get(),
+      saveEpisodeUseCase = get(),
+      getStoredEpisodesUseCase = get(),
+      playPauseUseCase = get(),
+      seekToUseCase = get(),
+      fastForwardPlaybackUseCase = get(),
+      rewindPlaybackUseCase = get(),
+      playbackSpeedUseCase = get()
+    )
   }
 }

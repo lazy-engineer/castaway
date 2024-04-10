@@ -9,19 +9,19 @@ class PreparePlayerUseCase(
 ) {
 
   operator fun invoke(episodes: List<Episode>) {
-	castawayPlayer.prepare(episodes.mapToMediaData())
+    castawayPlayer.prepare(episodes.mapToMediaData())
   }
 
   private fun List<Episode>.mapToMediaData() = this.map {
-	MediaData(
-	  mediaId = it.id,
-	  mediaUri = it.audioUrl,
-	  displayTitle = it.title,
-	  displayIconUri = it.imageUrl,
-	  displaySubtitle = it.subTitle.orEmpty(),
-	  author = it.author,
-	  playbackPosition = it.playbackPosition.position,
-	  duration = it.playbackPosition.duration,
-	)
+    MediaData(
+      mediaId = it.id,
+      mediaUri = it.audioUrl,
+      displayTitle = it.title,
+      displayIconUri = it.imageUrl,
+      displaySubtitle = it.subTitle.orEmpty(),
+      author = it.author,
+      playbackPosition = it.playbackPosition.position,
+      duration = it.playbackPosition.duration,
+    )
   }
 }

@@ -9,7 +9,9 @@ The Goal of this Project is to bring as much common logic as possible into the s
 <br/><br/>
 
 <!-- Screenshots -->
+
 # Neumorphism Design
+
 ## iOS
 
 <p align="center">
@@ -44,6 +46,7 @@ The Goal of this Project is to bring as much common logic as possible into the s
 <br/><br/>
 
 <!-- LICENSE -->
+
 ## License
 
 Distributed under the MIT License. See `LICENSE` for more information.

@@ -1,5 +1,6 @@
 package io.github.lazyengineer.castaway.domain
 
+import kotlin.native.concurrent.freeze
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
@@ -7,7 +8,6 @@ import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onCompletion
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
-import kotlin.native.concurrent.freeze
 
 /**
  * https://github.com/touchlab/SwiftCoroutines/blob/master/shared/src/iosMain/kotlin/co/touchlab/swiftcoroutines/SwiftCoroutines.kt
@@ -15,19 +15,19 @@ import kotlin.native.concurrent.freeze
 sealed class SuspendWrapperParent<T>(private val suspender: suspend () -> T) {
 
   init {
-	freeze()
+    freeze()
   }
 
   fun subscribe(
-	scope: CoroutineScope,
-	onSuccess: (item: T) -> Unit,
-	onThrow: (error: Throwable) -> Unit
+    scope: CoroutineScope,
+    onSuccess: (item: T) -> Unit,
+    onThrow: (error: Throwable) -> Unit
   ) = scope.launch {
-	try {
-	  onSuccess(suspender().freeze())
-	} catch (error: Throwable) {
-	  onThrow(error.freeze())
-	}
+    try {
+      onSuccess(suspender().freeze())
+    } catch (error: Throwable) {
+      onThrow(error.freeze())
+    }
   }.freeze()
 }
 
@@ -37,20 +37,20 @@ class NullableSuspendWrapper<T>(suspender: suspend () -> T) : SuspendWrapperPare
 sealed class FlowWrapperParent<T>(private val flow: Flow<T>) {
 
   init {
-	freeze()
+    freeze()
   }
 
   fun subscribe(
-	scope: CoroutineScope,
-	onEach: (item: T) -> Unit,
-	onComplete: () -> Unit,
-	onThrow: (error: Throwable) -> Unit
+    scope: CoroutineScope,
+    onEach: (item: T) -> Unit,
+    onComplete: () -> Unit,
+    onThrow: (error: Throwable) -> Unit
   ) = flow
-	.onEach { onEach(it.freeze()) }
-	.catch { onThrow(it.freeze()) } // catch{} before onCompletion{} or else completion hits first and ends stream
-	.onCompletion { onComplete() }
-	.launchIn(scope)
-	.freeze()
+    .onEach { onEach(it.freeze()) }
+    .catch { onThrow(it.freeze()) } // catch{} before onCompletion{} or else completion hits first and ends stream
+    .onCompletion { onComplete() }
+    .launchIn(scope)
+    .freeze()
 }
 
 class FlowWrapper<T : Any>(flow: Flow<T>) : FlowWrapperParent<T>(flow)

@@ -17,10 +17,10 @@ import org.koin.dsl.module
 fun coreModule() = module {
   single { HttpClient() }
   single {
-	FeedRepository(
-	  remoteDataSource = FeedRemoteDataSource(get()),
-	  localDataSource = FeedLocalDataSource(get(), Dispatchers.Default),
-	)
+    FeedRepository(
+      remoteDataSource = FeedRemoteDataSource(get()),
+      localDataSource = FeedLocalDataSource(get(), Dispatchers.Default),
+    )
   }
 
   single { GetFeedUseCase(get() as FeedRepository) }

@@ -40,75 +40,75 @@ fun OnBoardingScreen(
   val switchState = rememberSaveable { mutableStateOf(darkTheme) }
 
   Surface(modifier = modifier.fillMaxSize()) {
-	Column(
-	  modifier = Modifier
-		.fillMaxSize()
-		.background(CastawayTheme.colors.background)
-		.padding(16.dp),
-	  verticalArrangement = Arrangement.SpaceAround,
-	  horizontalAlignment = Alignment.CenterHorizontally
-	) {
+    Column(
+      modifier = Modifier
+        .fillMaxSize()
+        .background(CastawayTheme.colors.background)
+        .padding(16.dp),
+      verticalArrangement = Arrangement.SpaceAround,
+      horizontalAlignment = Alignment.CenterHorizontally
+    ) {
 
-	  Column(
-		verticalArrangement = Arrangement.Center,
-		horizontalAlignment = Alignment.CenterHorizontally
-	  ) {
-		Text(
-		  text = stringResource(id = R.string.onboarding_choose),
-		  color = CastawayTheme.colors.onBackground,
-		  style = MaterialTheme.typography.h5,
-		  modifier = Modifier
-			.padding(16.dp)
-			.semantics {
-			  contentDescription = "Choose theme title"
-			}
-		)
+      Column(
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally
+      ) {
+        Text(
+          text = stringResource(id = R.string.onboarding_choose),
+          color = CastawayTheme.colors.onBackground,
+          style = MaterialTheme.typography.h5,
+          modifier = Modifier
+            .padding(16.dp)
+            .semantics {
+              contentDescription = "Choose theme title"
+            }
+        )
 
-		Text(
-		  text = when (switchState.value) {
-			true -> stringResource(id = R.string.onboarding_darkmode_desc)
-			false -> stringResource(id = R.string.onboarding_lightmode_desc)
-		  },
-		  color = CastawayTheme.colors.onBackground,
-		  style = MaterialTheme.typography.h6,
-		  modifier = Modifier
-			.padding(16.dp)
-			.semantics {
-			  contentDescription = "Choose theme description"
-			}
-		)
-	  }
+        Text(
+          text = when (switchState.value) {
+            true -> stringResource(id = R.string.onboarding_darkmode_desc)
+            false -> stringResource(id = R.string.onboarding_lightmode_desc)
+          },
+          color = CastawayTheme.colors.onBackground,
+          style = MaterialTheme.typography.h6,
+          modifier = Modifier
+            .padding(16.dp)
+            .semantics {
+              contentDescription = "Choose theme description"
+            }
+        )
+      }
 
-	  Row {
-		Text("☀️", modifier = Modifier.padding(end = 16.dp))
+      Row {
+        Text("☀️", modifier = Modifier.padding(end = 16.dp))
 
-		Switch(
-		  checked = switchState.value,
-		  colors = SwitchDefaults.colors(
-			checkedThumbColor = CastawayTheme.colors.primary,
-			checkedTrackColor = CastawayTheme.colors.primaryVariant,
-			uncheckedThumbColor = CastawayTheme.colors.primary,
-			uncheckedTrackColor = CastawayTheme.colors.primaryVariant
-		  ),
-		  onCheckedChange = { checked ->
-			switchTheme(checked)
-			switchState.value = checked
-		  })
+        Switch(
+          checked = switchState.value,
+          colors = SwitchDefaults.colors(
+            checkedThumbColor = CastawayTheme.colors.primary,
+            checkedTrackColor = CastawayTheme.colors.primaryVariant,
+            uncheckedThumbColor = CastawayTheme.colors.primary,
+            uncheckedTrackColor = CastawayTheme.colors.primaryVariant
+          ),
+          onCheckedChange = { checked ->
+            switchTheme(checked)
+            switchState.value = checked
+          })
 
-		Text("🌙", modifier = Modifier.padding(start = 16.dp))
-	  }
+        Text("🌙", modifier = Modifier.padding(start = 16.dp))
+      }
 
-	  GradientTextButton(
-		modifier = Modifier
-		  .width(240.dp)
-		  .height(48.dp),
-		text = stringResource(id = R.string.onboarding_continue).uppercase(),
-		gradient = Brush.linearGradient(CastawayTheme.colors.gradient),
-		shape = RoundedCornerShape(16.dp),
-	  ) {
-		finished(true)
-	  }
-	}
+      GradientTextButton(
+        modifier = Modifier
+          .width(240.dp)
+          .height(48.dp),
+        text = stringResource(id = R.string.onboarding_continue).uppercase(),
+        gradient = Brush.linearGradient(CastawayTheme.colors.gradient),
+        shape = RoundedCornerShape(16.dp),
+      ) {
+        finished(true)
+      }
+    }
   }
 }
 
@@ -118,7 +118,7 @@ fun OnBoardingScreenDarkPreview() {
   val darkTheme = true
 
   CastawayTheme(MATERIAL, darkTheme) {
-	OnBoardingScreen(darkTheme = darkTheme, switchTheme = {}) {}
+    OnBoardingScreen(darkTheme = darkTheme, switchTheme = {}) {}
   }
 }
 
@@ -128,6 +128,6 @@ fun OnBoardingScreenLightPreview() {
   val darkTheme = false
 
   CastawayTheme(MATERIAL, darkTheme) {
-	OnBoardingScreen(darkTheme = darkTheme, switchTheme = {}) {}
+    OnBoardingScreen(darkTheme = darkTheme, switchTheme = {}) {}
   }
 }

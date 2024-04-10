@@ -48,14 +48,14 @@ class PodcastDetailAcceptanceTest : BehaviorSpec({
 
   var fakeMediaServiceClient = FakeMediaServiceClient(mediaServiceConfig)
   val mockFeedParser = mock<FeedParser> {
-	whenever(mock.parseFeed(any(), any())).thenReturn(feedData())
+    whenever(mock.parseFeed(any(), any())).thenReturn(feedData())
   }
 
   val mockRemoteDataSource = mock<RemoteFeedDataSource>()
   val mockLocalDataSource = mock<LocalFeedDataSource> {
-	runTest {
-	  whenever(mock.saveFeedData(any(), any())).thenReturn(DataResult.Success(feedData()))
-	}
+    runTest {
+      whenever(mock.saveFeedData(any(), any())).thenReturn(DataResult.Success(feedData()))
+    }
   }
 
   val feedDataSource = FeedRepository(remoteDataSource = mockRemoteDataSource, localDataSource = mockLocalDataSource)
@@ -64,308 +64,308 @@ class PodcastDetailAcceptanceTest : BehaviorSpec({
   lateinit var state: StateReducerFlow<PodcastViewState, PodcastEvent>
 
   afterTest {
-	clearInvocations(
-	  mockFeedParser,
-	  mockRemoteDataSource,
-	  mockLocalDataSource,
-	)
-	fakeMediaServiceClient = FakeMediaServiceClient(mediaServiceConfig)
+    clearInvocations(
+      mockFeedParser,
+      mockRemoteDataSource,
+      mockLocalDataSource,
+    )
+    fakeMediaServiceClient = FakeMediaServiceClient(mediaServiceConfig)
   }
 
   Given("the app starts") {
-	Scenario("Loading a podcast details") {
-	  Given("PodcastViewModel is initialized") {
-		createPodcastViewModel(
-		  feedDataSource = feedDataSource,
-		  fakeMediaServiceClient = fakeMediaServiceClient,
-		  mockFeedParser = mockFeedParser,
-		).also {
-		  viewModel = it
-		  state = it.podcastState
-		}
+    Scenario("Loading a podcast details") {
+      Given("PodcastViewModel is initialized") {
+        createPodcastViewModel(
+          feedDataSource = feedDataSource,
+          fakeMediaServiceClient = fakeMediaServiceClient,
+          mockFeedParser = mockFeedParser,
+        ).also {
+          viewModel = it
+          state = it.podcastState
+        }
 
-		val robot = StateFlowTurbineViewRobot(
-		  scheduler = StandardTestDispatcher().scheduler,
-		  stateFlow = state,
-		)
+        val robot = StateFlowTurbineViewRobot(
+          scheduler = StandardTestDispatcher().scheduler,
+          stateFlow = state,
+        )
 
-		When("the user requests to view the podcast") {
-		  whenever(mockRemoteDataSource.fetchFeed(feedData().info.url)).thenReturn(DataResult.Success(""))
-		  whenever(mockLocalDataSource.loadFeed(feedData().info.url)).thenReturn(DataResult.Error(Exception("Error loading podcast")))
-		  state.handleEvent(Load(feedData().info.url))
-		  robot.collect()
+        When("the user requests to view the podcast") {
+          whenever(mockRemoteDataSource.fetchFeed(feedData().info.url)).thenReturn(DataResult.Success(""))
+          whenever(mockLocalDataSource.loadFeed(feedData().info.url)).thenReturn(DataResult.Error(Exception("Error loading podcast")))
+          state.handleEvent(Load(feedData().info.url))
+          robot.collect()
 
-		  Then("the podcast details should be fetched") {
-			verify(mockRemoteDataSource).fetchFeed(feedData().info.url)
-		  }
-		  Then("the view state should display the loading indicator") {
-			robot.listOfStates.first().loading shouldBe true
-		  }
-		}
-		When("the podcast is fetched successfully") {
-		  robot.collect()
+          Then("the podcast details should be fetched") {
+            verify(mockRemoteDataSource).fetchFeed(feedData().info.url)
+          }
+          Then("the view state should display the loading indicator") {
+            robot.listOfStates.first().loading shouldBe true
+          }
+        }
+        When("the podcast is fetched successfully") {
+          robot.collect()
 
-		  Then("the view state should display the podcast details") {
-			assertSoftly {
-			  robot.listOfStates[1].episodes `should be equal to` EpisodesList(listOf(podcastEpisode()))
-			  robot.listOfStates[1].imageUrl `should be equal to` feedData().info.imageUrl.orEmpty()
-			}
-		  }
+          Then("the view state should display the podcast details") {
+            assertSoftly {
+              robot.listOfStates[1].episodes `should be equal to` EpisodesList(listOf(podcastEpisode()))
+              robot.listOfStates[1].imageUrl `should be equal to` feedData().info.imageUrl.orEmpty()
+            }
+          }
 
-		  Then("the loading indicator should disappear") {
-			robot.listOfStates[1].loading shouldBe false
-		  }
-		}
-	  }
-	}
+          Then("the loading indicator should disappear") {
+            robot.listOfStates[1].loading shouldBe false
+          }
+        }
+      }
+    }
 
-	Scenario("Loading a podcast details fails") {
-	  val expectedError = Exception("Error fetching podcast")
+    Scenario("Loading a podcast details fails") {
+      val expectedError = Exception("Error fetching podcast")
 
-	  Given("PodcastViewModel is initialized") {
-		createPodcastViewModel(
-		  feedDataSource = feedDataSource,
-		  fakeMediaServiceClient = fakeMediaServiceClient,
-		  mockFeedParser = mockFeedParser,
-		).also {
-		  viewModel = it
-		  state = it.podcastState
-		}
+      Given("PodcastViewModel is initialized") {
+        createPodcastViewModel(
+          feedDataSource = feedDataSource,
+          fakeMediaServiceClient = fakeMediaServiceClient,
+          mockFeedParser = mockFeedParser,
+        ).also {
+          viewModel = it
+          state = it.podcastState
+        }
 
-		val robot = StateFlowTurbineViewRobot(
-		  scheduler = StandardTestDispatcher().scheduler,
-		  stateFlow = state,
-		)
+        val robot = StateFlowTurbineViewRobot(
+          scheduler = StandardTestDispatcher().scheduler,
+          stateFlow = state,
+        )
 
-		When("the user requests to view the podcast") {
-		  whenever(mockRemoteDataSource.fetchFeed(feedData().info.url)).thenReturn(DataResult.Error(expectedError))
-		  whenever(mockLocalDataSource.loadFeed(feedData().info.url)).thenReturn(DataResult.Error(Exception("Error loading podcast")))
-		  state.handleEvent(Load(feedData().info.url))
-		  robot.collect()
+        When("the user requests to view the podcast") {
+          whenever(mockRemoteDataSource.fetchFeed(feedData().info.url)).thenReturn(DataResult.Error(expectedError))
+          whenever(mockLocalDataSource.loadFeed(feedData().info.url)).thenReturn(DataResult.Error(Exception("Error loading podcast")))
+          state.handleEvent(Load(feedData().info.url))
+          robot.collect()
 
-		  Then("the view state should display the loading indicator") {
-			robot.listOfStates.first().loading shouldBe true
-		  }
+          Then("the view state should display the loading indicator") {
+            robot.listOfStates.first().loading shouldBe true
+          }
 
-		  And("there's an error fetching the podcast") {
-			robot.collect()
+          And("there's an error fetching the podcast") {
+            robot.collect()
 
-			Then("the view state should display an error message") {
-			  robot.listOfStates[1].error `should be equal to` expectedError.message
-			}
+            Then("the view state should display an error message") {
+              robot.listOfStates[1].error `should be equal to` expectedError.message
+            }
 
-			Then("the loading indicator should disappear") {
-			  robot.listOfStates[1].loading shouldBe false
-			}
-		  }
-		}
-	  }
-	}
+            Then("the loading indicator should disappear") {
+              robot.listOfStates[1].loading shouldBe false
+            }
+          }
+        }
+      }
+    }
 
-	Scenario("Selecting a podcast episode from the list") {
-	  createPodcastViewModel(
-		feedDataSource = feedDataSource,
-		fakeMediaServiceClient = fakeMediaServiceClient,
-		mockFeedParser = mockFeedParser,
-	  ).also {
-		viewModel = it
-		state = it.podcastState
-	  }
+    Scenario("Selecting a podcast episode from the list") {
+      createPodcastViewModel(
+        feedDataSource = feedDataSource,
+        fakeMediaServiceClient = fakeMediaServiceClient,
+        mockFeedParser = mockFeedParser,
+      ).also {
+        viewModel = it
+        state = it.podcastState
+      }
 
-	  val robot = StateFlowTurbineViewRobot(
-		scheduler = StandardTestDispatcher().scheduler,
-		stateFlow = state,
-	  )
+      val robot = StateFlowTurbineViewRobot(
+        scheduler = StandardTestDispatcher().scheduler,
+        stateFlow = state,
+      )
 
-	  Given("the podcast episode list is displayed") {
-		state.handleEvent(Loaded(feedData()))
-		robot.collect()
-		robot.collect()
+      Given("the podcast episode list is displayed") {
+        state.handleEvent(Loaded(feedData()))
+        robot.collect()
+        robot.collect()
 
-		When("the user selects a episode") {
-		  state.handleEvent(EpisodeRowEvent.ShowDetails(podcastEpisode()))
-		  robot.collect()
+        When("the user selects a episode") {
+          state.handleEvent(EpisodeRowEvent.ShowDetails(podcastEpisode()))
+          robot.collect()
 
-		  Then("the view state should display to the episode detail view") {
-			robot.listOfStates.last().showDetails `should be equal to` podcastEpisode()
-		  }
-		}
-	  }
-	}
+          Then("the view state should display to the episode detail view") {
+            robot.listOfStates.last().showDetails `should be equal to` podcastEpisode()
+          }
+        }
+      }
+    }
 
-	Scenario("Refreshing the podcast details") {
-	  createPodcastViewModel(
-		feedDataSource = feedDataSource,
-		fakeMediaServiceClient = fakeMediaServiceClient,
-		mockFeedParser = mockFeedParser,
-	  ).also {
-		viewModel = it
-		state = it.podcastState
-	  }
+    Scenario("Refreshing the podcast details") {
+      createPodcastViewModel(
+        feedDataSource = feedDataSource,
+        fakeMediaServiceClient = fakeMediaServiceClient,
+        mockFeedParser = mockFeedParser,
+      ).also {
+        viewModel = it
+        state = it.podcastState
+      }
 
-	  val robot = StateFlowTurbineViewRobot(
-		scheduler = StandardTestDispatcher().scheduler,
-		stateFlow = state,
-	  )
+      val robot = StateFlowTurbineViewRobot(
+        scheduler = StandardTestDispatcher().scheduler,
+        stateFlow = state,
+      )
 
-	  Given("the podcast details is displayed") {
-		whenever(mockRemoteDataSource.fetchFeed(feedData().info.url)).thenReturn(DataResult.Success(""))
-		robot.collect()
+      Given("the podcast details is displayed") {
+        whenever(mockRemoteDataSource.fetchFeed(feedData().info.url)).thenReturn(DataResult.Success(""))
+        robot.collect()
 
-		state.handleEvent(Loaded(feedData()))
-		robot.collect()
+        state.handleEvent(Loaded(feedData()))
+        robot.collect()
 
-		When("the user refreshes the podcast details") {
+        When("the user refreshes the podcast details") {
 
-		  state.handleEvent(Load(feedData().info.url, forceUpdate = true))
-		  robot.collect()
+          state.handleEvent(Load(feedData().info.url, forceUpdate = true))
+          robot.collect()
 
-		  Then("the podcast details should re-fetch") {
-			verify(mockRemoteDataSource).fetchFeed(feedData().info.url)
-		  }
+          Then("the podcast details should re-fetch") {
+            verify(mockRemoteDataSource).fetchFeed(feedData().info.url)
+          }
 
-		  Then("the view state should display the loading indicator") {
-			robot.listOfStates.last().loading shouldBe true
-		  }
-		}
-		When("the refreshed podcast details is fetched successfully") {
-		  robot.collect()
+          Then("the view state should display the loading indicator") {
+            robot.listOfStates.last().loading shouldBe true
+          }
+        }
+        When("the refreshed podcast details is fetched successfully") {
+          robot.collect()
 
-		  Then("the view state should display the updated podcast details") {
-			assertSoftly {
-			  robot.listOfStates.last().episodes `should be equal to` EpisodesList(listOf(podcastEpisode()))
-			  robot.listOfStates.last().imageUrl `should be equal to` feedData().info.imageUrl.orEmpty()
-			}
-		  }
-		  Then("the loading indicator should disappear") {
-			robot.listOfStates.last().loading shouldBe false
-		  }
-		}
-	  }
-	}
+          Then("the view state should display the updated podcast details") {
+            assertSoftly {
+              robot.listOfStates.last().episodes `should be equal to` EpisodesList(listOf(podcastEpisode()))
+              robot.listOfStates.last().imageUrl `should be equal to` feedData().info.imageUrl.orEmpty()
+            }
+          }
+          Then("the loading indicator should disappear") {
+            robot.listOfStates.last().loading shouldBe false
+          }
+        }
+      }
+    }
 
-	Scenario("Playing a podcast episode") {
-	  createPodcastViewModel(
-		feedDataSource = feedDataSource,
-		fakeMediaServiceClient = fakeMediaServiceClient,
-		mockFeedParser = mockFeedParser,
-	  ).also {
-		viewModel = it
-		state = it.podcastState
-	  }
+    Scenario("Playing a podcast episode") {
+      createPodcastViewModel(
+        feedDataSource = feedDataSource,
+        fakeMediaServiceClient = fakeMediaServiceClient,
+        mockFeedParser = mockFeedParser,
+      ).also {
+        viewModel = it
+        state = it.podcastState
+      }
 
-	  val robot = StateFlowTurbineViewRobot(
-		scheduler = StandardTestDispatcher().scheduler,
-		stateFlow = state,
-	  )
+      val robot = StateFlowTurbineViewRobot(
+        scheduler = StandardTestDispatcher().scheduler,
+        stateFlow = state,
+      )
 
-	  Given("the podcast detail view is displayed") {
-		val feedData = feedData()
-		whenever(mockRemoteDataSource.fetchFeed(feedData.info.url)).thenReturn(DataResult.Success(""))
-		robot.collect()
+      Given("the podcast detail view is displayed") {
+        val feedData = feedData()
+        whenever(mockRemoteDataSource.fetchFeed(feedData.info.url)).thenReturn(DataResult.Success(""))
+        robot.collect()
 
-		state.handleEvent(Loaded(feedData))
-		robot.collect()
+        state.handleEvent(Loaded(feedData))
+        robot.collect()
 
-		When("the user clicks on the play button for an episode") {
-		  state.handleEvent(PlayPause(feedData.episodes.first().id))
-		  robot.collect()
+        When("the user clicks on the play button for an episode") {
+          state.handleEvent(PlayPause(feedData.episodes.first().id))
+          robot.collect()
 
-		  Then("the episode to play should be buffering") {
-			robot.listOfStates.last().episodes.items.first().buffering shouldBe true
-		  }
+          Then("the episode to play should be buffering") {
+            robot.listOfStates.last().episodes.items.first().buffering shouldBe true
+          }
 
-		  robot.collect()
+          robot.collect()
 
-		  Then("the view state should update to show the episode as 'playing'") {
-			robot.listOfStates.last().episodes.items.first().playing shouldBe true
-		  }
-		}
-	  }
-	}
+          Then("the view state should update to show the episode as 'playing'") {
+            robot.listOfStates.last().episodes.items.first().playing shouldBe true
+          }
+        }
+      }
+    }
 
-	Scenario("Pausing a podcast episode") {
-	  createPodcastViewModel(
-		feedDataSource = feedDataSource,
-		fakeMediaServiceClient = fakeMediaServiceClient,
-		mockFeedParser = mockFeedParser,
-	  ).also {
-		viewModel = it
-		state = it.podcastState
-	  }
+    Scenario("Pausing a podcast episode") {
+      createPodcastViewModel(
+        feedDataSource = feedDataSource,
+        fakeMediaServiceClient = fakeMediaServiceClient,
+        mockFeedParser = mockFeedParser,
+      ).also {
+        viewModel = it
+        state = it.podcastState
+      }
 
-	  val robot = StateFlowTurbineViewRobot(
-		scheduler = StandardTestDispatcher().scheduler,
-		stateFlow = state,
-	  )
+      val robot = StateFlowTurbineViewRobot(
+        scheduler = StandardTestDispatcher().scheduler,
+        stateFlow = state,
+      )
 
-	  Given("a podcast episode is playing") {
-		val feedData = feedData()
-		whenever(mockRemoteDataSource.fetchFeed(feedData.info.url)).thenReturn(DataResult.Success(""))
-		robot.collect()
+      Given("a podcast episode is playing") {
+        val feedData = feedData()
+        whenever(mockRemoteDataSource.fetchFeed(feedData.info.url)).thenReturn(DataResult.Success(""))
+        robot.collect()
 
-		state.handleEvent(Loaded(feedData))
-		robot.collect()
+        state.handleEvent(Loaded(feedData))
+        robot.collect()
 
-		state.handleEvent(PlayPause(feedData.episodes.first().id))
-		robot.collectMostRecentItem()
+        state.handleEvent(PlayPause(feedData.episodes.first().id))
+        robot.collectMostRecentItem()
 
-		When("the user clicks on the pause button") {
-		  state.handleEvent(PlayPause(feedData.episodes.first().id))
-		  robot.collect()
+        When("the user clicks on the pause button") {
+          state.handleEvent(PlayPause(feedData.episodes.first().id))
+          robot.collect()
 
-		  Then("the episode to play should be buffering") {
-			robot.listOfStates.last().episodes.items.first().buffering shouldBe true
-		  }
+          Then("the episode to play should be buffering") {
+            robot.listOfStates.last().episodes.items.first().buffering shouldBe true
+          }
 
-		  robot.collect()
+          robot.collect()
 
-		  Then("the view state should update to show the episode as 'paused'") {
-			robot.listOfStates.last().episodes.items.first().playing shouldBe false
-		  }
-		}
-	  }
-	}
+          Then("the view state should update to show the episode as 'paused'") {
+            robot.listOfStates.last().episodes.items.first().playing shouldBe false
+          }
+        }
+      }
+    }
 
-	Scenario("Subscribing to a podcast") {
-	  Given("the podcast detail view is displayed") {
-		When("the user clicks on the subscribe button") {
-		  xThen("the PodcastViewModel should add the podcast to the user's subscriptions") {}
-		  xThen("the view state should update to show the podcast as 'subscribed'") {}
-		}
-	  }
-	}
+    Scenario("Subscribing to a podcast") {
+      Given("the podcast detail view is displayed") {
+        When("the user clicks on the subscribe button") {
+          xThen("the PodcastViewModel should add the podcast to the user's subscriptions") {}
+          xThen("the view state should update to show the podcast as 'subscribed'") {}
+        }
+      }
+    }
 
-	Scenario("Unsubscribing from a podcast") {
-	  Given("the user is subscribed to a podcast") {
-		When("the user clicks on the unsubscribe button in the podcast detail view") {
-		  xThen("the PodcastViewModel should remove the podcast from the user's subscriptions") {}
-		  xThen("the view state should update to show the podcast as 'not subscribed'") {}
-		}
-	  }
-	}
+    Scenario("Unsubscribing from a podcast") {
+      Given("the user is subscribed to a podcast") {
+        When("the user clicks on the unsubscribe button in the podcast detail view") {
+          xThen("the PodcastViewModel should remove the podcast from the user's subscriptions") {}
+          xThen("the view state should update to show the podcast as 'not subscribed'") {}
+        }
+      }
+    }
 
-	Scenario("Searching for a episode") {
-	  Given("the episode list is displayed") {
-		When("the user inputs a search query") {
-		  xThen("the PodcastViewModel should search for episodes matching the query") {}
-		  xThen("the view state should display the loading indicator") {}
-		}
-		When("the search results are fetched successfully") {
-		  xThen("the view state should display the search results") {}
-		  xThen("the loading indicator should disappear") {}
-		}
-	  }
-	}
+    Scenario("Searching for a episode") {
+      Given("the episode list is displayed") {
+        When("the user inputs a search query") {
+          xThen("the PodcastViewModel should search for episodes matching the query") {}
+          xThen("the view state should display the loading indicator") {}
+        }
+        When("the search results are fetched successfully") {
+          xThen("the view state should display the search results") {}
+          xThen("the loading indicator should disappear") {}
+        }
+      }
+    }
   }
 })
 
 fun createPodcastViewModel(feedDataSource: FeedDataSource, fakeMediaServiceClient: MediaServiceClient, mockFeedParser: FeedParser) =
   PodcastViewModel(
-	getStoredFeedUseCase = GetStoredFeedUseCase(feedDataSource),
-	storeAndGetFeedUseCase = StoreAndGetFeedUseCase(feedDataSource, mockFeedParser),
-	subscribeToPlayerUseCase = SubscribeToPlayerUseCase(fakeMediaServiceClient),
-	preparePlayerUseCase = PreparePlayerUseCase(fakeMediaServiceClient),
-	playerStateUseCase = PlayerStateUseCase(fakeMediaServiceClient),
-	playPauseUseCase = PlayPauseUseCase(fakeMediaServiceClient),
+    getStoredFeedUseCase = GetStoredFeedUseCase(feedDataSource),
+    storeAndGetFeedUseCase = StoreAndGetFeedUseCase(feedDataSource, mockFeedParser),
+    subscribeToPlayerUseCase = SubscribeToPlayerUseCase(fakeMediaServiceClient),
+    preparePlayerUseCase = PreparePlayerUseCase(fakeMediaServiceClient),
+    playerStateUseCase = PlayerStateUseCase(fakeMediaServiceClient),
+    playPauseUseCase = PlayPauseUseCase(fakeMediaServiceClient),
   )

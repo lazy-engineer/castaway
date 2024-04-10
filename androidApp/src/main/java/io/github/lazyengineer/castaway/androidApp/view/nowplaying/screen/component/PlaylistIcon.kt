@@ -16,10 +16,10 @@ internal fun PlaylistIcon(
   onClick: () -> Unit,
 ) {
   Image(
-	imageVector = Filled.PlaylistPlay,
-	contentDescription = "List",
-	contentScale = ContentScale.Fit,
-	colorFilter = ColorFilter.tint(CastawayTheme.colors.onBackground),
-	modifier = modifier.clickable(onClick = onClick)
+    imageVector = Filled.PlaylistPlay,
+    contentDescription = "List",
+    contentScale = ContentScale.Fit,
+    colorFilter = ColorFilter.tint(CastawayTheme.colors.onBackground),
+    modifier = modifier.clickable(onClick = onClick)
   )
 }

@@ -13,10 +13,10 @@ import io.github.lazyengineer.castaway.androidApp.theme.CastawayTheme
 @Composable
 internal fun RewindButton(modifier: Modifier = Modifier, onClick: () -> Unit) {
   Image(
-	imageVector = Sharp.Replay30,
-	contentDescription = "replay 30 second",
-	contentScale = ContentScale.FillBounds,
-	colorFilter = ColorFilter.tint(CastawayTheme.colors.onBackground),
-	modifier = modifier.clickable { onClick() }
+    imageVector = Sharp.Replay30,
+    contentDescription = "replay 30 second",
+    contentScale = ContentScale.FillBounds,
+    colorFilter = ColorFilter.tint(CastawayTheme.colors.onBackground),
+    modifier = modifier.clickable { onClick() }
   )
 }

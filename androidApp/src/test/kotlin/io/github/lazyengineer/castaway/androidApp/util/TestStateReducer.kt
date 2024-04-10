@@ -7,8 +7,8 @@ import kotlinx.coroutines.test.runTest
 
 fun <S, E> StateReducerFlow<S, E>.testState(test: suspend (ReceiveTurbine<S>) -> Unit) {
   runTest {
-	this@testState.test {
-	  test(this)
-	}
+    this@testState.test {
+      test(this)
+    }
   }
 }

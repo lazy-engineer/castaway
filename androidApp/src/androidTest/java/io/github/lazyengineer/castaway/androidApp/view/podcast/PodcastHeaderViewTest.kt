@@ -15,31 +15,31 @@ class PodcastHeaderViewTest {
 
   @Test
   fun podcastHeaderView_shouldDisplayPodcastTitle() {
-	val podcastTitle = "Header Test"
+    val podcastTitle = "Header Test"
 
-	composeTestRule.setContent {
-	  PodcastHeaderView(
-		modifier = Modifier,
-		title = podcastTitle,
-		imageUrl= "test-image.url"
-	  )
-	}
+    composeTestRule.setContent {
+      PodcastHeaderView(
+        modifier = Modifier,
+        title = podcastTitle,
+        imageUrl = "test-image.url"
+      )
+    }
 
-	composeTestRule.onNodeWithText(podcastTitle)
-	  .assertIsDisplayed()
+    composeTestRule.onNodeWithText(podcastTitle)
+      .assertIsDisplayed()
   }
 
   @Test
   fun podcastHeaderView_shouldDisplayPodcastImage() {
-	composeTestRule.setContent {
-	  PodcastHeaderView(
-		modifier = Modifier,
-		title = "Header Test",
-		imageUrl= "test-image.url"
-	  )
-	}
+    composeTestRule.setContent {
+      PodcastHeaderView(
+        modifier = Modifier,
+        title = "Header Test",
+        imageUrl = "test-image.url"
+      )
+    }
 
-	composeTestRule.onNodeWithContentDescription("Podcast header image")
-	  .assertIsDisplayed()
+    composeTestRule.onNodeWithContentDescription("Podcast header image")
+      .assertIsDisplayed()
   }
 }

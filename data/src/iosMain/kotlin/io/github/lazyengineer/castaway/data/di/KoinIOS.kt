@@ -10,19 +10,17 @@ import io.github.lazyengineer.castaway.domain.usecase.NativeSaveEpisodeUseCase
 import io.github.lazyengineer.castaway.domain.usecase.NativeSaveFeedUseCase
 import io.github.lazyengineer.castaway.domain.usecase.NativeStoredEpisodeFlowableUseCase
 import iogithublazyengineercastawaydb.EpisodeEntity.Adapter
-import org.koin.core.component.KoinComponent
-import org.koin.core.component.get
 import org.koin.dsl.module
 
 actual fun platformModule() = module {
 
   single {
-	val driver = NativeSqliteDriver(CastawayDatabase.Schema, "castaway.db")
-	CastawayDatabase(
-	  driver, episodeEntityAdapter = Adapter(
-		playbackPositionAdapter = PlaybackPositionAdapter
-	  )
-	)
+    val driver = NativeSqliteDriver(CastawayDatabase.Schema, "castaway.db")
+    CastawayDatabase(
+      driver, episodeEntityAdapter = Adapter(
+        playbackPositionAdapter = PlaybackPositionAdapter
+      )
+    )
   }
 
   single { NativeGetFeedUseCase(get()) }

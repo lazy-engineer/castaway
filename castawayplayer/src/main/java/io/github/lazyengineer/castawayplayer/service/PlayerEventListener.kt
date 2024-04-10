@@ -10,24 +10,24 @@ class PlayerEventListener(
 ) : Player.Listener {
 
   override fun onPlaybackStateChanged(playbackState: Int) {
-	super.onPlaybackStateChanged(playbackState)
-	playbackStateChanged(playbackState)
+    super.onPlaybackStateChanged(playbackState)
+    playbackStateChanged(playbackState)
   }
 
   override fun onPlayWhenReadyChanged(playWhenReady: Boolean, reason: Int) {
-	super.onPlayWhenReadyChanged(playWhenReady, reason)
-	playWhenReadyChanged(playWhenReady)
+    super.onPlayWhenReadyChanged(playWhenReady, reason)
+    playWhenReadyChanged(playWhenReady)
   }
 
   override fun onPlayerErrorChanged(error: PlaybackException?) {
-	super.onPlayerErrorChanged(error)
-	error?.let {
-	  Log.e(TAG, "${it.errorCode}: ${it.message}")
-	}
+    super.onPlayerErrorChanged(error)
+    error?.let {
+      Log.e(TAG, "${it.errorCode}: ${it.message}")
+    }
   }
 
   companion object {
 
-	private const val TAG = "PlayerEventListener"
+    private const val TAG = "PlayerEventListener"
   }
 }

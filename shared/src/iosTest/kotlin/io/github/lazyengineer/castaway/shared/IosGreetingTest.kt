@@ -7,6 +7,6 @@ class IosGreetingTest {
 
   @Test
   fun testExample() {
-	assertTrue(true)
+    assertTrue(true)
   }
 }

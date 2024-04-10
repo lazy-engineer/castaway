@@ -26,26 +26,26 @@ fun Modifier.shadow(
 
   this.drawBehind {
 
-	this.drawIntoCanvas {
-	  val paint = Paint()
-	  val frameworkPaint = paint.asFrameworkPaint()
-	  frameworkPaint.color = transparent
+    this.drawIntoCanvas {
+      val paint = Paint()
+      val frameworkPaint = paint.asFrameworkPaint()
+      frameworkPaint.color = transparent
 
-	  frameworkPaint.setShadowLayer(
-		shadowRadius.toPx(),
-		offsetX.toPx(),
-		offsetY.toPx(),
-		shadowColor
-	  )
-	  it.drawRoundRect(
-		0f,
-		0f,
-		this.size.width,
-		this.size.height,
-		borderRadius.toPx(),
-		borderRadius.toPx(),
-		paint
-	  )
-	}
+      frameworkPaint.setShadowLayer(
+        shadowRadius.toPx(),
+        offsetX.toPx(),
+        offsetY.toPx(),
+        shadowColor
+      )
+      it.drawRoundRect(
+        0f,
+        0f,
+        this.size.width,
+        this.size.height,
+        borderRadius.toPx(),
+        borderRadius.toPx(),
+        paint
+      )
+    }
   }
 }

@@ -21,25 +21,25 @@ internal fun EpisodeImage(
   modifier: Modifier = Modifier
 ) {
   Box(modifier = modifier) {
-	SubcomposeAsyncImage(
-	  model = Builder(LocalContext.current)
-		.data(imageUrl)
-		.crossfade(true)
-		.build(),
-	  loading = {
-		CircularProgressIndicator(color = CastawayTheme.colors.primary)
-	  },
-	  error = {
-		Icon(
-		  imageVector = Filled.Mic,
-		  contentDescription = "Podcast header icon",
-		  modifier = Modifier.fillMaxSize(),
-		  tint = Color.Gray
-		)
-	  },
-	  contentDescription = "Podcast header image",
-	  contentScale = ContentScale.Crop,
-	  modifier = Modifier.fillMaxSize()
-	)
+    SubcomposeAsyncImage(
+      model = Builder(LocalContext.current)
+        .data(imageUrl)
+        .crossfade(true)
+        .build(),
+      loading = {
+        CircularProgressIndicator(color = CastawayTheme.colors.primary)
+      },
+      error = {
+        Icon(
+          imageVector = Filled.Mic,
+          contentDescription = "Podcast header icon",
+          modifier = Modifier.fillMaxSize(),
+          tint = Color.Gray
+        )
+      },
+      contentDescription = "Podcast header image",
+      contentScale = ContentScale.Crop,
+      modifier = Modifier.fillMaxSize()
+    )
   }
 }

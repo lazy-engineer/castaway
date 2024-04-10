@@ -8,6 +8,6 @@ class SeekToUseCase(
 ) {
 
   operator fun invoke(positionMillis: Long) {
-	castawayPlayer.dispatchMediaServiceEvent(MediaServiceEvent.SeekTo(positionMillis))
+    castawayPlayer.dispatchMediaServiceEvent(MediaServiceEvent.SeekTo(positionMillis))
   }
 }

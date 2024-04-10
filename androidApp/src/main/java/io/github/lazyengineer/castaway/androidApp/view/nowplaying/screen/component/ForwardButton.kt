@@ -13,10 +13,10 @@ import io.github.lazyengineer.castaway.androidApp.theme.CastawayTheme
 @Composable
 internal fun ForwardButton(modifier: Modifier = Modifier, onClick: () -> Unit) {
   Image(
-	imageVector = Sharp.Forward30,
-	contentDescription = "fast forward 30 second",
-	contentScale = ContentScale.FillBounds,
-	colorFilter = ColorFilter.tint(CastawayTheme.colors.onBackground),
-	modifier = modifier.clickable { onClick() }
+    imageVector = Sharp.Forward30,
+    contentDescription = "fast forward 30 second",
+    contentScale = ContentScale.FillBounds,
+    colorFilter = ColorFilter.tint(CastawayTheme.colors.onBackground),
+    modifier = modifier.clickable { onClick() }
   )
 }

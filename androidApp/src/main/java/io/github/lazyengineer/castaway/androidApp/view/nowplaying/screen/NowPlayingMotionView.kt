@@ -56,68 +56,68 @@ internal fun NowPlayingMotionView(
   val playbackSpeedId = "playback_speed"
 
   MotionLayout(
-	motionScene = rememberMotionScene(
-	  episodeImageId = episodeImageId,
-	  playlistIconId = playlistIconId,
-	  rewindButtonId = rewindButtonId,
-	  forwardButtonId = forwardButtonId,
-	  playButtonId = playButtonId,
-	  episodeTitleId = episodeTitleId,
-	  playbackProgressId = playbackProgressId,
-	  playbackSpeedId = playbackSpeedId
-	),
-	progress = expandedPercentage(),
-	modifier = modifier
-	  .fillMaxWidth()
-	  .background(CastawayTheme.colors.background)
+    motionScene = rememberMotionScene(
+      episodeImageId = episodeImageId,
+      playlistIconId = playlistIconId,
+      rewindButtonId = rewindButtonId,
+      forwardButtonId = forwardButtonId,
+      playButtonId = playButtonId,
+      episodeTitleId = episodeTitleId,
+      playbackProgressId = playbackProgressId,
+      playbackSpeedId = playbackSpeedId
+    ),
+    progress = expandedPercentage(),
+    modifier = modifier
+      .fillMaxWidth()
+      .background(CastawayTheme.colors.background)
   ) {
-	EpisodeImage(
-	  imageUrl = episode().imageUrl,
-	  modifier = Modifier
-		.clip(RoundedCornerShape(25f))
-		.layoutId(episodeImageId)
-	)
+    EpisodeImage(
+      imageUrl = episode().imageUrl,
+      modifier = Modifier
+        .clip(RoundedCornerShape(25f))
+        .layoutId(episodeImageId)
+    )
 
-	EpisodeTitle(
-	  episodeTitle = episode().title,
-	  modifier = Modifier.layoutId(episodeTitleId)
-	)
+    EpisodeTitle(
+      episodeTitle = episode().title,
+      modifier = Modifier.layoutId(episodeTitleId)
+    )
 
-	RewindButton(
-	  modifier = Modifier.layoutId(rewindButtonId)
-	) {
-	  event(Rewind)
-	}
+    RewindButton(
+      modifier = Modifier.layoutId(rewindButtonId)
+    ) {
+      event(Rewind)
+    }
 
-	PlayButton(
-	  playing = playing(),
-	  modifier = Modifier.layoutId(playButtonId)
-	) {
-	  event(PlayPause(episode().id))
-	}
+    PlayButton(
+      playing = playing(),
+      modifier = Modifier.layoutId(playButtonId)
+    ) {
+      event(PlayPause(episode().id))
+    }
 
-	ForwardButton(
-	  modifier = Modifier.layoutId(forwardButtonId)
-	) {
-	  event(FastForward)
-	}
+    ForwardButton(
+      modifier = Modifier.layoutId(forwardButtonId)
+    ) {
+      event(FastForward)
+    }
 
-	PlaybackProgress(
-	  expandedPercentage = expandedPercentage,
-	  playbackPosition = { episode().playbackPosition },
-	  event = remember { event },
-	  modifier = Modifier.layoutId(playbackProgressId)
-	)
+    PlaybackProgress(
+      expandedPercentage = expandedPercentage,
+      playbackPosition = { episode().playbackPosition },
+      event = remember { event },
+      modifier = Modifier.layoutId(playbackProgressId)
+    )
 
-	PlaylistIcon(
-	  modifier = Modifier.layoutId(playlistIconId)
-	) {}
+    PlaylistIcon(
+      modifier = Modifier.layoutId(playlistIconId)
+    ) {}
 
-	PlaybackSpeed(
-	  playbackSpeed = playbackSpeed(),
-	  event = event,
-	  modifier = Modifier.layoutId(playbackSpeedId),
-	)
+    PlaybackSpeed(
+      playbackSpeed = playbackSpeed(),
+      event = event,
+      modifier = Modifier.layoutId(playbackSpeedId),
+    )
   }
 }
 
@@ -136,55 +136,55 @@ private fun rememberMotionScene(
 ): MotionScene {
 
   val startSet = startConstraintSet(
-	episodeImageId = episodeImageId,
-	playlistIconId = playlistIconId,
-	playButtonId = playButtonId,
-	rewindButtonId = rewindButtonId,
-	forwardButtonId = forwardButtonId,
-	episodeTitleId = episodeTitleId,
-	playbackProgressId = playbackProgressId,
-	playbackSpeedId = playbackSpeedId
+    episodeImageId = episodeImageId,
+    playlistIconId = playlistIconId,
+    playButtonId = playButtonId,
+    rewindButtonId = rewindButtonId,
+    forwardButtonId = forwardButtonId,
+    episodeTitleId = episodeTitleId,
+    playbackProgressId = playbackProgressId,
+    playbackSpeedId = playbackSpeedId
   )
 
   val endSet = endConstraintSet(
-	episodeImageId = episodeImageId,
-	playlistIconId = playlistIconId,
-	playButtonId = playButtonId,
-	rewindButtonId = rewindButtonId,
-	forwardButtonId = forwardButtonId,
-	episodeTitleId = episodeTitleId,
-	playbackProgressId = playbackProgressId,
-	playbackSpeedId = playbackSpeedId
+    episodeImageId = episodeImageId,
+    playlistIconId = playlistIconId,
+    playButtonId = playButtonId,
+    rewindButtonId = rewindButtonId,
+    forwardButtonId = forwardButtonId,
+    episodeTitleId = episodeTitleId,
+    playbackProgressId = playbackProgressId,
+    playbackSpeedId = playbackSpeedId
   )
 
   val transition = Transition(from = startConstraintId, to = endConstraintId) {
-	motionArc = Arc.StartHorizontal
+    motionArc = Arc.StartHorizontal
 
-	keyAttributes(ConstrainedLayoutReference(episodeTitleId)) {
-	  frame(75) {
-		this.alpha = 0f
-	  }
-	  frame(100) {
-		this.alpha = 1f
-	  }
-	}
+    keyAttributes(ConstrainedLayoutReference(episodeTitleId)) {
+      frame(75) {
+        this.alpha = 0f
+      }
+      frame(100) {
+        this.alpha = 1f
+      }
+    }
 
-	keyAttributes(ConstrainedLayoutReference(playbackSpeedId)) {
-	  frame(75) {
-		this.alpha = 0f
-	  }
-	  frame(100) {
-		this.alpha = 1f
-	  }
-	}
+    keyAttributes(ConstrainedLayoutReference(playbackSpeedId)) {
+      frame(75) {
+        this.alpha = 0f
+      }
+      frame(100) {
+        this.alpha = 1f
+      }
+    }
   }
 
   return remember {
-	MotionScene {
-	  addConstraintSet(name = startConstraintId, constraintSet = startSet)
-	  addConstraintSet(name = endConstraintId, constraintSet = endSet)
-	  addTransition(name = "default", transition = transition)
-	}
+    MotionScene {
+      addConstraintSet(name = startConstraintId, constraintSet = startSet)
+      addConstraintSet(name = endConstraintId, constraintSet = endSet)
+      addTransition(name = "default", transition = transition)
+    }
   }
 }
 
@@ -209,68 +209,68 @@ private fun startConstraintSet(
   val playbackSpeed = createRefFor(playbackSpeedId)
 
   createHorizontalChain(
-	episodeImage,
-	rewindButton,
-	playButton,
-	forwardButton,
-	playlistIcon.withChainParams(startMargin = 16.dp, endMargin = 8.dp),
-	chainStyle = ChainStyle.SpreadInside
+    episodeImage,
+    rewindButton,
+    playButton,
+    forwardButton,
+    playlistIcon.withChainParams(startMargin = 16.dp, endMargin = 8.dp),
+    chainStyle = ChainStyle.SpreadInside
   )
 
   constrain(episodeImage) {
-	width = Dimension.value(56.dp)
-	height = Dimension.value(56.dp)
-	top.linkTo(parent.top)
+    width = Dimension.value(56.dp)
+    height = Dimension.value(56.dp)
+    top.linkTo(parent.top)
   }
 
   constrain(episodeTitle) {
-	visibility = Visibility.Invisible
-	top.linkTo(parent.top)
-	start.linkTo(parent.start, margin = 24.dp)
-	end.linkTo(parent.end, margin = 24.dp)
+    visibility = Visibility.Invisible
+    top.linkTo(parent.top)
+    start.linkTo(parent.start, margin = 24.dp)
+    end.linkTo(parent.end, margin = 24.dp)
   }
 
   constrain(playButton) {
-	width = Dimension.value(48.dp)
-	height = Dimension.value(48.dp)
-	start.linkTo(rewindButton.end)
-	top.linkTo(episodeImage.top)
-	bottom.linkTo(episodeImage.bottom)
+    width = Dimension.value(48.dp)
+    height = Dimension.value(48.dp)
+    start.linkTo(rewindButton.end)
+    top.linkTo(episodeImage.top)
+    bottom.linkTo(episodeImage.bottom)
   }
 
   constrain(rewindButton) {
-	width = Dimension.value(36.dp)
-	height = Dimension.value(36.dp)
-	start.linkTo(episodeImage.end)
-	top.linkTo(episodeImage.top)
-	bottom.linkTo(episodeImage.bottom)
+    width = Dimension.value(36.dp)
+    height = Dimension.value(36.dp)
+    start.linkTo(episodeImage.end)
+    top.linkTo(episodeImage.top)
+    bottom.linkTo(episodeImage.bottom)
   }
 
   constrain(forwardButton) {
-	width = Dimension.value(36.dp)
-	height = Dimension.value(36.dp)
-	start.linkTo(playButton.end)
-	top.linkTo(episodeImage.top)
-	bottom.linkTo(episodeImage.bottom)
+    width = Dimension.value(36.dp)
+    height = Dimension.value(36.dp)
+    start.linkTo(playButton.end)
+    top.linkTo(episodeImage.top)
+    bottom.linkTo(episodeImage.bottom)
   }
 
   constrain(playlistIcon) {
-	width = Dimension.value(36.dp)
-	height = Dimension.value(36.dp)
-	top.linkTo(episodeImage.top)
-	bottom.linkTo(episodeImage.bottom)
+    width = Dimension.value(36.dp)
+    height = Dimension.value(36.dp)
+    top.linkTo(episodeImage.top)
+    bottom.linkTo(episodeImage.bottom)
   }
 
   constrain(playbackProgress) {
-	top.linkTo(episodeImage.bottom, margin = 2.dp)
-	start.linkTo(parent.start)
-	end.linkTo(parent.end)
+    top.linkTo(episodeImage.bottom, margin = 2.dp)
+    start.linkTo(parent.start)
+    end.linkTo(parent.end)
   }
 
   constrain(playbackSpeed) {
-	visibility = Visibility.Invisible
-	start.linkTo(parent.start)
-	end.linkTo(parent.end)
+    visibility = Visibility.Invisible
+    start.linkTo(parent.start)
+    end.linkTo(parent.end)
   }
 }
 
@@ -295,66 +295,66 @@ private fun endConstraintSet(
   val playbackSpeed = createRefFor(playbackSpeedId)
 
   createHorizontalChain(
-	rewindButton,
-	playButton.withChainParams(startMargin = 16.dp),
-	forwardButton.withChainParams(startMargin = 16.dp),
-	chainStyle = ChainStyle.Spread
+    rewindButton,
+    playButton.withChainParams(startMargin = 16.dp),
+    forwardButton.withChainParams(startMargin = 16.dp),
+    chainStyle = ChainStyle.Spread
   )
 
   constrain(playlistIcon) {
-	width = Dimension.value(36.dp)
-	height = Dimension.value(36.dp)
-	top.linkTo(parent.top, margin = 8.dp)
-	end.linkTo(parent.end, margin = 8.dp)
+    width = Dimension.value(36.dp)
+    height = Dimension.value(36.dp)
+    top.linkTo(parent.top, margin = 8.dp)
+    end.linkTo(parent.end, margin = 8.dp)
   }
 
   constrain(episodeImage) {
-	width = Dimension.value(350.dp)
-	height = Dimension.value(350.dp)
-	top.linkTo(playlistIcon.bottom, margin = 16.dp)
-	start.linkTo(parent.start)
-	end.linkTo(parent.end)
+    width = Dimension.value(350.dp)
+    height = Dimension.value(350.dp)
+    top.linkTo(playlistIcon.bottom, margin = 16.dp)
+    start.linkTo(parent.start)
+    end.linkTo(parent.end)
   }
 
   constrain(episodeTitle) {
-	top.linkTo(episodeImage.bottom, margin = 48.dp)
-	start.linkTo(parent.start, margin = 24.dp)
-	end.linkTo(parent.end, margin = 24.dp)
+    top.linkTo(episodeImage.bottom, margin = 48.dp)
+    start.linkTo(parent.start, margin = 24.dp)
+    end.linkTo(parent.end, margin = 24.dp)
   }
 
   constrain(playButton) {
-	width = Dimension.value(96.dp)
-	height = Dimension.value(96.dp)
-	top.linkTo(episodeTitle.bottom, margin = 24.dp)
+    width = Dimension.value(96.dp)
+    height = Dimension.value(96.dp)
+    top.linkTo(episodeTitle.bottom, margin = 24.dp)
   }
 
   constrain(rewindButton) {
-	width = Dimension.value(64.dp)
-	height = Dimension.value(64.dp)
-	start.linkTo(parent.end)
-	top.linkTo(playButton.top)
-	bottom.linkTo(playButton.bottom)
+    width = Dimension.value(64.dp)
+    height = Dimension.value(64.dp)
+    start.linkTo(parent.end)
+    top.linkTo(playButton.top)
+    bottom.linkTo(playButton.bottom)
   }
 
   constrain(forwardButton) {
-	width = Dimension.value(64.dp)
-	height = Dimension.value(64.dp)
-	top.linkTo(playButton.top)
-	bottom.linkTo(playButton.bottom)
-	end.linkTo(parent.end)
+    width = Dimension.value(64.dp)
+    height = Dimension.value(64.dp)
+    top.linkTo(playButton.top)
+    bottom.linkTo(playButton.bottom)
+    end.linkTo(parent.end)
   }
 
   constrain(playbackProgress) {
-	width = Dimension.fillToConstraints
-	top.linkTo(playButton.bottom, margin = 16.dp)
-	start.linkTo(parent.start, margin = 24.dp)
-	end.linkTo(parent.end, margin = 24.dp)
+    width = Dimension.fillToConstraints
+    top.linkTo(playButton.bottom, margin = 16.dp)
+    start.linkTo(parent.start, margin = 24.dp)
+    end.linkTo(parent.end, margin = 24.dp)
   }
 
   constrain(playbackSpeed) {
-	top.linkTo(playbackProgress.bottom)
-	start.linkTo(parent.start, margin = 24.dp)
-	bottom.linkTo(parent.bottom, margin = 48.dp)
+    top.linkTo(playbackProgress.bottom)
+    start.linkTo(parent.start, margin = 24.dp)
+    bottom.linkTo(parent.bottom, margin = 48.dp)
   }
 }
 
@@ -362,25 +362,25 @@ private fun endConstraintSet(
 @Composable
 fun MiniNowPlayingMotionViewPreview() {
   CastawayTheme(MATERIAL, true) {
-	NowPlayingMotionView(
-	  expandedPercentage = { 0f },
-	  episode = {
-		NowPlayingEpisode(
-		  id = "uu1d",
-		  title = "Awesome Episode 1",
-		  subTitle = "How to be just awesome!",
-		  description = "In this episode...",
-		  audioUrl = "episode.url",
-		  imageUrl = "image.url",
-		  author = "Awesom-O",
-		  playbackPosition = NowPlayingPosition(position = 1800000L, duration = 2160000L),
-		  episode = 1,
-		  podcastUrl = "pod.url"
-		)
-	  },
-	  playing = { true },
-	  playbackSpeed = { 1.5f }
-	) {}
+    NowPlayingMotionView(
+      expandedPercentage = { 0f },
+      episode = {
+        NowPlayingEpisode(
+          id = "uu1d",
+          title = "Awesome Episode 1",
+          subTitle = "How to be just awesome!",
+          description = "In this episode...",
+          audioUrl = "episode.url",
+          imageUrl = "image.url",
+          author = "Awesom-O",
+          playbackPosition = NowPlayingPosition(position = 1800000L, duration = 2160000L),
+          episode = 1,
+          podcastUrl = "pod.url"
+        )
+      },
+      playing = { true },
+      playbackSpeed = { 1.5f }
+    ) {}
   }
 }
 
@@ -388,24 +388,24 @@ fun MiniNowPlayingMotionViewPreview() {
 @Composable
 fun NowPlayingMotionViewPreview() {
   CastawayTheme(MATERIAL, true) {
-	NowPlayingMotionView(
-	  expandedPercentage = { 1f },
-	  episode = {
-		NowPlayingEpisode(
-		  id = "uu1d",
-		  title = "Awesome Episode 1",
-		  subTitle = "How to be just awesome!",
-		  description = "In this episode...",
-		  audioUrl = "episode.url",
-		  imageUrl = "image.url",
-		  author = "Awesom-O",
-		  playbackPosition = NowPlayingPosition(position = 1800000L, duration = 2160000L),
-		  episode = 1,
-		  podcastUrl = "pod.url"
-		)
-	  },
-	  playing = { true },
-	  playbackSpeed = { 1.5f }
-	) {}
+    NowPlayingMotionView(
+      expandedPercentage = { 1f },
+      episode = {
+        NowPlayingEpisode(
+          id = "uu1d",
+          title = "Awesome Episode 1",
+          subTitle = "How to be just awesome!",
+          description = "In this episode...",
+          audioUrl = "episode.url",
+          imageUrl = "image.url",
+          author = "Awesom-O",
+          playbackPosition = NowPlayingPosition(position = 1800000L, duration = 2160000L),
+          episode = 1,
+          podcastUrl = "pod.url"
+        )
+      },
+      playing = { true },
+      playbackSpeed = { 1.5f }
+    ) {}
   }
 }

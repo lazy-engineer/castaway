@@ -11,6 +11,6 @@ data class EpisodeRowState(
 
   companion object {
 
-	val Empty = EpisodeRowState()
+    val Empty = EpisodeRowState()
   }
 }

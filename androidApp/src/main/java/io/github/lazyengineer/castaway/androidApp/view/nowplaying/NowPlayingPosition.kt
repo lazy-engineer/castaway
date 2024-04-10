@@ -8,18 +8,18 @@ data class NowPlayingPosition(
 ) {
 
   val safePosition: Long
-	get() = position.coerceIn(0, duration)
+    get() = position.coerceIn(0, duration)
 
   companion object {
 
-	fun PlaybackPosition.toNowPlayingPosition() = NowPlayingPosition(
-	  position = position,
-	  duration = duration,
-	)
+    fun PlaybackPosition.toNowPlayingPosition() = NowPlayingPosition(
+      position = position,
+      duration = duration,
+    )
 
-	fun NowPlayingPosition.toPlaybackPosition() = PlaybackPosition(
-	  position = position,
-	  duration = duration,
-	)
+    fun NowPlayingPosition.toPlaybackPosition() = PlaybackPosition(
+      position = position,
+      duration = duration,
+    )
   }
 }

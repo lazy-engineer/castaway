@@ -12,17 +12,17 @@ import io.github.lazyengineer.castaway.domain.resource.ThemeType.MATERIAL
 class MainActivity : AppCompatActivity() {
 
   override fun onCreate(savedInstanceState: Bundle?) {
-	super.onCreate(savedInstanceState)
-	setContent {
-	  val systemThemeMode = isSystemInDarkTheme()
-	  val darkMode = rememberSaveable { mutableStateOf(systemThemeMode) }
-	  val theme = rememberSaveable { mutableStateOf(MATERIAL) }
+    super.onCreate(savedInstanceState)
+    setContent {
+      val systemThemeMode = isSystemInDarkTheme()
+      val darkMode = rememberSaveable { mutableStateOf(systemThemeMode) }
+      val theme = rememberSaveable { mutableStateOf(MATERIAL) }
 
-	  CastawayTheme(theme.value, darkMode.value) {
-		StartScreen { isDarkMode ->
-		  darkMode.value = isDarkMode
-		}
-	  }
-	}
+      CastawayTheme(theme.value, darkMode.value) {
+        StartScreen { isDarkMode ->
+          darkMode.value = isDarkMode
+        }
+      }
+    }
   }
 }

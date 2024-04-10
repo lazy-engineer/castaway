@@ -12,19 +12,19 @@ data class MediaServiceState(
 
   companion object {
 
-	private val DEFAULT_PLAYBACK_STATE = PlaybackState(
-	  isPrepared = false,
-	  isPlayEnabled = false,
-	  isPlaying = false,
-	  currentPlaybackPosition = 0,
-	)
+    private val DEFAULT_PLAYBACK_STATE = PlaybackState(
+      isPrepared = false,
+      isPlayEnabled = false,
+      isPlaying = false,
+      currentPlaybackPosition = 0,
+    )
 
-	private val NOTHING_PLAYING: MediaData = MediaData(
-	  mediaId = "",
-	  mediaUri = "",
-	  displayTitle = "",
-	)
+    private val NOTHING_PLAYING: MediaData = MediaData(
+      mediaId = "",
+      mediaUri = "",
+      displayTitle = "",
+    )
 
-	val Initial = MediaServiceState()
+    val Initial = MediaServiceState()
   }
 }

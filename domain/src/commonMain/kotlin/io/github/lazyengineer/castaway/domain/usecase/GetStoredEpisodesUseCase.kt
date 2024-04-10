@@ -9,6 +9,6 @@ class GetStoredEpisodesUseCase(
 ) {
 
   suspend operator fun invoke(episodeIds: List<String>): DataResult<List<Episode>> {
-	return feedRepository.loadEpisodes(episodeIds)
+    return feedRepository.loadEpisodes(episodeIds)
   }
 }
