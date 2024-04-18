@@ -1,6 +1,4 @@
-import dependencies.App
-import dependencies.Library
-import dependencies.TestLibrary
+import config.Shared
 import org.jetbrains.kotlin.gradle.dsl.KotlinMultiplatformExtension
 import org.jetbrains.kotlin.gradle.plugin.mpp.KotlinNativeTarget
 
@@ -33,21 +31,21 @@ kotlin {
       dependencies {
         api(project(":domain"))
         implementation(project(":data"))
-        implementation(Library.koin)
+        implementation(libs.koin.core)
       }
     }
     val commonTest by getting {
       dependencies {
         implementation(kotlin("test-common"))
         implementation(kotlin("test-annotations-common"))
-        implementation(Library.koinTest)
+        implementation(libs.koin.test)
       }
     }
     val androidMain by getting
     val androidUnitTest by getting {
       dependencies {
         implementation(kotlin("test-junit"))
-        implementation(TestLibrary.junit)
+        implementation(libs.junit)
       }
     }
 
@@ -74,17 +72,17 @@ kotlin {
 }
 
 android {
-  compileSdk = App.compileSdk
+  compileSdk = Shared.compileSdk
   sourceSets["main"].manifest.srcFile("src/androidMain/AndroidManifest.xml")
   defaultConfig {
-    minSdk = App.minSdk
-    targetSdk = App.targetSdk
+    minSdk = Shared.minSdk
+    targetSdk = Shared.targetSdk
   }
-  namespace = "io.github.lazyengineer.castaway.shared"
+  namespace = Shared.namespace
 
   compileOptions {
-    sourceCompatibility(JavaVersion.VERSION_17)
-    targetCompatibility(JavaVersion.VERSION_17)
+    sourceCompatibility(Shared.javaVersion)
+    targetCompatibility(Shared.javaVersion)
   }
 }
 

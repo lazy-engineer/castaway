@@ -1,7 +1,4 @@
-import dependencies.AndroidTestLibrary
-import dependencies.App
-import dependencies.Library
-import dependencies.TestLibrary
+import config.App
 
 plugins {
   id("com.android.application")
@@ -13,55 +10,45 @@ dependencies {
   implementation(project(":shared"))
   implementation(project(":castawayplayer"))
 
-  with(Library.Compose) {
-    implementation(composeUi)
-    implementation(composeUiTooling)
-    implementation(composeFoundation)
-    implementation(composeMaterial)
-    implementation(composeMaterialIconsCore)
-    implementation(composeMaterialIconsExtended)
-    implementation(composeConstraintlayout)
-    implementation(composeActivity)
-    implementation(composeLifecycle)
-    implementation(composeViewModel)
-    implementation(composeNavigation)
-    implementation(composeLifecycleRuntime)
-  }
-
-  with(Library) {
-    implementation(ktxWorkRuntime)
-    implementation(viewmodelKtx)
-    implementation(activityKtx)
-    implementation(fragmentKtx)
+  with(libs) {
+    implementation(compose.ui)
+    implementation(compose.ui.tooling)
+    implementation(compose.foundation)
+    implementation(compose.material)
+    implementation(compose.material.icons.core)
+    implementation(compose.material.icons.extended)
+    implementation(constraintlayout.compose)
+    implementation(activity.compose)
+    implementation(lifecycle.runtime.ktx)
+    implementation(lifecycle.viewmodel.compose)
+    implementation(navigation.compose)
+    implementation(lifecycle.runtime.compose)
+    implementation(work.runtime.ktx)
+    implementation(lifecycle.viewmodel.ktx)
+    implementation(activity.ktx)
+    implementation(fragment.ktx)
     implementation(material)
     implementation(appcompat)
     implementation(media)
-
-    implementation(koin)
-    implementation(koinAndroid)
-    implementation(koinCompose)
-
+    implementation(koin.core)
+    implementation(koin.android)
+    implementation(koin.androidx.compose)
     implementation(coil)
-    implementation(coilCompose)
+    implementation(coil.compose)
     implementation(gson)
+    implementation(kotlinx.collections.immutable)
 
-    implementation(immutableCollections)
-  }
+    androidTestImplementation(compose.ui.test)
+    androidTestImplementation(compose.ui.test.junit)
+    debugImplementation(compose.ui.test.manifest)
 
-  with(AndroidTestLibrary) {
-    androidTestImplementation(composeUiTest)
-    androidTestImplementation(composeUiTestJunit)
-    debugImplementation(composeDebugTestManifest)
-  }
-
-  with(TestLibrary) {
     testImplementation(junit)
-    testImplementation(coroutines)
+    testImplementation(kotlinx.coroutines.test)
     testImplementation(turbine)
-    testImplementation(mockito)
+    testImplementation(mockito.kotlin)
     testImplementation(mockk)
     testImplementation(kluent)
-    testImplementation(kotest)
+    testImplementation(kotest.runner.junit5)
   }
 
   testImplementation(project(mapOf("path" to ":data")))
@@ -70,12 +57,12 @@ dependencies {
 android {
   compileSdk = App.compileSdk
   defaultConfig {
-    applicationId = "io.github.lazyengineer.castaway.androidApp"
+    applicationId = App.applicationId
     minSdk = App.minSdk
     targetSdk = App.targetSdk
     versionCode = App.versionCode
     versionName = App.versionName
-    testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+    testInstrumentationRunner = App.testRunner
   }
 
   buildTypes {
@@ -85,12 +72,12 @@ android {
   }
 
   compileOptions {
-    sourceCompatibility(JavaVersion.VERSION_17)
-    targetCompatibility(JavaVersion.VERSION_17)
+    sourceCompatibility(App.javaVersion)
+    targetCompatibility(App.javaVersion)
   }
 
   kotlinOptions {
-    jvmTarget = "17"
+    jvmTarget = App.jvmTarget
   }
 
   buildFeatures {
@@ -98,7 +85,7 @@ android {
   }
 
   composeOptions {
-    kotlinCompilerExtensionVersion = "1.5.3"
+    kotlinCompilerExtensionVersion = App.kotlinCompilerVersion
   }
 
   packaging {
@@ -113,5 +100,5 @@ android {
     }
   }
 
-  namespace = "io.github.lazyengineer.castaway.androidApp"
+  namespace = App.namespace
 }

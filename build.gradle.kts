@@ -1,12 +1,10 @@
+import config.CastawayPlayer
+
 plugins {
-  id("io.gitlab.arturbosch.detekt") version ("1.23.1")
+  alias(libs.plugins.detekt)
 }
 
 buildscript {
-  val kotlinVersion by extra("1.9.10")
-  val gradleVersion by extra("8.1.1")
-  val sqldelightVersion by extra("1.5.3")
-
   repositories {
     gradlePluginPortal()
     google()
@@ -14,9 +12,9 @@ buildscript {
   }
 
   dependencies {
-    classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlinVersion")
-    classpath("com.android.tools.build:gradle:$gradleVersion")
-    classpath("com.squareup.sqldelight:gradle-plugin:$sqldelightVersion")
+    classpath(libs.gradle)
+    classpath(libs.kotlin.gradle.plugin)
+    classpath(libs.sqldelight.gradle.plugin)
   }
 }
 
@@ -33,10 +31,10 @@ tasks.register("clean", Delete::class) {
 }
 
 subprojects {
-  apply(plugin = "io.gitlab.arturbosch.detekt")
+  apply(plugin = rootProject.libs.plugins.detekt.get().pluginId)
 
   detekt {
-    toolVersion = "1.23.1"
+    toolVersion = rootProject.libs.plugins.detekt.get().version.requiredVersion
     config.setFrom(file("$rootDir/config/detekt/detekt.yml"))
     buildUponDefaultConfig = true
     baseline = file("$rootDir/config/detekt/baseline.xml")
@@ -55,12 +53,12 @@ subprojects {
 
   plugins.withType<org.jetbrains.kotlin.gradle.plugin.KotlinBasePluginWrapper> {
     dependencies {
-      detektPlugins("com.twitter.compose.rules:detekt:0.0.26")
+      detektPlugins(libs.detekt)
     }
   }
 
   tasks.withType<io.gitlab.arturbosch.detekt.Detekt>().configureEach {
-    jvmTarget = JavaVersion.VERSION_17.majorVersion
+    jvmTarget = CastawayPlayer.jvmTarget
     reports {
       xml.required.set(true)
       xml.outputLocation.set(file("$rootDir/build/reports/detekt.xml"))
@@ -68,7 +66,7 @@ subprojects {
   }
 
   tasks.withType<io.gitlab.arturbosch.detekt.DetektCreateBaselineTask>().configureEach {
-    jvmTarget = JavaVersion.VERSION_17.majorVersion
+    jvmTarget = CastawayPlayer.jvmTarget
   }
 
   tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile>().configureEach {

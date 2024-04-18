@@ -1,5 +1,4 @@
-import dependencies.App
-import dependencies.Library
+import config.Shared
 
 plugins {
   kotlin("multiplatform")
@@ -15,7 +14,7 @@ kotlin {
   sourceSets {
     val commonMain by getting {
       dependencies {
-        implementation(Library.coroutines)
+        implementation(libs.kotlinx.coroutines.core)
       }
     }
     val commonTest by getting {
@@ -25,7 +24,7 @@ kotlin {
     }
     val androidMain by getting {
       dependencies {
-        implementation(Library.viewmodelKtx)
+        implementation(libs.lifecycle.viewmodel.ktx)
       }
     }
     val androidUnitTest by getting
@@ -52,15 +51,15 @@ kotlin {
 }
 
 android {
-  compileSdk = App.compileSdk
-  namespace = "io.github.lazyengineer.castaway.domain"
+  compileSdk = Shared.compileSdk
+  namespace = Shared.Domain.namespace
   defaultConfig {
-    minSdk = App.minSdk
-    targetSdk = App.targetSdk
+    minSdk = Shared.minSdk
+    targetSdk = Shared.targetSdk
   }
 
   compileOptions {
-    sourceCompatibility(JavaVersion.VERSION_17)
-    targetCompatibility(JavaVersion.VERSION_17)
+    sourceCompatibility(Shared.javaVersion)
+    targetCompatibility(Shared.javaVersion)
   }
 }

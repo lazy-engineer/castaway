@@ -1,0 +1,103 @@
+[versions]
+detekt = "0.0.26"
+kotlin = "1.9.10"
+gradle = "8.1.1"
+appcompat = "1.5.1"
+material = "1.2.1"
+media = "1.6.0"
+lifecycleExtensions = "2.5.1"
+ktxActivity = "1.5.1"
+ktxFragment = "1.5.2"
+ktxLifecycleRuntime = "2.5.1"
+compose = "1.6.5"
+composeActivity = "1.8.2"
+composeViewModel = "2.5.1"
+composeNavigation = "2.5.2"
+composeConstraintlayout = "1.1.0-alpha13"
+composeLifecycleRuntime = "2.6.2"
+ktxCore = "1.9.0"
+ktxWorkRuntime = "2.7.1"
+coroutines = "1.6.4"
+exoplayer = "2.18.1"
+coil = "2.2.2"
+gson = "2.9.1"
+koin = "3.2.0"
+ktor = "2.1.2"
+sqldelight = "1.5.3"
+feedparser = "0.1.0"
+immutableCollections = "0.3.5"
+junit = "4.13.1"
+coroutinesTest = "1.6.4"
+turbine = "0.12.1"
+mockito = "4.0.0"
+mockk = "1.13.7"
+kluent = "1.72"
+kotest = "5.6.2"
+androidJunit = "1.1.2"
+detektPlugin = "1.23.1"
+
+[plugins]
+detekt = { id = "io.gitlab.arturbosch.detekt", version.ref = "detektPlugin" }
+
+[libraries]
+detekt = { module = "com.twitter.compose.rules:detekt", version.ref = "detekt" }
+gradle = { module = "com.android.tools.build:gradle", version.ref = "gradle" }
+kotlin-gradle-plugin = { module = "org.jetbrains.kotlin:kotlin-gradle-plugin", version.ref = "kotlin" }
+koin-gradle-plugin = { module = "org.koin:koin-gradle-plugin", version.ref = "koin" }
+sqldelight-gradle-plugin = { module = "com.squareup.sqldelight:gradle-plugin", version.ref = "sqldelight" }
+kotlin-stdlib = { module = "org.jetbrains.kotlin:kotlin-stdlib-jdk7", version.ref = "kotlin" }
+core-ktx = { module = "androidx.core:core-ktx", version.ref = "ktxCore" }
+work-runtime-ktx = { module = "androidx.work:work-runtime-ktx", version.ref = "ktxWorkRuntime" }
+appcompat = { module = "androidx.appcompat:appcompat", version.ref = "appcompat" }
+material = { module = "com.google.android.material:material", version.ref = "material" }
+koin-core = { module = "io.insert-koin:koin-core", version.ref = "koin" }
+koin-test = { module = "io.insert-koin:koin-test", version.ref = "koin" }
+koin-android = { module = "io.insert-koin:koin-android", version.ref = "koin" }
+koin-androidx-compose = { module = "io.insert-koin:koin-androidx-compose", version.ref = "koin" }
+lifecycle-viewmodel-ktx = { module = "androidx.lifecycle:lifecycle-viewmodel-ktx", version.ref = "lifecycleExtensions" }
+activity-ktx = { module = "androidx.activity:activity-ktx", version.ref = "ktxActivity" }
+fragment-ktx = { module = "androidx.fragment:fragment-ktx", version.ref = "ktxFragment" }
+media = { module = "androidx.media:media", version.ref = "media" }
+exoplayer = { module = "com.google.android.exoplayer:exoplayer", version.ref = "exoplayer" }
+exoplayer-extension-mediasession = { module = "com.google.android.exoplayer:extension-mediasession", version.ref = "exoplayer" }
+exoplayer-extension-cast = { module = "com.google.android.exoplayer:extension-cast", version.ref = "exoplayer" }
+exoplayer-ui = { module = "com.google.android.exoplayer:exoplayer-ui", version.ref = "exoplayer" }
+coil = { module = "io.coil-kt:coil", version.ref = "coil" }
+coil-compose = { module = "io.coil-kt:coil-compose", version.ref = "coil" }
+gson = { module = "com.google.code.gson:gson", version.ref = "gson" }
+ktor-client-core = { module = "io.ktor:ktor-client-core", version.ref = "ktor" }
+ktor-client-android = { module = "io.ktor:ktor-client-android", version.ref = "ktor" }
+ktor-client-darwin = { module = "io.ktor:ktor-client-darwin", version.ref = "ktor" }
+sqldelight-runtime = { module = "com.squareup.sqldelight:runtime", version.ref = "sqldelight" }
+sqldelight-coroutines-extensions = { module = "com.squareup.sqldelight:coroutines-extensions", version.ref = "sqldelight" }
+sqldelight-android-driver = { module = "com.squareup.sqldelight:android-driver", version.ref = "sqldelight" }
+sqldelight-native-driver = { module = "com.squareup.sqldelight:native-driver", version.ref = "sqldelight" }
+feedparser = { module = "io.github.lazy-engineer:feedparser", version.ref = "feedparser" }
+compose-runtime = { module = "androidx.compose.runtime:runtime", version.ref = "compose" }
+lifecycle-runtime-compose = { module = "androidx.lifecycle:lifecycle-runtime-compose", version.ref = "composeLifecycleRuntime" }
+compose-ui = { module = "androidx.compose.ui:ui", version.ref = "compose" }
+compose-ui-tooling = { module = "androidx.compose.ui:ui-tooling", version.ref = "compose" }
+compose-foundation = { module = "androidx.compose.foundation:foundation", version.ref = "compose" }
+compose-material = { module = "androidx.compose.material:material", version.ref = "compose" }
+compose-material-icons-core = { module = "androidx.compose.material:material-icons-core", version.ref = "compose" }
+compose-material-icons-extended = { module = "androidx.compose.material:material-icons-extended", version.ref = "compose" }
+constraintlayout-compose = { module = "androidx.constraintlayout:constraintlayout-compose", version.ref = "composeConstraintlayout" }
+activity-compose = { module = "androidx.activity:activity-compose", version.ref = "composeActivity" }
+lifecycle-runtime-ktx = { module = "androidx.lifecycle:lifecycle-runtime-ktx", version.ref = "ktxLifecycleRuntime" }
+lifecycle-viewmodel-compose = { module = "androidx.lifecycle:lifecycle-viewmodel-compose", version.ref = "composeViewModel" }
+navigation-compose = { module = "androidx.navigation:navigation-compose", version.ref = "composeNavigation" }
+ui-test-junit4 = { module = "androidx.compose.ui:ui-test-junit4", version.ref = "compose" }
+kotlinx-coroutines-core = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "coroutines" }
+kotlinx-coroutines-android = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-android", version.ref = "coroutines" }
+kotlinx-collections-immutable = { module = "org.jetbrains.kotlinx:kotlinx-collections-immutable", version.ref = "immutableCollections" }
+junit = { module = "junit:junit", version.ref = "junit" }
+kotlinx-coroutines-test = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-test", version.ref = "coroutinesTest" }
+turbine = { module = "app.cash.turbine:turbine", version.ref = "turbine" }
+mockito-kotlin = { module = "org.mockito.kotlin:mockito-kotlin", version.ref = "mockito" }
+mockk = { module = "io.mockk:mockk", version.ref = "mockk" }
+kluent = { module = "org.amshove.kluent:kluent", version.ref = "kluent" }
+kotest-runner-junit5 = { module = "io.kotest:kotest-runner-junit5", version.ref = "kotest" }
+android-junit = { module = "androidx.test.ext:junit", version.ref = "androidJunit" }
+compose-ui-test = { module = "androidx.compose.ui:ui-test", version.ref = "compose" }
+compose-ui-test-junit = { module = "androidx.compose.ui:ui-test-junit4", version.ref = "compose" }
+compose-ui-test-manifest = { module = "androidx.compose.ui:ui-test-manifest", version.ref = "compose" }

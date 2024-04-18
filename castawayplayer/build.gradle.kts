@@ -1,7 +1,4 @@
-import dependencies.AndroidTestLibrary
-import dependencies.App
-import dependencies.Library
-import dependencies.TestLibrary
+import config.CastawayPlayer
 
 plugins {
   id("com.android.library")
@@ -9,14 +6,14 @@ plugins {
 }
 
 android {
-  compileSdk = App.compileSdk
-  buildToolsVersion = App.buildTools
+  compileSdk = CastawayPlayer.compileSdk
+  buildToolsVersion = CastawayPlayer.buildTools
 
   defaultConfig {
-    minSdk = App.minSdk
-    targetSdk = App.targetSdk
+    minSdk = CastawayPlayer.minSdk
+    targetSdk = CastawayPlayer.targetSdk
 
-    testInstrumentationRunner = App.testRunner
+    testInstrumentationRunner = CastawayPlayer.testRunner
     consumerProguardFiles("consumer-rules.pro")
   }
 
@@ -30,30 +27,30 @@ android {
   }
 
   compileOptions {
-    sourceCompatibility(JavaVersion.VERSION_17)
-    targetCompatibility(JavaVersion.VERSION_17)
+    sourceCompatibility(CastawayPlayer.javaVersion)
+    targetCompatibility(CastawayPlayer.javaVersion)
   }
 
   kotlinOptions {
-    jvmTarget = "17"
+    jvmTarget = CastawayPlayer.jvmTarget
   }
-  namespace = "io.github.lazyengineer.castawayplayer"
+  namespace = CastawayPlayer.namespace
 }
 
 dependencies {
-  implementation(Library.kotlin)
-  implementation(Library.ktxCore)
+  with(libs) {
+    implementation(kotlin.stdlib)
+    implementation(core.ktx)
+    implementation(exoplayer)
+    implementation(exoplayer.extension.cast)
+    implementation(exoplayer.extension.mediasession)
+    implementation(exoplayer.ui)
+    implementation(coil)
+    implementation(gson)
+    implementation(kotlinx.coroutines.core)
+    implementation(kotlinx.coroutines.android)
 
-  implementation(Library.exoplayer)
-  implementation(Library.exoplayerCast)
-  implementation(Library.exoplayerMediaSession)
-  implementation(Library.exoplayerUI)
-  implementation(Library.coil)
-  implementation(Library.gson)
-
-  implementation(Library.coroutines)
-  implementation(Library.coroutinesAndroid)
-
-  testImplementation(TestLibrary.junit)
-  androidTestImplementation(AndroidTestLibrary.androidJunit)
+    testImplementation(junit)
+    androidTestImplementation(android.junit)
+  }
 }

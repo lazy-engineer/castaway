@@ -1,7 +1,4 @@
-import dependencies.App
-import dependencies.Library
-import dependencies.TestLibrary
-import dependencies.Version
+import config.Shared
 
 plugins {
   kotlin("multiplatform")
@@ -19,34 +16,31 @@ kotlin {
     val commonMain by getting {
       dependencies {
         implementation(project(":domain"))
-        implementation(Library.koin)
-        implementation(Library.coroutines)
-        implementation(Library.Ktor.ktor)
-
-        with(Library.SqlDelight) {
-          implementation(sqldelight)
-          implementation(sqldelightExt)
-        }
+        implementation(libs.koin.core)
+        implementation(libs.kotlinx.coroutines.core)
+        implementation(libs.ktor.client.core)
+        implementation(libs.sqldelight.runtime)
+        implementation(libs.sqldelight.coroutines.extensions)
       }
     }
     val commonTest by getting {
       dependencies {
         implementation(kotlin("test-common"))
         implementation(kotlin("test-annotations-common"))
-        implementation(Library.koinTest)
+        implementation(libs.koin.test)
       }
     }
     val androidMain by getting {
       dependencies {
-        implementation(Library.Ktor.ktorAndroid)
-        implementation(Library.SqlDelight.sqldelightAndroid)
-        implementation(Library.feedparser)
+        implementation(libs.ktor.client.android)
+        implementation(libs.sqldelight.android.driver)
+        implementation(libs.feedparser)
       }
     }
     val androidUnitTest by getting {
       dependencies {
         implementation(kotlin("test-junit"))
-        implementation(TestLibrary.junit)
+        implementation(libs.junit)
       }
     }
 
@@ -59,13 +53,9 @@ kotlin {
       iosArm64Main.dependsOn(this)
       iosSimulatorArm64Main.dependsOn(this)
       dependencies {
-        implementation(Library.Ktor.ktorIOS)
-        implementation(Library.SqlDelight.sqldelightIOS)
-        implementation(Library.coroutines) {
-          version {
-            strictly(Version.coroutines)
-          }
-        }
+        implementation(libs.ktor.client.darwin)
+        implementation(libs.sqldelight.native.driver)
+        implementation(libs.kotlinx.coroutines.core)
       }
     }
 
@@ -82,21 +72,21 @@ kotlin {
 }
 
 android {
-  namespace = "io.github.lazyengineer.castaway.data"
-  compileSdk = App.compileSdk
+  namespace = Shared.Data.namespace
+  compileSdk = Shared.compileSdk
   defaultConfig {
-    minSdk = App.minSdk
-    targetSdk = App.targetSdk
+    minSdk = Shared.minSdk
+    targetSdk = Shared.targetSdk
   }
 
   compileOptions {
-    sourceCompatibility(JavaVersion.VERSION_17)
-    targetCompatibility(JavaVersion.VERSION_17)
+    sourceCompatibility(Shared.javaVersion)
+    targetCompatibility(Shared.javaVersion)
   }
 }
 
 sqldelight {
-  database("CastawayDatabase") {
-    packageName = "io.github.lazyengineer.castaway.db"
+  database(Shared.Data.database) {
+    packageName = Shared.Data.databasePackageName
   }
 }
