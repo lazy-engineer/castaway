@@ -11,6 +11,9 @@ dependencies {
   implementation(project(":castawayplayer"))
 
   with(libs) {
+    val composeBom = platform(libs.compose.bom)
+    
+    implementation(composeBom)
     implementation(compose.ui)
     implementation(compose.ui.tooling)
     implementation(compose.foundation)
@@ -38,8 +41,9 @@ dependencies {
     implementation(gson)
     implementation(kotlinx.collections.immutable)
 
+    androidTestImplementation(composeBom)
     androidTestImplementation(compose.ui.test)
-    androidTestImplementation(compose.ui.test.junit)
+    androidTestImplementation(compose.ui.test.junit4)
     debugImplementation(compose.ui.test.manifest)
 
     testImplementation(junit)
