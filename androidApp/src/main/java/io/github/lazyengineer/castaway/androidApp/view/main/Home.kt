@@ -68,7 +68,7 @@ internal fun Home(
     sheetPeekHeight = animatedHeight,
   ) {
     with(LocalDensity.current) {
-      expandedPercentage = calculateBottomSheetExpandedPercentage(scaffoldState.bottomSheetState.offset.value.toDp())
+      expandedPercentage = calculateBottomSheetExpandedPercentage(scaffoldState.bottomSheetState.requireOffset().toDp())
     }
 
     PodcastScreen(modifier = modifier) {

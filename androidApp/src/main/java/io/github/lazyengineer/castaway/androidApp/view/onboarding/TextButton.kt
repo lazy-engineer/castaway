@@ -123,9 +123,9 @@ fun GradientTextButtonPreview() {
     shape = RoundedCornerShape(8.dp),
     gradient = Brush.linearGradient(
       listOf(
-        Colors.azurGradientStart.toColor(),
-        Colors.azurGradientMiddle.toColor(),
-        Colors.azurGradientEnd.toColor(),
+        Colors.AzurGradientStart.toColor(),
+        Colors.AzurGradientMiddle.toColor(),
+        Colors.AzurGradientEnd.toColor(),
       )
     ),
   ) {}
