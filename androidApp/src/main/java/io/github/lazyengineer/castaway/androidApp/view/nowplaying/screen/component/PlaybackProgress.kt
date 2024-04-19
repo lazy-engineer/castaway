@@ -19,8 +19,8 @@ import io.github.lazyengineer.castaway.androidApp.view.nowplaying.NowPlayingPosi
 import io.github.lazyengineer.castaway.androidApp.view.nowplaying.screen.util.millisToTxt
 import io.github.lazyengineer.castaway.androidApp.view.nowplaying.screen.util.playbackProgress
 import io.github.lazyengineer.castaway.androidApp.view.nowplaying.screen.util.progressToPosition
-import io.github.lazyengineer.castaway.androidApp.view.shared.PlaybackProgressView
 import io.github.lazyengineer.castaway.androidApp.view.shared.PlaybackSliderView
+import io.github.lazyengineer.castaway.androidApp.view.shared.PlaybackTrackView
 
 @Composable
 internal fun PlaybackProgress(
@@ -71,7 +71,7 @@ internal fun PlaybackProgress(
         })
     }
   } else {
-    PlaybackProgressView(
+    PlaybackTrackView(
       modifier = modifier.fillMaxWidth(),
       playbackPosition = playbackProgress,
     )

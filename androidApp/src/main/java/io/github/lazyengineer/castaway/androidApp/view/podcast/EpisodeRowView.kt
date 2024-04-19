@@ -25,7 +25,7 @@ import androidx.compose.ui.semantics.stateDescription
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import io.github.lazyengineer.castaway.androidApp.theme.CastawayTheme
-import io.github.lazyengineer.castaway.androidApp.view.shared.PlaybackProgressView
+import io.github.lazyengineer.castaway.androidApp.view.shared.PlaybackTrackView
 import io.github.lazyengineer.castaway.domain.resource.ThemeType.MATERIAL
 
 @Composable
@@ -93,7 +93,7 @@ fun EpisodeRowView(
       }
     }
 
-    PlaybackProgressView(
+    PlaybackTrackView(
       modifier = Modifier
         .fillMaxWidth()
         .padding(horizontal = 16.dp)
