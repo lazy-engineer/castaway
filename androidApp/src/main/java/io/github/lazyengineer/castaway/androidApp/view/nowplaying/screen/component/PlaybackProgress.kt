@@ -8,12 +8,16 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableLongStateOf
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import io.github.lazyengineer.castaway.androidApp.theme.CastawayTheme
 import io.github.lazyengineer.castaway.androidApp.view.nowplaying.NowPlayingEvent
-import io.github.lazyengineer.castaway.androidApp.view.nowplaying.NowPlayingEvent.EditPlaybackPosition
-import io.github.lazyengineer.castaway.androidApp.view.nowplaying.NowPlayingEvent.EditingPlayback
 import io.github.lazyengineer.castaway.androidApp.view.nowplaying.NowPlayingEvent.SeekTo
 import io.github.lazyengineer.castaway.androidApp.view.nowplaying.NowPlayingPosition
 import io.github.lazyengineer.castaway.androidApp.view.nowplaying.screen.util.millisToTxt
@@ -21,23 +25,38 @@ import io.github.lazyengineer.castaway.androidApp.view.nowplaying.screen.util.pl
 import io.github.lazyengineer.castaway.androidApp.view.nowplaying.screen.util.progressToPosition
 import io.github.lazyengineer.castaway.androidApp.view.shared.PlaybackSliderView
 import io.github.lazyengineer.castaway.androidApp.view.shared.PlaybackTrackView
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.collectLatest
 
 @Composable
 internal fun PlaybackProgress(
   @FloatRange(from = 0.0, to = 1.0) expandedPercentage: () -> Float,
-  playbackPosition: () -> NowPlayingPosition,
+  playbackPosition: Flow<NowPlayingPosition>,
   modifier: Modifier = Modifier,
-  event: (NowPlayingEvent) -> Unit
+  event: (NowPlayingEvent) -> Unit,
+  editing: (Boolean) -> Unit,
 ) {
+
+  var playbackPos by rememberSaveable { mutableLongStateOf(0L) }
+  var playbackDuration by rememberSaveable { mutableLongStateOf(0L) }
+  var editingPlayback by remember { mutableStateOf(false) }
+
+  LaunchedEffect(Unit) {
+    println("Editing: PING!!")
+    playbackPosition.collectLatest {
+      println("Editing: flow ${playbackPosition.hashCode()}")
+      println("Editing: PONG!!")
+      if (!editingPlayback) {
+        println("Editing: PONG??")
+        playbackPos = it.safePosition
+        playbackDuration = it.duration
+      }
+    }
+  }
 
   val sliderExpandedPercentage by animateFloatAsState(
     targetValue = expandedPercentage(),
     label = "playbackProgress"
-  )
-
-  val playbackProgress = playbackProgress(
-    playbackPosition().safePosition,
-    playbackPosition().duration
   )
 
   if (sliderExpandedPercentage >= 0.75f) {
@@ -46,34 +65,40 @@ internal fun PlaybackProgress(
         modifier = Modifier.fillMaxWidth(),
         horizontalArrangement = Arrangement.SpaceBetween
       ) {
-        Text(playbackPosition().safePosition.millisToTxt(), color = CastawayTheme.colors.onBackground)
-        Text(playbackPosition().duration.millisToTxt(), color = CastawayTheme.colors.onBackground)
+        Text(playbackPos.millisToTxt(), color = CastawayTheme.colors.onBackground)
+        Text(playbackDuration.millisToTxt(), color = CastawayTheme.colors.onBackground)
       }
 
       PlaybackSliderView(
         modifier = Modifier.fillMaxWidth(),
-        progress = playbackProgress,
+        progress = playbackProgress(
+          playbackPosition = playbackPos,
+          playbackDuration = playbackDuration
+        ),
         onValueChange = {
-          event(
-            EditPlaybackPosition(
-              it.progressToPosition(
-                playbackPosition().duration
-              )
-            )
-          )
+          if (editingPlayback) {
+            playbackPos = it.progressToPosition(playbackDuration)
+          }
         },
         onValueChangeStarted = {
-          event(EditingPlayback(true))
+          editingPlayback = true
+          println("Editing: onValueChangeStarted")
+          editing(true)
         },
         onValueChangeFinished = {
-          event(SeekTo(playbackPosition().safePosition))
-          event(EditingPlayback(false))
+          event(SeekTo(playbackPos))
+          editingPlayback = false
+          println("Editing: onValueChangeFinished")
+          editing(false)
         })
     }
   } else {
     PlaybackTrackView(
       modifier = modifier.fillMaxWidth(),
-      playbackPosition = playbackProgress,
+      playbackPosition = playbackProgress(
+        playbackPosition = playbackPos,
+        playbackDuration = playbackDuration
+      ),
     )
   }
 }

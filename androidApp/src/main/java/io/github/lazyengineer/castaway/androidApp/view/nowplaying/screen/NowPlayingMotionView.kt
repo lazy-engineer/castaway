@@ -5,7 +5,12 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.layoutId
@@ -36,6 +41,8 @@ import io.github.lazyengineer.castaway.androidApp.view.nowplaying.screen.compone
 import io.github.lazyengineer.castaway.androidApp.view.nowplaying.screen.component.PlaylistIcon
 import io.github.lazyengineer.castaway.androidApp.view.nowplaying.screen.component.RewindButton
 import io.github.lazyengineer.castaway.domain.resource.ThemeType.MATERIAL
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.onEach
 
 @Composable
 internal fun NowPlayingMotionView(
@@ -71,6 +78,22 @@ internal fun NowPlayingMotionView(
       .fillMaxWidth()
       .background(CastawayTheme.colors.background)
   ) {
+
+    val playbackPositionFlow = MutableSharedFlow<NowPlayingPosition>(replay = 1)
+
+    var editingPlayback by remember { mutableStateOf(false) }
+
+    LaunchedEffect(Unit) {
+      snapshotFlow {
+        episode().playbackPosition
+      }.takeUnless { editingPlayback }?.collect {
+        if (!editingPlayback) {
+          println("Editing: playbackPosition $it, $editingPlayback")
+          playbackPositionFlow.emit(it)
+        }
+      }
+    }
+
     EpisodeImage(
       imageUrl = episode().imageUrl,
       modifier = Modifier
@@ -104,10 +127,13 @@ internal fun NowPlayingMotionView(
 
     PlaybackProgress(
       expandedPercentage = expandedPercentage,
-      playbackPosition = { episode().playbackPosition },
+      playbackPosition = remember { playbackPositionFlow.onEach { println("Editing: onEach") } },
       event = remember { event },
       modifier = Modifier.layoutId(playbackProgressId)
-    )
+    ) {
+      println("Editing: $it")
+      editingPlayback = it
+    }
 
     PlaylistIcon(
       modifier = Modifier.layoutId(playlistIconId)

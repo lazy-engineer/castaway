@@ -112,7 +112,7 @@ class PlaybackPlayerAcceptanceTest : BehaviorSpec({
           Then("the mini playback player should display details of the new episode") {
             robot.listOfStates.last().episode `should be equal to` episode.copy(
               playbackPosition = episode.playbackPosition.copy(
-                position = episode.playbackPosition.duration
+                position = episode.playbackPosition.position
               )
             )
           }

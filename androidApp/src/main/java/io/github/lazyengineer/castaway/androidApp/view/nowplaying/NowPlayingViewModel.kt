@@ -11,9 +11,7 @@ import io.github.lazyengineer.castaway.androidApp.player.RewindPlaybackUseCase
 import io.github.lazyengineer.castaway.androidApp.player.SeekToUseCase
 import io.github.lazyengineer.castaway.androidApp.view.nowplaying.NowPlayingEpisode.Companion.toEpisode
 import io.github.lazyengineer.castaway.androidApp.view.nowplaying.NowPlayingEpisode.Companion.toNowPlayingEpisode
-import io.github.lazyengineer.castaway.androidApp.view.nowplaying.NowPlayingEvent.EditPlaybackPosition
 import io.github.lazyengineer.castaway.androidApp.view.nowplaying.NowPlayingEvent.EditPlaybackSpeed
-import io.github.lazyengineer.castaway.androidApp.view.nowplaying.NowPlayingEvent.EditingPlayback
 import io.github.lazyengineer.castaway.androidApp.view.nowplaying.NowPlayingEvent.EpisodeLoaded
 import io.github.lazyengineer.castaway.androidApp.view.nowplaying.NowPlayingEvent.EpisodeUpdated
 import io.github.lazyengineer.castaway.androidApp.view.nowplaying.NowPlayingEvent.FastForward
@@ -65,20 +63,6 @@ class NowPlayingViewModel(
         currentState.copy(playbackSpeed = event.speed)
       }
 
-      is EditPlaybackPosition -> {
-        currentState.episode?.let { episode ->
-          val updatedEpisode = episode.copy(
-            playbackPosition = episode.playbackPosition.copy(position = event.positionMillis)
-          )
-
-          currentState.copy(episode = updatedEpisode)
-        } ?: currentState
-      }
-
-      is EditingPlayback -> {
-        currentState.copy(editing = event.editing)
-      }
-
       is PlayPause -> {
         playOrPause(event.itemId)
         currentState.copy(buffering = true)
@@ -124,7 +108,7 @@ class NowPlayingViewModel(
     viewModelScope.launch {
       playerState.collectLatest { state ->
         if (state.prepared) {
-          if (state.mediaData != null && !nowPlayingState.value.editing) handleMediaData(nowPlayingState.value, state.mediaData, state.playbackSpeed)
+          if (state.mediaData != null) handleMediaData(nowPlayingState.value, state.mediaData, state.playbackSpeed)
           if (state.playing != nowPlayingState.value.playing) nowPlayingState.handleEvent(Playing(state.playing))
         }
       }
